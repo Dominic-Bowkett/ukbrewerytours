@@ -1,0 +1,23 @@
+<!-- Blog post template. Tokens filled by build.js from content/blog/*.md -->
+<div class="container">
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span class="sep">/</span><a href="/blog/">Blog</a><span class="sep">/</span>{{title}}
+  </nav>
+  <header class="post-hero">
+    <span class="date">{{date_human}}</span>
+    <h1>{{title}}</h1>
+    <p class="lede mt-2">{{description}}</p>
+  </header>
+  {{hero_block}}
+  <article class="prose" style="padding-bottom:40px">
+{{content}}
+  </article>
+</div>
+
+<section class="section band-amber">
+  <div class="container cta-banner">
+    <h2>Thirsty for the real thing?</h2>
+    <p class="mt-2">Join one of our award-winning brewery tours — tutored tastings, working breweries and the UK's best taprooms, guided by beer experts.</p>
+    <a class="btn btn-dark" href="/tours/">Browse all tours</a>
+  </div>
+</section>
