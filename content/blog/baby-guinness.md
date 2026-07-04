@@ -4,7 +4,7 @@ slug: baby-guinness
 old_url: /2024/06/03/baby-guinness/
 description: "How to make a Baby Guinness shot: layer Baileys Irish cream over coffee liqueur for a mini pint look, with step-by-step recipe and layering tips."
 date: "2024-06-03"
-hero_image: ""
+hero_image: "/assets/img/blog-baby-guinness-hero.jpg"
 ---
 
 The **Baby Guinness** cocktail is a standout in the realm of **Irish cocktail recipes**. This unique **shooter** mirrors the iconic pint of Guinness in miniature form, making it a perfect addition to any **home bar**. The recipe is simple and quick, taking a mere five minutes from start to finish.
@@ -32,6 +32,8 @@ The ingredients required to craft a Baby Guinness are straightforward yet crucia
 Proper **bar equipment** is necessary to construct this eye-catching drink. A shot glass is essential, serving as the vessel to highlight the layered effect. Additionally, a spoon is indispensable for the layering technique. Using the back of the spoon to gently pour **Baileys Irish Cream** over the **coffee liqueur** ensures the cream remains on top, creating the **small pint** look that defines the Baby Guinness. Whether you're at home or visiting an establishment such as the **Old Bushmills Distillery**, having the right tools will make all the difference in your **drink presentation**.
 
 ## Step-by-Step Baby Guinness Recipe
+
+![Pouring Irish cream over the back of a spoon to layer a Baby Guinness shot](/assets/img/blog-baby-guinness-pour.jpg)
 
 Creating a Baby Guinness cocktail is an effective way to impress guests at your **home bar** with its striking visual presentation and delicious taste. This *step-by-step guide* will walk you through the process, ensuring your **Baby Guinness recipe** achieves the **perfect layering** for that characteristic look.
 

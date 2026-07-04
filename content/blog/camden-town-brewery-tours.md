@@ -62,6 +62,8 @@ During the tour, you'll get the chance to visit local breweries and enjoy unique
 
 ## Exploring the Craft Beer Scene in Camden Town
 
+![Drinking craft beer on a canal-side terrace in north London](/assets/img/blog-camden-canal.jpg)
+
 If you're a craft beer enthusiast, then Camden Town Brewery Tours are the perfect choice for you. Their knowledgeable guides will take you on a journey through the vibrant and exciting craft beer scene in Camden Town.
 
 During the tour, you'll get to visit local breweries and learn about the brewing process, from the ingredients to the final product. You can also gain insights into the history of brewing in the area and how it has evolved over the years.

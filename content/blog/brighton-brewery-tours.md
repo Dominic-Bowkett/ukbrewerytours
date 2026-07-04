@@ -41,6 +41,8 @@ Don't miss out on the opportunity to explore Brighton's vibrant craft brewery sc
 
 ## Unforgettable Beer Tasting Experiences
 
+![Friends enjoying craft beer on a seafront terrace near the pier](/assets/img/blog-brighton-seafront.jpg)
+
 As part of the Brighton brewery tours gift voucher, you can embark on an unforgettable beer tasting experience. This sensory journey is not only enjoyable but also educational, giving you the opportunity to explore different beer flavors, aromas, and styles.
 
 During the tour, you'll get a chance to learn about the brewing process and understand the science behind different beer styles. Whether you're a seasoned beer enthusiast or a novice, this experience caters to all levels of understanding.

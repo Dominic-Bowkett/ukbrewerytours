@@ -4,7 +4,7 @@ slug: leeds-brewery-tour
 old_url: /2023/08/19/discover-the-best-leeds-brewery-tour-a-perfect-day-out-for-you/
 description: "Explore Leeds' vibrant craft beer scene on a guided brewery tour: top breweries to visit, beer tastings, planning tips, FAQs and gift voucher ideas."
 date: "2023-08-19"
-hero_image: ""
+hero_image: "/assets/img/blog-leeds-victorian-pub-hero.jpg"
 ---
 
 If you're a fan of beer, then a brewery tour in Leeds is a must-do activity. With a vibrant craft beer scene and a range of unique breweries, a tour offers an enjoyable and educational experience where you can learn about the brewing process, taste different beers and explore the city.
@@ -24,6 +24,8 @@ Leeds is home to some of the most dynamic and exciting craft breweries in the UK
 Whether you're a connoisseur or simply curious, a brewery tour in Leeds is a fun and educational experience that's suitable for everyone. So why not book your tour today and discover the best breweries in Leeds?
 
 ## What to Expect on a Leeds Brewery Tour
+
+![Copper and stainless steel brewing vessels inside a craft microbrewery](/assets/img/blog-brewing-vessels.jpg)
 
 Embark on a guided brewery tour in Leeds and get ready for an unforgettable experience. Your knowledgeable guide will take you behind the scenes of some of the city's best breweries, giving you an insider's view of the brewing process.
 

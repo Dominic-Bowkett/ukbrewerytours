@@ -4,7 +4,7 @@ slug: brewery-tour-kent
 old_url: /2023/08/14/discover-brewery-tour-kent-your-ultimate-craft-beer-experience/
 description: "Plan a brewery tour in Kent: visit Shepherd Neame, Whitstable Brewery and top microbreweries, taste unique craft beers and learn the brewing process."
 date: "2023-08-14"
-hero_image: ""
+hero_image: "/assets/img/blog-kent-hop-garden-hero.jpg"
 ---
 
 Are you a craft beer enthusiast looking for the ultimate brewery tour experience? Look no further than Kent, the home of some of the best breweries in the UK.
@@ -54,6 +54,8 @@ Visiting a brewery in Kent is the perfect opportunity to engage your senses and 
 Throughout the tour, you'll have the chance to ask questions, taste samples of beer, and gain a deeper understanding of the craft beer making process. You'll leave with a newfound appreciation for the art of brewing and an unforgettable experience that you'll cherish forever.
 
 ## Taste Unique Brews from Microbreweries in Kent
+
+![Fresh hop cones on a rustic wooden table beside a glass of golden ale](/assets/img/blog-kent-hop-cones.jpg)
 
 One of the exciting aspects of a brewery tour in Kent is the opportunity to taste a variety of unique craft beers from microbreweries in the area. These small-batch, artisanal brews offer a distinct flavour that cannot be found in mass-produced beers.
 

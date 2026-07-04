@@ -87,6 +87,8 @@ Book your spot on one of these top-rated brewery tours in Glasgow, and treat you
 
 ## Brewery Tours and Tastings in Glasgow
 
+![A tasting flight of craft beers in a cosy taproom](/assets/img/blog-glasgow-taproom.jpg)
+
 One of the best things about brewery tours in Glasgow is the opportunity to indulge in a variety of beer tastings. Whether you're a seasoned beer enthusiast or just starting to explore the world of craft beer, these tours offer a chance to sample a range of delicious brews while learning about the brewing process.
 
 Many tours include a guided tasting session, where participants can try out different styles of beer and learn about the distinct flavours and aromas that make them unique. You'll have the chance to ask questions, get tasting notes from the experts, and discover new favourites to add to your collection.

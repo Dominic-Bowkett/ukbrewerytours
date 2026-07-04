@@ -4,7 +4,7 @@ slug: brewery-tours-near-me
 old_url: /2023/08/07/discover-local-brewery-tours-near-me-taste-craft-beers-today/
 description: "Find local brewery tours near you: guided visits to UK breweries and microbreweries, craft beer tastings, gift vouchers and tips for planning your day."
 date: "2023-08-07"
-hero_image: ""
+hero_image: "/assets/img/blog-tasting-flight-hero.jpg"
 ---
 
 Are you a beer lover searching for a unique experience? Look no further! Brewery tours near you offer the chance to taste craft beers and witness the art of brewing firsthand.

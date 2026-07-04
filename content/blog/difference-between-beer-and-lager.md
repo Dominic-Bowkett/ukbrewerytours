@@ -17,6 +17,8 @@ Here, you'll learn everything you ever wanted to know about the world's most pop
 
 ## What is the difference between Lager and Beer?
 
+![A pale golden lager and a darker amber ale side by side on a bar](/assets/img/blog-lager-vs-ale.jpg)
+
 We receive a lot of questions about this one. There are several types of lagers, but not all beers are lagers. Both refer to beers that are fermented at the bottom of the bottle. Pilsner, helles lager, Dortmunder, bock, and Märzen are all examples of lagers.
 
 ## Lager vs. Pilsner: what's the difference?

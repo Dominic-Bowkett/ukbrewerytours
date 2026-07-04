@@ -37,6 +37,8 @@ Two Tribes Brewery & Campfire Taproom in Kings Cross offers a unique beer garden
 
 ## Hidden Gems: Lesser-Known London Beer Garden Bars
 
+![A sunny London pub beer garden with wooden benches and bunting](/assets/img/blog-london-beer-garden.jpg)
+
 London is full of hidden spots, with quiet and lovely pub gardens. These unknown beer gardens are a perfect escape from the busy city. They offer a special experience for drinking.
 
 ### The Chesham Arms
