@@ -4,16 +4,16 @@
     "name": "Bermondsey Beer Tasting Tour",
     "city": "London",
     "price": "49",
-    "duration": "3.5 hours",
-    "schedule": "Usually Saturdays at 1:00pm and 5:00pm (various days and times available)",
+    "duration": "2–3.5 hours depending on time slot",
+    "schedule": "Various dates, with start times from midday to 6:30pm",
     "meeting_point": "Southwark Brewing, 46 Druid St, London SE1 2EZ",
     "summary": "A guided walking tour of the best breweries and taprooms on Bermondsey's famous 'beer mile', led by accredited Beer Sommelier and Certified Cicerone Paul Davies, with tutored tastings at 4 tap rooms.",
-    "description_md": "London has a fantastic craft beer scene with over 130 breweries based in the city. Our Bermondsey beer tour will include the best breweries and taprooms of the city's famous 'beer mile'. Groups of up to 20 will be personally guided by beer expert Paul Davies to 4 tap rooms enabling the inquisitive traveller to easily engage with my city's craft beer scene.\n\nAn accredited Beer Sommelier and Certified Cicerone® Paul will give you a tutored beer tasting where you will discover how sensory analysts and beer judges evaluate the qualities and styles characteristics in a glass of beer. You will also come away with knowledge of the beer styles that you are tasting, their history and evolution. This is a step up from a traditional tasting tour and elevates beer tasting experiences to another level.",
+    "description_md": "London has a fantastic craft beer scene with over 130 breweries in the city — and nowhere tells the story better than Bermondsey's famous 'beer mile'. This tutored tasting tour visits the best breweries and taprooms of the mile, and it's a step up from a traditional tasting tour.\n\n# What you'll do\n\nYour guide — beer expert Paul Davies, an accredited Beer Sommelier and Certified Cicerone® who has worked with Fuller's and judges beer internationally — personally leads you to four taprooms along the beer mile. At each stop you'll enjoy a tutored tasting: discover how sensory analysts and beer judges evaluate the qualities and style characteristics in a glass of beer, and come away knowing the styles you're tasting, their history and their evolution.\n\n# Good to know\n\n- 2 to 3.5 hours depending on your time slot — start times run from midday to 6:30pm\n- Small groups capped at 14, personally guided\n- Meet at Southwark Brewing, 46 Druid Street — a short walk from London Bridge station\n- Over 18s only; identification may be required",
     "includes": [
-      "Tutored beer tasting",
-      "Personal guidance from beer expert Paul Davies",
-      "Knowledge of beer styles, history, and evolution",
-      "Professional sensory evaluation instruction"
+      "Tutored beer tasting led by an accredited Beer Sommelier & Certified Cicerone®",
+      "Visits to 4 taprooms on the Bermondsey beer mile",
+      "Sensory evaluation techniques used by beer judges",
+      "The history and evolution of the beer styles you taste"
     ],
     "breweries": [
       "Southwark Brewing",
@@ -24,10 +24,22 @@
       "The Kernel"
     ],
     "images": [
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2023/06/Bermondsey-AandH-Upstairs-600x338.jpg", "context": "hero"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/ESiACTKWsAAbbKd-768x576.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/EDTCxoTWsAAXQSN-768x576.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/FMMnheiWYAIIYFi-768x576.jpg", "context": "gallery"}
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2023/06/Bermondsey-AandH-Upstairs-600x338.jpg",
+        "context": "hero"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/ESiACTKWsAAbbKd-768x576.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/EDTCxoTWsAAXQSN-768x576.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/FMMnheiWYAIIYFi-768x576.jpg",
+        "context": "gallery"
+      }
     ],
     "active": true
   },
@@ -36,14 +48,16 @@
     "name": "Bermondsey Cheese Meat & Beer Tour",
     "city": "London",
     "price": "65",
-    "duration": "2.5 hours (approx)",
-    "schedule": "Saturdays at 11am",
+    "duration": "Approximately 2.5 hours",
+    "schedule": "Saturdays, 12pm–2:30pm",
     "meeting_point": "Southwark Brewery, 46 Druid Street, London SE1 2EZ",
-    "summary": "A guided food and beer pairing tour through 4 Bermondsey brewery taprooms, combining beer tastings with cheese and cured meat pairings explained by your guide.",
-    "description_md": "What could be better than cheese, meat and beer all together (I'm sure vegetarian's may differ). This tour takes place inside 4 different Bermondsey brewery taprooms and you'll enjoy beers at each stop. We meet in Southwark Brewery for a welcome drink and introduction, before heading down to Billy Frank's Jerky for cheese and beer tastings. We'll then walk the short trip down to Anspach & Hobday or Bianca Road or Moor Vaults. Your guide will be on hand to talk you through the food and drink sampled and explain how different foods and flavours pair well to different styles of beer.",
+    "summary": "A 2.5-hour guided tasting walk through Bermondsey’s beer mile taprooms, pairing quality British cheese and charcuterie with craft beers — small groups capped at around 13.",
+    "description_md": "What could be better than cheese, meat and beer all together? This guided tasting walk showcases quality British cheese and charcuterie alongside carefully chosen craft beers, inside the taprooms of Bermondsey's famous beer mile.\n\n# What you'll do\n\nWe meet at Southwark Brewery for a welcome drink and introduction, then head to Billy Frank's Jerky for cheese and beer tastings, before finishing in one of the neighbouring taprooms — Anspach & Hobday, Bianca Road or Moor Vaults. There's at least one tasting at every stop, and your guide talks you through how different foods and flavours pair with different styles of beer.\n\n# What you'll taste\n\nSoft and hard British cheeses, prosciutto and beef jerky, paired against a spread of beer styles from pale ales and IPAs through to stouts.\n\n# Good to know\n\n- Around 2.5 hours, Saturdays from midday\n- Small groups — capped at around 13 people\n- Over 18s only; bring valid ID\n- All venues have step-free access; comfortable shoes recommended\n- Meet at Southwark Brewery, 46 Druid Street — a short walk from London Bridge station",
     "includes": [
-      "Guided tour",
-      "Beer, meat and cheese tastings"
+      "Welcome drink at Southwark Brewery",
+      "Beer, cheese and charcuterie tastings at every stop",
+      "Expert food-and-beer pairing guidance",
+      "Three Bermondsey taproom visits"
     ],
     "breweries": [
       "Southwark Brewery",
@@ -53,10 +67,22 @@
       "Moor Vaults"
     ],
     "images": [
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/original_cheese-meat-and-beer-tasting-gift-voucher-for-two.jpg", "context": "hero"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/E-cq58jXMAUAiKx.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/E-crGVdXEAEiGFf.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/FCZu5xSXoAE_rmg.jpg", "context": "gallery"}
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/original_cheese-meat-and-beer-tasting-gift-voucher-for-two.jpg",
+        "context": "hero"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/E-cq58jXMAUAiKx.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/E-crGVdXEAEiGFf.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/FCZu5xSXoAE_rmg.jpg",
+        "context": "gallery"
+      }
     ],
     "active": true
   },
@@ -79,10 +105,22 @@
       "Partizan"
     ],
     "images": [
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/11/Bermondsey-Experience-scaled.jpg", "context": "hero"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/11/bermondsey-beer-tasting-tour.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/bermondsey-fourpure-tour-768x513.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/FF2IQxQWQAEsZ4e-768x576.jpg", "context": "gallery"}
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/11/Bermondsey-Experience-scaled.jpg",
+        "context": "hero"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/11/bermondsey-beer-tasting-tour.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/bermondsey-fourpure-tour-768x513.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/FF2IQxQWQAEsZ4e-768x576.jpg",
+        "context": "gallery"
+      }
     ],
     "active": false
   },
@@ -91,14 +129,17 @@
     "name": "Bristol Craft Beer Experience",
     "city": "Bristol",
     "price": "69",
-    "duration": "Approximately 4 hours",
-    "schedule": "Saturdays (check availability for starting times and dates)",
+    "duration": "4 hours (11:45am to approx. 4pm)",
+    "schedule": "Selected Saturdays — at least monthly, with more dates in summer",
     "meeting_point": "Outside Grain Barge, Hotwell Rd, Bristol BS8 4RU",
-    "summary": "A Bristol beer tour combining a private 30-minute harbour ferry cruise with tastings, a behind-the-scenes visit to Moor Brewery, and a finish at The Beer Emporium with beers and cheese and meat platters.",
-    "description_md": "The tour begins by meeting outside Grain Barge and heading to the ferry for a private 30-minute harbour tour. Enjoy a talk and tasting of 2 local beer styles while sailing past the old Bristol brewery site, learning about the city's brewing history.\n\nThe group then visits Moor Brewery for a behind-the-scenes look at the brewing equipment and a discussion with the team on beer production, followed by tastings in the taproom.\n\nAn approximately 20-minute walk through Castle Park leads past the old Bristol Brewery site, then on to The Beer Emporium on King Street for final tastings and shared cheese and meat platters (nibbles rather than a full meal, though pizza discounts are available).",
+    "summary": "The ultimate Bristol beer tasting experience, running since 2016: a private harbour cruise on HMS Hops with tastings, a behind-the-scenes tour at Moor Brewery, and a beer flight with cheese and meat platters at The Beer Emporium.",
+    "description_md": "The ultimate Bristol beer tasting experience, running since 2016 — a Saturday afternoon that packs in a private harbour boat cruise, a behind-the-scenes brewery tour and a King Street beer flight, with cheese and meat platters along the way.\n\n# What you'll do\n\n**HMS Hops.** Meet outside the Grain Barge at 11:45am, then board for a 30-minute private cruise across Bristol's beautiful harbour — tasting Bristol Beer Factory beers while your guide covers beer styles and the city's brewing history, sailing past the old Bristol brewery site.\n\n**Moor Brewery.** A short walk brings you to the award-winning Moor Brewery for a behind-the-scenes look at the brewing kit, followed by tastings in the taproom.\n\n**The Beer Emporium.** A 20-minute stroll through Castle Park leads to the final stop on King Street: a beer flight with cheese and meat sharing platters to finish the afternoon (nibbles rather than a full meal).\n\n# Good to know\n\n- 4 hours: 11:45am start (boat departs midday), finishing around 4pm\n- Beers are served in third-pint measures so you can sample a wider variety; keg and cask formats vary with availability\n- Groups of up to 30 guests\n- Refunds available up to 30 days before your tour; tours run in snow, rain and hail unless conditions are unsafe\n- Private group tours available for corporate events and celebrations",
     "includes": [
-      "Guided tour",
-      "Beer tastings and nibbles"
+      "Private 30-minute harbour cruise on HMS Hops with tastings",
+      "Behind-the-scenes tour and taproom tastings at Moor Brewery",
+      "Beer flight at The Beer Emporium",
+      "Cheese and meat sharing platters",
+      "Expert guide commentary throughout"
     ],
     "breweries": [
       "HMS Hops (private ferry)",
@@ -106,10 +147,22 @@
       "The Beer Emporium"
     ],
     "images": [
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/11/bristol-craft-beer-experience.jpg", "context": "hero"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/bristol-beer-tasting-tour-768x512.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/FIQjm_wWUAkcC9a-768x576.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/E8Hv9deXEAA0p41-768x576.jpg", "context": "gallery"}
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/11/bristol-craft-beer-experience.jpg",
+        "context": "hero"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/bristol-beer-tasting-tour-768x512.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/FIQjm_wWUAkcC9a-768x576.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/E8Hv9deXEAA0p41-768x576.jpg",
+        "context": "gallery"
+      }
     ],
     "active": true
   },
@@ -122,7 +175,7 @@
     "schedule": "Saturdays (monthly tour)",
     "meeting_point": null,
     "summary": "A monthly guided beer tour of Lewes, East Sussex, visiting Harvey's Brewery, Abyss Brewing Co. and Beak Brewery with tastings, led by Certified Cicerone and International Beer Judge Dan of That's The Beer Talking.",
-    "description_md": "Enjoy a brewery tour and tasting in Lewes.\n\nLewes is a charming town located in East Sussex, England. It is known for its picturesque streets, historic landmarks, and cultural significance. The town is surrounded by the South Downs National Park, which provides a stunning backdrop for outdoor activities such as hiking and cycling. Lewes is also home to some of the finest breweries in the country, where visitors can learn about the brewing process, sample some delicious beers, and immerse themselves in the town's rich brewing heritage. Whether you're a history buff, an outdoor enthusiast, or a beer lover, Lewes has something to offer for everyone.\n\nThat's The Beer Talking is founded by Dan, who's a Certified Cicerone & International Beer Judge, and will be on hand to tell you everything about Lewes & Beer that you never knew you needed to know, while drinking a variety of the freshest, hand picked beers we can get our hands on.\n\nVisit Harvey's Brewery, Abyss Brewing Co. & Beak Brewery on this monthly beer tour with tastings included.",
+    "description_md": "Enjoy a brewery tour and tasting in Lewes.\n\nLewes is a charming town located in East Sussex, England. It is known for its picturesque streets, historic landmarks, and cultural significance. The town is surrounded by the South Downs National Park, which provides a stunning backdrop for outdoor activities such as hiking and cycling. Lewes is also home to some of the finest breweries in the country, where visitors can learn about the brewing process, sample some delicious beers, and immerse themselves in the town's rich brewing heritage. Whether you're a history buff, an outdoor enthusiast, or a beer lover, Lewes has something to offer for everyone.\n\n# Your guide\n\nThat's The Beer Talking is founded by Dan, who's a Certified Cicerone & International Beer Judge, and will be on hand to tell you everything about Lewes & Beer that you never knew you needed to know, while drinking a variety of the freshest, hand picked beers we can get our hands on.\n\n# What you'll do\n\nVisit Harvey's Brewery, Abyss Brewing Co. & Beak Brewery on this monthly beer tour with tastings included.",
     "includes": [
       "Brewery tours",
       "Beer tastings",
@@ -134,10 +187,22 @@
       "Beak Brewery"
     ],
     "images": [
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2023/03/5210fc2d-549b-4dd8-a488-5a9b38a1293b-600x338.jpg", "context": "hero"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2023/03/Abyss-Group-600x511.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2023/03/cedd2af7-eb7d-4739-be66-0684a083fbc9-600x338.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2023/03/lewes-brewery-tours-600x338.jpeg", "context": "gallery"}
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2023/03/5210fc2d-549b-4dd8-a488-5a9b38a1293b-600x338.jpg",
+        "context": "hero"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2023/03/Abyss-Group-600x511.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2023/03/cedd2af7-eb7d-4739-be66-0684a083fbc9-600x338.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2023/03/lewes-brewery-tours-600x338.jpeg",
+        "context": "gallery"
+      }
     ],
     "active": true
   },
@@ -147,22 +212,34 @@
     "city": "Liverpool",
     "price": "39.50",
     "duration": "4 hours",
-    "schedule": "Saturdays",
+    "schedule": "Last Saturday of each month",
     "meeting_point": "Inside The Ship & Mitre pub, Liverpool",
-    "summary": "A 4-hour walking tour of Liverpool's craft beer scene visiting two microbreweries and two award-winning beer pubs, with behind-the-scenes access, brewer meet-and-greets and beer tastings.",
-    "description_md": "Discover Liverpool's booming craft beer scene and meet its heroes on our Liverpool Craft Beer Experience. This walking tour will take you on an exclusive behind the scenes journey to some of Liverpool's most exciting breweries and taprooms.\n\nJoin us on a Liverpool Craft Beer Tour to go behind the scenes, meet the brewers, and taste their beers! We'll experience two microbreweries and two award-winning beer-based pubs on our journey. Learn about beer ingredients and how the beer is made into different styles using different techniques and expert craftsmanship. With plenty to discover, the Liverpool Craft Beer Experience will leave you spoilt for choice.",
+    "summary": "A 4-hour guided walk through Liverpool’s craft beer scene — four independent breweries and taprooms, ten craft beer tastings and a flat, walkable city-centre route, on the last Saturday of each month.",
+    "description_md": "Discover Liverpool's booming craft beer scene and meet its heroes. This guided walking tour takes you on an exclusive behind-the-scenes journey through some of the city's most exciting independent breweries and taprooms.\n\n# What you'll do\n\nVisit four independent breweries and taprooms along a flat, easily walkable route through Liverpool city centre — no strenuous hiking required. Along the way you'll taste ten different craft beers, go behind the scenes to learn how they're made, and pick up local stories and insider recommendations from your beer-specialist guide. The tour champions independent, inclusive venues throughout.\n\n# Good to know\n\n- Around 4 hours, depending on the route and venues\n- Tours run on the last Saturday of each month — book ahead, spaces are limited and tours often sell out\n- Free cancellation up to 24 hours before the tour\n- Private tours available for groups of 10+, with options like cheese pairings",
     "includes": [
-      "Guided tasting experience by a Beer Expert",
-      "Private behind-the-scenes brewery tours",
-      "Multiple beer tastings across various styles",
-      "Educational insights into beer production"
+      "Visits to four independent breweries and taprooms",
+      "Ten craft beer tastings",
+      "Expert guidance from a local beer specialist",
+      "Behind-the-scenes brewery access and beer-style education"
     ],
     "breweries": [],
     "images": [
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2021/10/Delia-Debbie.jpg", "context": "hero"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/EOAEHsoWoAExZwz-768x576.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/EOAeMDVX4AEmPyY-768x1024.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/EOAeMzVWkAMpieB-768x576.jpg", "context": "gallery"}
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2021/10/Delia-Debbie.jpg",
+        "context": "hero"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/EOAEHsoWoAExZwz-768x576.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/EOAeMDVX4AEmPyY-768x1024.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/EOAeMzVWkAMpieB-768x576.jpg",
+        "context": "gallery"
+      }
     ],
     "active": true
   },
@@ -171,24 +248,35 @@
     "name": "Manchester Microbrewery Experience",
     "city": "Manchester",
     "price": "38.50",
-    "duration": null,
-    "schedule": "Saturdays",
-    "meeting_point": null,
-    "summary": "A guided craft beer walking tour of Manchester's hidden craft beer gems, with brewery taproom visits, diverse beer style tastings hand-picked by local guides, and a group size limited to 25.",
-    "description_md": "During this Manchester Craft Beer Experience, you will visit several hidden craft beer gems that you might not have discovered otherwise. Each venue offers a unique atmosphere, and you'll learn all about the brewing process from our knowledgeable local beer guides.\n\nAt each stop, you'll have the opportunity to sample a wide variety of beer styles, handpicked by your guide to ensure you get a diverse and exciting tasting experience. From old favorites like IPAs to more unusual and rare beer styles like grisettes and wild-fermented beers, there's something for every palette and level of expertise.\n\nOur group size is limited to 25 people to ensure everyone gets the attention they need and to make the tour more intimate and interactive. The walking distance is approximately 1 mile, so comfortable shoes are recommended.",
+    "duration": "3.5 hours",
+    "schedule": "Last Saturday of each month",
+    "meeting_point": "Cloudwater Brew Co, near Manchester Piccadilly",
+    "summary": "A 3.5-hour guided craft beer walk through Manchester — four hand-picked brewery taprooms and ten tastings at a gentle pace, starting at Cloudwater Brew Co near Piccadilly. Trusted by over 1,000 guests.",
+    "description_md": "Explore Manchester's brilliant brewery scene on a guided craft beer walk that's been enjoyed by over 1,000 guests. Small groups, a gentle walking pace and four hand-picked taprooms make for a relaxed, social afternoon of proper beer.\n\n# What you'll do\n\nMeet at Cloudwater Brew Co near Manchester Piccadilly, then wander between four hand-picked brewery taprooms with only short distances between venues. Across the afternoon you'll enjoy ten craft beer tastings chosen by your guide — from familiar favourites like IPAs to more unusual and rare styles — with expert commentary on brewing, beer styles and Manchester's beer culture along the way.\n\n# Good to know\n\n- 3.5 hours at a gentle walking pace (roughly a mile in total — comfortable shoes recommended)\n- Tours run on the last Saturday of each month — advance booking essential\n- Low/no-alcohol and gluten-free options available on request\n- Cancel or reschedule free of charge up to 24 hours in advance\n- Private tours available for groups of 10+, including optional cheese pairings",
     "includes": [
-      "Multiple brewery taproom visits",
-      "Behind-the-scenes tastings",
-      "Diverse beer style samples",
-      "Knowledgeable local guide",
-      "Limited group size (max 25 people)"
+      "Ten craft beer tastings across four venues",
+      "A certified beer educator as your guide",
+      "Hand-picked taproom route with short walks between venues",
+      "Low/no-alcohol and gluten-free options on request"
     ],
     "breweries": [],
     "images": [
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/Manchester-microbrewery-exeperience.jpg", "context": "hero"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/manchester-beer-tasting-tour-768x432.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/D_fnoYZUYAAvHA9-768x571.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/EOAeMzVWkAMpieB-768x576.jpg", "context": "gallery"}
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/Manchester-microbrewery-exeperience.jpg",
+        "context": "hero"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/manchester-beer-tasting-tour-768x432.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/D_fnoYZUYAAvHA9-768x571.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/EOAeMzVWkAMpieB-768x576.jpg",
+        "context": "gallery"
+      }
     ],
     "active": true
   },
@@ -201,7 +289,7 @@
     "schedule": "Thursday/Friday/Saturday",
     "meeting_point": "The Tetley, Leeds (tour starting point)",
     "summary": "A three-and-a-half-hour exploration of over 300 years of Leeds pub and brewing history, led by local expert guide Mike, with a half pint included at each historic pub stop from The Tetley to Whitelock's Ale House.",
-    "description_md": "Enjoy an exploration of over 300 years of pub and brewing history in Leeds, led by local expert and passionate independent tour guide Mike. Fully self-researched, this three-and-a-half-hour tour brings to life stories of the people, places and events that shaped the city's incredible pub heritage, with drinks included to keep everyone refreshed along the way.\n\nStarting at The Tetley, hear the two-century story of Tetley Brewery, which went on to become one of Yorkshire's most beloved, and Britain's largest. The tour then heads on to the Adelphi, a classic late Victorian pub. Understand how the architecture played an important part of the Victorian pub experience, before watching heritage video artefacts showing what life was like for one of Leeds' breweries in the early and mid-20th century. From here, the group will then head for a walk through Brewery Wharf, stopping at various points of interest on the way. The next stop is the Lamb & Flag, where a fun map reading task will take place, before hearing the history of the building, opened in 1801. Then it's time for another walk, this time to explore some ghost pubs of Leeds – buildings that used to be pubs, with evidence still in the architecture. This leads the group to the White Swan, with a history that ties it closely to neighbouring City Varieties Music Hall. Here, explore a modern map of Leeds City Centre and learn how brewing has evolved in the area. The final tour stop is Whitelock's Ale House, arguably Leeds' jewel in the pub crown. Founded in 1715, the pub boasts a fascinating history which Mike will explain unvarnished to finish the tour.\n\nThroughout the tour, Mike will tell you stories from old local newspapers and books, show and use old maps and images and lots more to bring history to life. At each pub stop, a half pint is included for each guest. Enjoy either hand-pulled ale, draught lager or cider, or a soft drink. For tour timings and guest wellbeing, upgrades to pints or higher alcohol content drinks such as wines and spirits are not offered as part of this tour.\n\nYour guide Mike is Leeds born and bred. He is currently the serving Secretary of the British Guild of Beer Writers and has a background that has seen him operate a micro-brewery, run a pub, organise beer festivals and serve as the Chair for the Leeds branch of the Campaign for Real Ale.",
+    "description_md": "Enjoy an exploration of over 300 years of pub and brewing history in Leeds, led by local expert and passionate independent tour guide Mike. Fully self-researched, this three-and-a-half-hour tour brings to life stories of the people, places and events that shaped the city's incredible pub heritage, with drinks included to keep everyone refreshed along the way.\n\n# The route\n\nStarting at The Tetley, hear the two-century story of Tetley Brewery, which went on to become one of Yorkshire's most beloved, and Britain's largest. The tour then heads on to the Adelphi, a classic late Victorian pub. Understand how the architecture played an important part of the Victorian pub experience, before watching heritage video artefacts showing what life was like for one of Leeds' breweries in the early and mid-20th century. From here, the group will then head for a walk through Brewery Wharf, stopping at various points of interest on the way. The next stop is the Lamb & Flag, where a fun map reading task will take place, before hearing the history of the building, opened in 1801. Then it's time for another walk, this time to explore some ghost pubs of Leeds – buildings that used to be pubs, with evidence still in the architecture. This leads the group to the White Swan, with a history that ties it closely to neighbouring City Varieties Music Hall. Here, explore a modern map of Leeds City Centre and learn how brewing has evolved in the area. The final tour stop is Whitelock's Ale House, arguably Leeds' jewel in the pub crown. Founded in 1715, the pub boasts a fascinating history which Mike will explain unvarnished to finish the tour.\n\n# Drinks along the way\n\nThroughout the tour, Mike will tell you stories from old local newspapers and books, show and use old maps and images and lots more to bring history to life. At each pub stop, a half pint is included for each guest. Enjoy either hand-pulled ale, draught lager or cider, or a soft drink. For tour timings and guest wellbeing, upgrades to pints or higher alcohol content drinks such as wines and spirits are not offered as part of this tour.\n\n# Your guide\n\nYour guide Mike is Leeds born and bred. He is currently the serving Secretary of the British Guild of Beer Writers and has a background that has seen him operate a micro-brewery, run a pub, organise beer festivals and serve as the Chair for the Leeds branch of the Campaign for Real Ale.",
     "includes": [
       "Half pint at each pub stop (hand-pulled ale, draught lager, cider, or soft drink)",
       "Expert-led tour by local guide Mike",
@@ -217,12 +305,30 @@
       "Whitelock's Ale House"
     ],
     "images": [
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/Leeds-Heritage-Pub-and-Brewery-Tour-Guests-outside-The-Tetley-600x797.jpg", "context": "hero"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/Leeds-Heritage-Pub-and-Brewery-Tour-Guests-at-Duck-and-Drake-600x450.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/Leeds-Heritage-Pub-and-Brewery-Tour-Guests-at-Whitelocks-Ale-House-600x450.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/Leeds-Heritage-Pub-and-Brewery-Tour-Guests-inside-Duck-and-Drake-600x797.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/Leeds-Heritage-Pub-and-Brewery-Tour-Guests-inside-The-Tetley-600x797.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/Leeds-Heritage-Pub-and-Brewery-Tour-guests-outside-the-Duck-and-Drake-pub-600x797.jpg", "context": "gallery"}
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/Leeds-Heritage-Pub-and-Brewery-Tour-Guests-outside-The-Tetley-600x797.jpg",
+        "context": "hero"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/Leeds-Heritage-Pub-and-Brewery-Tour-Guests-at-Duck-and-Drake-600x450.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/Leeds-Heritage-Pub-and-Brewery-Tour-Guests-at-Whitelocks-Ale-House-600x450.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/Leeds-Heritage-Pub-and-Brewery-Tour-Guests-inside-Duck-and-Drake-600x797.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/Leeds-Heritage-Pub-and-Brewery-Tour-Guests-inside-The-Tetley-600x797.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/Leeds-Heritage-Pub-and-Brewery-Tour-guests-outside-the-Duck-and-Drake-pub-600x797.jpg",
+        "context": "gallery"
+      }
     ],
     "active": true
   },
@@ -235,7 +341,7 @@
     "schedule": "Saturdays at 1:15pm (does not run every weekend; check dates)",
     "meeting_point": "Nomadic Beers, Unit 11, Sheepscar House, 15 Sheepscar St N, Leeds LS7 1AD",
     "summary": "A 4-hour expert-led walking tour of Leeds' craft beer scene starting with a brewery tour at Nomadic Beers, then Brew York, North Brewing Co and Leeds City Tap, finishing at the iconic Cross Keys.",
-    "description_md": "Join us on a 4-hour walking tour discovering the best of Leeds' craft beer scene on an in depth guided tour led by beer experts. Discover a range of beer styles and the story behind them on this expert led tour in Leeds.\n\nLearn how beer is made with stops at Nomadic Beers, Brew York in Leeds, Leeds original Brewpub, North Brewing Co & Leeds City Tap. Finish up at the iconic Cross Keys on this guided beer tasting tour in Leeds.\n\nThe day starts inside Nomadic Beers with a brewery tour of the equipment with tastings. Then onto Brew York in Leeds followed by North Brewing Co, Leeds City Tap and a final tasting at the Cross Keys.",
+    "description_md": "Join us on a 4-hour walking tour discovering the best of Leeds' craft beer scene on an in depth guided tour led by beer experts. Discover a range of beer styles and the story behind them on this expert led tour in Leeds.\n\nLearn how beer is made with stops at Nomadic Beers, Brew York in Leeds, Leeds original Brewpub, North Brewing Co & Leeds City Tap. Finish up at the iconic Cross Keys on this guided beer tasting tour in Leeds.\n\n# What you'll do\n\nThe day starts inside Nomadic Beers with a brewery tour of the equipment with tastings. Then onto Brew York in Leeds followed by North Brewing Co, Leeds City Tap and a final tasting at the Cross Keys.",
     "includes": [
       "Behind-the-scenes brewery tour with equipment viewing",
       "Tutored tastings at multiple venues",
@@ -249,11 +355,26 @@
       "Cross Keys"
     ],
     "images": [
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/leeds-craft-beer-experience-768x576.jpg", "context": "hero"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2021/11/leeds-craft-beer-experience-c-768x576.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2021/08/leeds-group-up4.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2021/08/Leeds-8-optimised-768x512.jpeg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/D9yKhg4U8AA0AeN.jpg", "context": "gallery"}
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/leeds-craft-beer-experience-768x576.jpg",
+        "context": "hero"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2021/11/leeds-craft-beer-experience-c-768x576.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2021/08/leeds-group-up4.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2021/08/Leeds-8-optimised-768x512.jpeg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/D9yKhg4U8AA0AeN.jpg",
+        "context": "gallery"
+      }
     ],
     "active": true
   },
@@ -261,26 +382,42 @@
     "old_slug": "kent-hop-farm-tour-at-hukins-hops",
     "name": "Kent Hop Farm Tour at Hukins Hops",
     "city": "Kent",
-    "price": "15",
-    "duration": "Approximately 1 hour",
-    "schedule": "Tours take place between May and September every year; specific dates vary by month based on hop growth stages",
+    "price": "27.50",
+    "duration": "Approximately 2 hours",
+    "schedule": "Selected Saturdays during the season, with 11am, 1pm and 3pm time slots",
     "meeting_point": "Hukins Hops, Haffenden Farms, Bugglesden Rd, St Michaels, Tenterden TN30 6TG (at the taproom)",
-    "summary": "A one-hour guided tour of the working Hukins Hops farm in Kent, walking the 18-foot-high hop gardens and visiting the hop picking and processing facility, with the taproom available afterwards.",
-    "description_md": "Kent is rich in hop growing and brewing history. Visit the stunning Hukins Hops estate and see how a modern hop farm combines with craft brewing to give you an experience to remember.\n\nStep into the 18 foot high hop gardens and learn how hops are grown today to meet the dynamic craft beer market.\n\nWe'll visit the hop picking and processing facility to see how great British engineering combine with modern technology to pick 320,000 hop plants in just 30 days of harvest!\n\nAfter the tour, why not grab a beer and food in the taproom at your leisure.",
+    "summary": "A two-hour guided tour of the working Hukins Hops farm in Kent — walk the 18-foot-high hop gardens, see the picking and processing facility in action, then relax in the taproom. Children attend free with a paying adult.",
+    "description_md": "Kent is rich in hop growing and brewing history. Visit the stunning Hukins Hops estate near Tenterden and see how a modern working hop farm feeds the craft beer market — behind-the-scenes access for hop lovers and beer enthusiasts alike, whether amateur or experienced.\n\n# What you'll do\n\nStep into the 18-foot-high hop gardens for a guided stroll and learn how hops are selected and grown today to meet the dynamic craft beer market — and how they influence the flavour of the beer in your glass.\n\nThen visit the modern picking and processing facility to see how great British engineering combines with modern technology to pick, dry and process 320,000 hop plants in just 30 days of harvest.\n\nAfter the tour, grab a beer in the taproom at your leisure — food is available to purchase too.\n\n# Good to know\n\n- Tours last approximately 2 hours, with 11am, 1pm and 3pm slots on tour days\n- Groups are capped at around 20 people\n- Children attend tours free with a paying adult\n- Tickets are non-refundable and non-exchangeable after purchase",
     "includes": [
-      "Guided stroll through working hop farm",
-      "Education on hop cultivation",
-      "Tour of hop picking and processing facility"
+      "Guided walk through the working hop gardens",
+      "Tour of the hop picking and processing facility",
+      "The story of Kent’s hop-growing heritage",
+      "Taproom time afterwards (beer and food available to buy)"
     ],
     "breweries": [
       "Hukins Hops (farm and taproom)"
     ],
     "images": [
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/12/craft-beer-tasting-and-281146280.jpg", "context": "hero"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/12/hop-farm-tour-kent-2.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/12/craft-beer-tasting-and-281146460.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/12/craft-beer-tasting-and-281146590.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/12/craft-beer-tasting-and-011124100.jpg", "context": "gallery"}
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/12/craft-beer-tasting-and-281146280.jpg",
+        "context": "hero"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/12/hop-farm-tour-kent-2.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/12/craft-beer-tasting-and-281146460.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/12/craft-beer-tasting-and-281146590.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/12/craft-beer-tasting-and-011124100.jpg",
+        "context": "gallery"
+      }
     ],
     "active": true
   },
@@ -288,12 +425,12 @@
     "old_slug": "birmingham-microbrewery-experience",
     "name": "Birmingham Microbrewery Experience",
     "city": "Birmingham",
-    "price": "80",
+    "price": null,
     "duration": "Approximately 4 hours",
     "schedule": "Saturdays only (check availability for starting times and dates)",
     "meeting_point": "Rock and Roll Brewery, 19 Hall St, Birmingham B18 6BS",
     "summary": "A day visiting Birmingham brewery taprooms and craft beer venues with behind-the-scenes equipment tours at Rock and Roll Brewery and Burning Soul Brewery, finishing with beer, cheese and meat pairings at The Wolf.",
-    "description_md": "Visit several Birmingham brewery taprooms and craft beer venues in a day for behind the scenes tours of the equipment.\n\nWe start the day inside Rock and Roll Brewery where Mark and Lynn will take us on a tour of the equipment of this truly unique brewery. It's then onto the award winning Burning Soul Brewery to see the team for another look at the equipment and more tastings of the beers brewed on site. We'll then walk onto The Wolf for beer pairings of cheese and meats with even more beer tastings to round off the day.",
+    "description_md": "Visit several Birmingham brewery taprooms and craft beer venues in a day, with behind-the-scenes tours of the equipment at two of the city's most characterful breweries.\n\n# What you'll do\n\nWe start the day inside Rock and Roll Brewery, where Mark and Lynn take us on a tour of the equipment at this truly unique brewery. It's then on to the award-winning Burning Soul Brewery to meet the team for another look behind the scenes and more tastings of the beers brewed on site. We finish at The Wolf for beer pairings of cheese and meats, with even more beer tastings to round off the day.\n\n# Good to know\n\n- Runs on Saturdays — contact us for dates and availability\n- Approximately 4 hours\n- Contact us for current pricing",
     "includes": [
       "Guided tour",
       "Beer tastings"
@@ -304,10 +441,22 @@
       "The Wolf"
     ],
     "images": [
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/11/birmingham-craft-beer-experience.jpg", "context": "hero"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/birmingham-beer-tasting-tour.png", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/E12RuB7X0Ag9HKY.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/E12RusaWUAQ80Wj.jpg", "context": "gallery"}
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/11/birmingham-craft-beer-experience.jpg",
+        "context": "hero"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/birmingham-beer-tasting-tour.png",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/E12RuB7X0Ag9HKY.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/E12RusaWUAQ80Wj.jpg",
+        "context": "gallery"
+      }
     ],
     "active": true
   },
@@ -331,10 +480,22 @@
       "Platform, Glasgow"
     ],
     "images": [
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2024/03/platform-entrance-600x400.jpg", "context": "hero"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2023/03/bristol-hen-do.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2023/05/MoorhousesBrewery-Tour-hires-9-scaled-600x400.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/12/5sazxev5-ja-600x400.jpg", "context": "gallery"}
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2024/03/platform-entrance-600x400.jpg",
+        "context": "hero"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2023/03/bristol-hen-do.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2023/05/MoorhousesBrewery-Tour-hires-9-scaled-600x400.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/12/5sazxev5-ja-600x400.jpg",
+        "context": "gallery"
+      }
     ],
     "active": true
   },
@@ -344,25 +505,40 @@
     "city": "Dorset",
     "price": "17",
     "duration": null,
-    "schedule": null,
+    "schedule": "Selected dates — booking recommended, essential for large groups",
     "meeting_point": "The Brewery, Hall & Woodhouse, Blandford St. Mary, Dorset DT11 9LS",
     "summary": "A tour of the independent, family-owned Hall & Woodhouse (Badger) brewery in Dorset, with a flight of beers included; a Brewery Tour option at £17 and a Brewery Experience with expert tasting at £25.",
-    "description_md": "Wherever you're enjoying a tasty Badger beer, it's always special. But there's something even more wonderful about having one at the home of Badger beers – the independent, family-owned Hall & Woodhouse brewery in Dorset. The aroma of the hops. The taste of the malts. The unique inner workings. And hearing first-hand the craft, expertise and legendary stories behind our characterful beers. Enjoy a tour at Badger Brewery.\n\nTwo options are offered: Brewery Tours at £17 and the Brewery Experience at £25 (which adds an expert tasting of the award-winning beer collection). Both include a flight of beers and a tour of the state-of-the-art brewery installed in 2012, covering the brewery's 200-year journey.",
+    "description_md": "Wherever you're enjoying a tasty Badger beer, it's always special. But there's something even more wonderful about having one at the home of Badger beers — the independent, family-owned Hall & Woodhouse brewery, nestling by the River Stour at Blandford St Mary in Dorset.\n\n# What you'll do\n\nExplore the Victorian maltings and the modern, state-of-the-art brewery installed in 2012, taking in the rich aroma of brewing beer as your guide explains the brewery's inner workings and its 200-year journey. Tastings of the award-winning Badger beers are enjoyed at the brewery, and the Brewery Tap bar and restaurant is right there for food and a pint afterwards.\n\nTwo options are offered: the **Brewery Tour** at £17, and the **Brewery Experience** at £25, which adds an expert tutored tasting of the award-winning beer collection. Both include a flight of beers.\n\n# Good to know\n\n- Check in at the Brewery Shop 10 minutes before your tour\n- Maximum group size is 20 — booking is recommended and essential for large groups\n- Children over 10 are welcome; under-18s must be accompanied by an adult\n- Wear sensible footwear — no open-toed shoes or heels\n- The Brewery Tap and Shop are fully accessible, but some areas of the tour route are not suitable for guests with mobility difficulties",
     "includes": [
-      "Overview of 200-year brewery journey",
-      "Tour of state-of-the-art brewery (installed 2012)",
-      "Flight of beers (included in both options)",
-      "Expert tasting of award-winning beer collection (Brewery Experience only)"
+      "Guided tour of the Victorian maltings and modern brewery",
+      "The brewery’s 200-year story",
+      "A flight of Badger beers (both options)",
+      "Expert tutored tasting of the award-winning collection (Brewery Experience option)"
     ],
     "breweries": [
       "Hall & Woodhouse (Badger Brewery)"
     ],
     "images": [
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2024/02/Badger-brewery-images-1-600x338.jpg", "context": "hero"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2024/02/Liam-FV-600x338.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2024/02/BreweryTour-5-600x338.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2024/02/BreweryTour-1-600x338.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2024/02/BreweryTour-3-600x338.jpg", "context": "gallery"}
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2024/02/Badger-brewery-images-1-600x338.jpg",
+        "context": "hero"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2024/02/Liam-FV-600x338.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2024/02/BreweryTour-5-600x338.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2024/02/BreweryTour-1-600x338.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2024/02/BreweryTour-3-600x338.jpg",
+        "context": "gallery"
+      }
     ],
     "active": true
   },
@@ -375,7 +551,7 @@
     "schedule": null,
     "meeting_point": "Cardiff Castle, Castle Street, Cardiff CF10 3RB (just inside the South Gate entrance)",
     "summary": "A private group craft beer tour of Cardiff (minimum 10 people) visiting 3 brewery taprooms, starting with a meet-up inside Cardiff Castle and featuring independent Welsh craft beers with a behind-the-scenes brewery look.",
-    "description_md": "Discover the best that Cardiff has to offer at a number of different craft beer venues in the city. This is available as a private group tour for a minimum of 10 people.\n\nOur Cardiff Craft Beer Tour allows guests to sample quality, independent Welsh craft beers at a selection of Cardiff's specialist craft beer bars and tap rooms including a local brewery. We sample different beer styles such as pale ales, IPAs and stouts. It's all about quality Welsh produce on this tour with beer from local suppliers. What could be better than a selection of quality independent craft beer?\n\nThis tour takes place inside 3 different Cardiff brewery taprooms and you'll enjoy beers at each stop. We gather within the walls of Cardiff's iconic city centre castle for meet-up and an introduction, before heading for a welcome drink at the city's newest brewery, a look behind the scenes at the brewery and an insight into how your beer is crafted. Your guide will be on hand to talk you through the carefully selected beers and explain how their ingredients and methods combine to the flavours that you'll enjoy.",
+    "description_md": "Discover the best that Cardiff has to offer at a number of different craft beer venues in the city. This is available as a private group tour for a minimum of 10 people.\n\nOur Cardiff Craft Beer Tour allows guests to sample quality, independent Welsh craft beers at a selection of Cardiff's specialist craft beer bars and tap rooms including a local brewery. We sample different beer styles such as pale ales, IPAs and stouts. It's all about quality Welsh produce on this tour with beer from local suppliers. What could be better than a selection of quality independent craft beer?\n\n# What you'll do\n\nThis tour takes place inside 3 different Cardiff brewery taprooms and you'll enjoy beers at each stop. We gather within the walls of Cardiff's iconic city centre castle for meet-up and an introduction, before heading for a welcome drink at the city's newest brewery, a look behind the scenes at the brewery and an insight into how your beer is crafted. Your guide will be on hand to talk you through the carefully selected beers and explain how their ingredients and methods combine to the flavours that you'll enjoy.",
     "includes": [
       "Guided tour",
       "Brewery visit",
@@ -383,10 +559,22 @@
     ],
     "breweries": [],
     "images": [
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/E_CE-HBXsAYjM-g-768x576.jpg", "context": "hero"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/01/IMG-20220710-WA0003-600x800.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/01/IMG-20220710-WA0005-600x800.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/01/IMG-20220710-WA0006-600x800.jpg", "context": "gallery"}
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/E_CE-HBXsAYjM-g-768x576.jpg",
+        "context": "hero"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/01/IMG-20220710-WA0003-600x800.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/01/IMG-20220710-WA0005-600x800.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/01/IMG-20220710-WA0006-600x800.jpg",
+        "context": "gallery"
+      }
     ],
     "active": true
   },
@@ -394,12 +582,12 @@
     "old_slug": "heist-brewery-tours",
     "name": "Heist Brewery Tours",
     "city": "Sheffield",
-    "price": "10",
+    "price": null,
     "duration": "1 hour",
     "schedule": "Every Friday 16:00-17:00",
     "meeting_point": null,
     "summary": "A weekly one-hour tour of Heist Brew Co in Sheffield, seeing the brewing process behind the beers and enjoying 3 x 1/3 pints of Heist beers fresh from the tap.",
-    "description_md": "Heist started brewing from our old site in Clowne, Derbyshire in 2018, building a reputation for a wide variety of beers. The move to Sheffield was always on the cards and now allows us to expand operations with doubled fermentation capacity, an awesome new brewing team and plans to upgrade and replace the older 10HL brewkit in 2022.\n\nAlthough our plans had been severely delayed due to the Covid-19 outbreak, we are back at it, brewing flat out to service the new taproom and our fantastic customers across the country.\n\nJoin the team on our weekly brewery tours, see the process behind the beer and enjoy 3x 1/3 of Heist beers fresh from tap! Runs every Friday 16:00-17:00.",
+    "description_md": "Heist Brew Co started brewing in Clowne, Derbyshire in 2018 and quickly built a reputation for a wide variety of bold, modern beers. Now based in Sheffield with expanded fermentation capacity and a brilliant taproom, the team brews flat out to keep the taps flowing — and opens the doors every week to show you how it's done.\n\n# What you'll do\n\nJoin the team on their weekly brewery tour and see the process behind the beer, from raw ingredients to finished pint. Then settle into the taproom with three fresh thirds of Heist beer poured straight from the tap.\n\n# Good to know\n\n- Tours run every Friday, 4pm–5pm\n- Includes 3 x 1/3 pints of Heist beers fresh from the tap\n- Contact us for current pricing and availability",
     "includes": [
       "See the brewing process",
       "3x 1/3 pints of Heist beers fresh from tap"
@@ -408,10 +596,22 @@
       "Heist Brew Co (Sheffield)"
     ],
     "images": [
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/12/HEISTContentDay-18.Nov_.22-42.jpg", "context": "hero"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/12/HEISTContentDay-18.Nov_.22-916.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/12/HEISTContentDay-18.Nov_.22-51.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/12/5sazxev5-ja.jpg", "context": "gallery"}
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/12/HEISTContentDay-18.Nov_.22-42.jpg",
+        "context": "hero"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/12/HEISTContentDay-18.Nov_.22-916.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/12/HEISTContentDay-18.Nov_.22-51.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/12/5sazxev5-ja.jpg",
+        "context": "gallery"
+      }
     ],
     "active": true
   },
@@ -419,12 +619,12 @@
     "old_slug": "moorhouses-brewery-tours",
     "name": "Moorhouse's Brewery Tours",
     "city": "Lancashire",
-    "price": "16",
+    "price": null,
     "duration": "45 minutes (guided tour)",
     "schedule": "By prior appointment only",
     "meeting_point": null,
     "summary": "A behind-the-scenes tour of Moorhouse's Brewery in Burnley with a pie and pea supper, arranged by prior appointment, with optional beer add-ons of 4 halves or 4 pints.",
-    "description_md": "Discover Moorhouse's Brewery on a tour behind the scenes. Visits are only arranged by prior appointment.\n\nAll bookings and pie choices must be confirmed and paid for 1 week prior to the event. If you are booking as a gift on behalf of someone please provide an additional email address within the message field so we can send event reminders.",
+    "description_md": "Discover Moorhouse's — Burnley's famous brewery, home of Pendle Witches Brew and Blond Witch — on a tour behind the scenes, finished off with a proper pie and pea supper.\n\n# What you'll do\n\nA 45-minute guided tour takes you behind the scenes at the brewery to see how the beers are made. Afterwards, sit down to a pie and pea supper. Fancy a drink with it? Add 4 halves of Moorhouse's beers for £6, or 4 pints for £12.\n\n# Good to know\n\n- Visits are arranged by prior appointment only — contact us for pricing and dates\n- All bookings and pie choices must be confirmed and paid one week before the event\n- Booking as a gift? Include the recipient's email address so we can send event reminders",
     "includes": [
       "45-minute guided brewery tour",
       "Pie and pea supper",
@@ -435,10 +635,22 @@
       "Moorhouse's Brewery (Burnley)"
     ],
     "images": [
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2023/05/MoorhousesBrewery-Tour-hires-66-scaled-600x400.jpg", "context": "hero"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2023/05/MoorhousesBrewery-hires-32-scaled-600x401.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2023/05/MoorhousesBrewery-Tour-hires-9-scaled-600x400.jpg", "context": "gallery"},
-      {"url": "https://www.ukbrewerytours.com/wp-content/uploads/2023/05/MoorhousesBrewery-Tour-hires-10-scaled-600x400.jpg", "context": "gallery"}
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2023/05/MoorhousesBrewery-Tour-hires-66-scaled-600x400.jpg",
+        "context": "hero"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2023/05/MoorhousesBrewery-hires-32-scaled-600x401.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2023/05/MoorhousesBrewery-Tour-hires-9-scaled-600x400.jpg",
+        "context": "gallery"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2023/05/MoorhousesBrewery-Tour-hires-10-scaled-600x400.jpg",
+        "context": "gallery"
+      }
     ],
     "active": true
   }
