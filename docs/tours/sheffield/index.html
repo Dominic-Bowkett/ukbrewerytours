@@ -66,9 +66,13 @@
     </div>
   </div>
 </section>
-<section class="section" id="tours" style="padding-bottom:30px">
+<section class="section" id="tours">
   <div class="container">
-    <div class="section-head"><span class="kicker">Led by our team</span><h2>Our Sheffield tours</h2></div>
+    <div class="section-head">
+      <span class="kicker">Tours &amp; experiences</span>
+      <h2>Brewery tours &amp; experiences in Sheffield</h2>
+      <p>Our own guided tours plus hand-picked brewery tours, tastings and food &amp; drink experiences — all in one place.</p>
+    </div>
     <div class="card-grid"><a class="tour-card" href="/tours/heist-brewery-tours/" data-card data-city="Sheffield" data-name="heist brewery tours" data-days="Fri">
     <div class="thumb"><img src="/assets/img/HEISTContentDay-18.Nov_.22-42.jpg" alt="Heist Brewery Tours" loading="lazy"><span class="city-tag">Sheffield</span></div>
     <div class="body">
@@ -76,17 +80,8 @@
       <p class="meta">1 hour · Every Friday 16:00-17:00</p>
       <div class="price-row"><span class="price"><small>price on enquiry</small></span><span class="go">View tour →</span></div>
     </div>
-  </a></div>
-  </div>
-</section>
-<section class="section" style="padding-top:30px">
-  <div class="container">
-    <div class="section-head">
-      <span class="kicker">Book online</span>
-      <h2>More Sheffield experiences</h2>
-      <p>Hand-picked brewery tours, tastings and food &amp; drink experiences, bookable through our partner GetYourGuide.</p>
-    </div>
-    <div class="card-grid"><a class="tour-card partner" href="/tours/experiences/bakewell-thornbridge-brewery-tour-beer-tasting-experience/" data-card data-city="" data-name="bakewell: thornbridge brewery tour &amp; beer tasting experience" data-days="">
+  </a>
+<a class="tour-card partner" href="/tours/experiences/bakewell-thornbridge-brewery-tour-beer-tasting-experience/" data-card data-city="" data-name="bakewell: thornbridge brewery tour &amp; beer tasting experience" data-days="">
     <div class="thumb"><img src="/assets/img/gyg/bakewell-thornbridge-brewery-tour-beer-tasting-experience.jpg" alt="Bakewell: Thornbridge Brewery Tour &amp; Beer Tasting Experience" loading="lazy"><span class="city-tag"></span><span class="partner-flag">Partner</span></div>
     <div class="body">
       <h3>Bakewell: Thornbridge Brewery Tour &amp; Beer Tasting Experience</h3>
@@ -180,6 +175,27 @@
       </div>
     </div>
   </footer>
+
+  <!-- Gift voucher popup modal (opened by any [data-giftup-open] button, on every page) -->
+  <div class="giftup-modal" data-giftup-modal hidden>
+    <div class="giftup-modal__backdrop" data-giftup-close></div>
+    <div class="giftup-modal__panel" role="dialog" aria-modal="true" aria-labelledby="giftup-title">
+      <button class="giftup-modal__close" type="button" data-giftup-close aria-label="Close">&times;</button>
+      <div class="giftup-modal__head">
+        <span class="kicker">Gift vouchers</span>
+        <h2 id="giftup-title">Buy a gift voucher</h2>
+        <p>Monetary UK Brewery Tours vouchers — instant email delivery, and they never expire.</p>
+      </div>
+      <div class="gift-up-target" data-site-id="6ed23cad-32b5-4c18-8d00-49f291f4b0fb" data-platform="Other" data-product-id="2600a62f-f863-4e4c-8b67-07c82b627130" data-language="en-GB"></div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    (function (g, i, f, t, u, p, s) {
+      g[u] = g[u] || function () { (g[u].q = g[u].q || []).push(arguments) };
+      p = i.createElement(f); p.async = 1; p.src = t;
+      s = i.getElementsByTagName(f)[0]; s.parentNode.insertBefore(p, s);
+    })(window, document, "script", "https://cdn.giftup.app/dist/gift-up.js", "giftup");
+  </script>
 
   <script src="/assets/js/main.js" defer></script>
 </body>

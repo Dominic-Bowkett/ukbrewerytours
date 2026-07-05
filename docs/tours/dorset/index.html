@@ -66,9 +66,13 @@
     </div>
   </div>
 </section>
-<section class="section" id="tours" style="padding-bottom:30px">
+<section class="section" id="tours">
   <div class="container">
-    <div class="section-head"><span class="kicker">Led by our team</span><h2>Our Dorset tours</h2></div>
+    <div class="section-head">
+      <span class="kicker">Tours &amp; experiences</span>
+      <h2>Brewery tours &amp; experiences in Dorset</h2>
+      <p>Our own guided tours plus hand-picked brewery tours, tastings and food &amp; drink experiences — all in one place.</p>
+    </div>
     <div class="card-grid"><a class="tour-card" href="/tours/dorset-brewery-tours/" data-card data-city="Dorset" data-name="dorset brewery tours: badger ales" data-days="">
     <div class="thumb"><img src="/assets/img/Badger-brewery-images-1.jpg" alt="Dorset Brewery Tours: Badger Ales" loading="lazy"><span class="city-tag">Dorset</span></div>
     <div class="body">
@@ -77,9 +81,9 @@
       <div class="price-row"><span class="price">£17 <small>per person</small></span><span class="go">View tour →</span></div>
     </div>
   </a></div>
+    
   </div>
 </section>
-
 <section class="section band-cream" style="border-top:1px solid var(--line)">
   <div class="container">
     <div class="section-head"><span class="kicker">Eat &amp; drink in Dorset</span><h2>Where to drink in Dorset</h2></div>
@@ -155,6 +159,27 @@
       </div>
     </div>
   </footer>
+
+  <!-- Gift voucher popup modal (opened by any [data-giftup-open] button, on every page) -->
+  <div class="giftup-modal" data-giftup-modal hidden>
+    <div class="giftup-modal__backdrop" data-giftup-close></div>
+    <div class="giftup-modal__panel" role="dialog" aria-modal="true" aria-labelledby="giftup-title">
+      <button class="giftup-modal__close" type="button" data-giftup-close aria-label="Close">&times;</button>
+      <div class="giftup-modal__head">
+        <span class="kicker">Gift vouchers</span>
+        <h2 id="giftup-title">Buy a gift voucher</h2>
+        <p>Monetary UK Brewery Tours vouchers — instant email delivery, and they never expire.</p>
+      </div>
+      <div class="gift-up-target" data-site-id="6ed23cad-32b5-4c18-8d00-49f291f4b0fb" data-platform="Other" data-product-id="2600a62f-f863-4e4c-8b67-07c82b627130" data-language="en-GB"></div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    (function (g, i, f, t, u, p, s) {
+      g[u] = g[u] || function () { (g[u].q = g[u].q || []).push(arguments) };
+      p = i.createElement(f); p.async = 1; p.src = t;
+      s = i.getElementsByTagName(f)[0]; s.parentNode.insertBefore(p, s);
+    })(window, document, "script", "https://cdn.giftup.app/dist/gift-up.js", "giftup");
+  </script>
 
   <script src="/assets/js/main.js" defer></script>
 </body>

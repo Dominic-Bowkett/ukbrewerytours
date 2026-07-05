@@ -113,16 +113,32 @@ h3 { font-size: 1.25rem; line-height: 1.3; }
 .tour-disclaimer { font-size: .8rem; line-height: 1.5; color: var(--ink-soft); margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--line); }
 .tour-disclaimer a { color: var(--amber-deep); }
 
-.giftup-wrap {
-  max-width: 860px;
-  margin: 0 auto;
+/* gift voucher popup modal */
+.giftup-modal { position: fixed; inset: 0; z-index: 200; display: flex; align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto; }
+.giftup-modal[hidden] { display: none; }
+.giftup-modal__backdrop { position: fixed; inset: 0; background: rgba(24, 16, 11, .72); backdrop-filter: blur(2px); }
+.giftup-modal__panel {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
   background: var(--paper);
-  border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 28px;
-  box-shadow: var(--shadow);
-  min-height: 200px;
+  box-shadow: var(--shadow-lift);
+  padding: 32px;
+  margin: auto;
 }
+.giftup-modal__head { margin-bottom: 22px; }
+.giftup-modal__head h2 { margin-top: 4px; }
+.giftup-modal__head p { color: var(--ink-soft); margin-top: 8px; font-size: .95rem; }
+.giftup-modal__close {
+  position: absolute; top: 12px; right: 14px;
+  width: 38px; height: 38px;
+  border: 0; border-radius: 999px;
+  background: var(--cream); color: var(--ink);
+  font-size: 1.6rem; line-height: 1; cursor: pointer;
+}
+.giftup-modal__close:hover { background: var(--line); }
+@media (max-width: 560px) { .giftup-modal__panel { padding: 24px 18px; } .giftup-modal { padding: 16px; } }
 
 .btn svg { width: 18px; height: 18px; flex: none; }
 
@@ -822,6 +838,11 @@ details .a { padding: 0 0 20px; color: var(--ink-soft); font-size: .97rem; }
 
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
 @media (max-width: 880px) { .grid-2 { grid-template-columns: 1fr; } }
+
+.gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.gallery-grid img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius); box-shadow: var(--shadow); }
+@media (max-width: 760px) { .gallery-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 460px) { .gallery-grid { grid-template-columns: 1fr; } }
 
 .mt-0 { margin-top: 0; } .mt-2 { margin-top: 16px; } .mt-3 { margin-top: 28px; } .mt-4 { margin-top: 44px; }
 .center { text-align: center; }

@@ -1,3 +1,16 @@
+// Gift voucher popup modal — opened by any [data-giftup-open] control, closed by backdrop/close/Escape
+const giftModal = document.querySelector('[data-giftup-modal]');
+if (giftModal) {
+  const openModal = () => { giftModal.hidden = false; document.body.style.overflow = 'hidden'; };
+  const closeModal = () => { giftModal.hidden = true; document.body.style.overflow = ''; };
+  document.addEventListener('click', (e) => {
+    const opener = e.target.closest('[data-giftup-open]');
+    if (opener) { e.preventDefault(); openModal(); return; }
+    if (e.target.closest('[data-giftup-close]')) closeModal();
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !giftModal.hidden) closeModal(); });
+}
+
 // Mobile nav toggle
 const toggle = document.querySelector('[data-nav-toggle]');
 const nav = document.querySelector('[data-nav]');

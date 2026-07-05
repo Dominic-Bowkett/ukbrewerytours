@@ -412,8 +412,7 @@ for (const t of activeTours) {
   const ctaButtons = t.booking_url
     ? `<a class="btn btn-primary" href="${decorateBooking(t.booking_url)}" target="_blank" rel="noopener">Buy tickets</a>
        ${groupBtn(t.name)}`
-    : `${groupBtn(t.name)}
-       <a class="btn btn-outline" href="/gift-vouchers/">Buy a gift voucher</a>`;
+    : `${groupBtn(t.name)}`;
 
   let content = fill(productTpl, {
     name: esc(t.name), city: esc(t.city), price: t.price || '',
@@ -493,21 +492,15 @@ for (const g of cityGuides) {
     </div>
   </div>
 </section>
-${ownCount ? `<section class="section" id="tours" style="padding-bottom:30px">
-  <div class="container">
-    <div class="section-head"><span class="kicker">Led by our team</span><h2>Our ${g.name} tours</h2></div>
-    <div class="card-grid">${own.map(tourCard).join('\n')}</div>
-  </div>
-</section>` : ''}
-${expCount ? `<section class="section" ${ownCount ? 'style="padding-top:30px"' : 'id="tours"'}>
+${(ownCount || expCount) ? `<section class="section" id="tours">
   <div class="container">
     <div class="section-head">
-      <span class="kicker">Book online</span>
-      <h2>${ownCount ? `More ${g.name} experiences` : `${g.name} tours &amp; experiences`}</h2>
-      <p>Hand-picked brewery tours, tastings and food &amp; drink experiences, bookable through our partner GetYourGuide.</p>
+      <span class="kicker">Tours &amp; experiences</span>
+      <h2>Brewery tours &amp; experiences in ${g.name}</h2>
+      <p>${ownCount ? 'Our own guided tours plus hand-picked' : 'Hand-picked'} brewery tours, tastings and food &amp; drink experiences${ownCount ? '' : ', bookable through our partner GetYourGuide'} — all in one place.</p>
     </div>
-    <div class="card-grid">${gygTours.map(partnerCard).join('\n')}</div>
-    ${DISCLOSURE}
+    <div class="card-grid">${[...own.map(tourCard), ...gygTours.map(partnerCard)].join('\n')}</div>
+    ${expCount ? DISCLOSURE : ''}
   </div>
 </section>` : ''}
 <section class="section band-cream" style="border-top:1px solid var(--line)">
@@ -588,6 +581,7 @@ for (const t of allGyg) {
       <div class="price-line">${priceLine}</div>
       <a class="btn btn-primary" href="${aff}" target="_blank" rel="sponsored noopener">Book on GetYourGuide ↗</a>
       ${groupBtn(t.title)}
+      <a class="btn btn-outline" href="/gift-vouchers/" data-giftup-open>🎁 Buy a gift voucher</a>
       <p class="note">${ratingStr ? esc(ratingStr) + ' · ' : ''}Free cancellation on most tours · <a href="/tours/${guide ? guide.slug : ''}/">More ${esc(t.city)} tours</a></p>
       ${TOUR_DISCLAIMER}
       <p class="disclosure" style="margin-top:12px">Booked via GetYourGuide, our partner. We may earn a commission at no extra cost to you. Group enquiries are handled directly by us.</p>

@@ -150,8 +150,12 @@
     ],
     "images": [
       {
-        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/11/bristol-craft-beer-experience.jpg",
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/E8Hv9deXEAA0p41-768x576.jpg",
         "context": "hero"
+      },
+      {
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/11/bristol-craft-beer-experience.jpg",
+        "context": "gallery"
       },
       {
         "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/bristol-beer-tasting-tour-768x512.jpg",
@@ -159,10 +163,6 @@
       },
       {
         "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/FIQjm_wWUAkcC9a-768x576.jpg",
-        "context": "gallery"
-      },
-      {
-        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/E8Hv9deXEAA0p41-768x576.jpg",
         "context": "gallery"
       }
     ],
@@ -229,11 +229,11 @@
     "breweries": [],
     "images": [
       {
-        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2021/10/Delia-Debbie.jpg",
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/EOAEHsoWoAExZwz-768x576.jpg",
         "context": "hero"
       },
       {
-        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/EOAEHsoWoAExZwz-768x576.jpg",
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2021/10/Delia-Debbie.jpg",
         "context": "gallery"
       },
       {
@@ -267,15 +267,15 @@
     "breweries": [],
     "images": [
       {
-        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/Manchester-microbrewery-exeperience.jpg",
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/D_fnoYZUYAAvHA9-768x571.jpg",
         "context": "hero"
       },
       {
-        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/manchester-beer-tasting-tour-768x432.jpg",
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/Manchester-microbrewery-exeperience.jpg",
         "context": "gallery"
       },
       {
-        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/D_fnoYZUYAAvHA9-768x571.jpg",
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/manchester-beer-tasting-tour-768x432.jpg",
         "context": "gallery"
       },
       {
@@ -449,15 +449,15 @@
     ],
     "images": [
       {
-        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/11/birmingham-craft-beer-experience.jpg",
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/E12RuB7X0Ag9HKY.jpg",
         "context": "hero"
       },
       {
-        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/birmingham-beer-tasting-tour.png",
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/11/birmingham-craft-beer-experience.jpg",
         "context": "gallery"
       },
       {
-        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2022/05/E12RuB7X0Ag9HKY.jpg",
+        "url": "https://www.ukbrewerytours.com/wp-content/uploads/2020/06/birmingham-beer-tasting-tour.png",
         "context": "gallery"
       },
       {
@@ -626,7 +626,7 @@
   {
     "old_slug": "moorhouses-brewery-tours",
     "name": "Moorhouse's Brewery Tours",
-    "city": "Lancashire",
+    "city": "Burnley",
     "price": null,
     "duration": "45 minutes (guided tour)",
     "schedule": "By prior appointment only",

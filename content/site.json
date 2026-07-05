@@ -29,7 +29,7 @@
     "Cardiff",
     "Dorset",
     "Sheffield",
-    "Lancashire"
+    "Burnley"
   ],
   "redirects": {
     "/contact-us/": "/contact/",
@@ -110,6 +110,7 @@
     "/2023/08/03/discover-black-sheep-brewery-craft-beer-at-its-finest/": "/blog/leeds-brewery-tour/",
     "/2023/01/09/ross-cider-festival/": "/blog/",
     "/2022/07/24/fun-things-to-do-in-newcastle-for-adults/": "/blog/",
-    "/2022/06/13/open-farm-sunday-at-hukins-hops/": "/tours/kent-hop-farm-tour-at-hukins-hops/"
+    "/2022/06/13/open-farm-sunday-at-hukins-hops/": "/tours/kent-hop-farm-tour-at-hukins-hops/",
+    "/tours/lancashire/": "/tours/burnley/"
   }
 }
