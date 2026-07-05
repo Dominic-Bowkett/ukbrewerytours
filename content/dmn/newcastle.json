@@ -2,24 +2,6 @@
   "name": "Newcastle",
   "dmn_experiences": [
     {
-      "title": "Newcastle Brewery Tour",
-      "url": "https://www.designmynight.com/newcastle/whats-on/food-drink/newcastle-beer-tasting-tour",
-      "city": "Newcastle",
-      "price_gbp": "50",
-      "duration": "Approximately 3.5 hours",
-      "summary": "A guided beer tour visiting several of Newcastle's craft beer venues, including a brewery tour and tutored tasting at Full Circle Brew Co. An expert local guide talks through beer styles, brewing and local history.",
-      "image_url": null,
-      "highlights": [
-        "Brewery tour and tasting at Full Circle Brew Co",
-        "Curated tastings at venues including Two by Two and Brinkburn Street",
-        "Roughly one mile of mostly flat walking",
-        "Small groups, maximum of 14",
-        "Led by a knowledgeable local guide"
-      ],
-      "category": "Brewery tour",
-      "slug": "newcastle-newcastle-beer-tasting-tour"
-    },
-    {
       "title": "Newcastle Gin Tasting @ Bealim House",
       "url": "https://www.designmynight.com/newcastle/whats-on/classes/gin-tasting",
       "city": "Newcastle",

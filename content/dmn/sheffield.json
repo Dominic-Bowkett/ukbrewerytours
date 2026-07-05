@@ -2,24 +2,6 @@
   "name": "Sheffield",
   "dmn_experiences": [
     {
-      "title": "Sheffield Craft Beer Experience",
-      "url": "https://www.designmynight.com/uk/whats-on/drinks-tasting/sheffield-craft-beer-experience",
-      "city": "Sheffield",
-      "price_gbp": "35",
-      "duration": "Approximately 3 hours",
-      "summary": "A guided tour of three of Sheffield's craft beer venues with tutored tastings and a brewery tour, led by an expert local guide. It finishes at Triple Point Brewery.",
-      "image_url": "https://lh5.googleusercontent.com/qAazrJxfnl3Q9vx99jrStaZCPT2Zh3v4_zCakRiq1QOgPIoV1SNP8sWvqah3EP0E9_6gB8gDD_q3gvZNBvzl-5Ps1z0aYiH_K2ky0msCKJPVAP6OtJJ3u4uHdkSDxjSOSILyGVXX",
-      "highlights": [
-        "Brewery tour and tutored tastings at each stop",
-        "Venues including the Rutland Arms and Lost Industry Taproom",
-        "Roughly 1.5 miles of walking",
-        "Led by a knowledgeable local guide",
-        "Small groups, maximum of 20"
-      ],
-      "category": "Beer tasting",
-      "slug": "sheffield-sheffield-craft-beer-experience"
-    },
-    {
       "title": "Sheffield Craft Beer Tasting Experience - Sheffield Brewery Tours (Private Groups)",
       "url": "https://www.designmynight.com/sheffield/whats-on/walks-tours/sheffield-craft-beer-tasting-experience-sheffield-brewery-tours-private-groups",
       "city": "Sheffield",
@@ -36,24 +18,6 @@
       ],
       "category": "Beer tasting",
       "slug": "sheffield-sheffield-craft-beer-tasting-experience-sheffield-brewery-tours-private-groups"
-    },
-    {
-      "title": "Triple Point Brewery Tour",
-      "url": "https://www.designmynight.com/sheffield/bars/triple-point-brewery/triple-point-brewery-tour",
-      "city": "Sheffield",
-      "price_gbp": "15",
-      "duration": "1 hour 30 minutes",
-      "summary": "A guided tour of Triple Point Brewery in Sheffield with a Q&A with the head brewer and a tasting of four brewer-selected beers. All the beers are vegan and gluten-free.",
-      "image_url": null,
-      "highlights": [
-        "Guided tour of the production facility",
-        "Q&A with the head brewer",
-        "Tasting of four two-thirds pints",
-        "10% off additional drinks, food and merchandise",
-        "All beers vegan and gluten-free"
-      ],
-      "category": "Brewery tour",
-      "slug": "sheffield-triple-point-brewery-tour"
     }
   ]
 }

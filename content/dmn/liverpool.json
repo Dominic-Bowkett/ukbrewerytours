@@ -18,60 +18,6 @@
       ],
       "category": "Beer tasting",
       "slug": "liverpool-liverpool-craft-beer-experience"
-    },
-    {
-      "title": "Liverpool Beer Tasting Experience",
-      "url": "https://www.designmynight.com/liverpool/bars/the-dead-crafty-beer-company/liverpool-beer-tasting-experience-tour",
-      "city": "Liverpool",
-      "price_gbp": "35",
-      "duration": "2 hours",
-      "summary": "A two-hour guided craft beer tasting taking in two of Liverpool's best beer venues, starting at The Dead Crafty Beer Company. A beer expert leads tastings of local and world beers with table service throughout.",
-      "image_url": "https://lh6.googleusercontent.com/ToZbpCDA8rvpFkgSLORFjFK44-LxoJrf8B1Y7xk9mQ0WomzB4JTd9lt_USa7RZQzhbKPHS4VNDgITwUT9fZV4SGl7vjz0cAGk-kA2sJWE6q1btJaFfNqPwlITRrn28NXHQR811N3LsRVbk3BNkIXdESkBKnODf4p-3iEc3qWfGJTr0-YpN0jr92GVQ",
-      "highlights": [
-        "Seven third-pint tastings included",
-        "Expert-led guidance on styles and brewing",
-        "Reserved tables with table service at each venue",
-        "Visits two of the city's best beer spots",
-        "Step-free, accessible venues"
-      ],
-      "category": "Beer tasting",
-      "slug": "liverpool-liverpool-beer-tasting-experience-tour"
-    },
-    {
-      "title": "Bottomless Brewery Tours Liverpool",
-      "url": "https://www.designmynight.com/liverpool/bars/baltic-triangle/cains-brewery/bottomless-brewery-tours-liverpool",
-      "city": "Liverpool",
-      "price_gbp": "35",
-      "duration": "Approximately 2.5 hours",
-      "summary": "A behind-the-scenes tour of Liverpool's historic Cains brewery in the Baltic Triangle, followed by 90 minutes of bottomless Cains beers and nibbles.",
-      "image_url": null,
-      "highlights": [
-        "Guided tour of the historic Cains brewery",
-        "90 minutes of bottomless Cains beers",
-        "Nibbles included",
-        "Learn the brewing process and brewery heritage",
-        "Saturday 1pm slots; weekday options for groups of eight or more"
-      ],
-      "category": "Brewery tour",
-      "slug": "liverpool-bottomless-brewery-tours-liverpool"
-    },
-    {
-      "title": "Top Rope Brewing Brewery Tour",
-      "url": "https://www.designmynight.com/liverpool/whats-on/bar-crawl/top-rope-brewing-brewery-tour",
-      "city": "Liverpool",
-      "price_gbp": "20",
-      "duration": "1 to 1.5 hours",
-      "summary": "A guided tour of Top Rope Brewing led by the head brewer, following beer from grain to glass. It ends with a tutored tasting and pizza in the taproom.",
-      "image_url": null,
-      "highlights": [
-        "Guided tour with head brewer Ben Jackson",
-        "Four and a half pints plus pizza included",
-        "See the raw ingredients up close",
-        "10% off takeaway cans",
-        "Finishes in the taproom"
-      ],
-      "category": "Brewery tour",
-      "slug": "liverpool-top-rope-brewing-brewery-tour"
     }
   ]
 }

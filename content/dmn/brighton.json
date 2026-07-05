@@ -18,60 +18,6 @@
       ],
       "category": "Beer tasting",
       "slug": "brighton-beer-tours-of-lewes"
-    },
-    {
-      "title": "Guided Brighton Beer Tour & Tasting",
-      "url": "https://www.designmynight.com/brighton/whats-on/food-drink/guided-brighton-beer-tour-tasting",
-      "city": "Brighton",
-      "price_gbp": "49",
-      "duration": "3.5 hours",
-      "summary": "An expert-led walking tour of four Brighton beer venues, finishing at the Unbarred taproom, hosted by an Advanced Cicerone.",
-      "image_url": "https://static.designmynight.com/uploads/2024/10/DCCF532B-BD46-49FD-8A05-A5D5B634F5AE-optimised.png",
-      "highlights": [
-        "Visits The Brick, The Rook, The Evening Star and the Unbarred taproom",
-        "Led by an Advanced Cicerone and international beer judge",
-        "Insights and facts about each beer and venue",
-        "Just over a mile of walking",
-        "Over-18s only"
-      ],
-      "category": "Beer tasting",
-      "slug": "brighton-guided-brighton-beer-tour-tasting"
-    },
-    {
-      "title": "Brewery Tour",
-      "url": "https://www.designmynight.com/brighton/bars/london-road/unbarred-brewery/brewery-tour",
-      "city": "Brighton",
-      "price_gbp": "25",
-      "duration": "1.5 hours",
-      "summary": "A tour of UnBarred Brewery in central Brighton covering the brewing process from grain to glass, followed by a tasting of six beers.",
-      "image_url": "https://static.designmynight.com/uploads/2019/12/Screenshot-2019-12-10-at-11.17.33-620x319-optimised.png",
-      "highlights": [
-        "Guided tour of the on-site brewing process",
-        "Tasting of six craft beers from cask ale to New England IPAs",
-        "Reserved taproom table and branded glass included",
-        "Ten minutes' walk from Brighton Station",
-        "Over-18s only"
-      ],
-      "category": "Brewery tour",
-      "slug": "brighton-brewery-tour"
-    },
-    {
-      "title": "Brewery Tour & Guided Tasting",
-      "url": "https://www.designmynight.com/brighton/pubs/north-laine/the-north-laine-pub-and-brewery/brewery-tour-guided-tasting",
-      "city": "Brighton",
-      "price_gbp": "25",
-      "duration": "2 hours",
-      "summary": "A brewery tour and guided tasting at North Laine Brewhouse covering the brewing process and the on-site Laine Brew Co beers.",
-      "image_url": "https://static.designmynight.com/uploads/2020/10/North-Laine-Brewhouse-Brewery-Tour-620x317.png",
-      "highlights": [
-        "Behind-the-scenes tour of the Laine Brew Co microbrewery",
-        "Talk on beer history and brewing methods",
-        "Guided tasting of award-winning beers",
-        "Complimentary drink tokens included",
-        "Central Brighton location"
-      ],
-      "category": "Brewery tour",
-      "slug": "brighton-brewery-tour-guided-tasting"
     }
   ]
 }

@@ -17,57 +17,6 @@
       ],
       "category": "Beer tasting",
       "slug": "london-a-tasting-tour-of-londons-craft-breweries"
-    },
-    {
-      "title": "Crate's Beer Tasting + Brewery Tour",
-      "url": "https://www.designmynight.com/london/whats-on/walks-tours/beer-tasting-brewery-tour",
-      "city": "London",
-      "price_gbp": "15",
-      "duration": "1 to 1.5 hours",
-      "summary": "A guided tour of CRATE Brewery in Hackney Wick with tastings of its craft beers. A premium option adds cheese and charcuterie sharing platters.",
-      "image_url": null,
-      "highlights": [
-        "Behind-the-scenes tour of the Hackney Wick brewery",
-        "Guided tastings of CRATE craft beers",
-        "Premium option includes cheese and charcuterie platters",
-        "Several start times through the day"
-      ],
-      "category": "Brewery tour",
-      "slug": "london-beer-tasting-brewery-tour"
-    },
-    {
-      "title": "Welsh Whisky Masterclass & Food Pairing",
-      "url": "https://www.designmynight.com/london/whats-on/drinks-tasting/welsh-whisky-masterclass-food-pairing-1",
-      "city": "London",
-      "price_gbp": "35",
-      "duration": "2 hours",
-      "summary": "A two-hour tutored tasting of five Penderyn Welsh whiskies, each paired with a traditional Welsh dish, hosted by a whisky writer and awards judge.",
-      "image_url": "https://static.designmynight.com/uploads/2019/06/Penderyn-1-1200x616-optimised.png",
-      "highlights": [
-        "Five award-winning Penderyn Welsh whiskies",
-        "Five paired Welsh dishes, including rarebit, cawl and bara brith",
-        "Hosted by a whisky writer and World Whisky Awards judge",
-        "Vegetarian food options available"
-      ],
-      "category": "Gin & spirits",
-      "slug": "london-welsh-whisky-masterclass-food-pairing-1"
-    },
-    {
-      "title": "Beavertown Beer Tasting & Food Pairing",
-      "url": "https://www.designmynight.com/london/pubs/clapham/the-windmill/beavertown-beer-tasting-dinner-pairing",
-      "city": "London",
-      "price_gbp": "22",
-      "duration": "2 hours",
-      "summary": "An evening at The Windmill in Clapham pairing four sliders with four Beavertown beers, designed by the head chef and brewery team, finishing with a pint of Neck Oil.",
-      "image_url": "https://static.designmynight.com/uploads/2018/08/Youngs_CrookedBillet-1476.png",
-      "highlights": [
-        "Four sliders paired with four Beavertown beers",
-        "Pairings designed by the head chef and brewery team",
-        "Complimentary pint of Neck Oil to finish",
-        "Beavertown goodie bag to take home"
-      ],
-      "category": "Food & drink",
-      "slug": "london-beavertown-beer-tasting-dinner-pairing"
     }
   ]
 }

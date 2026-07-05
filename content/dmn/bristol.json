@@ -2,24 +2,6 @@
   "name": "Bristol",
   "dmn_experiences": [
     {
-      "title": "Bristol Beer Tasting Tour",
-      "url": "https://www.designmynight.com/bristol/whats-on/walks-tours/bristol-beer-tasting-tour",
-      "city": "Bristol",
-      "price_gbp": "51.80",
-      "duration": "Approximately 2 hours",
-      "summary": "A guided walking tour of Bristol's brewery taprooms, stopping at a minimum of three venues to sample local beers. An expert guide talks through the different beer styles and the city's brewing scene.",
-      "image_url": "https://lh5.googleusercontent.com/qAazrJxfnl3Q9vx99jrStaZCPT2Zh3v4_zCakRiq1QOgPIoV1SNP8sWvqah3EP0E9_6gB8gDD_q3gvZNBvzl-5Ps1z0aYiH_K2ky0msCKJPVAP6OtJJ3u4uHdkSDxjSOSILyGVXX",
-      "highlights": [
-        "At least three taproom stops with a drink at each",
-        "Roughly three-mile flat, step-free walking route",
-        "Visits breweries such as Moor, Good Chemistry and Arbor",
-        "Led by a knowledgeable local guide",
-        "Small group size"
-      ],
-      "category": "Beer tasting",
-      "slug": "bristol-bristol-beer-tasting-tour"
-    },
-    {
       "title": "Bristol Craft Beer Experience",
       "url": "https://www.designmynight.com/bristol/whats-on/boat-party/bristol-craft-beer-experience",
       "city": "Bristol",
