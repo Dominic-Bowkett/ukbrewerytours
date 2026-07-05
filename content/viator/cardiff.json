@@ -1,0 +1,60 @@
+{
+  "name": "Cardiff",
+  "viator_experiences": [
+    {
+      "title": "Cardiff Food Tasting Walking Tour",
+      "url": "https://www.viator.com/tours/Cardiff/Cardiff-Food-Tasting-Walking-Tour/d5158-23054P1",
+      "city": "Cardiff",
+      "type": "food",
+      "image": "cardiff-food",
+      "slug": "cardiff-food-tasting-walking-tour-23054p1",
+      "summary": "A guided food-and-drink experience in Cardiff, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+    },
+    {
+      "title": "2.5 hour Walking and Tasting Tour in Cardiff",
+      "url": "https://www.viator.com/tours/Cardiff/Cardiff-Tasting-Tour-the-best-way-to-see-Cardiff/d5158-240345P1",
+      "city": "Cardiff",
+      "type": "food",
+      "image": "cardiff-food",
+      "slug": "cardiff-tasting-tour-the-best-way-to-see-cardiff-240345p1",
+      "summary": "A guided food-and-drink experience in Cardiff, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site.",
+      "duration": "2.5 hours"
+    },
+    {
+      "title": "Private Cardiff Food and Drink Safari including Water Bus Ride to Cardiff Bay",
+      "url": "https://www.viator.com/tours/Cardiff/Cardiff-Small-Group-Food-and-Drink-Safari-including-Water-Bus-Ride-to-Cardiff-Bay/d5158-23054P11",
+      "city": "Cardiff",
+      "type": "food",
+      "image": "cardiff-food",
+      "slug": "cardiff-small-group-food-and-drink-safari-including-water-bus-ride-to-cardiff-bay-23054p11",
+      "summary": "A guided food-and-drink experience in Cardiff, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+    },
+    {
+      "title": "Gin Tour at Hensol Castle Distillery",
+      "url": "https://www.viator.com/tours/Wales/Gin-Tour-at-Hensol-Castle-Distillery/d5157-326456P2",
+      "city": "Cardiff",
+      "type": "distillery-spirits",
+      "image": "cardiff-distillery-spirits",
+      "slug": "gin-tour-at-hensol-castle-distillery-326456p2",
+      "summary": "A gin, whisky and spirits experience in Cardiff with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+    },
+    {
+      "title": "Afternoon Distillery Tour in Newport",
+      "url": "https://www.viator.com/tours/Wales/Distillery-Tour/d5157-308090P1",
+      "city": "Cardiff",
+      "type": "distillery-spirits",
+      "image": "cardiff-distillery-spirits",
+      "slug": "distillery-tour-308090p1",
+      "summary": "A gin, whisky and spirits experience in Cardiff with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+    },
+    {
+      "title": "Distillery Experience",
+      "url": "https://www.viator.com/tours/Wales/Distillery-Experience/d5157-240800P2",
+      "city": "Cardiff",
+      "type": "distillery-spirits",
+      "image": "cardiff-distillery-spirits",
+      "slug": "distillery-experience-240800p2",
+      "summary": "A gin, whisky and spirits experience in Cardiff with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+    }
+  ]
+}

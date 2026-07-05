@@ -1,0 +1,32 @@
+{
+  "name": "Liverpool",
+  "viator_experiences": [
+    {
+      "title": "Eat and Explore Liverpool Walking Tour",
+      "url": "https://www.viator.com/tours/Liverpool/Eat-and-Explore-Liverpool-Walking-Tour/d940-163922P2",
+      "city": "Liverpool",
+      "type": "food",
+      "image": "liverpool-food",
+      "slug": "eat-and-explore-liverpool-walking-tour-163922p2",
+      "summary": "A guided food-and-drink experience in Liverpool, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+    },
+    {
+      "title": "Liverpool with a City Host: Cocktails, Craft Beer and Pub Food",
+      "url": "https://www.viator.com/tours/Liverpool/Liverpool-with-a-City-Host-Cocktails-Craft-Beer-and-Pub-Food/d940-30791P414",
+      "city": "Liverpool",
+      "type": "food",
+      "image": "liverpool-food",
+      "slug": "liverpool-with-a-city-host-cocktails-craft-beer-and-pub-food-30791p414",
+      "summary": "A guided food-and-drink experience in Liverpool, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+    },
+    {
+      "title": "Walking and Drinking Evening Tour in Liverpool",
+      "url": "https://www.viator.com/tours/Liverpool/Walking-and-Drinking-Evening-Tour/d940-6724P5",
+      "city": "Liverpool",
+      "type": "other",
+      "image": "liverpool-other",
+      "slug": "walking-and-drinking-evening-tour-6724p5",
+      "summary": "A drinks-focused tasting experience in Liverpool. Booked through our partner Viator — see the full details, live availability and prices on their site."
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "name": "Edinburgh",
+  "viator_experiences": [
+    {
+      "title": "Old Town Small-Group Edinburgh Beer Walking and Tasting Tour",
+      "url": "https://www.viator.com/tours/Edinburgh/2-5-Hour-Small-Group-Edinburgh-Beer-Tour-with-Tasting/d739-38072P2",
+      "city": "Edinburgh",
+      "type": "beer-brewery",
+      "image": "edinburgh-beer-brewery",
+      "slug": "2-5-hour-small-group-edinburgh-beer-tour-with-tasting-38072p2",
+      "summary": "Discover Edinburgh's craft beer scene on this brewery and beer-tasting experience, old Town Small-Group Edinburgh Beer Walking and Tasting Tour. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+    },
+    {
+      "title": "Edinburgh Brewery Tour",
+      "url": "https://www.viator.com/tours/Edinburgh/Edinburgh-Brewery-Tour/d739-54259P1",
+      "city": "Edinburgh",
+      "type": "beer-brewery",
+      "image": "edinburgh-beer-brewery",
+      "slug": "edinburgh-brewery-tour-54259p1",
+      "summary": "Discover Edinburgh's craft beer scene on this brewery and beer-tasting experience, edinburgh Brewery Tour. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+    },
+    {
+      "title": "Edinburgh Food Tour with Scotch, Haggis, a Secret Dish and More",
+      "url": "https://www.viator.com/tours/Edinburgh/3-Hour-Guided-Edinburgh-Food-Tour/d739-7812P14",
+      "city": "Edinburgh",
+      "type": "food",
+      "image": "edinburgh-food",
+      "slug": "3-hour-guided-edinburgh-food-tour-7812p14",
+      "summary": "A guided food-and-drink experience in Edinburgh, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+    },
+    {
+      "title": "A Wee Taste of Edinburgh Walking Food and Drink Tour",
+      "url": "https://www.viator.com/tours/Edinburgh/A-Wee-Taste-of-Edinburgh-Walking-Food-and-Drink-Tours/d739-150433P1",
+      "city": "Edinburgh",
+      "type": "food",
+      "image": "edinburgh-food",
+      "slug": "a-wee-taste-of-edinburgh-walking-food-and-drink-tours-150433p1",
+      "summary": "A guided food-and-drink experience in Edinburgh, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+    },
+    {
+      "title": "Edinburgh: Holyrood Distillery Whisky and Gin Tour Tasting",
+      "url": "https://www.viator.com/tours/Edinburgh/Holyrood-Distillery-Tour/d739-188182P1",
+      "city": "Edinburgh",
+      "type": "distillery-spirits",
+      "image": "edinburgh-distillery-spirits",
+      "slug": "holyrood-distillery-tour-188182p1",
+      "summary": "A gin, whisky and spirits experience in Edinburgh with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+    },
+    {
+      "title": "Edinburgh: Gin Distillery Tasting & Tour at South Loch Gin",
+      "url": "https://www.viator.com/tours/Edinburgh/South-Loch-Gin-distillery-tasting-and-learn-how-gin-is-made/d739-344865P1",
+      "city": "Edinburgh",
+      "type": "distillery-spirits",
+      "image": "edinburgh-distillery-spirits",
+      "slug": "south-loch-gin-distillery-tasting-and-learn-how-gin-is-made-344865p1",
+      "summary": "A gin, whisky and spirits experience in Edinburgh with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+    },
+    {
+      "title": "The Scotch Whisky Experience - Whisky Masterclass for Enthusiasts",
+      "url": "https://www.viator.com/tours/Edinburgh/Morning-Masterclass/d739-13468P1",
+      "city": "Edinburgh",
+      "type": "distillery-spirits",
+      "image": "edinburgh-distillery-spirits",
+      "slug": "morning-masterclass-13468p1",
+      "summary": "A gin, whisky and spirits experience in Edinburgh with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "name": "Glasgow",
+  "viator_experiences": [
+    {
+      "title": "Glasgow: Pubs & History Walking Tour with Beer Tasting",
+      "url": "https://www.viator.com/tours/Glasgow/Glasgow-Walking-Tour-with-Beer-Tasting/d740-38072P4",
+      "city": "Glasgow",
+      "type": "beer-brewery",
+      "image": "glasgow-beer-brewery",
+      "slug": "glasgow-walking-tour-with-beer-tasting-38072p4",
+      "summary": "Discover Glasgow's craft beer scene on this brewery and beer-tasting experience, pubs & History Walking Tour with Beer Tasting. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+    },
+    {
+      "title": "Scottish Whisky Distilleries Tour: Lowlands & Highlands",
+      "url": "https://www.viator.com/tours/Glasgow/Scottish-Whisky-Distillery-Tour/d740-201925P2",
+      "city": "Glasgow",
+      "type": "distillery-spirits",
+      "image": "glasgow-distillery-spirits",
+      "slug": "scottish-whisky-distillery-tour-201925p2",
+      "summary": "A gin, whisky and spirits experience in Glasgow with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+    },
+    {
+      "title": "Single Malt Whisky and Distillery Tour",
+      "url": "https://www.viator.com/tours/Glasgow/Single-Malt-Whisky-and-Distillery-Tour/d740-51118P5",
+      "city": "Glasgow",
+      "type": "distillery-spirits",
+      "image": "glasgow-distillery-spirits",
+      "slug": "single-malt-whisky-and-distillery-tour-51118p5",
+      "summary": "A gin, whisky and spirits experience in Glasgow with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+    },
+    {
+      "title": "Glasgow City Centre Whisky Tour",
+      "url": "https://www.viator.com/tours/Glasgow/Glasgow-City-Centre-Whisky-Tour/d740-51118P2",
+      "city": "Glasgow",
+      "type": "distillery-spirits",
+      "image": "glasgow-distillery-spirits",
+      "slug": "glasgow-city-centre-whisky-tour-51118p2",
+      "summary": "A gin, whisky and spirits experience in Glasgow with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+    },
+    {
+      "title": "Glasgow Food Walking Tour: Locally-sourced Scottish Food and Drink",
+      "url": "https://www.viator.com/tours/Glasgow/Glasgow-food-walking-tour-Locally-sourced-Scottish-food-and-drink/d740-175958P1",
+      "city": "Glasgow",
+      "type": "food",
+      "image": "glasgow-food",
+      "slug": "glasgow-food-walking-tour-locally-sourced-scottish-food-and-drink-175958p1",
+      "summary": "A guided food-and-drink experience in Glasgow, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+    }
+  ]
+}

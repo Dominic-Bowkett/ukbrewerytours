@@ -1,0 +1,43 @@
+{
+  "name": "Kent",
+  "viator_experiences": [
+    {
+      "title": "Kent: Full-Day English Wineries and Cheese Tour From London",
+      "url": "https://www.viator.com/tours/London/English-Wine-and-Cheese-Tour-from-London/d737-12389P7",
+      "city": "Kent",
+      "type": "food",
+      "image": "kent-food",
+      "slug": "english-wine-and-cheese-tour-from-london-12389p7",
+      "summary": "A guided food-and-drink experience in Kent, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site.",
+      "duration": "Full day"
+    },
+    {
+      "title": "English Sparkling Wine Tour from London",
+      "url": "https://www.viator.com/tours/London/English-Wine-Tour-to-Kent-from-London/d737-112039P1",
+      "city": "Kent",
+      "type": "other",
+      "image": "kent-other",
+      "slug": "english-wine-tour-to-kent-from-london-112039p1",
+      "summary": "A drinks-focused tasting experience in Kent. Booked through our partner Viator — see the full details, live availability and prices on their site."
+    },
+    {
+      "title": "Full Day Wine Tour",
+      "url": "https://www.viator.com/tours/Canterbury/Full-Day-Wine-Tour/d24670-126175P1",
+      "city": "Kent",
+      "type": "other",
+      "image": "kent-other",
+      "slug": "full-day-wine-tour-126175p1",
+      "summary": "A drinks-focused tasting experience in Kent. Booked through our partner Viator — see the full details, live availability and prices on their site.",
+      "duration": "Full day"
+    },
+    {
+      "title": "Self-Guided Electric Bike Tour to vineyards and castles in Kent",
+      "url": "https://www.viator.com/tours/London/Electric-Bike-Hire-in-Kent/d737-10486P2",
+      "city": "Kent",
+      "type": "other",
+      "image": "kent-other",
+      "slug": "electric-bike-hire-in-kent-10486p2",
+      "summary": "A drinks-focused tasting experience in Kent. Booked through our partner Viator — see the full details, live availability and prices on their site."
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "name": "Manchester",
+  "viator_experiences": [
+    {
+      "title": "Craft Beer Tour around Manchester",
+      "url": "https://www.viator.com/tours/Manchester/Craft-Beer-Tour-around-Manchester/d4056-156550P1",
+      "city": "Manchester",
+      "type": "beer-brewery",
+      "image": "manchester-beer-brewery",
+      "slug": "craft-beer-tour-around-manchester-156550p1",
+      "summary": "Discover Manchester's craft beer scene on this brewery and beer-tasting experience, craft Beer Tour around Manchester. Booked through our partner Viator — check live dates, the full itinerary and prices on their site.",
+      "duration": "Approximately 3.5 hours"
+    },
+    {
+      "title": "Canals to Canapes: The Ultimate Manchester Food Tour (3-Hour Guided Manchester Food Tour with Lunch)",
+      "url": "https://www.viator.com/tours/Manchester/Canals-to-Canapes-The-Ultimate-Manchester-Food-Tour/d4056-296703P1",
+      "city": "Manchester",
+      "type": "food",
+      "image": "manchester-food",
+      "slug": "canals-to-canapes-the-ultimate-manchester-food-tour-296703p1",
+      "summary": "A guided food-and-drink experience in Manchester, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site.",
+      "duration": "3 hours"
+    },
+    {
+      "title": "Manchester Food Tour by Scranchester Tours",
+      "url": "https://www.viator.com/tours/Manchester/Manchester-Food-Tour-by-Scranchester-Tours/d4056-70572P1",
+      "city": "Manchester",
+      "type": "food",
+      "image": "manchester-food",
+      "slug": "manchester-food-tour-by-scranchester-tours-70572p1",
+      "summary": "A guided food-and-drink experience in Manchester, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+    },
+    {
+      "title": "Wine Tour around Manchester",
+      "url": "https://www.viator.com/tours/Manchester/Wine-Tour-around-Manchester/d4056-156550P2",
+      "city": "Manchester",
+      "type": "other",
+      "image": "manchester-other",
+      "slug": "wine-tour-around-manchester-156550p2",
+      "summary": "A drinks-focused tasting experience in Manchester. Booked through our partner Viator — see the full details, live availability and prices on their site."
+    },
+    {
+      "title": "Relaxed walking wine tasting tour of Manchester's best wine spots",
+      "url": "https://www.viator.com/tours/Manchester/Relaxed-walking-wine-tasting-tour-of-Manchesters-best-wine-spots/d4056-437079P1",
+      "city": "Manchester",
+      "type": "other",
+      "image": "manchester-other",
+      "slug": "relaxed-walking-wine-tasting-tour-of-manchesters-best-wine-spots-437079p1",
+      "summary": "A drinks-focused tasting experience in Manchester. Booked through our partner Viator — see the full details, live availability and prices on their site.",
+      "duration": "4 hours"
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "name": "London",
+  "viator_experiences": [
+    {
+      "title": "Brewery tour and tasting",
+      "url": "https://www.viator.com/tours/London/Brewery-tour-and-tasting/d737-116890P1",
+      "city": "London",
+      "type": "beer-brewery",
+      "image": "london-beer-brewery",
+      "slug": "brewery-tour-and-tasting-116890p1",
+      "summary": "Discover London's craft beer scene on this brewery and beer-tasting experience, brewery tour and tasting. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+    },
+    {
+      "title": "London Nano Brewery Craft Beer Tasting Experience",
+      "url": "https://www.viator.com/tours/London/10-Craft-Beer-Tasting-Experience/d737-5553568P1",
+      "city": "London",
+      "type": "beer-brewery",
+      "image": "london-beer-brewery",
+      "slug": "10-craft-beer-tasting-experience-5553568p1",
+      "summary": "Discover London's craft beer scene on this brewery and beer-tasting experience, london Nano Brewery Craft Beer Tasting Experience. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+    },
+    {
+      "title": "London: Fuller's Griffin Brewery Small-Group Tour",
+      "url": "https://www.viator.com/tours/London/London-Fullers-Griffin-Brewery-Tour/d737-459162P1",
+      "city": "London",
+      "type": "beer-brewery",
+      "image": "london-beer-brewery",
+      "slug": "london-fullers-griffin-brewery-tour-459162p1",
+      "summary": "Discover London's craft beer scene on this brewery and beer-tasting experience, fuller's Griffin Brewery Small-Group Tour. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+    },
+    {
+      "title": "Shoreditch Craft Beer Tour",
+      "url": "https://www.viator.com/tours/London/Shoreditch-Craft-Beer-Tour/d737-7812P27",
+      "city": "London",
+      "type": "beer-brewery",
+      "image": "london-beer-brewery",
+      "slug": "shoreditch-craft-beer-tour-7812p27",
+      "summary": "Discover London's craft beer scene on this brewery and beer-tasting experience, shoreditch Craft Beer Tour. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+    },
+    {
+      "title": "London: Borough Market Small-Group or Private Food Tour",
+      "url": "https://www.viator.com/tours/London/Secret-Food-Tours-London/d737-7812P2",
+      "city": "London",
+      "type": "food",
+      "image": "london-food",
+      "slug": "secret-food-tours-london-7812p2",
+      "summary": "A guided food-and-drink experience in London, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+    },
+    {
+      "title": "London: Soho By Night Food & Drinks Small-Group Tour",
+      "url": "https://www.viator.com/tours/London/Eating-London-Twilight-Soho-Food-and-Drinks-Tour/d737-6093P2",
+      "city": "London",
+      "type": "food",
+      "image": "london-food",
+      "slug": "eating-london-twilight-soho-food-and-drinks-tour-6093p2",
+      "summary": "A guided food-and-drink experience in London, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+    },
+    {
+      "title": "London: Bombay Sapphire Gin Distillery Tour With Cocktail",
+      "url": "https://www.viator.com/tours/London/Bombay-Sapphire-Distillery-Tour-and-Tasting/d737-35079P1",
+      "city": "London",
+      "type": "distillery-spirits",
+      "image": "london-distillery-spirits",
+      "slug": "bombay-sapphire-distillery-tour-and-tasting-35079p1",
+      "summary": "A gin, whisky and spirits experience in London with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+    },
+    {
+      "title": "London Sipsmith Distillery Tour and Tasting",
+      "url": "https://www.viator.com/tours/London/Sipsmith-Distillery-Tour-and-Complimentary-Tasting/d737-69840P1",
+      "city": "London",
+      "type": "distillery-spirits",
+      "image": "london-distillery-spirits",
+      "slug": "sipsmith-distillery-tour-and-complimentary-tasting-69840p1",
+      "summary": "A gin, whisky and spirits experience in London with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+    },
+    {
+      "title": "London South: Borough Market & Beefeater Gin Distillery Tour",
+      "url": "https://www.viator.com/tours/London/Borough-Market-and-Gin-Distillery-Small-Group-Tour/d737-3858P132",
+      "city": "London",
+      "type": "distillery-spirits",
+      "image": "london-distillery-spirits",
+      "slug": "borough-market-and-gin-distillery-small-group-tour-3858p132",
+      "summary": "A gin, whisky and spirits experience in London with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+    }
+  ]
+}

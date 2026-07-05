@@ -170,6 +170,24 @@ function decorateBooking(url) {
   }
   return url;
 }
+
+// Viator affiliate: stamp our tracking params onto any viator.com product link.
+const VIATOR_QS = 'pid=P00012546&uid=U00090442&mcid=58086&currency=GBP';
+function viatorAff(url) {
+  if (!url) return url;
+  let u = url.trim();
+  if (!/^https?:\/\//i.test(u)) u = 'https://www.viator.com' + (u.startsWith('/') ? '' : '/') + u;
+  const base = u.split('?')[0].split('#')[0];
+  return base + '?' + VIATOR_QS;
+}
+// Slug from a Viator product URL: "name-<productcode>" (product code kept for uniqueness).
+const viatorSlug = u => {
+  const parts = (u || '').split('?')[0].replace(/\/$/, '').split('/');
+  const code = (parts.pop() || '').toLowerCase();          // e.g. d737-116890p1
+  const name = (parts.pop() || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  const shortCode = (code.split('-').pop() || code);       // e.g. 116890p1
+  return (name ? name + '-' : '') + shortCode;
+};
 const gygSlug = u => u.replace(/\/$/, '').split('/').pop().replace(/-t\d+$/, '');
 const GYG_IMG_DIR = path.join(ROOT, 'assets', 'img', 'gyg');
 const gygImgs = new Set(fs.existsSync(GYG_IMG_DIR) ? fs.readdirSync(GYG_IMG_DIR) : []);
@@ -204,13 +222,17 @@ const guideFor = name => cityGuides.find(c => c.name === name);
 // link builder and CTA/label. Experiences from both share one on-site listing system.
 const dmnImgDir = path.join(ROOT, 'assets', 'img', 'dmn');
 const dmnImgs = new Set(fs.existsSync(dmnImgDir) ? fs.readdirSync(dmnImgDir) : []);
+const viatorImgDir = path.join(ROOT, 'assets', 'img', 'viator');
+const viatorImgs = new Set(fs.existsSync(viatorImgDir) ? fs.readdirSync(viatorImgDir) : []);
 const SOURCES = {
   gyg: { name: 'GetYourGuide', imgs: gygImgs, dir: 'gyg', book: u => affUrl(u), rel: 'sponsored noopener', cta: 'Book on GetYourGuide ↗' },
   dmn: { name: 'DesignMyNight', imgs: dmnImgs, dir: 'dmn', book: u => decorateBooking(u), rel: 'noopener', cta: 'Book on DesignMyNight ↗' },
+  viator: { name: 'Viator', imgs: viatorImgs, dir: 'viator', book: u => viatorAff(u), rel: 'sponsored noopener', cta: 'Book on Viator ↗' },
 };
 const dmnSlug = u => u.replace(/\/$/, '').split('/').pop().split('?')[0];
 const expImage = e => {
   const s = SOURCES[e.source];
+  if (e.image && s.imgs.has(e.image + '.jpg')) return `/assets/img/${s.dir}/${e.image}.jpg`;  // shared themed image (e.g. viator city+type)
   return s.imgs.has(e.slug + '.jpg') ? `/assets/img/${s.dir}/${e.slug}.jpg` : '/assets/img/hero-static.jpg';
 };
 
@@ -235,19 +257,34 @@ if (fs.existsSync(dmnDir)) {
     }
   }
 }
+// Viator experiences (from content/viator/*.json viator_experiences).
+const viatorDir = path.join(ROOT, 'content', 'viator');
+const allViator = [];
+if (fs.existsSync(viatorDir)) {
+  for (const f of fs.readdirSync(viatorDir).filter(f => f.endsWith('.json'))) {
+    const d = JSON.parse(read('content/viator/' + f));
+    for (const t of (d.viator_experiences || [])) {
+      allViator.push({ ...t, source: 'viator', slug: t.slug || viatorSlug(t.url), city: t.city || d.name });
+    }
+  }
+}
 
 // Combine, drop partner listings that duplicate our own tours, and de-dupe slugs.
 const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
 const ownByCity = {};
 for (const t of activeTours) (ownByCity[t.city] = ownByCity[t.city] || []).push(norm(t.name));
 const seenSlugs = new Set();
+const seenTitleKeys = new Set();                 // city|normalised-title — drops cross-partner duplicates
 const allExperiences = [];
-for (const e of [...allGyg, ...allDmn]) {
+for (const e of [...allGyg, ...allDmn, ...allViator]) {
   const canon = (e.url || '').split('?')[0].replace(/\/$/, '');
   if (ownBookingUrls.has(canon)) continue;      // same booking URL as one of our tours — skip
   const en = norm(e.title);
   if ((ownByCity[e.city] || []).some(tn => en.includes(tn) || tn.includes(en))) continue; // our own tour, listed by a partner
+  const tkey = e.city + '|' + en;
+  if (seenTitleKeys.has(tkey)) continue;        // same experience already listed via another partner
   if (seenSlugs.has(e.slug)) continue;          // avoid duplicate on-site pages
+  seenTitleKeys.add(tkey);
   seenSlugs.add(e.slug);
   allExperiences.push(e);
 }
@@ -268,7 +305,7 @@ function partnerCard(g) {
     </div>
   </a>`;
 }
-const DISCLOSURE = `<p class="disclosure">Experiences marked "Partner" are operated by third parties and booked through our partners (GetYourGuide and DesignMyNight); we may earn a commission at no extra cost to you.</p>`;
+const DISCLOSURE = `<p class="disclosure">Experiences marked "Partner" are operated by third parties and booked through our partners (GetYourGuide, DesignMyNight and Viator); we may earn a commission at no extra cost to you.</p>`;
 
 /* ---------- components ---------- */
 

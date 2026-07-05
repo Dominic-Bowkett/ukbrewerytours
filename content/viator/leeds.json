@@ -1,0 +1,77 @@
+{
+  "name": "Leeds",
+  "viator_experiences": [
+    {
+      "title": "Harrogate Small-Group Evening Beer and Pub Walking Tour",
+      "url": "https://www.viator.com/tours/Leeds/Harrogate-Beer-Tours/d26342-211190P1",
+      "city": "Leeds",
+      "type": "beer-brewery",
+      "image": "leeds-beer-brewery",
+      "slug": "harrogate-beer-tours-211190p1",
+      "summary": "Discover Leeds's craft beer scene on this brewery and beer-tasting experience, harrogate Small-Group Evening Beer and Pub Walking Tour. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+    },
+    {
+      "title": "Leeds Heritage Beer Guided Tour",
+      "url": "https://www.viator.com/tours/Leeds/Leeds-Heritage-Beer-Tours/d26342-163283P1",
+      "city": "Leeds",
+      "type": "beer-brewery",
+      "image": "leeds-beer-brewery",
+      "slug": "leeds-heritage-beer-tours-163283p1",
+      "summary": "Discover Leeds's craft beer scene on this brewery and beer-tasting experience, leeds Heritage Beer Guided Tour. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+    },
+    {
+      "title": "Leeds Craft Beer Guided Tour",
+      "url": "https://www.viator.com/tours/Leeds/Leeds-Craft-Beer-Tour/d26342-163283P2",
+      "city": "Leeds",
+      "type": "beer-brewery",
+      "image": "leeds-beer-brewery",
+      "slug": "leeds-craft-beer-tour-163283p2",
+      "summary": "Discover Leeds's craft beer scene on this brewery and beer-tasting experience, leeds Craft Beer Guided Tour. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+    },
+    {
+      "title": "Leeds Breweries Bus Tours",
+      "url": "https://www.viator.com/tours/Leeds/Leeds-Breweries-Bus-Tours/d26342-52843P2",
+      "city": "Leeds",
+      "type": "beer-brewery",
+      "image": "leeds-beer-brewery",
+      "slug": "leeds-breweries-bus-tours-52843p2",
+      "summary": "Discover Leeds's craft beer scene on this brewery and beer-tasting experience, leeds Breweries Bus Tours. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+    },
+    {
+      "title": "Leeds: Small-Group Food Tour of Hidden Gems",
+      "url": "https://www.viator.com/tours/Leeds/Leeds-Food-Tours-Local-Leeds/d26342-207594P1",
+      "city": "Leeds",
+      "type": "food",
+      "image": "leeds-food",
+      "slug": "leeds-food-tours-local-leeds-207594p1",
+      "summary": "A guided food-and-drink experience in Leeds, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+    },
+    {
+      "title": "Harrogate Walking Food Tour",
+      "url": "https://www.viator.com/tours/Leeds/Harrogate-Walking-Food-Tour/d26342-62324P1",
+      "city": "Leeds",
+      "type": "food",
+      "image": "leeds-food",
+      "slug": "harrogate-walking-food-tour-62324p1",
+      "summary": "A guided food-and-drink experience in Leeds, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+    },
+    {
+      "title": "Drinks Ahoy — Canal Boat Tour (Whisky Cruise)",
+      "url": "https://www.viator.com/tours/Leeds/Whisky-Cruise/d26342-103450P6",
+      "city": "Leeds",
+      "type": "distillery-spirits",
+      "image": "leeds-distillery-spirits",
+      "slug": "whisky-cruise-103450p6",
+      "summary": "A gin, whisky and spirits experience in Leeds with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+    },
+    {
+      "title": "Leeds: Gin & Tonic Tasting Session",
+      "url": "https://www.viator.com/tours/Leeds/Gin-Creation-Session/d26342-243641P1",
+      "city": "Leeds",
+      "type": "distillery-spirits",
+      "image": "leeds-distillery-spirits",
+      "slug": "gin-creation-session-243641p1",
+      "summary": "A gin, whisky and spirits experience in Leeds with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+    }
+  ]
+}

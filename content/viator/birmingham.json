@@ -1,0 +1,23 @@
+{
+  "name": "Birmingham",
+  "viator_experiences": [
+    {
+      "title": "Birmingham Whisky Talk and Tasting Experience",
+      "url": "https://www.viator.com/tours/Birmingham/Whisky-Tasting-Experience/d22776-334291P1",
+      "city": "Birmingham",
+      "type": "distillery-spirits",
+      "image": "birmingham-distillery-spirits",
+      "slug": "whisky-tasting-experience-334291p1",
+      "summary": "A gin, whisky and spirits experience in Birmingham with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+    },
+    {
+      "title": "Birmingham Slogging Gangs Walking and Food Tour (Porky Blinders Food Tour with a Peaky Blinder)",
+      "url": "https://www.viator.com/tours/Birmingham/Porky-Blinders-Food-Tour-with-a-Peaky-Blinder/d22776-339867P3",
+      "city": "Birmingham",
+      "type": "food",
+      "image": "birmingham-food",
+      "slug": "porky-blinders-food-tour-with-a-peaky-blinder-339867p3",
+      "summary": "A guided food-and-drink experience in Birmingham, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+    }
+  ]
+}

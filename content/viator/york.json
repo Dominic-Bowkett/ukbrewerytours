@@ -1,0 +1,60 @@
+{
+  "name": "York",
+  "viator_experiences": [
+    {
+      "title": "York Breweries Bus Tours",
+      "url": "https://www.viator.com/tours/York/York-Breweries-Bus-Tours/d5446-52843P1",
+      "city": "York",
+      "type": "beer-brewery",
+      "image": "york-beer-brewery",
+      "slug": "york-breweries-bus-tours-52843p1",
+      "summary": "Discover York's craft beer scene on this brewery and beer-tasting experience, york Breweries Bus Tours. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+    },
+    {
+      "title": "York Small-Group Food Tour With Tastings",
+      "url": "https://www.viator.com/tours/York/York-Food-Tour/d5446-62324P3",
+      "city": "York",
+      "type": "food",
+      "image": "york-food",
+      "slug": "york-food-tour-62324p3",
+      "summary": "A guided food-and-drink experience in York, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+    },
+    {
+      "title": "York Food Tour: Hidden Gems of the City",
+      "url": "https://www.viator.com/tours/York/The-Hidden-Gems-Foodie-Tour-of-York/d5446-324623P1",
+      "city": "York",
+      "type": "food",
+      "image": "york-food",
+      "slug": "the-hidden-gems-foodie-tour-of-york-324623p1",
+      "summary": "A guided food-and-drink experience in York, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+    },
+    {
+      "title": "York Gin Tour and Tasting at the Hooting Owl Distillery",
+      "url": "https://www.viator.com/tours/York/Distillery-Tour-and-Tasting/d5446-464662P1",
+      "city": "York",
+      "type": "distillery-spirits",
+      "image": "york-distillery-spirits",
+      "slug": "distillery-tour-and-tasting-464662p1",
+      "summary": "A gin, whisky and spirits experience in York with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+    },
+    {
+      "title": "2-hour Chocolate Tasting Tour of York",
+      "url": "https://www.viator.com/tours/York/2-Hour-Guided-Chocolate-Tour-and-Tasting-in-York/d5446-49063P7",
+      "city": "York",
+      "type": "food",
+      "image": "york-food",
+      "slug": "2-hour-guided-chocolate-tour-and-tasting-in-york-49063p7",
+      "summary": "A guided food-and-drink experience in York, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site.",
+      "duration": "2 hours"
+    },
+    {
+      "title": "York Afternoon Tea Cruise",
+      "url": "https://www.viator.com/tours/York/York-Afternoon-Tea-Cruise/d5446-46275P4",
+      "city": "York",
+      "type": "food",
+      "image": "york-food",
+      "slug": "york-afternoon-tea-cruise-46275p4",
+      "summary": "A guided food-and-drink experience in York, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+    }
+  ]
+}

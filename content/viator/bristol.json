@@ -1,0 +1,32 @@
+{
+  "name": "Bristol",
+  "viator_experiences": [
+    {
+      "title": "Bristol Self-Led Craft Beer Tasting and Walking Tour",
+      "url": "https://www.viator.com/tours/Bristol/Self-Guided-Mystery-Craft-Beer-Tour-Explore-Old-Market-Bristol/d4293-144944P2",
+      "city": "Bristol",
+      "type": "beer-brewery",
+      "image": "bristol-beer-brewery",
+      "slug": "self-guided-mystery-craft-beer-tour-explore-old-market-bristol-144944p2",
+      "summary": "Discover Bristol's craft beer scene on this brewery and beer-tasting experience, bristol Self-Led Craft Beer Tasting and Walking Tour. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+    },
+    {
+      "title": "Food & drink Tour: Bristol Hotspots & Hidden Treasures",
+      "url": "https://www.viator.com/tours/Bristol/Food-and-drink-tour-Bristol-Hotspots-and-Hidden-Treasures/d4293-405113P1",
+      "city": "Bristol",
+      "type": "food",
+      "image": "bristol-food",
+      "slug": "food-and-drink-tour-bristol-hotspots-and-hidden-treasures-405113p1",
+      "summary": "A guided food-and-drink experience in Bristol, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+    },
+    {
+      "title": "Bristol Private Cocktail Class",
+      "url": "https://www.viator.com/tours/Bristol/Cocktail-Classes/d4293-152324P2",
+      "city": "Bristol",
+      "type": "distillery-spirits",
+      "image": "bristol-distillery-spirits",
+      "slug": "cocktail-classes-152324p2",
+      "summary": "A gin, whisky and spirits experience in Bristol with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "name": "Newcastle",
+  "viator_experiences": [
+    {
+      "title": "Newcastle Private Food Tour",
+      "url": "https://www.viator.com/tours/Newcastle-upon-Tyne/Food-Tour/d23189-123884P1",
+      "city": "Newcastle",
+      "type": "food",
+      "image": "newcastle-food",
+      "slug": "food-tour-123884p1",
+      "summary": "A guided food-and-drink experience in Newcastle, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+    },
+    {
+      "title": "Ouseburn Food Tour with Tour of Victoria Tunnel",
+      "url": "https://www.viator.com/tours/Newcastle-upon-Tyne/Ouseburn-Food-Tour-Including-Tour-Of-Victorian-Tunnels/d23189-123884P7",
+      "city": "Newcastle",
+      "type": "food",
+      "image": "newcastle-food",
+      "slug": "ouseburn-food-tour-including-tour-of-victorian-tunnels-123884p7",
+      "summary": "A guided food-and-drink experience in Newcastle, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+    },
+    {
+      "title": "The Ultimate Cheese & Wine Food Tour",
+      "url": "https://www.viator.com/tours/Newcastle-upon-Tyne/The-Ultimate-Cheese-and-Wine-Tour/d23189-123884P2",
+      "city": "Newcastle",
+      "type": "food",
+      "image": "newcastle-food",
+      "slug": "the-ultimate-cheese-and-wine-tour-123884p2",
+      "summary": "A guided food-and-drink experience in Newcastle, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+    },
+    {
+      "title": "Newcastle Private Historic Pub Tour",
+      "url": "https://www.viator.com/tours/Newcastle-upon-Tyne/Newcastle-Pub-Tour/d23189-8607P105",
+      "city": "Newcastle",
+      "type": "beer-brewery",
+      "image": "newcastle-beer-brewery",
+      "slug": "newcastle-pub-tour-8607p105",
+      "summary": "Discover Newcastle's craft beer scene on this brewery and beer-tasting experience, newcastle Private Historic Pub Tour. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+    },
+    {
+      "title": "Newcastle beer or prosecco bike tour",
+      "url": "https://www.viator.com/tours/Newcastle-upon-Tyne/Beer-Bike-tour-in-Newcastle/d23189-187055P4",
+      "city": "Newcastle",
+      "type": "beer-brewery",
+      "image": "newcastle-beer-brewery",
+      "slug": "beer-bike-tour-in-newcastle-187055p4",
+      "summary": "Discover Newcastle's craft beer scene on this brewery and beer-tasting experience, newcastle beer or prosecco bike tour. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+    }
+  ]
+}
