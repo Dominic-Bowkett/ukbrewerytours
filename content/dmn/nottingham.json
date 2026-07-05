@@ -1,0 +1,58 @@
+{
+  "name": "Nottingham",
+  "dmn_experiences": [
+    {
+      "title": "Nottingham Beer Tasting Tour",
+      "url": "https://www.designmynight.com/nottingham/whats-on/drinks-tasting/nottingham-beer-tasting-tour-1",
+      "city": "Nottingham",
+      "price_gbp": "35",
+      "duration": "Approximately 3 hours",
+      "summary": "A guided walking tour of at least three of Nottingham's craft beer venues, with a tutored tasting at each stop. A local guide talks through the beer styles and the city's brewing history.",
+      "image_url": "https://lh5.googleusercontent.com/qAazrJxfnl3Q9vx99jrStaZCPT2Zh3v4_zCakRiq1QOgPIoV1SNP8sWvqah3EP0E9_6gB8gDD_q3gvZNBvzl-5Ps1z0aYiH_K2ky0msCKJPVAP6OtJJ3u4uHdkSDxjSOSILyGVXX",
+      "highlights": [
+        "Tutored tastings at three or more venues",
+        "Stops including Crafty Crow and Organ Grinder",
+        "Roughly one mile of walking",
+        "Led by a knowledgeable local guide",
+        "Small groups, maximum of 20"
+      ],
+      "category": "Beer tasting",
+      "slug": "nottingham-nottingham-beer-tasting-tour-1"
+    },
+    {
+      "title": "Cocktail Fizzics Bubble Bar + Cocktail Masterclass",
+      "url": "https://www.designmynight.com/nottingham/bars/the-alchemist-nottingham/cocktail-fizzics-bubble-bar-cocktail-masterclass",
+      "city": "Nottingham",
+      "price_gbp": "25",
+      "duration": "1 hour",
+      "summary": "A one-hour session at The Alchemist Nottingham where guests build a bubble bar to take home and make the venue's signature Raspberry Ripple gin and fizz cocktail.",
+      "image_url": null,
+      "highlights": [
+        "Glass of prosecco on arrival",
+        "Make a personalised bubble bar to take home",
+        "Mini-masterclass on the Raspberry Ripple cocktail",
+        "Goodie bag included"
+      ],
+      "category": "Cocktails",
+      "slug": "nottingham-cocktail-fizzics-bubble-bar-cocktail-masterclass"
+    },
+    {
+      "title": "Cocktail Masterclass",
+      "url": "https://www.designmynight.com/nottingham/bars/lace-market/das-kino/cocktail-masterclass",
+      "city": "Nottingham",
+      "price_gbp": "24.95",
+      "duration": null,
+      "summary": "A cocktail masterclass at Das Kino in the Lace Market, where an in-house expert guides groups through making two cocktails alongside games and prizes. It runs on Saturdays for groups of six to 15.",
+      "image_url": null,
+      "highlights": [
+        "Welcome drink on arrival",
+        "Make two cocktails with an expert",
+        "At least four games with shots and prizes",
+        "For groups of six to 15",
+        "Saturdays, pre-booking required"
+      ],
+      "category": "Cocktails",
+      "slug": "nottingham-cocktail-masterclass"
+    }
+  ]
+}

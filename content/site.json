@@ -27,7 +27,7 @@
     "Birmingham",
     "Glasgow",
     "Cardiff",
-    "Dorset",
+    "Blandford Forum",
     "Sheffield",
     "Burnley"
   ],
@@ -111,6 +111,7 @@
     "/2023/01/09/ross-cider-festival/": "/blog/",
     "/2022/07/24/fun-things-to-do-in-newcastle-for-adults/": "/blog/",
     "/2022/06/13/open-farm-sunday-at-hukins-hops/": "/tours/kent-hop-farm-tour-at-hukins-hops/",
-    "/tours/lancashire/": "/tours/burnley/"
+    "/tours/lancashire/": "/tours/burnley/",
+    "/tours/dorset/": "/tours/blandford-forum/"
   }
 }

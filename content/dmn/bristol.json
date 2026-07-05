@@ -16,7 +16,8 @@
         "Led by a knowledgeable local guide",
         "Small group size"
       ],
-      "category": "Beer tasting"
+      "category": "Beer tasting",
+      "slug": "bristol-bristol-beer-tasting-tour"
     },
     {
       "title": "Bristol Craft Beer Experience",
@@ -33,7 +34,8 @@
         "Insights into Bristol's brewing heritage",
         "Small guided group"
       ],
-      "category": "Food & drink"
+      "category": "Food & drink",
+      "slug": "bristol-bristol-craft-beer-experience"
     },
     {
       "title": "Cocktail Masterclass",
@@ -50,7 +52,8 @@
         "Competitive daiquiri challenge",
         "Suited to birthdays, hen parties and corporate groups"
       ],
-      "category": "Cocktails"
+      "category": "Cocktails",
+      "slug": "bristol-cocktail-masterclass"
     }
   ]
 }

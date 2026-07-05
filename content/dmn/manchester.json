@@ -1,0 +1,90 @@
+{
+  "name": "Manchester",
+  "dmn_experiences": [
+    {
+      "title": "The Manchester Craft Beer Experience",
+      "url": "https://www.designmynight.com/manchester/whats-on/walks-tours/manchester-microbrewery-experience",
+      "city": "Manchester",
+      "price_gbp": "65",
+      "duration": "Approximately 3.5 hours",
+      "summary": "A guided tour of Manchester's craft beer venues with tastings across several stops, covering the brewing process and a range of beer styles. Groups are capped at 25 people.",
+      "image_url": "https://static.designmynight.com/uploads/2023/11/cheers-1200x615-optimised.png",
+      "highlights": [
+        "Guided tour of Manchester's craft beer scene",
+        "Tastings of styles from IPAs to wild-fermented beers",
+        "Small groups of up to 25 people",
+        "Wheelchair-accessible route of about one mile"
+      ],
+      "category": "Beer tasting",
+      "slug": "manchester-manchester-microbrewery-experience"
+    },
+    {
+      "title": "Runaway Brewery tours",
+      "url": "https://www.designmynight.com/manchester/whats-on/food-drink/runaway-brewery-tours",
+      "city": "Manchester",
+      "price_gbp": "13.20",
+      "duration": "90 minutes",
+      "summary": "A guided tour of Runaway Brewery in Ardwick led by the brewing team, with tastings of four beers and a walk through the production process.",
+      "image_url": "https://static.designmynight.com/uploads/2017/05/runaway-tap-room-620x465-optimised.jpg",
+      "highlights": [
+        "Tour of the working brewery led by the team",
+        "Tastings of four beers",
+        "See malt and smell hops up close",
+        "Sample from the tank when available"
+      ],
+      "category": "Brewery tour",
+      "slug": "manchester-runaway-brewery-tours"
+    },
+    {
+      "title": "Beer Nouveau Brewery Tours",
+      "url": "https://www.designmynight.com/manchester/whats-on/food-drink/beer-nouveau-brewery-tours",
+      "city": "Manchester",
+      "price_gbp": "16.50",
+      "duration": "1 hour",
+      "summary": "A behind-the-scenes tour of Beer Nouveau in Ardwick, hosted by the brewer, taking in the equipment and brewing process with tastings along the way.",
+      "image_url": "https://static.designmynight.com/uploads/2018/03/BN5-1200x618-optimised.png",
+      "highlights": [
+        "Hosted tour of the brewing equipment",
+        "Beer tastings throughout",
+        "Traditional techniques with modern ingredients",
+        "A short walk from Manchester Piccadilly"
+      ],
+      "category": "Brewery tour",
+      "slug": "manchester-beer-nouveau-brewery-tours"
+    },
+    {
+      "title": "Manchester Gin Tour",
+      "url": "https://www.designmynight.com/manchester/whats-on/classes/manchester-gin-tasting-experience",
+      "city": "Manchester",
+      "price_gbp": "30",
+      "duration": "45 minutes",
+      "summary": "A behind-the-scenes tour of The Spirit of Manchester Distillery followed by a guided tasting of five award-winning Manchester Gins.",
+      "image_url": "https://static.designmynight.com/uploads/2024/02/LSP_3LW_A__E4A8944-1200x615-optimised.png",
+      "highlights": [
+        "Behind-the-scenes distillery tour",
+        "Guided tasting of five gins",
+        "10% discount on the bar bill and merchandise",
+        "Several daily time slots"
+      ],
+      "category": "Gin & spirits",
+      "slug": "manchester-manchester-gin-tasting-experience"
+    },
+    {
+      "title": "Gin Masterclass First Saturdays at 2pm",
+      "url": "https://www.designmynight.com/manchester/bars/deansgate/the-liquor-store/gin-masterclass",
+      "city": "Manchester",
+      "price_gbp": "25",
+      "duration": "1 hour 45 minutes",
+      "summary": "A gin masterclass for two at The Liquor Store on Deansgate, covering gin history, botanicals and distillation, with a welcome G&T and a tasting of four gins.",
+      "image_url": "https://static.designmynight.com/uploads/2024/01/Gin-Logo-File1-620x318-optimised.png",
+      "highlights": [
+        "Welcome G&T on arrival",
+        "Tutored tasting of four gins",
+        "Learn about gin history and distillation",
+        "Explore a range of botanicals"
+      ],
+      "category": "Gin & spirits",
+      "slug": "manchester-gin-masterclass"
+    }
+  ]
+}

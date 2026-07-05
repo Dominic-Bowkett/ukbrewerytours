@@ -200,23 +200,66 @@ cityGuides.sort((a, b) => {
 });
 const guideFor = name => cityGuides.find(c => c.name === name);
 
-// Flatten every partner tour with a derived slug + owning city, for on-site listing pages.
+// Partner sources: GetYourGuide + DesignMyNight. Each has its own image dir, affiliate
+// link builder and CTA/label. Experiences from both share one on-site listing system.
+const dmnImgDir = path.join(ROOT, 'assets', 'img', 'dmn');
+const dmnImgs = new Set(fs.existsSync(dmnImgDir) ? fs.readdirSync(dmnImgDir) : []);
+const SOURCES = {
+  gyg: { name: 'GetYourGuide', imgs: gygImgs, dir: 'gyg', book: u => affUrl(u), rel: 'sponsored noopener', cta: 'Book on GetYourGuide ↗' },
+  dmn: { name: 'DesignMyNight', imgs: dmnImgs, dir: 'dmn', book: u => decorateBooking(u), rel: 'noopener', cta: 'Book on DesignMyNight ↗' },
+};
+const dmnSlug = u => u.replace(/\/$/, '').split('/').pop().split('?')[0];
+const expImage = e => {
+  const s = SOURCES[e.source];
+  return s.imgs.has(e.slug + '.jpg') ? `/assets/img/${s.dir}/${e.slug}.jpg` : '/assets/img/hero-static.jpg';
+};
+
+// Our own tours' external booking URLs (canonical) — used to drop partner duplicates of our tours.
+const ownBookingUrls = new Set(activeTours.filter(t => t.booking_url).map(t => t.booking_url.split('?')[0].replace(/\/$/, '')));
+
+// GetYourGuide experiences (from content/gyg/*.json gyg_tours).
 const allGyg = [];
 for (const g of cityGuides) {
   for (const t of (g.gyg_tours || [])) {
-    const slug = t.slug || gygSlug(t.url);
-    allGyg.push({ ...t, slug, city: g.name });
+    allGyg.push({ ...t, source: 'gyg', slug: t.slug || gygSlug(t.url), city: g.name });
   }
 }
-const gygBySlug = Object.fromEntries(allGyg.map(t => [t.slug, t]));
+// DesignMyNight experiences (from content/dmn/*.json dmn_experiences).
+const dmnDir = path.join(ROOT, 'content', 'dmn');
+const allDmn = [];
+if (fs.existsSync(dmnDir)) {
+  for (const f of fs.readdirSync(dmnDir).filter(f => f.endsWith('.json'))) {
+    const d = JSON.parse(read('content/dmn/' + f));
+    for (const t of (d.dmn_experiences || [])) {
+      allDmn.push({ ...t, source: 'dmn', slug: t.slug || dmnSlug(t.url), city: t.city || d.name });
+    }
+  }
+}
 
-/** Card for a partner experience — links to our on-site listing page (not straight to GYG). */
+// Combine, drop partner listings that duplicate our own tours, and de-dupe slugs.
+const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+const ownByCity = {};
+for (const t of activeTours) (ownByCity[t.city] = ownByCity[t.city] || []).push(norm(t.name));
+const seenSlugs = new Set();
+const allExperiences = [];
+for (const e of [...allGyg, ...allDmn]) {
+  const canon = (e.url || '').split('?')[0].replace(/\/$/, '');
+  if (ownBookingUrls.has(canon)) continue;      // same booking URL as one of our tours — skip
+  const en = norm(e.title);
+  if ((ownByCity[e.city] || []).some(tn => en.includes(tn) || tn.includes(en))) continue; // our own tour, listed by a partner
+  if (seenSlugs.has(e.slug)) continue;          // avoid duplicate on-site pages
+  seenSlugs.add(e.slug);
+  allExperiences.push(e);
+}
+const expByCity = {};
+for (const e of allExperiences) (expByCity[e.city] = expByCity[e.city] || []).push(e);
+
+/** Card for a partner experience — links to our on-site listing page (not straight to the partner). */
 function partnerCard(g) {
-  const slug = g.slug || gygSlug(g.url);
-  const img = gygImage(slug);
+  const img = expImage(g);
   const rating = g.rating ? `★ ${g.rating}${g.reviews ? ` (${Number(g.reviews).toLocaleString('en-GB')})` : ''}` : null;
   const meta = [g.duration, rating].filter(Boolean).join(' · ');
-  return `<a class="tour-card partner" href="/tours/experiences/${slug}/" data-card data-city="${esc(g.city)}" data-name="${esc(g.title.toLowerCase())}" data-days="">
+  return `<a class="tour-card partner" href="/tours/experiences/${g.slug}/" data-card data-city="${esc(g.city)}" data-name="${esc(g.title.toLowerCase())}" data-days="">
     <div class="thumb"><img src="${img}" alt="${esc(g.title)}" loading="lazy"><span class="city-tag">${esc(g.city)}</span><span class="partner-flag">Partner</span></div>
     <div class="body">
       <h3>${esc(g.title)}</h3>
@@ -225,7 +268,7 @@ function partnerCard(g) {
     </div>
   </a>`;
 }
-const DISCLOSURE = `<p class="disclosure">Experiences marked "Partner" are operated by third parties and booked through GetYourGuide, our booking partner; we may earn a commission at no extra cost to you.</p>`;
+const DISCLOSURE = `<p class="disclosure">Experiences marked "Partner" are operated by third parties and booked through our partners (GetYourGuide and DesignMyNight); we may earn a commission at no extra cost to you.</p>`;
 
 /* ---------- components ---------- */
 
@@ -301,7 +344,7 @@ const featuredCards = site.featured
 const citiesWithTours = site.city_order.filter(c => activeTours.some(t => t.city === c));
 
 // All cities across our tours + partner experiences, in preferred order, for filters + tiles.
-const allCityNames = [...new Set([...activeTours.map(t => t.city), ...allGyg.map(t => t.city)])]
+const allCityNames = [...new Set([...activeTours.map(t => t.city), ...allExperiences.map(t => t.city)])]
   .sort((a, b) => {
     const ia = cityOrder.indexOf(a), ib = cityOrder.indexOf(b);
     return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib) || a.localeCompare(b);
@@ -312,7 +355,7 @@ const tileCities = allCityNames.filter(c => guideFor(c) && cityImgs.has(c.toLowe
 const exploreTiles = tileCities.map(c => {
   const g = guideFor(c);
   const own = activeTours.filter(t => t.city === c).length;
-  const exp = (g.gyg_tours || []).length;
+  const exp = (expByCity[c] || []).length;
   const n = own + exp;
   return `<a class="city-tile" href="/tours/${g.slug}/" style="background-image:url('${cityHeroImage(c)}')">
     <span class="city-tile-scrim"></span>
@@ -326,7 +369,7 @@ const cityOptions = allCityNames.map(c => `<option value="${esc(c)}">${esc(c)}</
 // city (our own first within each city) so a city's options sit side by side.
 const mergedTours = [
   ...activeTours.map(t => ({ city: t.city, own: 1, html: tourCard(t) })),
-  ...allGyg.map(t => ({ city: t.city, own: 0, html: partnerCard(t) })),
+  ...allExperiences.map(t => ({ city: t.city, own: 0, html: partnerCard(t) })),
 ].sort((a, b) => {
   const ia = cityOrder.indexOf(a.city), ib = cityOrder.indexOf(b.city);
   return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib) || (b.own - a.own) || a.city.localeCompare(b.city);
@@ -348,7 +391,7 @@ const pageTokens = {
   google_rating: site.google_rating,
   google_reviews: site.google_reviews,
   tour_count: String(activeTours.length),
-  partner_count: String(allGyg.length),
+  partner_count: String(allExperiences.length),
   city_count: String(citiesWithTours.length),
 };
 
@@ -465,7 +508,7 @@ for (const p of posts) {
 for (const g of cityGuides) {
   const own = activeTours.filter(t => t.city === g.name);
   const banner = cityHeroImage(g.name);
-  const gygTours = (g.gyg_tours || []);
+  const gygTours = (expByCity[g.name] || []);
   const ownCount = own.length, expCount = gygTours.length;
 
   // A short punchy hero tagline (first sentence of the intro, trimmed).
@@ -535,13 +578,11 @@ ${mdToHtml(g.intro_md || '')}
   });
 }
 
-/* ----- partner (GetYourGuide) experience listing pages ----- */
+/* ----- partner experience listing pages (GetYourGuide + DesignMyNight) ----- */
 
-const gygByCity = {};
-for (const t of allGyg) (gygByCity[t.city] = gygByCity[t.city] || []).push(t);
-
-for (const t of allGyg) {
-  const img = gygImage(t.slug);
+for (const t of allExperiences) {
+  const src = SOURCES[t.source];
+  const img = expImage(t);
   const guide = guideFor(t.city);
   const ratingStr = t.rating ? `★ ${t.rating}${t.reviews ? ` · ${Number(t.reviews).toLocaleString('en-GB')} reviews` : ''}` : null;
   const chips = [t.duration && `<span class="exp-chip">${ICONS.clock}${esc(t.duration)}</span>`,
@@ -552,8 +593,8 @@ for (const t of allGyg) {
   const meeting = t.meeting_point
     ? `<h2>Meeting point</h2><p>${esc(t.meeting_point)}</p>` : '';
   const desc = mdToHtml(t.description_md || t.summary || '');
-  const related = (gygByCity[t.city] || []).filter(x => x.slug !== t.slug).slice(0, 3);
-  const aff = affUrl(t.url);
+  const related = (expByCity[t.city] || []).filter(x => x.slug !== t.slug).slice(0, 3);
+  const bookUrl = src.book(t.url);
   const priceLine = t.price_gbp
     ? `<span class="price">£${t.price_gbp}</span><span class="pp">per person from</span>`
     : `<span class="pp" style="font-weight:600;font-size:1.05rem">See live prices</span>`;
@@ -564,7 +605,7 @@ for (const t of allGyg) {
     <nav class="breadcrumbs city-crumbs" aria-label="Breadcrumb">
       <a href="/">Home</a><span class="sep">/</span><a href="/tours/">Tours</a><span class="sep">/</span><a href="/tours/${guide ? guide.slug : ''}/">${esc(t.city)}</a><span class="sep">/</span>Experience
     </nav>
-    <span class="partner-flag-lg">Partner experience · GetYourGuide</span>
+    <span class="partner-flag-lg">Partner experience · ${src.name}</span>
     <h1>${esc(t.title)}</h1>
     <div class="exp-chips">${chips}</div>
   </div>
@@ -579,12 +620,12 @@ for (const t of allGyg) {
     </div>
     <aside class="booking-card">
       <div class="price-line">${priceLine}</div>
-      <a class="btn btn-primary" href="${aff}" target="_blank" rel="sponsored noopener">Book on GetYourGuide ↗</a>
+      <a class="btn btn-primary" href="${bookUrl}" target="_blank" rel="${src.rel}">${src.cta}</a>
       ${groupBtn(t.title)}
       <a class="btn btn-outline" href="/gift-vouchers/" data-giftup-open>🎁 Buy a gift voucher</a>
-      <p class="note">${ratingStr ? esc(ratingStr) + ' · ' : ''}Free cancellation on most tours · <a href="/tours/${guide ? guide.slug : ''}/">More ${esc(t.city)} tours</a></p>
+      <p class="note">${ratingStr ? esc(ratingStr) + ' · ' : ''}${guide ? `<a href="/tours/${guide.slug}/">More ${esc(t.city)} tours</a>` : `<a href="/tours/">All tours</a>`}</p>
       ${TOUR_DISCLAIMER}
-      <p class="disclosure" style="margin-top:12px">Booked via GetYourGuide, our partner. We may earn a commission at no extra cost to you. Group enquiries are handled directly by us.</p>
+      <p class="disclosure" style="margin-top:12px">Booked via ${src.name}, our partner. We may earn a commission at no extra cost to you. Group enquiries are handled directly by us.</p>
     </aside>
   </div>
 </section>
@@ -611,14 +652,18 @@ for (const t of activeTours) allRedirects[`/listing/${t.old_slug}/`] = `/tours/$
 for (const p of posts) if (p.old_url) allRedirects[p.old_url] = `/blog/${p.slug}/`;
 
 let stubCount = 0;
+const redirectLines = [];
 for (const [from, to] of Object.entries(allRedirects)) {
   if (from === to) continue;
   const stub = fill(redirectTpl, { target: to, target_abs: site.base_url + to });
   const abs = path.join(OUT, from.replace(/^\//, ''), 'index.html');
   fs.mkdirSync(path.dirname(abs), { recursive: true });
   fs.writeFileSync(abs, stub);
+  redirectLines.push(`${from} ${to} 301`);
   stubCount++;
 }
+// Cloudflare Pages _redirects file — real 301s (better than the meta-refresh stubs).
+fs.writeFileSync(path.join(OUT, '_redirects'), redirectLines.join('\n') + '\n');
 
 /* ----- 404, sitemap, robots ----- */
 

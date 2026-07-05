@@ -1,0 +1,59 @@
+{
+  "name": "Cardiff",
+  "dmn_experiences": [
+    {
+      "title": "Cardiff Craft Beer Tasting Experience - Cardiff Brewery Tours (Private Groups)",
+      "url": "https://www.designmynight.com/cardiff/whats-on/walks-tours/cardiff-craft-beer-tasting-experience-cardiff-brewery-tours-private-groups",
+      "city": "Cardiff",
+      "price_gbp": "39",
+      "duration": "2.5 hours",
+      "summary": "A private-group guided walking tour of three Cardiff city-centre craft beer venues with tastings and commentary from a local guide.",
+      "image_url": null,
+      "highlights": [
+        "Visit three specially selected craft beer venues",
+        "Sample a range of styles from pale ales to IPAs and stouts",
+        "Learn the four main beer ingredients and brewing methods",
+        "Expert local guide throughout",
+        "Private groups of up to 20 with flexible start times"
+      ],
+      "category": "Beer tasting",
+      "slug": "cardiff-cardiff-craft-beer-tasting-experience-cardiff-brewery-tours-private-groups"
+    },
+    {
+      "title": "Cocktail Masterclass",
+      "url": "https://www.designmynight.com/cardiff/bars/city-centre/dirty-martini-cardiff/cocktail-masterclass",
+      "city": "Cardiff",
+      "price_gbp": "35",
+      "duration": "3 hours",
+      "summary": "A cocktail masterclass at Dirty Martini in Cardiff city centre where a mixologist guides you through making three cocktails, with Prosecco and small plates.",
+      "image_url": "https://static.designmynight.com/uploads/2025/04/DM-CMC-1200x617-optimised.png",
+      "highlights": [
+        "Welcome glass of Prosecco on arrival",
+        "Make three cocktails from four flavour options",
+        "Sliders and small plates served in Birdcage Sharers",
+        "Suited to groups and celebrations",
+        "Over-18s only"
+      ],
+      "category": "Cocktails",
+      "slug": "cardiff-cocktail-masterclass"
+    },
+    {
+      "title": "Welsh Craft Beer Tour",
+      "url": "https://www.designmynight.com/cardiff/whats-on/walks-tours/welsh-craft-beer-tour",
+      "city": "Cardiff",
+      "price_gbp": "39",
+      "duration": "3 hours",
+      "summary": "A guided tour of three Cardiff brewery taprooms starting at Cardiff Castle, with a behind-the-scenes look at how the beer is made.",
+      "image_url": "https://static.designmynight.com/uploads/2022/08/BSimg3-1200x615-optimised.png",
+      "highlights": [
+        "Meet and introduction at Cardiff Castle",
+        "Welcome drink at one of the city's newest breweries",
+        "Visit three different Cardiff brewery taprooms",
+        "Behind-the-scenes insight into how the beer is crafted",
+        "Beer at each stop"
+      ],
+      "category": "Brewery tour",
+      "slug": "cardiff-welsh-craft-beer-tour"
+    }
+  ]
+}

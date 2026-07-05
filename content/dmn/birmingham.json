@@ -1,0 +1,90 @@
+{
+  "name": "Birmingham",
+  "dmn_experiences": [
+    {
+      "title": "Birmingham Beer Tasting Tour",
+      "url": "https://www.designmynight.com/birmingham/whats-on/walks-tours/birmingham-beer-tasting-tour",
+      "city": "Birmingham",
+      "price_gbp": "51.80",
+      "duration": "Approximately 2 hours",
+      "summary": "A guided walking tour visiting at least three Birmingham brewery taprooms and craft beer venues, with a drink included at each stop. Groups are capped at around 25 people.",
+      "image_url": "https://static.designmynight.com/uploads/2018/09/brumtt-optimised.png",
+      "highlights": [
+        "At least three taproom stops with a drink at each",
+        "Flat, wheelchair-friendly route of about 1.5 miles",
+        "Small groups of up to around 25 people",
+        "Guided introduction to local beer styles and venues"
+      ],
+      "category": "Beer tasting",
+      "slug": "birmingham-birmingham-beer-tasting-tour"
+    },
+    {
+      "title": "Birmingham Microbrewery Experience",
+      "url": "https://www.designmynight.com/birmingham/whats-on/something-a-little-different-events/birmingham-brewery-tours",
+      "city": "Birmingham",
+      "price_gbp": "59",
+      "duration": "Approximately 4.5 hours",
+      "summary": "A guided brewery tour visiting Rock and Roll Brewery, Burning Soul Brewery and The Wolf, with tastings at each stop and a cheese and charcuterie finish.",
+      "image_url": "https://static.designmynight.com/uploads/2018/05/Birm-1200x618-optimised.png",
+      "highlights": [
+        "Tours and tastings at three local breweries",
+        "Beer samples at each stop",
+        "Cheese and charcuterie to finish",
+        "Small groups of up to 25 people"
+      ],
+      "category": "Brewery tour",
+      "slug": "birmingham-birmingham-brewery-tours"
+    },
+    {
+      "title": "Sipsmith Gin Masterclass",
+      "url": "https://www.designmynight.com/birmingham/bars/birmingham-city-centre/be-at-one-birmingham/sipsmith-gin-masterclass",
+      "city": "Birmingham",
+      "price_gbp": "27.50",
+      "duration": "1 hour 30 minutes",
+      "summary": "A gin masterclass at Be At One in Birmingham city centre, led by Sipsmith experts, with a welcome G&T and the chance to make two gin cocktails.",
+      "image_url": "https://static.designmynight.com/uploads/2017/01/Emailer-PDF-Birmingham-01-468x620-optimised.jpeg",
+      "highlights": [
+        "Sipsmith G&T on arrival",
+        "Expert-led gin tasting session",
+        "Make two gin cocktails behind the bar",
+        "Over-18s only"
+      ],
+      "category": "Gin & spirits",
+      "slug": "birmingham-sipsmith-gin-masterclass"
+    },
+    {
+      "title": "Barrel & Bond Whisky Tasting",
+      "url": "https://www.designmynight.com/birmingham/pubs/city-centre/the-old-joint-stock-theatre/barrel-bond-whisky-tasting",
+      "city": "Birmingham",
+      "price_gbp": "40",
+      "duration": "Approximately 2.5 hours",
+      "summary": "An SQA-accredited whisky tasting at The Old Joint Stock, with a curated flight of whiskies and matched food pairings, suitable for beginners and enthusiasts alike.",
+      "image_url": "https://static.designmynight.com/uploads/2025/05/WHISKY-TASTING-POSTER-770-x-400-px-620x320-optimised.png",
+      "highlights": [
+        "Led by an SQA-accredited whisky guide",
+        "Curated whisky flight with food pairings",
+        "A journey through whisky history and flavours",
+        "Over-18s only"
+      ],
+      "category": "Gin & spirits",
+      "slug": "birmingham-barrel-bond-whisky-tasting"
+    },
+    {
+      "title": "Cocktail Masterclass",
+      "url": "https://www.designmynight.com/birmingham/bars/city-centre/the-cocktail-club-birmingham/cocktail-masterclass",
+      "city": "Birmingham",
+      "price_gbp": "40",
+      "duration": "90 minutes",
+      "summary": "A 90-minute cocktail masterclass at The Cocktail Club in Birmingham city centre, making two cocktails and taking part in a daiquiri challenge, with a welcome drink on arrival.",
+      "image_url": "https://static.designmynight.com/uploads/2025/04/tcc-cocktail-masterclass-photo-02-1200x615-optimised.png",
+      "highlights": [
+        "Bubbly welcome drink on arrival",
+        "Make two cocktails from a set selection",
+        "Take part in a daiquiri challenge",
+        "Over-18s only"
+      ],
+      "category": "Cocktails",
+      "slug": "birmingham-cocktail-masterclass"
+    }
+  ]
+}

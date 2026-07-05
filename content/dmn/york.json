@@ -1,0 +1,23 @@
+{
+  "name": "York",
+  "dmn_experiences": [
+    {
+      "title": "York Craft Beer Tasting Experience - York Brewery Tours (Private Groups)",
+      "url": "https://www.designmynight.com/uk/whats-on/walks-tours/york-brewery-tours-group-tours",
+      "city": "York",
+      "price_gbp": "39",
+      "duration": "2.5 hours",
+      "summary": "A private-group guided walking tour of three York city-centre craft beer venues with tastings and an expert guide.",
+      "image_url": null,
+      "highlights": [
+        "Visit three specially selected York beer venues",
+        "Sample a range of styles from pale ales to IPAs and stouts",
+        "Learn about beer tasting, ingredients and York's brewing heritage",
+        "Step-free access on the route",
+        "Private groups of up to 20 with flexible start times"
+      ],
+      "category": "Beer tasting",
+      "slug": "york-york-brewery-tours-group-tours"
+    }
+  ]
+}

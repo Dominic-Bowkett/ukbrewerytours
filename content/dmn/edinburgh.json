@@ -1,0 +1,77 @@
+{
+  "name": "Edinburgh",
+  "dmn_experiences": [
+    {
+      "title": "Edinburgh Gin Distillery at The Arches",
+      "url": "https://www.designmynight.com/edinburgh/bars/old-town/edinburgh-gin-distillery-at-the-arches",
+      "city": "Edinburgh",
+      "price_gbp": null,
+      "duration": null,
+      "summary": "A working gin distillery in Edinburgh's Old Town, near the Royal Mile, offering guided Stillhouse tours and tastings alongside cocktail classes and a make-your-own-gin experience.",
+      "image_url": "https://static.designmynight.com/uploads/2024/12/20241129_154336000_iOS-620x413-optimised.jpg",
+      "highlights": [
+        "Classic Tour & Tasting through the Stillhouse with signature gins and paired mixers",
+        "Gin & chocolate tasting with hand-selected artisan chocolates",
+        "Mix & Muddle cocktail class on the rooftop bar",
+        "Make-your-own gin in the Gin Lab, bottled with a custom label",
+        "Old Town location a short walk from the Royal Mile"
+      ],
+      "category": "Gin & spirits",
+      "slug": "edinburgh-edinburgh-gin-distillery-at-the-arches"
+    },
+    {
+      "title": "Pickering's Gin",
+      "url": "https://www.designmynight.com/edinburgh/bars/city-centre/pickerings-gin",
+      "city": "Edinburgh",
+      "price_gbp": null,
+      "duration": null,
+      "summary": "An independent hand-crafted gin distillery at Summerhall running cocktail masterclasses, a cheese-and-cocktail brunch and Scottish tasting experiences.",
+      "image_url": "https://static.designmynight.com/uploads/2025/02/Distillery_exterior_1-1200x799-optimised.jpg",
+      "highlights": [
+        "Cocktail Craft Masterclass making three cocktails",
+        "Cheese & Cocktail Brunch at weekends",
+        "The Scottish Explorer with local cheese, charcuterie and spirit pairings",
+        "Set in the historic Summerhall arts venue",
+        "Award-winning small-batch spirits"
+      ],
+      "category": "Gin & spirits",
+      "slug": "edinburgh-pickerings-gin"
+    },
+    {
+      "title": "Cocktail Masterclass!",
+      "url": "https://www.designmynight.com/edinburgh/whats-on/classes/cocktail-masterclass",
+      "city": "Edinburgh",
+      "price_gbp": "30",
+      "duration": "90 minutes",
+      "summary": "A guided cocktail-making class at Pilgrim Bar in Edinburgh's Old Town where a bartender teaches you to make two signature cocktails.",
+      "image_url": "https://static.designmynight.com/uploads/2023/06/dmn-mojito-1200x618-optimised.png",
+      "highlights": [
+        "Make two signature cocktails with an instructor",
+        "Premium package adds welcome fizz and a celebration shot",
+        "Shareable nachos and a certificate of completion",
+        "Afternoon sessions at 1pm, 2.30pm or 4pm",
+        "Suited to groups of six or more"
+      ],
+      "category": "Cocktails",
+      "slug": "edinburgh-cocktail-masterclass"
+    },
+    {
+      "title": "Whisky and Cheese Tastings at Whiski Rooms",
+      "url": "https://www.designmynight.com/edinburgh/restaurants/whisky-rooms/whisky-and-cheese-tastings-at-whiski-rooms",
+      "city": "Edinburgh",
+      "price_gbp": "35",
+      "duration": "1 hour",
+      "summary": "An hour-long tasting at Whiski Rooms on the Mound, pairing four single malt whiskies with four cheeses from a local cheesemonger.",
+      "image_url": "https://static.designmynight.com/uploads/2019/01/whiski-rooms-620x318-optimised.png",
+      "highlights": [
+        "Four single malt whiskies paired with four cheeses",
+        "Cheeses sourced from a local cheesemonger",
+        "Learn how to match whisky with food and flavours",
+        "Held on Edinburgh's historic Mound",
+        "Saturday afternoon sessions"
+      ],
+      "category": "Gin & spirits",
+      "slug": "edinburgh-whisky-and-cheese-tastings-at-whiski-rooms"
+    }
+  ]
+}

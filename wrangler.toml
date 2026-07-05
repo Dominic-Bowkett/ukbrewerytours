@@ -1,0 +1,7 @@
+# Cloudflare Pages configuration.
+# The site is pre-built and committed to docs/ (no build step needed), so we
+# tell Pages to serve that directory. If the project name differs in your
+# Cloudflare dashboard, either rename the project to "ukbrewerytours" or set
+# the same "Build output directory = docs" under Settings › Builds & deployments.
+name = "ukbrewerytours"
+pages_build_output_dir = "docs"

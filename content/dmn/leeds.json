@@ -1,0 +1,56 @@
+{
+  "name": "Leeds",
+  "dmn_experiences": [
+    {
+      "title": "Kirkstall Brewery Tour & Tasting",
+      "url": "https://www.designmynight.com/leeds/bars/kirkstall-brewery-taproom/kirkstall-brewery-tour-tasting-1",
+      "city": "Leeds",
+      "price_gbp": "16.50",
+      "duration": "45 minutes",
+      "summary": "A guided tour of Kirkstall Brewery in Leeds led by a tasting expert, including samples of three seasonal beers and access to the taproom. Adults only.",
+      "image_url": "https://static.designmynight.com/uploads/2022/07/220-05-06_KirkstallBrewery_Taproom-51-140x93-optimised.jpg",
+      "highlights": [
+        "Guided brewery tour with a tasting expert",
+        "Samples of three seasonal beers",
+        "Access to the Kirkstall Brewery Taproom",
+        "Adults-only (18+)"
+      ],
+      "category": "Brewery tour",
+      "slug": "leeds-kirkstall-brewery-tour-tasting-1"
+    },
+    {
+      "title": "Leeds Craft Beer Experience",
+      "url": "https://www.designmynight.com/leeds/whats-on/something-a-little-different-events/leeds-craft-beer-experience",
+      "city": "Leeds",
+      "price_gbp": "45",
+      "duration": "Approximately 4 hours",
+      "summary": "An expert-guided tour of at least four Leeds craft beer venues, including Whitelocks, The Brunswick and Tartarus, with tastings and local history along an accessible 1.5-mile route.",
+      "image_url": "https://static.designmynight.com/uploads/2019/10/Leeds-7-1200x615-optimised.png",
+      "highlights": [
+        "Visits at least four craft beer venues",
+        "Tastings and brewery tours at the stops",
+        "Expert local guide covering beer and city history",
+        "Flat, wheelchair-accessible route of about 1.5 miles"
+      ],
+      "category": "Beer tasting",
+      "slug": "leeds-leeds-craft-beer-experience"
+    },
+    {
+      "title": "Cocktail Masterclass",
+      "url": "https://www.designmynight.com/leeds/bars/city-centre/dirty-martini-leeds/cocktail-masterclass",
+      "city": "Leeds",
+      "price_gbp": "35",
+      "duration": "Approximately 3 hours",
+      "summary": "A hands-on cocktail masterclass at Dirty Martini in Leeds city centre, led by expert mixologists, with a prosecco welcome, three cocktails to make and sliders to share.",
+      "image_url": "https://static.designmynight.com/uploads/2025/04/DM-CMC-1200x617-optimised.png",
+      "highlights": [
+        "Welcome glass of prosecco",
+        "Make three cocktails with guidance from mixologists",
+        "Learn bartending techniques and flair",
+        "Sliders and small plates to share"
+      ],
+      "category": "Cocktails",
+      "slug": "leeds-cocktail-masterclass"
+    }
+  ]
+}
