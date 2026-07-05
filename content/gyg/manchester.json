@@ -11,7 +11,18 @@
       "duration": "1.5 hours",
       "rating": "5.0",
       "reviews": "2",
-      "summary": "A seated, guided tasting of five craft beers in Manchester's Northern Quarter, with an expert host covering tasting technique and beer styles."
+      "summary": "A seated, guided tasting of five craft beers in Manchester's Northern Quarter, with an expert host covering tasting technique and beer styles.",
+      "slug": "manchester-craft-beer-tasting-in-the-northern-quarter",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/00271d75acb1c2282ada29386ffc22df8daa0b86262a5c88ee925cc95c4ed5ba.jpg",
+      "description_md": "This 90-minute guided tasting masterclass explores Manchester's independent craft beer culture in the Northern Quarter. In a relaxed, seated venue with small groups of up to 10 people, you sample five modern craft beers while a knowledgeable host explains professional tasting techniques, brewing methods, ingredients and flavour profiles. It is designed for anyone curious about modern beer styles, from first-time tasters to seasoned enthusiasts.</description_md>\n<parameter name=\"meeting_point\">Outside 16 Tariff St, Manchester M1 2FN",
+      "highlights": [
+        "Taste five modern craft beer styles",
+        "Learn professional beer tasting techniques",
+        "Explore Manchester's independent craft beer scene",
+        "Each beer served as a 1/3 pint pour",
+        "Small groups of up to 10 people",
+        "Learn about brewing methods and flavour profiles"
+      ]
     },
     {
       "title": "Manchester: Pub Tour",
@@ -20,7 +31,19 @@
       "duration": "2 hours",
       "rating": "4.7",
       "reviews": "2",
-      "summary": "A two-hour guided tour of Manchester city-centre pubs exploring the city's drinking history and pub culture, finishing with a short pub quiz."
+      "summary": "A two-hour guided tour of Manchester city-centre pubs exploring the city's drinking history and pub culture, finishing with a short pub quiz.",
+      "slug": "manchester-pub-tour",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/d67e7e251077a59b281113c0fb4cf25ecc19bb4b8d848299cac9389bdeb59d65.jpg",
+      "description_md": "This guided walking tour explores Manchester's pub culture and drinking history, visiting a selection of classic pubs around the city centre. Along the way, your guide shares the origins of common drinking phrases, the stories behind pub names, and tales of notable figures linked to the venues. The tour runs for around two hours and ends with a lighthearted pub quiz with prizes.",
+      "highlights": [
+        "Visit classic Manchester city-centre pubs",
+        "Learn the history of Manchester's drinking culture",
+        "Discover the origins of drinking phrases and pub names",
+        "Hear stories of notable local figures",
+        "End with a pub quiz and prizes",
+        "Two-hour guided tour in English"
+      ],
+      "meeting_point": "Outside Central Library, St Peter's Square, Manchester, M2 5PD"
     },
     {
       "title": "Manchester: Guided Walking Tour of Historic Pubs & City",
@@ -29,7 +52,18 @@
       "duration": "2 hours",
       "rating": "4.5",
       "reviews": "4",
-      "summary": "A guided walk through Manchester's historic pubs, including the Old Wellington and Sinclair's Oyster Bar, run by a social enterprise whose guides have experienced homelessness."
+      "summary": "A guided walk through Manchester's historic pubs, including the Old Wellington and Sinclair's Oyster Bar, run by a social enterprise whose guides have experienced homelessness.",
+      "slug": "manchester-guided-walking-tour-of-historic-pubs-city",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/f67868f62ec20efd91c7faa34d3d1b3bc849e35e07fe0e6dda9da0ec9c8b949d.jpg",
+      "description_md": "A two-hour guided walking tour through Manchester's historic public houses, led by a guide from the social enterprise Invisible Cities. As you visit a selection of the city's most storied pubs, including the Old Wellington and Sinclair's Oyster Bar, your guide shares tales linking these venues to Manchester's music, football, and social history. The route explores how the city has changed over time while raising awareness of homelessness.",
+      "highlights": [
+        "Explore historic Manchester pubs on foot",
+        "Visit the Old Wellington and Sinclair's Oyster Bar",
+        "Stories of music, football and social change",
+        "Guided by a local from Invisible Cities",
+        "Supports a social enterprise for former rough sleepers"
+      ],
+      "meeting_point": "Main entrance of Manchester Cathedral; look for Andy in a green hoodie by the cathedral doors. Tour ends near Oxford Road Station."
     },
     {
       "title": "Manchester & Salford: Guided Food and Drink Walking Tour",
@@ -38,7 +72,18 @@
       "duration": "3.5 hours",
       "rating": "5.0",
       "reviews": "5",
-      "summary": "A 3.5-hour walking tour spanning Manchester and Salford, taking in historic pubs, markets and street food, with food tastings and two drinks included."
+      "summary": "A 3.5-hour walking tour spanning Manchester and Salford, taking in historic pubs, markets and street food, with food tastings and two drinks included.",
+      "slug": "manchester-salford-guided-food-and-drink-walking-tour",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/ea0611f4feb8e09e64beb4349ba299b7403e075fe515779907942614814aee40.jpeg",
+      "description_md": "Discover the culinary heritage of Manchester and Salford on a guided food and drink walking tour led by a local guide. Explore the two neighbouring cities and sample an eclectic blend of food and drink that reflects their shared history and vibrant cultures. Along the way, learn about the cities' past and meet local characters as you journey between them.",
+      "highlights": [
+        "Guided by a knowledgeable local guide",
+        "Sample a blend of food and drink",
+        "Explore both Manchester and Salford",
+        "Learn about the cities' history",
+        "Meet local characters along the way"
+      ],
+      "meeting_point": "The Bridgewater Hall, Manchester (tour concludes at 40-42 Deansgate, Manchester M3 1RH)"
     },
     {
       "title": "Manchester: Beer Bike Tour with Drinks and Music",
@@ -47,7 +92,19 @@
       "duration": "75 minutes",
       "rating": "5.0",
       "reviews": "1",
-      "summary": "A 75-minute pedal-powered group bike ride through Manchester with beer or prosecco on board, music, and a sober captain doing the steering."
+      "summary": "A 75-minute pedal-powered group bike ride through Manchester with beer or prosecco on board, music, and a sober captain doing the steering.",
+      "slug": "manchester-beer-bike-tour-with-drinks-and-music",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/f2db9e717a8f16cee7cc3fb3add1bacf371efd5b485478edc93fcd851cf723f4.jpg",
+      "description_md": "Pedal your way through Manchester's streets aboard a group beer bike on this 75-minute ride for up to 13 people. Guests enjoy a selection of drinks together while a sober captain steers the bike safely through the city. A Bluetooth sound system lets the group play their own music, making it suited to celebrations or a fun day out with friends.",
+      "highlights": [
+        "Pedal through Manchester's streets on a beer bike",
+        "Enjoy beer or prosecco with friends",
+        "Play your own music via Bluetooth sound system",
+        "Group ride for up to 13 people",
+        "Sober captain steers you safely",
+        "Great for celebrations or a fun day out"
+      ],
+      "meeting_point": "Central Manchester (coordinates 53.476414, -2.2399954)"
     }
   ]
 }

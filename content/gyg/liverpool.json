@@ -11,7 +11,19 @@
       "duration": "4 hours",
       "rating": "5.0",
       "reviews": "12",
-      "summary": "A four-hour minibus tour visiting four Liverpool breweries, with twelve beer tastings and pizza included, guided by a local with insights into the city's brewing heritage."
+      "summary": "A four-hour minibus tour visiting four Liverpool breweries, with twelve beer tastings and pizza included, guided by a local with insights into the city's brewing heritage.",
+      "slug": "liverpool-brewery-bus-tour-with-12-beer-and-pizza",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/8091ceaeb598797d32c76a4bb22dfd80e3fb029d99d8b041249be1c54d2de6ec.png",
+      "description_md": "Join a four-hour guided minibus tour visiting four local breweries around Liverpool. Along the way you sample between eight and twelve freshly crafted beers, paired with food including pizza. The tour offers behind-the-scenes access to the breweries and insights into the city's brewing scene, guided by a beer sommelier.",
+      "highlights": [
+        "Visit four local Liverpool breweries",
+        "Taste 8 to 12 freshly crafted beers",
+        "Enjoy food including pizza",
+        "Go behind the scenes at the breweries",
+        "Meet a beer sommelier",
+        "Comfortable minibus transport"
+      ],
+      "meeting_point": "Outside the Shankly Hotel building, by the main road."
     },
     {
       "title": "Liverpool: Guided Pub Crawl Tour with 3 Drinks",
@@ -20,7 +32,19 @@
       "duration": "2 hours",
       "rating": "4.8",
       "reviews": "8",
-      "summary": "A two-hour guided crawl of three of Liverpool's iconic pubs, with three half-pint drinks included and local history and culture along the way."
+      "summary": "A two-hour guided crawl of three of Liverpool's iconic pubs, with three half-pint drinks included and local history and culture along the way.",
+      "slug": "liverpool-guided-pub-crawl-tour-with-3-drinks",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/d8a4929b23e85e619e8a7d20e7d790826170175249b5a3b1b39dfbb0ac472dcf.jpg",
+      "description_md": "Join a guided pub crawl through Liverpool city centre, taking in the city's highlights alongside three iconic pubs. Starting outside the Philharmonic Dining Rooms at the top of the city, you make your way down through the streets, passing famous landmarks and stopping at some of Liverpool's best-known pubs. The price includes three half-pint drinks (or soft drink equivalents), with the chance to sample local ales where available. The tour is well suited to first-time visitors and solo travellers, and finishes near the River Mersey.",
+      "highlights": [
+        "Guided pub crawl through Liverpool city centre",
+        "3 half-pint drinks or soft drink equivalents included",
+        "Visit 3 iconic Liverpool pubs",
+        "See landmarks and city highlights en route",
+        "Learn local history from your guide",
+        "Ideal for first-time visitors and solo travellers"
+      ],
+      "meeting_point": "Outside the Philharmonic Dining Rooms, at the top of the city centre"
     },
     {
       "title": "Liverpool: Albert Dock & Cavern Quarter Walking Food Tour",
@@ -29,7 +53,19 @@
       "duration": "3 hours",
       "rating": "4.4",
       "reviews": "2",
-      "summary": "A three-hour walking food tour through the waterfront, Liverpool ONE and the Cavern Quarter, sampling local specialities including Scouse, fish and chips, and local beer or cider."
+      "summary": "A three-hour walking food tour through the waterfront, Liverpool ONE and the Cavern Quarter, sampling local specialities including Scouse, fish and chips, and local beer or cider.",
+      "slug": "liverpool-knowledge-quarter-baltic-triangle-food-tour",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=850,height=560,dpr=2/tour_img/d3d65e98396d3d9a33560c8ca6e0867d8d174b3b2c56b4357cbfd2538f179b79.jpg",
+      "description_md": "This guided walking food tour explores Liverpool through its food and drink, beginning at the iconic waterfront before weaving through Liverpool ONE and finishing in the music-filled Cavern Quarter. Over around three hours, you stop at four or more tasting locations showcasing both traditional dishes and the city's contemporary culinary scene. Tastings include a freshly baked pastry with coffee or tea, handcrafted fudge, a British sausage roll, and Liverpool's signature Scouse stew or fish and chips (with a vegetarian Blind Scouse alternative available). The tour finishes with a glass of local beer or cider, served only to those aged 18 and over.",
+      "highlights": [
+        "Guided three-hour walking food tour",
+        "Stop at 4+ local tasting locations",
+        "Try Liverpool's signature Scouse stew",
+        "Taste fish and chips, fudge and sausage roll",
+        "Explore the Waterfront, Liverpool ONE and Cavern Quarter",
+        "Finish with a local beer or cider"
+      ],
+      "meeting_point": "Old Wall Arch, Albert Dock, on Gower Street"
     },
     {
       "title": "Liverpool: Guided Food and Drink Tour with Full Lunch",
@@ -38,7 +74,19 @@
       "duration": "3 hours",
       "rating": "5.0",
       "reviews": "3",
-      "summary": "A three-hour guided food tour through the Georgian Quarter and Ropewalks, with five food stops at independent eateries and two paired drinks included."
+      "summary": "A three-hour guided food tour through the Georgian Quarter and Ropewalks, with five food stops at independent eateries and two paired drinks included.",
+      "slug": "liverpool-guided-food-and-drink-tour-with-tastings",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/ba3ff36647472a50.jpeg",
+      "description_md": "Join a local guide for a walking food and drink tour through Liverpool's neighbourhoods, taking in independent eateries across areas such as the Ropewalks and Georgian Quarter. The route features five food and drink stops, with tastings ranging from traditional scouse stew to contemporary Asian dishes, finishing at a dessert venue. Two of the stops include a drink, with a choice of beer, wine or cocktails and mocktails. The roughly 2 km walk is led in English and runs over about three hours.",
+      "highlights": [
+        "Five food and drink tastings",
+        "Two drinks included (beer, wine or cocktails)",
+        "Traditional scouse stew and Asian cuisine",
+        "Local guide throughout",
+        "Walk through Ropewalks and Georgian Quarter",
+        "Small group, maximum 10 people"
+      ],
+      "meeting_point": "The Bluecoat, School Lane; guides wait at the front gates beneath a large tree."
     },
     {
       "title": "Liverpool: Beer Bike Tour with Drinks and Music",
@@ -47,7 +95,19 @@
       "duration": "1 hour",
       "rating": "5.0",
       "reviews": "3",
-      "summary": "An hour-long pedal-powered bike tour through Liverpool's Baltic Triangle, with drinks and music on board and a sober captain doing the steering."
+      "summary": "An hour-long pedal-powered bike tour through Liverpool's Baltic Triangle, with drinks and music on board and a sober captain doing the steering.",
+      "slug": "liverpool-beer-bike-tour-with-drinks-and-music",
+      "image_url": "https://cdn.getyourguide.com/tour_img/4b2fc2c11f7c8bf381306aa1f5c25e4809d265dcbd31324bedbd255886fe4903.jpg",
+      "description_md": "This is a social cycling experience through Liverpool's Baltic Triangle, where a group pedals together on a shared beer bike. A trained sober captain handles the steering and safety while riders enjoy drinks and music along the way. The ride lasts around 60 minutes and is fully pedal-powered, with room for up to 12 people.",
+      "highlights": [
+        "60-minute guided beer bike ride",
+        "Drinks included: beer or prosecco per guest",
+        "Trained sober captain steers and keeps you safe",
+        "Music on board throughout the ride",
+        "Explore Liverpool's Baltic Triangle",
+        "Group bike for up to 12 people"
+      ],
+      "meeting_point": "Baltic Triangle area of Liverpool (exact address not stated)"
     }
   ]
 }

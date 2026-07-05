@@ -11,7 +11,19 @@
       "duration": "2 hours",
       "rating": "5.0",
       "reviews": "6",
-      "summary": "A two-hour small-group tour of Brinkburn St Brewery in Newcastle's Ouseburn area, with tastings of the brewery's own craft beers, from session ales to IPAs and stouts."
+      "summary": "A two-hour small-group tour of Brinkburn St Brewery in Newcastle's Ouseburn area, with tastings of the brewery's own craft beers, from session ales to IPAs and stouts.",
+      "slug": "brinkburn-st-brewery-brewery-tour-and-beer-tasting",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/0820791c97da4c6d92392dc93efbfbf195f2f5964cab330e5170b261cb3f805e.png",
+      "description_md": "Explore the behind-the-scenes workings of Brinkburn St. Brewery, a microbrewery in Newcastle upon Tyne. On this tour you learn about the brewing process and the history of the brewery while taking in its eclectic space filled with local Northern artwork and collectibles. You then sample a range of original craft beers, many brewed on-site, spanning session ales, bold IPAs and rich stouts.",
+      "highlights": [
+        "Guided tour of a working microbrewery",
+        "Learn about the brewing process and history",
+        "Taste a range of original craft beers",
+        "Session ales, IPAs and stouts to sample",
+        "Beers brewed on-site",
+        "Access to the Tap Room Restaurant"
+      ],
+      "meeting_point": "Brinkburn St. Brewery, Newcastle upon Tyne"
     },
     {
       "title": "Newcastle: Brewery Tour, Lunch, and Beer Tasting",
@@ -20,7 +32,18 @@
       "duration": "3 hours",
       "rating": "4.3",
       "reviews": "7",
-      "summary": "A tour of St Dominic's micro-brewery at Blackfriars, a former Dominican friary dating from 1239, followed by a three-course lunch, a flight of beers and a beer gift pack to take home."
+      "summary": "A tour of St Dominic's micro-brewery at Blackfriars, a former Dominican friary dating from 1239, followed by a three-course lunch, a flight of beers and a beer gift pack to take home.",
+      "slug": "newcastle-brewery-tour-lunch-and-beer-tasting",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/2ae1c0dcdfc0970cf9e50cdcf4d863607ca055081830e6bc94eb4b2544440113.jpg",
+      "description_md": "Explore St Dominic's micro-brewery, housed within Blackfriars Restaurant in a Dominican friary dating back to 1239. Your guide shares the history of the brewery and the friary before the friars' expulsion by King Henry VIII in 1536. The experience combines a three-course lunch made from fresh, local and seasonal produce with a tasting of beers brewed on site, plus a beer gift pack to take away.",
+      "highlights": [
+        "Explore St Dominic's micro-brewery in a 1239 friary",
+        "Learn the brewery and friary's history",
+        "Three-course lunch from local seasonal produce",
+        "Flight of 3 beers brewed on site",
+        "Beer gift pack with three 500ml bottles"
+      ],
+      "meeting_point": "Parlour Bar at Blackfriars Restaurant, Newcastle, where the guide meets you on arrival."
     },
     {
       "title": "Newcastle: 3-Course Meal with Beer Flight",
@@ -29,7 +52,19 @@
       "duration": "2 hours",
       "rating": null,
       "reviews": null,
-      "summary": "A three-course meal at Dobson & Parnell on Newcastle's Quayside, paired with a flight of three artisan beers brewed at St Dominic's Brewery."
+      "summary": "A three-course meal at Dobson & Parnell on Newcastle's Quayside, paired with a flight of three artisan beers brewed at St Dominic's Brewery.",
+      "slug": "newcastle-3-course-meal-with-beer-flight",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/8140a99c66dc6833797c5b91d77c82c97809823b373c6d2fe07565ab5712ee4c.jpg",
+      "description_md": "Enjoy a three-course meal paired with a beer flight at Dobson & Parnell, an award-winning restaurant set in a Grade I listed Victorian building on Newcastle's Quayside. The menu features contemporary British and European dishes made with seasonal, locally sourced ingredients. Each course is accompanied by a flight of three artisan beers brewed at St Dominic's Brewery.",
+      "highlights": [
+        "Three-course meal on Newcastle's Quayside",
+        "Flight of 3 artisan beers",
+        "Beers brewed at St Dominic's Brewery",
+        "Contemporary British and European cuisine",
+        "Locally sourced, seasonal ingredients",
+        "Grade I listed Victorian setting"
+      ],
+      "meeting_point": "Dobson & Parnell restaurant, Newcastle Quayside; wait to be greeted and seated at the podium next to the restaurant entrance."
     }
   ]
 }

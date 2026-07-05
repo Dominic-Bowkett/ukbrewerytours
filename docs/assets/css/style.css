@@ -486,6 +486,116 @@ h3 { font-size: 1.25rem; line-height: 1.3; }
 
 .brewery-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
 
+/* ---------- band variants ---------- */
+.band-cream { background: var(--cream); }
+
+/* ---------- city hero banner (city guide + experience pages) ---------- */
+.city-hero, .exp-hero {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  color: var(--cream);
+  overflow: hidden;
+}
+.city-hero-scrim, .exp-hero-scrim {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(32,22,17,.5) 0%, rgba(32,22,17,.45) 40%, rgba(32,22,17,.86) 100%);
+}
+.city-hero .container, .exp-hero .container { position: relative; }
+.city-hero .container { padding-top: 60px; padding-bottom: 64px; max-width: 900px; }
+.exp-hero .container { padding-top: 54px; padding-bottom: 54px; max-width: 900px; }
+.city-hero h1, .exp-hero h1 { color: #fffcf5; max-width: 18ch; }
+.city-hero .lede { color: rgba(247,241,229,.9); margin: 16px 0 0; max-width: 54ch; }
+.city-hero .kicker, .exp-hero .kicker { color: var(--amber); }
+.city-crumbs { color: rgba(247,241,229,.75); padding: 0 0 20px; }
+.city-crumbs a { color: rgba(247,241,229,.75); }
+.city-hero-stats { margin-top: 16px; font-weight: 600; font-size: .95rem; color: var(--amber-soft); }
+.city-hero .hero-ctas { margin-top: 26px; }
+
+.exp-chips, .exp-chip { display: inline-flex; }
+.exp-chips { flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.exp-chip {
+  align-items: center; gap: 7px;
+  background: rgba(247,241,229,.14);
+  border: 1px solid rgba(247,241,229,.24);
+  padding: 7px 14px; border-radius: 999px;
+  font-size: .88rem; font-weight: 500;
+}
+.exp-chip svg { width: 15px; height: 15px; }
+.exp-chip.star { background: var(--amber); color: var(--stout); border-color: transparent; font-weight: 600; }
+
+.partner-flag-lg {
+  display: inline-block;
+  font-size: .74rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  background: var(--amber); color: var(--stout);
+  padding: 6px 13px; border-radius: 999px; margin-bottom: 14px;
+}
+
+/* ---------- explore-by-city tiles ---------- */
+.city-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+}
+.city-tile {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+  text-decoration: none !important;
+  box-shadow: var(--shadow);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.city-tile:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+.city-tile-scrim {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(32,22,17,.05) 30%, rgba(32,22,17,.82) 100%);
+}
+.city-tile-body { position: relative; padding: 18px; color: var(--cream); }
+.city-tile-name { display: block; font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; line-height: 1; }
+.city-tile-count { display: block; font-size: .82rem; color: rgba(247,241,229,.82); margin-top: 5px; }
+
+/* ---------- filter bar ---------- */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 14px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 22px;
+  box-shadow: var(--shadow);
+}
+.filter-field { display: flex; flex-direction: column; gap: 6px; min-width: 150px; }
+.filter-field.grow { flex: 1; min-width: 200px; }
+.filter-field label { font-size: .78rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); margin: 0; }
+.filter-field select, .filter-field input { padding: 11px 13px; }
+.filter-bar .btn-sm { margin-bottom: 1px; }
+.filter-count { font-size: .9rem; color: var(--ink-soft); margin: 0 0 18px; min-height: 1.2em; }
+.filter-empty { padding: 24px; text-align: center; color: var(--ink-soft); background: var(--paper); border: 1px dashed var(--line); border-radius: var(--radius); }
+.linklike { background: none; border: 0; color: var(--amber-deep); font: inherit; cursor: pointer; text-decoration: underline; padding: 0; }
+[data-card][hidden] { display: none; }
+
+/* partner flag on cards */
+.tour-card .partner-flag {
+  position: absolute; top: 12px; right: 12px;
+  background: var(--amber); color: var(--stout);
+  font-size: .68rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  padding: 5px 10px; border-radius: 999px;
+}
+.tour-card.partner .price small { font-weight: 500; font-size: .72rem; color: var(--ink-soft); }
+
+@media (max-width: 640px) {
+  .filter-bar { flex-direction: column; align-items: stretch; }
+  .filter-field { min-width: 0; }
+}
+
 /* ---------- partner (GetYourGuide) cards ---------- */
 
 .partner-card {

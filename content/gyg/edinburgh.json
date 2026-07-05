@@ -11,7 +11,18 @@
       "duration": "2 hours",
       "rating": "4.7",
       "reviews": "283",
-      "summary": "A guided two-hour walk tracing Edinburgh's brewing history from the 1100s to today's craft scene, with tutored tastings of award-winning Scottish beers in three pubs along the way."
+      "summary": "A guided two-hour walk tracing Edinburgh's brewing history from the 1100s to today's craft scene, with tutored tastings of award-winning Scottish beers in three pubs along the way.",
+      "slug": "edinburgh-old-town-guided-walking-tour-and-beer-tasting",
+      "description_md": "This guided two-hour walking tour explores Edinburgh's Old Town and its long brewing heritage, tracing how the city grew into a major centre for beer and cider production. Led by knowledgeable local guides, you visit historic and authentic pubs away from the usual tourist spots while hearing stories about the industry's rivalries, expansion and influence on the city. Along the way you taste a selection of award-winning Scottish beers and ciders and learn about the ingredients and science behind brewing.",
+      "highlights": [
+        "Two-hour guided walking tour of Old Town",
+        "Tastings of award-winning Scottish beers and cider",
+        "Visit authentic pubs beyond tourist areas",
+        "Expert local beer-enthusiast guide",
+        "Learn Edinburgh's brewing history and heritage",
+        "Insights into brewing ingredients and science"
+      ],
+      "meeting_point": "26 St Giles' Street, Old Town, Edinburgh (the last door at the end of the street next to the railings)"
     },
     {
       "title": "Edinburgh: Underground Beer Tasting in Lost Close",
@@ -20,7 +31,17 @@
       "duration": "1 hour",
       "rating": "5.0",
       "reviews": "5",
-      "summary": "A tutored tasting of four locally brewed beers held in the Lost Close, a historic underground site in the Old Town, with storytelling about Edinburgh's brewing past."
+      "summary": "A tutored tasting of four locally brewed beers held in the Lost Close, a historic underground site in the Old Town, with storytelling about Edinburgh's brewing past.",
+      "slug": "edinburgh-underground-beer-tasting-in-lost-close",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/1d3e1c889c76568d985c4eb6b4b5951c962a536a6dbc382ba01a7538f68498b3.jpg",
+      "description_md": "Join a one-hour guided beer tasting set in an atmospheric underground historic venue known as The Lost Close in the heart of Edinburgh. You will sample four locally brewed craft beers from breweries such as Campervan Brewery, Moonwake Beer Co. and Bellfield Brewery. Throughout the experience, an expert guide shares stories about Edinburgh's history alongside background on each brewery and the flavours in your glass.</description_md>\n<parameter name=\"meeting_point\">John's Coffee House & Tavern (part of CoDE Hostel), opposite St Giles' Cathedral and behind the Mercat Cross, marked by the statue of firefighter James Braidwood.",
+      "highlights": [
+        "Taste four local Edinburgh craft beers",
+        "Exclusive access to The Lost Close",
+        "Atmospheric underground historic setting",
+        "Discover Edinburgh's craft beer scene",
+        "Led by expert local storytellers"
+      ]
     },
     {
       "title": "Edinburgh: Leith Brewery Tour and Craft Beer Tasting",
@@ -29,7 +50,18 @@
       "duration": "1.5 hours",
       "rating": "5.0",
       "reviews": "1",
-      "summary": "A guided brewery tour in Edinburgh's port district of Leith, covering how the beer is made before a tasting session of the brewery's craft range."
+      "summary": "A guided brewery tour in Edinburgh's port district of Leith, covering how the beer is made before a tasting session of the brewery's craft range.",
+      "slug": "edinburgh-leith-brewery-tour-and-craft-beer-tasting",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/fd36cbb2ee2eddc268faae47527acf846e3a1a44eae1993796680a81acc546d4.jpg",
+      "description_md": "Visit a working brewery in Leith, the historic port district of Edinburgh, for a guided tour followed by a tasting in the onsite taproom. You will learn the story of the brewery, the history of brewing in Edinburgh and Leith, and how the port area developed into one of the city's most fashionable neighbourhoods. In the taproom you can sample a range of beers, from familiar styles to more adventurous limited-edition craft brews, whatever your level of experience.",
+      "highlights": [
+        "Guided tour of a Leith brewery",
+        "Tasting session in the onsite taproom",
+        "Sample beers from familiar to limited-edition",
+        "Learn the history of brewing in Edinburgh",
+        "Discover Leith's transformation as a port area"
+      ],
+      "meeting_point": "Leith, Edinburgh port area (specific venue not stated)"
     },
     {
       "title": "Leith Brewery Trail: Craft Beers and History Tour",
@@ -38,7 +70,19 @@
       "duration": "3 hours",
       "rating": "5.0",
       "reviews": "5",
-      "summary": "A three-hour walking trail visiting three of Leith's craft breweries — Newbarns, Campervan and Moonwake — with beer tastings at each stop plus snacks and pizza along the way."
+      "summary": "A three-hour walking trail visiting three of Leith's craft breweries — Newbarns, Campervan and Moonwake — with beer tastings at each stop plus snacks and pizza along the way.",
+      "slug": "leith-brewery-trail-craft-beers-and-history-tour",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/17140a0940b227a7d849a1fee787176bd6eed25cca692e862a39aae7eb1697da.jpeg",
+      "description_md": "This walking tour explores Leith, one of Edinburgh's most vibrant neighbourhoods, combining its history with its craft beer scene. Starting at the top of Leith Walk, you make your way down towards the Shore, Leith's historic port area, passing a Trainspotting filming location along the way. Three local breweries and taprooms are visited: Newbarns, Campervan and Moonwake, each known for a distinct brewing style, with beer samples at every stop. The route concludes near the Scottish National War Memorial.",
+      "highlights": [
+        "Visit three craft breweries and taprooms",
+        "Sample beers at each stop",
+        "Snacks at the first two breweries",
+        "Personal pizza at the final stop",
+        "Walk through Leith's historic port area",
+        "Gluten-free and vegetarian options available"
+      ],
+      "meeting_point": "Meet by the old cable wheels on Iona Street. The closest tram stop is Balfour Street."
     },
     {
       "title": "Edinburgh: Harry Potter Walking Tour and Beer Tasting",
@@ -47,7 +91,18 @@
       "duration": "5 hours",
       "rating": "4.9",
       "reviews": "8",
-      "summary": "A guided walk around the Edinburgh locations associated with J.K. Rowling and the Harry Potter books, followed by a tasting of Scottish beers in an underground cellar with a local expert."
+      "summary": "A guided walk around the Edinburgh locations associated with J.K. Rowling and the Harry Potter books, followed by a tasting of Scottish beers in an underground cellar with a local expert.",
+      "slug": "edinburgh-harry-potter-walking-tour-and-beer-tasting",
+      "description_md": "This combined walking tour and beer tasting takes you through the Edinburgh locations that inspired J.K. Rowling's writing of Harry Potter, including university sites, historic graveyards and streets. Over roughly two hours, a local guide shares the stories behind Rowling's magical world alongside the wider history of the city. The experience then concludes with a Scottish beer tasting led by an expert in an underground cellar.",
+      "highlights": [
+        "Explore locations that inspired Harry Potter",
+        "Visit the Elephant Cafe where Rowling wrote",
+        "Five Scottish beer tastings",
+        "Tasting in an underground cellar",
+        "Views of Edinburgh Castle",
+        "Small group with local guide"
+      ],
+      "meeting_point": "Tron Kirk Market on the Royal Mile, opposite Bella Italia (about 10 minutes' walk from Waverley Station)"
     }
   ]
 }

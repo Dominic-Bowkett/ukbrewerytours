@@ -140,10 +140,42 @@ const humanDate = iso => {
   return `${d} ${months[mo - 1]} ${y}`;
 };
 
+/** Derive weekday tags from a free-text schedule, for the day filter. */
+function parseDays(schedule) {
+  if (!schedule) return [];
+  const s = schedule.toLowerCase();
+  const map = [['monday', 'Mon'], ['tuesday', 'Tue'], ['wednesday', 'Wed'], ['thursday', 'Thu'], ['friday', 'Fri'], ['saturday', 'Sat'], ['sunday', 'Sun']];
+  const days = new Set();
+  for (const [full, code] of map) if (s.includes(full)) days.add(code);
+  if (s.includes('weekend')) { days.add('Sat'); days.add('Sun'); }
+  if (s.includes('daily') || s.includes('every day')) map.forEach(([, c]) => days.add(c));
+  return [...days];
+}
+const DAY_ORDER = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
 /* ---------- GetYourGuide partner data + city guides ---------- */
 
 const AFF_QS = 'partner_id=YK95MF9&utm_medium=travel_agent';
 const affUrl = u => u + (u.includes('?') ? '&' : '?') + AFF_QS;
+const gygSlug = u => u.replace(/\/$/, '').split('/').pop().replace(/-t\d+$/, '');
+const GYG_IMG_DIR = path.join(ROOT, 'assets', 'img', 'gyg');
+const gygImgs = new Set(fs.existsSync(GYG_IMG_DIR) ? fs.readdirSync(GYG_IMG_DIR) : []);
+const gygImage = slug => gygImgs.has(slug + '.jpg') ? `/assets/img/gyg/${slug}.jpg` : '/assets/img/hero-static.jpg';
+
+const CITY_IMG_DIR = path.join(ROOT, 'assets', 'img', 'city');
+const cityImgs = new Set(fs.existsSync(CITY_IMG_DIR) ? fs.readdirSync(CITY_IMG_DIR) : []);
+/** Best available wide banner image for a city: bespoke → our tour photo → partner photo → default. */
+function cityHeroImage(name) {
+  const slug = name.toLowerCase();
+  if (cityImgs.has(slug + '.jpg')) return `/assets/img/city/${slug}.jpg`;
+  const own = activeTours.find(t => t.city === name && t.images && t.images[0]);
+  if (own) return localizeUrl(own.images[0].url);
+  const g = cityGuides.find(c => c.name === name);
+  const gt = g && (g.gyg_tours || [])[0];
+  if (gt) return gygImage(gt.slug || gygSlug(gt.url));
+  return '/assets/img/hero-static.jpg';
+}
+
 const gygDir = path.join(ROOT, 'content', 'gyg');
 const cityGuides = fs.existsSync(gygDir)
   ? fs.readdirSync(gygDir).filter(f => f.endsWith('.json')).map(f => JSON.parse(read('content/gyg/' + f)))
@@ -155,21 +187,32 @@ cityGuides.sort((a, b) => {
 });
 const guideFor = name => cityGuides.find(c => c.name === name);
 
+// Flatten every partner tour with a derived slug + owning city, for on-site listing pages.
+const allGyg = [];
+for (const g of cityGuides) {
+  for (const t of (g.gyg_tours || [])) {
+    const slug = t.slug || gygSlug(t.url);
+    allGyg.push({ ...t, slug, city: g.name });
+  }
+}
+const gygBySlug = Object.fromEntries(allGyg.map(t => [t.slug, t]));
+
+/** Card for a partner experience — links to our on-site listing page (not straight to GYG). */
 function partnerCard(g) {
+  const slug = g.slug || gygSlug(g.url);
+  const img = gygImage(slug);
   const rating = g.rating ? `★ ${g.rating}${g.reviews ? ` (${Number(g.reviews).toLocaleString('en-GB')})` : ''}` : null;
   const meta = [g.duration, rating].filter(Boolean).join(' · ');
-  return `<a class="partner-card" href="${affUrl(g.url)}" target="_blank" rel="sponsored noopener">
-    <span class="partner-tag">Partner · GetYourGuide</span>
-    <h3>${esc(g.title)}</h3>
-    ${meta ? `<p class="meta">${esc(meta)}</p>` : ''}
-    ${g.summary ? `<p class="sum">${esc(g.summary)}</p>` : ''}
-    <div class="price-row">
-      <span class="price">${g.price_gbp ? `From £${g.price_gbp}` : 'See prices'}</span>
-      <span class="btn btn-primary btn-sm">Buy tickets ↗</span>
+  return `<a class="tour-card partner" href="/tours/experiences/${slug}/" data-card data-city="${esc(g.city)}" data-name="${esc(g.title.toLowerCase())}" data-days="">
+    <div class="thumb"><img src="${img}" alt="${esc(g.title)}" loading="lazy"><span class="city-tag">${esc(g.city)}</span><span class="partner-flag">Partner</span></div>
+    <div class="body">
+      <h3>${esc(g.title)}</h3>
+      ${meta ? `<p class="meta">${esc(meta)}</p>` : ''}
+      <div class="price-row"><span class="price">${g.price_gbp ? `£${g.price_gbp}` : 'See prices'} ${g.price_gbp ? '<small>from</small>' : ''}</span><span class="go">View details →</span></div>
     </div>
   </a>`;
 }
-const DISCLOSURE = `<p class="disclosure">Tours marked "Partner" are operated by third parties and booked through GetYourGuide; we may earn a commission at no extra cost to you.</p>`;
+const DISCLOSURE = `<p class="disclosure">Experiences marked "Partner" are operated by third parties and booked through GetYourGuide, our booking partner; we may earn a commission at no extra cost to you.</p>`;
 
 /* ---------- components ---------- */
 
@@ -177,7 +220,8 @@ function tourCard(t) {
   const img = localizeUrl((t.images && t.images[0] && t.images[0].url) || '');
   const price = t.price ? `£${t.price} <small>per person</small>` : `<small>price on enquiry</small>`;
   const meta = [t.duration, t.schedule && t.schedule.split('(')[0].trim()].filter(Boolean).join(' · ');
-  return `<a class="tour-card" href="/tours/${t.old_slug}/">
+  const days = parseDays(t.schedule).join(',');
+  return `<a class="tour-card" href="/tours/${t.old_slug}/" data-card data-city="${esc(t.city)}" data-name="${esc(t.name.toLowerCase())}" data-days="${days}">
     <div class="thumb"><img src="${img}" alt="${esc(t.name)}" loading="lazy"><span class="city-tag">${esc(t.city)}</span></div>
     <div class="body">
       <h3>${esc(t.name)}</h3>
@@ -207,17 +251,19 @@ function postCard(p) {
 
 const layout = read('templates/layout.html');
 
-function writePage(outPath, { title, description, content, nav, ogImage, jsonld }) {
+function writePage(outPath, { title, description, content, nav, ogImage, jsonld, robots }) {
   const canonical = site.base_url + ('/' + outPath).replace(/\/index\.html$/, '/');
   const navKeys = ['tours', 'vouchers', 'groups', 'blog', 'about'];
   const navMap = {};
   for (const k of navKeys) navMap['nav_' + k] = nav === k ? 'aria-current="page"' : '';
   let og = ogImage || '/assets/img/hms-hops.jpg';
   if (og.startsWith('/')) og = site.base_url + og;
+  const blocks = Array.isArray(jsonld) ? jsonld : (jsonld ? [jsonld] : []);
   const html = fill(layout, {
     title, description: esc(description), canonical, og_image: og,
     content, whatsapp_url: WHATSAPP, year: YEAR,
-    structured_data: jsonld ? `<script type="application/ld+json">${JSON.stringify(jsonld)}</script>` : '',
+    robots: robots ? `<meta name="robots" content="${robots}">` : '',
+    structured_data: blocks.map(b => `<script type="application/ld+json">${JSON.stringify(b)}</script>`).join('\n  '),
     ...navMap,
   });
   const abs = path.join(OUT, outPath);
@@ -240,46 +286,53 @@ const featuredCards = site.featured
   .map(tourCard).join('\n');
 
 const citiesWithTours = site.city_order.filter(c => activeTours.some(t => t.city === c));
-const partnerOnlyGuides = cityGuides.filter(g => !citiesWithTours.includes(g.name) && (g.gyg_tours || []).length);
-const cityNav = [...citiesWithTours, ...partnerOnlyGuides.map(g => g.name)]
-  .map(c => `<a href="#${c.toLowerCase()}">${c}</a>`).join('\n');
 
-const citySections = citiesWithTours.map(c => {
-  const ct = activeTours.filter(t => t.city === c);
-  const guide = guideFor(c);
-  const explore = guide ? `<a class="explore" href="/tours/${guide.slug}/">${c} city guide →</a>` : '';
-  const gyg = guide && (guide.gyg_tours || []).length
-    ? `<h3 class="partner-head">Also bookable in ${c} — via our partner GetYourGuide</h3>
-       <div class="card-grid">${guide.gyg_tours.map(partnerCard).join('\n')}</div>`
-    : '';
-  return `<section class="city-section" id="${c.toLowerCase()}">
-  <div class="container">
-    <h2>${c} <span class="count">${ct.length} tour${ct.length > 1 ? 's' : ''}</span>${explore}</h2>
-    <div class="card-grid">${ct.map(tourCard).join('\n')}</div>
-    ${gyg}
-  </div>
-</section>`;
-}).join('\n') + partnerOnlyGuides.map(g => `
-<section class="city-section" id="${g.slug}">
-  <div class="container">
-    <h2>${g.name} <span class="count">partner tours</span><a class="explore" href="/tours/${g.slug}/">${g.name} city guide →</a></h2>
-    <div class="card-grid">${g.gyg_tours.map(partnerCard).join('\n')}</div>
-  </div>
-</section>`).join('\n') + `
-<div class="container" style="padding-top:34px">${DISCLOSURE}</div>`;
+// All cities across our tours + partner experiences, in preferred order, for filters + tiles.
+const allCityNames = [...new Set([...activeTours.map(t => t.city), ...allGyg.map(t => t.city)])]
+  .sort((a, b) => {
+    const ia = cityOrder.indexOf(a), ib = cityOrder.indexOf(b);
+    return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib) || a.localeCompare(b);
+  });
+
+// "Explore by city" tiles — the key cities (those with a bespoke banner), in preferred order.
+const tileCities = allCityNames.filter(c => guideFor(c) && cityImgs.has(c.toLowerCase() + '.jpg'));
+const exploreTiles = tileCities.map(c => {
+  const g = guideFor(c);
+  const own = activeTours.filter(t => t.city === c).length;
+  const exp = (g.gyg_tours || []).length;
+  const n = own + exp;
+  return `<a class="city-tile" href="/tours/${g.slug}/" style="background-image:url('${cityHeroImage(c)}')">
+    <span class="city-tile-scrim"></span>
+    <span class="city-tile-body"><span class="city-tile-name">${c}</span><span class="city-tile-count">${n} tour${n === 1 ? '' : 's'} &amp; experience${n === 1 ? '' : 's'}</span></span>
+  </a>`;
+}).join('\n');
+
+const cityOptions = allCityNames.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
+const dayOptions = DAY_ORDER.map(d => {
+  const names = { Mon: 'Mondays', Tue: 'Tuesdays', Wed: 'Wednesdays', Thu: 'Thursdays', Fri: 'Fridays', Sat: 'Saturdays', Sun: 'Sundays' };
+  return `<option value="${d}">${names[d]}</option>`;
+}).join('');
+
+const ourToursGrid = activeTours.map(tourCard).join('\n');
+const partnerGrid = allGyg.map(partnerCard).join('\n');
 
 const blogCards = posts.map(postCard).join('\n');
 
 const pageTokens = {
   featured_cards: featuredCards,
-  city_nav: cityNav,
-  city_sections: citySections,
+  explore_tiles: exploreTiles,
+  city_options: cityOptions,
+  day_options: dayOptions,
+  our_tours_grid: ourToursGrid,
+  partner_grid: partnerGrid,
+  disclosure: DISCLOSURE,
   blog_cards: blogCards,
   whatsapp_url: WHATSAPP,
   email: site.email,
   google_rating: site.google_rating,
   google_reviews: site.google_reviews,
   tour_count: String(activeTours.length),
+  partner_count: String(allGyg.length),
   city_count: String(citiesWithTours.length),
 };
 
@@ -393,48 +446,63 @@ for (const p of posts) {
   });
 }
 
-/* ----- city guide pages ----- */
+/* ----- city guide pages (with hero banner) ----- */
 
 for (const g of cityGuides) {
   const own = activeTours.filter(t => t.city === g.name);
-  const gygCards = (g.gyg_tours || []).map(partnerCard).join('\n');
-  const heroImg = own[0] && own[0].images && own[0].images[0]
-    ? localizeUrl(own[0].images[0].url) : '/assets/img/hero-static.jpg';
+  const banner = cityHeroImage(g.name);
+  const gygTours = (g.gyg_tours || []);
+  const ownCount = own.length, expCount = gygTours.length;
 
-  const content = `<section class="page-hero">
+  // A short punchy hero tagline (first sentence of the intro, trimmed).
+  const firstSentence = (g.intro_md || '').split(/(?<=[.!?])\s/)[0].replace(/\s+/g, ' ').trim();
+  const heroTag = firstSentence.length > 150 ? firstSentence.slice(0, 147) + '…' : firstSentence;
+  const countBits = [
+    ownCount ? `${ownCount} of our tour${ownCount > 1 ? 's' : ''}` : null,
+    expCount ? `${expCount} partner experience${expCount > 1 ? 's' : ''}` : null,
+  ].filter(Boolean).join(' · ');
+
+  const content = `<section class="city-hero" style="background-image:url('${banner}')">
+  <div class="city-hero-scrim"></div>
   <div class="container">
-    <nav class="breadcrumbs" style="padding:0 0 18px" aria-label="Breadcrumb">
+    <nav class="breadcrumbs city-crumbs" aria-label="Breadcrumb">
       <a href="/">Home</a><span class="sep">/</span><a href="/tours/">Tours</a><span class="sep">/</span>${g.name}
     </nav>
-    <span class="kicker">City guide</span>
+    <span class="kicker">${g.name} · city guide</span>
     <h1>${g.name} brewery tours &amp; beer experiences</h1>
+    ${heroTag ? `<p class="lede">${esc(heroTag)}</p>` : ''}
+    ${countBits ? `<div class="city-hero-stats">${countBits}</div>` : ''}
+    <div class="hero-ctas">
+      <a class="btn btn-primary" href="#tours">See ${g.name} tours</a>
+      <a class="btn btn-outline-light" href="/group-tours/">Private group tours</a>
+    </div>
   </div>
 </section>
-${own.length ? `<section class="section" style="padding-bottom:34px">
+${ownCount ? `<section class="section" id="tours" style="padding-bottom:30px">
   <div class="container">
-    <div class="section-head"><span class="kicker">Our tours</span><h2>Our ${g.name} tours</h2></div>
+    <div class="section-head"><span class="kicker">Led by our team</span><h2>Our ${g.name} tours</h2></div>
     <div class="card-grid">${own.map(tourCard).join('\n')}</div>
   </div>
 </section>` : ''}
-<section class="section" style="padding-top:44px;padding-bottom:34px">
+${expCount ? `<section class="section" ${ownCount ? 'style="padding-top:30px"' : 'id="tours"'}>
   <div class="container">
-    <div class="section-head"><span class="kicker">Eat &amp; drink</span><h2>Food &amp; drink in ${g.name}</h2></div>
+    <div class="section-head">
+      <span class="kicker">Book online</span>
+      <h2>${ownCount ? `More ${g.name} experiences` : `${g.name} tours &amp; experiences`}</h2>
+      <p>Hand-picked brewery tours, tastings and food &amp; drink experiences, bookable through our partner GetYourGuide.</p>
+    </div>
+    <div class="card-grid">${gygTours.map(partnerCard).join('\n')}</div>
+    ${DISCLOSURE}
+  </div>
+</section>` : ''}
+<section class="section band-cream" style="border-top:1px solid var(--line)">
+  <div class="container">
+    <div class="section-head"><span class="kicker">Eat &amp; drink in ${g.name}</span><h2>Where to drink in ${g.name}</h2></div>
     <div class="prose">
 ${mdToHtml(g.intro_md || '')}
     </div>
   </div>
 </section>
-${gygCards ? `<section class="section" style="padding-top:44px">
-  <div class="container">
-    <div class="section-head">
-      <span class="kicker">More to book</span>
-      <h2>More ${g.name} tours &amp; experiences</h2>
-      <p>Hand-picked experiences from our partner GetYourGuide.</p>
-    </div>
-    <div class="card-grid">${gygCards}</div>
-    ${DISCLOSURE}
-  </div>
-</section>` : ''}
 <section class="section band-dark">
   <div class="container cta-banner">
     <h2>Planning a group day out in ${g.name}?</h2>
@@ -443,10 +511,85 @@ ${gygCards ? `<section class="section" style="padding-top:44px">
   </div>
 </section>`;
 
+  const crumbLd = {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: site.base_url + '/' },
+      { '@type': 'ListItem', position: 2, name: 'Tours', item: site.base_url + '/tours/' },
+      { '@type': 'ListItem', position: 3, name: g.name, item: `${site.base_url}/tours/${g.slug}/` },
+    ],
+  };
+
   writePage(`tours/${g.slug}/index.html`, {
-    title: `${g.name} Brewery Tours & Beer Experiences | UK Brewery Tours`,
-    description: g.meta_description || `Brewery tours, beer tastings and food & drink experiences in ${g.name}.`,
-    content, nav: 'tours', ogImage: heroImg,
+    title: `${g.name} Brewery Tours & Beer Tasting | Book Online | UK Brewery Tours`,
+    description: g.meta_description || `Brewery tours, beer tastings and food & drink experiences in ${g.name}. Compare and book top-rated tours online.`,
+    content, nav: 'tours', ogImage: banner, jsonld: crumbLd,
+  });
+}
+
+/* ----- partner (GetYourGuide) experience listing pages ----- */
+
+const gygByCity = {};
+for (const t of allGyg) (gygByCity[t.city] = gygByCity[t.city] || []).push(t);
+
+for (const t of allGyg) {
+  const img = gygImage(t.slug);
+  const guide = guideFor(t.city);
+  const ratingStr = t.rating ? `★ ${t.rating}${t.reviews ? ` · ${Number(t.reviews).toLocaleString('en-GB')} reviews` : ''}` : null;
+  const chips = [t.duration && `<span class="exp-chip">${ICONS.clock}${esc(t.duration)}</span>`,
+    ratingStr && `<span class="exp-chip star">${esc(ratingStr)}</span>`,
+    `<span class="exp-chip">${ICONS.pin}${esc(t.city)}</span>`].filter(Boolean).join('');
+  const highlights = (t.highlights || []).length
+    ? `<h2>Highlights</h2><ul class="includes-list">${t.highlights.map(h => `<li>${esc(h)}</li>`).join('')}</ul>` : '';
+  const meeting = t.meeting_point
+    ? `<h2>Meeting point</h2><p>${esc(t.meeting_point)}</p>` : '';
+  const desc = mdToHtml(t.description_md || t.summary || '');
+  const related = (gygByCity[t.city] || []).filter(x => x.slug !== t.slug).slice(0, 3);
+  const aff = affUrl(t.url);
+  const priceLine = t.price_gbp
+    ? `<span class="price">£${t.price_gbp}</span><span class="pp">per person from</span>`
+    : `<span class="pp" style="font-weight:600;font-size:1.05rem">See live prices</span>`;
+
+  const content = `<section class="exp-hero" style="background-image:url('${img}')">
+  <div class="exp-hero-scrim"></div>
+  <div class="container">
+    <nav class="breadcrumbs city-crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a><span class="sep">/</span><a href="/tours/">Tours</a><span class="sep">/</span><a href="/tours/${guide ? guide.slug : ''}/">${esc(t.city)}</a><span class="sep">/</span>Experience
+    </nav>
+    <span class="partner-flag-lg">Partner experience · GetYourGuide</span>
+    <h1>${esc(t.title)}</h1>
+    <div class="exp-chips">${chips}</div>
+  </div>
+</section>
+<section class="section" style="padding-top:44px">
+  <div class="container product-top">
+    <div class="prose">
+      <h2>About this experience</h2>
+      ${desc}
+      ${highlights}
+      ${meeting}
+    </div>
+    <aside class="booking-card">
+      <div class="price-line">${priceLine}</div>
+      <a class="btn btn-primary" href="${aff}" target="_blank" rel="sponsored noopener">Book on GetYourGuide ↗</a>
+      <a class="btn btn-outline" href="/tours/${guide ? guide.slug : ''}/">More ${esc(t.city)} tours</a>
+      <p class="note">${ratingStr ? esc(ratingStr) + ' · ' : ''}Free cancellation on most tours</p>
+      <p class="disclosure" style="margin-top:14px">Booked via GetYourGuide, our partner. We may earn a commission at no extra cost to you.</p>
+    </aside>
+  </div>
+</section>
+${related.length ? `<section class="section band-dark">
+  <div class="container">
+    <div class="section-head"><span class="kicker">More in ${esc(t.city)}</span><h2>You might also like</h2></div>
+    <div class="card-grid">${related.map(partnerCard).join('\n')}</div>
+  </div>
+</section>` : ''}`;
+
+  writePage(`tours/experiences/${t.slug}/index.html`, {
+    title: `${t.title} | UK Brewery Tours`,
+    description: (t.summary || t.description_md || '').replace(/\s+/g, ' ').slice(0, 158),
+    content, nav: 'tours', ogImage: img,
+    robots: 'noindex,follow',
   });
 }
 

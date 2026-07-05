@@ -11,7 +11,19 @@
       "duration": "1.5 hours",
       "rating": "4.7",
       "reviews": null,
-      "summary": "A 1.5-hour small-group tour of a working Yorkshire brewery at Nun Monkton near York, led by the owner and head brewer, with six beer tastings and a spread of Yorkshire tapas."
+      "summary": "A 1.5-hour small-group tour of a working Yorkshire brewery at Nun Monkton near York, led by the owner and head brewer, with six beer tastings and a spread of Yorkshire tapas.",
+      "slug": "york-brewery-tour-six-tastings-tapas",
+      "image_url": "https://cdn.getyourguide.com/img/tour_img/c9f2ed091757eba6e3d6f07f616ffbd93f7524702339b8c82309e6c1609931a8.jpg",
+      "description_md": "Spend an evening inside a working Yorkshire brewery, guided by the owner and head brewer, Tim. You'll learn about the brewing process and see the tanks up close before settling in to sample six half-pints of beer. The tastings are paired with a spread of Yorkshire-style tapas, including local charcuterie and cheese, served in the Winehouse Café, with the option to stay on afterwards for further drinks at your own pace.",
+      "highlights": [
+        "Guided tour of a working York brewery",
+        "Six beer tastings (half-pints)",
+        "Yorkshire-style tapas, charcuterie and cheese",
+        "Meet the owner and head brewer",
+        "Taste fresh beers by the tanks",
+        "Stay on afterwards for more drinks"
+      ],
+      "meeting_point": "Nun Monkton, near York, Yorkshire (Winehouse Cafe)"
     },
     {
       "title": "York: Cellar Door Beer Tasting",
@@ -20,7 +32,19 @@
       "duration": "1 day",
       "rating": "4.7",
       "reviews": null,
-      "summary": "A relaxed cellar-door tasting at the Winehouse Café in Nun Monkton near York, pairing bottled beers with Yorkshire tapas dishes, with bronze, silver and gold tiers to choose from."
+      "summary": "A relaxed cellar-door tasting at the Winehouse Café in Nun Monkton near York, pairing bottled beers with Yorkshire tapas dishes, with bronze, silver and gold tiers to choose from.",
+      "slug": "york-cellar-door-beer-tasting",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/b77f3046061741157cee0a5176ce4c7af51b373029f415c570f7667eec8f4fa6.jpg",
+      "description_md": "A self-guided beer tasting experience in the village of Nun Monkton, near York. Guests choose award-winning beers, such as Silverheart IPA and Blackheart Stout, from a fully stocked fridge and enjoy them in the Winehouse Café or on the terrace. Rather than small measures, the tasting features full 500ml bottles paired with sharing plates of Yorkshire tapas, including local cheeses, cured meats, crackers, olives and chocolate. Sessions run Tuesday to Saturday between 11:00 and 14:00.",
+      "highlights": [
+        "Self-guided beer tasting in Nun Monkton",
+        "Choose from Bronze, Silver or Gold tiers",
+        "Full 500ml bottles from a stocked fridge",
+        "Paired with Yorkshire tapas sharing plates",
+        "Local cheeses, cured meats and olives",
+        "Small groups of up to 6 people"
+      ],
+      "meeting_point": "Winehouse Café, Nun Monkton, York"
     }
   ]
 }

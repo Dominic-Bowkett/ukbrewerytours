@@ -11,7 +11,19 @@
       "duration": "45 minutes",
       "rating": null,
       "reviews": null,
-      "summary": "A 45-minute guided tour of Thornbridge's Riverside brewery in Bakewell, home to the UK's only working Burton Union brewing set, finishing with a tasting of six beers in the taproom."
+      "summary": "A 45-minute guided tour of Thornbridge's Riverside brewery in Bakewell, home to the UK's only working Burton Union brewing set, finishing with a tasting of six beers in the taproom.",
+      "slug": "bakewell-thornbridge-brewery-tour-beer-tasting-experience",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/4a465dee19a88bb13c7fc9e5e24893abd235896d4ec0ad7d35114ea915bf829a.jpg",
+      "description_md": "Enjoy a 45-minute guided tour of Thornbridge Brewery, set on the edge of the Peak District in Bakewell. The experience takes place in the Taproom beside the original Hall brewery kit, home to the UK's only working Burton Union set, and begins with a short film on the brewery's history. A guide walks you through the brewing process before a tutored tasting of six selected beers, served as thirds, ranging from crisp lagers to hoppy IPAs and rich stouts. The tour is dog-friendly and ends in the Taproom, with a 10% discount on takeaway beers in the shop.",
+      "highlights": [
+        "Taste six unique Thornbridge beers as thirds",
+        "See the UK's only working Burton Union set",
+        "Watch a short film on Thornbridge's heritage",
+        "Tutored tasting with expert insights",
+        "45-minute guided tour in the Taproom",
+        "10% discount on takeaway beers"
+      ],
+      "meeting_point": "Thornbridge Brewery, Bakewell (arrive at least 15 minutes before your start time)"
     },
     {
       "title": "Sheffield: Gin Distillery Tasting Visit with Guided Tour",
@@ -20,7 +32,19 @@
       "duration": "1.5 hours",
       "rating": "5.0",
       "reviews": "40",
-      "summary": "A guided visit to Locksley Distilling Co. at Sheffield's historic Portland Works, with a look at the gin-making process and a tasting of the core range, including a gin and tonic."
+      "summary": "A guided visit to Locksley Distilling Co. at Sheffield's historic Portland Works, with a look at the gin-making process and a tasting of the core range, including a gin and tonic.",
+      "slug": "sheffield-gin-distillery-tasting-visit-with-guided-tour",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/9af928ea92a44b3cb03d7b24fcd2fe3e676f623eb7874d515c861648e33e9da4.jpg",
+      "description_md": "This 90-minute guided tour explores Locksley Distilling's operations inside Sheffield's historic Portland Works, a Grade II* listed building dating from 1879. Visitors get an intimate look at the small-batch gin production process and learn about the distillery's botanicals and their origins. The experience includes an expert-led tasting session covering the distillery's core range, along with a Locksley gin and tonic.",
+      "highlights": [
+        "Guided tour of the working distillery",
+        "See small-batch gin production up close",
+        "Locksley gin and tonic tasting",
+        "Expert-led tasting of the core range",
+        "Learn about botanicals and their origins",
+        "Small groups of up to 10 people"
+      ],
+      "meeting_point": "Outside the gate on the corner of Randall Street; the guide escorts you inside."
     }
   ]
 }

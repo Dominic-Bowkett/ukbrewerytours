@@ -11,7 +11,18 @@
       "duration": "1 hour",
       "rating": "5.0",
       "reviews": "1",
-      "summary": "A private pedal-powered party bike tour through central Cardiff for groups of up to eight, with a trained sober captain steering. Beer or prosecco is included, along with music over a Bluetooth speaker."
+      "summary": "A private pedal-powered party bike tour through central Cardiff for groups of up to eight, with a trained sober captain steering. Beer or prosecco is included, along with music over a Bluetooth speaker.",
+      "slug": "cardiff-beer-bike-tour-with-drinks-and-music",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/f565b6ba9da817ef05e4352e330cb7a6c77e2ed70c248d9fb4c26ed3c1863c29.jpg",
+      "description_md": "Explore Cardiff aboard a pedal-powered beer bike, gathering your group to pedal through the city's iconic streets while enjoying your own drinks and music. A trained sober captain handles all the steering and braking, so you can simply pedal and socialise. Each ride lasts around 60 minutes and suits stag and hen parties, birthdays, team events and group celebrations. The covered bike seats up to 14 guests and comes fitted with a Bluetooth speaker.",
+      "highlights": [
+        "Pedal through Cardiff's iconic streets",
+        "Bring your own drinks and music",
+        "Sober captain handles steering and braking",
+        "Covered bike with Bluetooth sound system",
+        "Seats up to 14 guests",
+        "Around 60 minutes per ride"
+      ]
     },
     {
       "title": "Cardiff: City Flavors Guided Food Tour with 8 Tastings",
@@ -20,7 +31,18 @@
       "duration": "3 hours",
       "rating": "4.9",
       "reviews": "11",
-      "summary": "A three-hour guided food walk through Cardiff city centre with eight or more tastings of traditional and modern Welsh food, led by an official Wales Tourist Guide in groups capped at eight."
+      "summary": "A three-hour guided food walk through Cardiff city centre with eight or more tastings of traditional and modern Welsh food, led by an official Wales Tourist Guide in groups capped at eight.",
+      "slug": "cardiff-city-flavors-guided-food-tour-with-8-tastings",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/935d3bb74a431cc08507b15041e6d21771471a9a3c748d1c716ef01f8dfb299d.jpg",
+      "description_md": "This guided walking food tour explores Cardiff's city centre, combining the capital's landmarks and arcades with tastings of traditional and modern Welsh food. Led by a Blue or Green Badge Official Wales Tourist Guide, it takes in the city's history and food culture as you stroll through its streets and hidden corners. The experience includes 8 to 10 tastings along the way, plus an external visit to Cardiff Castle.",
+      "highlights": [
+        "8 to 10 Welsh food and drink tastings",
+        "Guided by official Wales Tourist Guide",
+        "Explore Cardiff's landmarks and arcades",
+        "External visit to Cardiff Castle",
+        "Stories behind Welsh food culture"
+      ],
+      "meeting_point": "In front of Cardiff Castle's main entrance"
     },
     {
       "title": "Cardiff: Guided Welsh Food Walking Tour",
@@ -29,7 +51,19 @@
       "duration": "2.5 hours",
       "rating": "5.0",
       "reviews": "1",
-      "summary": "A guided walking tour with seven tastings of Welsh food and drink, taking in landmarks including the castle and market while meeting local producers. Expect regional specialities such as Welsh cheese, laverbread and cider."
+      "summary": "A guided walking tour with seven tastings of Welsh food and drink, taking in landmarks including the castle and market while meeting local producers. Expect regional specialities such as Welsh cheese, laverbread and cider.",
+      "slug": "cardiff-guided-walking-food-tour-welsh-food-tour",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/ff16c38e85ccff9373123c8956edf296f60be15c397c27bfe6fa376dd971315c.jpg",
+      "description_md": "This guided walking tour explores Cardiff through its food and drink, with a relaxed stroll around the city that takes in seven tastings of Welsh produce. Along the way you pass landmarks including Cardiff Castle, Principality Stadium and Bute Park, and wander the city's Victorian arcades and market. A local guide shares insights into Cardiff and even teaches a few words of Welsh, with the tastings adding up to a light lunch.",
+      "highlights": [
+        "7 tastings of Welsh food and drink",
+        "Leisurely guided stroll around Cardiff",
+        "Meet local producers",
+        "Explore Victorian arcades and market",
+        "See Cardiff Castle and Bute Park",
+        "Learn a few words of Welsh"
+      ],
+      "meeting_point": "Inside the Keep Terrace Cafe, within Cardiff Castle, Cardiff CF10 3RB"
     }
   ]
 }

@@ -7,8 +7,10 @@ param(
 $ErrorActionPreference = "Stop"
 Add-Type -AssemblyName System.Drawing
 $root = Split-Path $PSScriptRoot -Parent
-$tmp = Join-Path $env:TEMP "$Name.png"
+$flat = ($Name -replace '[\\/]', '_')
+$tmp = Join-Path $env:TEMP "$flat.png"
 $dest = Join-Path $root "assets\img\$Name.jpg"
+New-Item -ItemType Directory -Force (Split-Path $dest) | Out-Null
 Invoke-WebRequest -Uri $Url -OutFile $tmp -UseBasicParsing -TimeoutSec 60 | Out-Null
 $img = [System.Drawing.Image]::FromFile($tmp)
 $codec = [System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() | Where-Object { $_.MimeType -eq 'image/jpeg' }

@@ -1,28 +1,90 @@
-<section class="page-hero">
+<section class="hero tours-hero">
+  <img class="hero-bg" src="/assets/img/hero-bar-bg.jpg" alt="" fetchpriority="high">
+  <div class="hero-scrim"></div>
   <div class="container">
-    <span class="kicker">All tours</span>
-    <h1>Brewery tours &amp; beer tastings across the UK</h1>
-    <p class="lede">{{tour_count}} scheduled tours in {{city_count}} cities — every one guided by a genuine beer expert. Can't see your city? We run <a href="/group-tours/">private group tours</a> almost anywhere in the UK.</p>
-    <nav class="city-nav" aria-label="Jump to city">
-{{city_nav}}
-    </nav>
+    <div class="hero-inner" style="max-width:760px">
+      <span class="kicker">All tours &amp; experiences</span>
+      <h1>Brewery tours &amp; beer tastings across the UK</h1>
+      <p class="lede">{{tour_count}} of our own guided tours plus {{partner_count}} hand-picked partner experiences in {{city_count}}+ UK cities. Filter by city or day, or explore a city below.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#filter">Find a tour</a>
+        <a class="btn btn-outline-light" href="/group-tours/">Private group tours</a>
+      </div>
+    </div>
   </div>
 </section>
 
-{{city_sections}}
-
-<section class="section">
+<section class="section" style="padding-bottom:20px">
   <div class="container">
-    <div class="voucher-banner">
-      <div>
-        <span class="kicker" style="color:#7a4407">Can't pick a date?</span>
-        <h2>Give a gift voucher instead</h2>
-        <p>Monetary vouchers redeemable on any of our tours — instant email delivery, and they never expire.</p>
-        <p class="mt-3"><a class="btn btn-dark" href="/gift-vouchers/">Buy a gift voucher</a></p>
-      </div>
-      <div class="frame">
-        <img src="/assets/img/Little-martha-brewery-tour.jpg" alt="A guided brewery tour at Little Martha Brewing" loading="lazy">
-      </div>
+    <div class="section-head">
+      <span class="kicker">Explore by city</span>
+      <h2>Pick your city</h2>
+      <p>Every city has its own guide — our tours, bookable experiences and where to eat and drink.</p>
     </div>
+    <div class="city-tiles">
+{{explore_tiles}}
+    </div>
+  </div>
+</section>
+
+<section class="section" id="filter" style="padding-top:30px">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">Our tours</span>
+      <h2>Book a UK Brewery Tours original</h2>
+      <p>Our own award-winning guided tours and tastings, led by beer experts.</p>
+    </div>
+
+    <form class="filter-bar" data-filter aria-label="Filter tours">
+      <div class="filter-field">
+        <label for="f-city">City</label>
+        <select id="f-city" data-filter-city>
+          <option value="">All cities</option>
+          {{city_options}}
+        </select>
+      </div>
+      <div class="filter-field">
+        <label for="f-day">Day</label>
+        <select id="f-day" data-filter-day>
+          <option value="">Any day</option>
+          {{day_options}}
+        </select>
+      </div>
+      <div class="filter-field grow">
+        <label for="f-q">Search</label>
+        <input id="f-q" type="search" placeholder="Search tours…" data-filter-q autocomplete="off">
+      </div>
+      <button type="button" class="btn btn-outline btn-sm" data-filter-reset>Reset</button>
+    </form>
+
+    <p class="filter-count" data-filter-count aria-live="polite"></p>
+
+    <div class="card-grid" data-our-grid>
+{{our_tours_grid}}
+    </div>
+    <p class="filter-empty" data-filter-empty hidden>No tours match those filters. <button type="button" class="linklike" data-filter-reset>Clear filters</button> or <a href="/group-tours/">ask about a private tour</a>.</p>
+  </div>
+</section>
+
+<section class="section band-cream" style="border-top:1px solid var(--line)">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">More to book · Partner experiences</span>
+      <h2>Brewery tours, tastings &amp; pub walks</h2>
+      <p>Hand-picked experiences across the UK, bookable through our partner GetYourGuide — filtered by the city you choose above.</p>
+    </div>
+    <div class="card-grid" data-partner-grid>
+{{partner_grid}}
+    </div>
+    <p class="filter-empty" data-partner-empty hidden>No partner experiences in that city yet — try another city or clear the filter.</p>
+    {{disclosure}}
+  </div>
+</section>
+
+<section class="section band-dark">
+  <div class="container cta-banner">
+    <h2>Can't see your city?</h2>
+    <p class="mt-2">We run private brewery tours and beer tastings in most UK cities — from £29 per person. Tell us where and when.</p>
+    <a class="btn btn-primary" href="/group-tours/">Plan a private tour</a>
   </div>
 </section>

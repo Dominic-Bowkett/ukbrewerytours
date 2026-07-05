@@ -11,7 +11,19 @@
       "duration": "1 hour",
       "rating": "4.8",
       "reviews": "294",
-      "summary": "A guided tour of Tennent's Wellpark Brewery, going behind the scenes of the brewing process and the brand's heritage collection. It finishes with a complimentary pint of Tennent's Lager."
+      "summary": "A guided tour of Tennent's Wellpark Brewery, going behind the scenes of the brewing process and the brand's heritage collection. It finishes with a complimentary pint of Tennent's Lager.",
+      "slug": "glasgow-tennent-s-brewery-tour",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/43b6018b544dd989.jpeg",
+      "description_md": "Take a guided tour of Tennent's Wellpark Brewery in Glasgow and go behind the scenes of how Scotland's signature lager is brewed. Over roughly an hour, a live guide leads you through the brewing process and the site's 450 years of history, with headsets provided throughout. You also visit the Heritage Centre, where vintage packaging, memorabilia and classic advertisements are on display, before finishing with a complimentary pint of Tennent's Lager.",
+      "highlights": [
+        "See behind the scenes of the brewing process",
+        "Explore 450 years of Wellpark Brewery history",
+        "Visit the Heritage Centre and vintage memorabilia",
+        "Enjoy a free pint of Tennent's Lager",
+        "Live English-speaking guide with headsets",
+        "Roughly one-hour walking tour"
+      ],
+      "meeting_point": "Check-in with staff at the Tennent's Visitor Centre, Wellpark Brewery, Glasgow."
     },
     {
       "title": "Glasgow: Pub History Tour with Beer & Cider Tasting",
@@ -20,7 +32,16 @@
       "duration": "2 hours",
       "rating": "4.8",
       "reviews": "85",
-      "summary": "A guided walk through Glasgow's brewing history, from Blythswood Square through the High Street and Merchant City, telling how the city became a major beer exporter. Includes tutored tastings of Scottish craft beers along the way."
+      "summary": "A guided walk through Glasgow's brewing history, from Blythswood Square through the High Street and Merchant City, telling how the city became a major beer exporter. Includes tutored tastings of Scottish craft beers along the way.",
+      "slug": "glasgow-walking-tour-with-beer-tasting",
+      "description_md": "This walking tour explores Glasgow's New Town through the story of William Harley and the city's brewing history. Setting off from Blythswood Square, you follow how Harley rose from a young labourer to make and lose a fortune, a tale taking in royal visitors, corporate espionage and civic duty, which set Glasgow on course to become the world's largest exporter of bottled beer. The experience ends with a tutored tasting of Scottish award-winning craft beers.</description_md>\n<parameter name=\"meeting_point\">Meet your host on the corner outside 8 Nelson Mandela Place, Glasgow (near Blythswood Square).",
+      "highlights": [
+        "Guided walking tour of Glasgow's New Town",
+        "Hear the story of brewer William Harley",
+        "Tutored tasting of Scottish craft beers",
+        "Explore beyond the main tourist areas",
+        "Learn how Scotland became a top beer exporter"
+      ]
     },
     {
       "title": "Glasgow: Scottish Rogue Whisky Bar Walking Tour",
@@ -29,7 +50,16 @@
       "duration": "2.5 hours",
       "rating": "5.0",
       "reviews": "10",
-      "summary": "A walking tour linking Glasgow's history with its whisky culture, visiting three pubs with a 25ml dram to sample at each, led by a local expert guide."
+      "summary": "A walking tour linking Glasgow's history with its whisky culture, visiting three pubs with a 25ml dram to sample at each, led by a local expert guide.",
+      "slug": "glasgow-scottish-rogue-whisky-pub-crawl",
+      "description_md": "This walking tour takes you through Glasgow to explore the city's history and its deep connections with the Scotch whisky industry. You stop at three of the best whisky pubs in the city, sampling a dram of Scotch at each while a local Scottish Rogue guide explains how to get the most from your tasting. Along the way you hear stories about Glasgow, its culture and its whisky heritage.</description_md>\n<parameter name=\"meeting_point\">Outside Caffe Nero, St Enoch Square, next to the St Enoch Subway entrance/exit. The tour finishes at The Scotch Malt Whisky Society.",
+      "highlights": [
+        "Explore Glasgow history and Scotch whisky links",
+        "Visit three of the best whisky pubs",
+        "Sample a dram of Scotch at each stop",
+        "Learn whisky tasting techniques from your guide",
+        "Hear stories from a local Scottish Rogue guide"
+      ]
     },
     {
       "title": "Glasgow: Guided City Highlights Tour & Whisky Tasting (5pm)",
@@ -38,7 +68,19 @@
       "duration": "2 hours",
       "rating": "4.7",
       "reviews": "24",
-      "summary": "A guided evening walk past Glasgow's main landmarks followed by a tutored tasting of three full drams of Scotch whisky in a local venue."
+      "summary": "A guided evening walk past Glasgow's main landmarks followed by a tutored tasting of three full drams of Scotch whisky in a local venue.",
+      "slug": "glasgow-city-highlights-walking-tour-and-whisky-tasting",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/63d1051d1fc97.jpeg",
+      "description_md": "This two-hour small-group tour pairs a guided walk through Glasgow's historic centre with a Scottish whisky tasting. A local guide leads you past cultural landmarks and heritage sites while sharing the city's history, before you settle in for three drams at Mharsanta Restaurant. Groups are limited to ten people for a relaxed, personal experience.",
+      "highlights": [
+        "Guided walk through Glasgow's historic centre",
+        "Whisky tasting with three drams",
+        "See City Chambers, Cathedral and Necropolis",
+        "Discover Glasgow's street art",
+        "Knowledgeable local guide",
+        "Small group of up to 10"
+      ],
+      "meeting_point": "7 George Square, outside Glasgow City Chambers (guide wears an orange jacket)"
     }
   ]
 }

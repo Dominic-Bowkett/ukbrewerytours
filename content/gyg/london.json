@@ -11,7 +11,19 @@
       "duration": "3.5 hours",
       "rating": "5.0",
       "reviews": "4",
-      "summary": "A guided walk along the Bermondsey Beer Mile, visiting four railway-arch taprooms with tutored tastings led by an international beer judge."
+      "summary": "A guided walk along the Bermondsey Beer Mile, visiting four railway-arch taprooms with tutored tastings led by an international beer judge.",
+      "slug": "london-bermondsey-craft-brewery-tour",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/df31dd0bf82bf898e5bf2bde4f0e5f6182dd2f92a48170bcc00f68004dbbd6cb.jpg",
+      "description_md": "This guided walking tour explores the craft breweries and taprooms of Bermondsey's famous 'Beer Mile' in London. Small groups of up to 14 people are led by a local guide to four taprooms, with visits drawn from breweries such as Southwark Brewing, Anspach and Hobday, Moor Beer, The Kernel, Bianca Road and the Barrel Project. Along the way guests receive tutored tastings of every beer, learning how to taste beer, alongside the history of the area and the different beer styles.",
+      "highlights": [
+        "Walk the Bermondsey Beer Mile with a local guide",
+        "Visit 4 craft breweries and taprooms",
+        "Tutored tastings of every beer sampled",
+        "Learn to taste beer like a pro",
+        "Guided by an international beer judge",
+        "Small groups of up to 14 people"
+      ],
+      "meeting_point": "Bermondsey Beer Mile, London (approx. 51.50062, -0.07706)"
     },
     {
       "title": "London: Historic Pubs of Central London Walking Tour",
@@ -20,7 +32,17 @@
       "duration": "3.5 hours",
       "rating": "4.9",
       "reviews": "1176",
-      "summary": "A guided walk of around two miles through central London, calling at four historic taverns — some dating back to the 16th century — with stories of the city's drinking culture along the way."
+      "summary": "A guided walk of around two miles through central London, calling at four historic taverns — some dating back to the 16th century — with stories of the city's drinking culture along the way.",
+      "slug": "drink-london-historical-walking-pub-tour",
+      "description_md": "A guided walk of around two miles through central London, calling at four historic taverns — some dating back to the sixteenth century. Along the way your guide brings the capitals drinking culture to life with stories of the writers, rogues and revolutionaries who once propped up these bars.",
+      "highlights": [
+        "Four genuinely historic London pubs",
+        "Around two miles of gentle walking",
+        "Centuries of drinking-culture stories",
+        "Expert local guide",
+        "Small friendly group"
+      ],
+      "meeting_point": "Central London (details on booking)"
     },
     {
       "title": "London: Royal Historic Pubs Walking Tour",
@@ -29,7 +51,19 @@
       "duration": "2.5 hours",
       "rating": "5.0",
       "reviews": "630",
-      "summary": "A walking tour of four tucked-away pubs near Buckingham Palace, pairing British beers with tales of Churchill, royalty and other national figures."
+      "summary": "A walking tour of four tucked-away pubs near Buckingham Palace, pairing British beers with tales of Churchill, royalty and other national figures.",
+      "slug": "london-royal-historic-pubs-walking-tour",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/63c010af9eb98.png",
+      "description_md": "This 2.5-hour guided walking tour explores four historic, tucked-away pubs in London's royal district. Along the way you sample traditional British beer while your local guide shares stories of figures such as Churchill and the Queen. The route takes in secret alleyways, ancient tunnels and royal landmarks, with tales of scandal, romance and intrigue.",
+      "highlights": [
+        "Visit 4 hidden historic royal pubs",
+        "Taste traditional British beer",
+        "See Churchill's house",
+        "Explore London's royal district",
+        "Walk secret alleyways",
+        "Admire the royal palaces"
+      ],
+      "meeting_point": "Piccadilly Circus, next to the winged statue in the centre; guide holds an open umbrella."
     },
     {
       "title": "3 Locks Brewing Company: Guided tasting and brewery tour",
@@ -38,7 +72,19 @@
       "duration": "1.5 hours",
       "rating": "5.0",
       "reviews": "22",
-      "summary": "A tour and tasting at an independent brewery in Camden Market, including six beers — some poured straight from the tank."
+      "summary": "A tour and tasting at an independent brewery in Camden Market, including six beers — some poured straight from the tank.",
+      "slug": "3-locks-brewery-guided-tasting-and-brewery-tour",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/8f3740e2d942153a51222cd214e85ab230ea24345e331ec09f51b067bf5cb5d0.jpg",
+      "description_md": "Join a 1.5-hour guided tasting and brewery tour at 3 Locks Brewing Company, an independent brewery in London. You'll be taken through the brewhouse to learn about the brewing process while sampling a range of the brewery's beers, including some poured straight from the tank. The experience combines a friendly guided tasting flight with a behind-the-scenes look at how the beer is made.",
+      "highlights": [
+        "Welcome beer on arrival",
+        "Guided tasting flight of 6 tasters",
+        "Beer poured straight from the tank",
+        "Behind-the-scenes brewhouse tour",
+        "End-of-tour beer",
+        "10% discount on taproom purchases"
+      ],
+      "meeting_point": "Check in with the bar team at 3 Locks Brewing Company"
     },
     {
       "title": "London: Small Group, Ancient Pubs and Historic Taverns Tour",
@@ -47,7 +93,17 @@
       "duration": "2 hours",
       "rating": "4.9",
       "reviews": "125",
-      "summary": "A small-group, two-hour walk through some of London's oldest pubs and taverns, combining beer tasting with centuries of local history. Non-drinkers are welcome."
+      "summary": "A small-group, two-hour walk through some of London's oldest pubs and taverns, combining beer tasting with centuries of local history. Non-drinkers are welcome.",
+      "slug": "london-historic-pubs-beer-tasting",
+      "description_md": "This small-group guided walking tour leads you through some of London's most atmospheric pubs and historic taverns, several dating back to the 16th century. As you wind through cobbled streets, hidden courtyards and lesser-known corners of the city, your guide shares stories of the famous drinkers, criminals and local legends tied to each establishment. The experience combines historical storytelling with British ale tastings and an introduction to traditional pub culture. Participation in the drinking is entirely optional, so non-drinkers are equally welcome.</description_md>\n<parameter name=\"meeting_point\">Waterhouse Square, 1 Waterhouse Square, London. The guide holds a green sign reading \"Side Routes\".",
+      "highlights": [
+        "Visit historic London pubs and taverns",
+        "Hear stories of famous drinkers and legends",
+        "Taste traditional British ales",
+        "Learn about British pub traditions",
+        "Explore hidden streets and courtyards",
+        "Small-group, roughly 2-hour walking tour"
+      ]
     }
   ]
 }

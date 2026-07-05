@@ -11,7 +11,19 @@
       "duration": "2-3 hours",
       "rating": "4.8",
       "reviews": null,
-      "summary": "A private guided tasting tour of Birmingham's pubs and brewing heritage, with four to eight beer tastings depending on the option chosen and optional food pairings. The route passes city landmarks including Birmingham Cathedral and the Library of Birmingham."
+      "summary": "A private guided tasting tour of Birmingham's pubs and brewing heritage, with four to eight beer tastings depending on the option chosen and optional food pairings. The route passes city landmarks including Birmingham Cathedral and the Library of Birmingham.",
+      "slug": "birmingham-british-beer-private-guided-tasting-tour",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=850,height=560,dpr=2/tour_img/d5640604ece639ada5858f46fc694529466c5d371d5f5109ec2a6e3f619b80a5.jpg",
+      "description_md": "This private guided tasting tour explores Birmingham's brewing culture with a licensed local guide. You visit a selection of handpicked venues around the city centre, sampling a range of ales and craft beers paired with snacks or a meal, while learning about the city's industrial heritage and pub scene. Three duration options are available, ranging from two to four hours with four to eight beers included.",
+      "highlights": [
+        "Private tour with a licensed local guide",
+        "Sample 4 to 8 beers depending on option",
+        "Popular, regional and craft beer selections",
+        "Beers paired with snacks or a full meal",
+        "Reserved seating at curated venues",
+        "Learn Birmingham's brewing and industrial heritage"
+      ],
+      "meeting_point": "The Grand Hotel Birmingham, 1 Church St, Birmingham B3 2FE, United Kingdom"
     },
     {
       "title": "Birmingham Slogging Gang Evening Walking Tour with Pub Stops",
@@ -20,7 +32,19 @@
       "duration": "2 hours",
       "rating": "4.6",
       "reviews": "36",
-      "summary": "An evening walking tour through Birmingham's late 19th-century gang history, led by a guide in Peaky Blinders character, with stops at four drinking establishments ranging from real ale pubs to gin palaces. Drinks are at your own expense."
+      "summary": "An evening walking tour through Birmingham's late 19th-century gang history, led by a guide in Peaky Blinders character, with stops at four drinking establishments ranging from real ale pubs to gin palaces. Drinks are at your own expense.",
+      "slug": "birmingham-slogging-gang-evening-walking-tour-with-pub-stops",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/2d733fafd0dec258ee5d23e75a6863b72399da9cbd1b008b59137359d5e179e6.jpeg",
+      "description_md": "This two-hour guided evening walking tour explores Birmingham's criminal past through the story of the city's late 19th-century slogging gangs. Led by a guide dressed as a Peaky Blinder, you walk through the city centre learning about real gangs such as the Peaky Blinders and the Gun Quarter Gang. The route takes in four local pubs, with drinks included along the way for a genuinely local Birmingham experience.",
+      "highlights": [
+        "Explore Birmingham's slogging gang history",
+        "Guide dressed as a Peaky Blinder",
+        "Stops at four local pubs",
+        "Learn about the Peaky Blinders and Gun Quarter Gang",
+        "Drinks included along the way",
+        "Two-hour evening walking tour"
+      ],
+      "meeting_point": "Outside the Apple shop (Apple Birmingham); your guide will be dressed as a Peaky Blinder."
     },
     {
       "title": "Birmingham: Slogging Gangs Guided Walking Tour",
@@ -29,7 +53,18 @@
       "duration": "2 hours",
       "rating": "4.1",
       "reviews": "262",
-      "summary": "A two-hour guided walk through Birmingham's back streets telling the story of the city's slogging gangs and the real Peaky Blinders, taking in the Gunmakers Quarter and a local pub along the way."
+      "summary": "A two-hour guided walk through Birmingham's back streets telling the story of the city's slogging gangs and the real Peaky Blinders, taking in the Gunmakers Quarter and a local pub along the way.",
+      "slug": "birmingham-slogging-gangs-walking-tour-with-edward-shelby",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/4ad402aab8c7e8e9.jpeg",
+      "description_md": "Follow in the footsteps of Edward Shelby and his comrades on a guided walking tour through Birmingham's streets, exploring the history of the city's 19th- and 20th-century slogging gangs. Your guide, in character as Edward Shelby, leads you through hidden corners, dark alleyways and significant landmarks while recounting tales of notorious figures made famous by Peaky Blinders, such as Billy Kimber and Alfie Solomon. The walk includes a stop at a historical local pub for refreshments.",
+      "highlights": [
+        "Guided walk through Peaky Blinders history",
+        "Learn about Birmingham's slogging gangs",
+        "In-character narration as Edward Shelby",
+        "Explore hidden alleyways and landmarks",
+        "Refreshments stop at a historical pub"
+      ],
+      "meeting_point": "Across the street from the old fire station; look for a guide dressed as a Peaky Blinders character (52.4857244, -1.8900586)."
     }
   ]
 }

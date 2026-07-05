@@ -11,7 +11,19 @@
       "duration": "1.5 hours",
       "rating": "5.0",
       "reviews": "3",
-      "summary": "A guided visit to an organic vineyard and cider farm on the edge of Bristol, with walks through the vines and orchards. Includes tastings of natural wines and award-winning ciders paired with local cheese."
+      "summary": "A guided visit to an organic vineyard and cider farm on the edge of Bristol, with walks through the vines and orchards. Includes tastings of natural wines and award-winning ciders paired with local cheese.",
+      "slug": "bristol-wine-and-cider-tour-with-tastings",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/8c39ae8568535ae6d791d4938d4168dae59602b87ccf4bc0ef29deb29cba9236.jpg",
+      "description_md": "This 1.5-hour guided tour explores natural winemaking and cider-making at an organic vineyard and cider farm near Bristol. Visitors meet the farm owners, walk the vineyard and orchards, and learn about small-batch, seasonal production methods. The experience includes tastings of the handcrafted wine and cider alongside a local cheese pairing.",
+      "highlights": [
+        "Guided tour of organic vineyard and orchards",
+        "Wine and cider tastings",
+        "Hands-on activities at the farm",
+        "Local cheese pairing",
+        "Meet the farm owners",
+        "Transport to the farm included"
+      ],
+      "meeting_point": "Organic vineyard and cider farm near Bristol (Failand area); transport to the farm is included."
     },
     {
       "title": "Bristol: Local Craft Distillery's Gin Tasting Experience",
@@ -20,7 +32,19 @@
       "duration": "2 hours",
       "rating": "5.0",
       "reviews": "2",
-      "summary": "A two-hour session at a small Bristol craft distillery, starting with a garnished gin and tonic before a guided tasting of five seasonal gins in the tasting room. Tonic water and mixers are provided."
+      "summary": "A two-hour session at a small Bristol craft distillery, starting with a garnished gin and tonic before a guided tasting of five seasonal gins in the tasting room. Tonic water and mixers are provided.",
+      "slug": "bristol-local-craft-distillery-s-gin-tasting-experience",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/632318c3960633755dff037858c76dad699044967717b976e0b7dca12be2cfb8.png",
+      "description_md": "Step into the world of craft gin with a relaxed tasting experience in the heart of Bristol. You begin with a beautifully garnished gin and tonic on arrival, then settle into a cosy tasting room to learn about the distillery, the history of gin and how the spirits are made. Taste five of the best seasonal gins, all produced in the in-house distillery, each with its own distinctive style, and discover how the botanicals are selected and how the award-winning gins are distilled, infused and refined.",
+      "highlights": [
+        "Welcome gin and tonic on arrival",
+        "Taste five seasonal in-house gins",
+        "Learn how the spirits are made",
+        "Discover how botanicals are selected",
+        "Relaxed tasting in a cosy room",
+        "Tonic water and mixers included"
+      ],
+      "meeting_point": "Meet in the downstairs bar in the Rummer Hotel, situated in St Nicholas Market."
     }
   ]
 }

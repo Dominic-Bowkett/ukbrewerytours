@@ -11,7 +11,18 @@
       "duration": "1 hour",
       "rating": "5.0",
       "reviews": "2",
-      "summary": "A one-hour guided tasting at BeerBelly micropub in Hove, sampling a selection of local beers and craft brews from UK breweries with the pub's owner."
+      "summary": "A one-hour guided tasting at BeerBelly micropub in Hove, sampling a selection of local beers and craft brews from UK breweries with the pub's owner.",
+      "slug": "brighton-local-beer-tasting-experience-at-a-micropub",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/8bb3aab12d6ac0cd709213addfc382c0b583cee0fd05ff6e40d755da1d3fa502.jpg",
+      "description_md": "Head to BeerBelly, an independent micropub and bottle shop in Brighton and Hove, just a short walk from the seafront. Meet Robin, the owner and beer enthusiast, for a tasting of a selection of local beers and craft brews from breweries across the UK. As you sip each one, you'll learn about the different flavours and styles and get to know the local beer scene. The experience finishes with the BeerBelly shot of the week.",
+      "highlights": [
+        "Taste local beers and UK craft brews",
+        "Tasting led by owner and beer enthusiast Robin",
+        "Visit a family-owned micropub and bottle shop",
+        "Learn about different beer flavours and styles",
+        "Finish with the BeerBelly shot of the week"
+      ],
+      "meeting_point": "BeerBelly micropub, Brighton and Hove, near the seafront"
     },
     {
       "title": "Brighton Bar Crawl: 5+ Venues, Free Shots, Free Club Entry",
@@ -20,7 +31,19 @@
       "duration": "5 hours",
       "rating": "4.5",
       "reviews": "12",
-      "summary": "A five-hour guided crawl of at least five bars and clubs in central Brighton, with free shots, discounted drink deals and free entry to the final club included."
+      "summary": "A five-hour guided crawl of at least five bars and clubs in central Brighton, with free shots, discounted drink deals and free entry to the final club included.",
+      "slug": "brighton-s-1-rated-bar-crawlfree-shotsfree-club-entry",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/64b92f6199ae1.jpeg",
+      "description_md": "Join a guided evening bar crawl through Brighton's city centre, visiting at least five bars and clubs with energetic hosts leading the way. The experience is built around meeting new people and exploring the local nightlife, with a free shot at every bar and reduced drink prices via a wristband. The night finishes with free club entry.",
+      "highlights": [
+        "Visit at least 5 bars and clubs",
+        "Free shot at every bar",
+        "Cheaper drinks with your wristband",
+        "Free club entry at the end",
+        "Energetic hosts guiding the night",
+        "Photos taken throughout the evening"
+      ],
+      "meeting_point": "Fitz Regent, 7-8 Castle Square, Brighton and Hove, Brighton BN1 1EG (meet 19:30)"
     },
     {
       "title": "Brighton: Beer Bike Ride with Drinks and Music",
@@ -29,7 +52,18 @@
       "duration": "1 hour",
       "rating": null,
       "reviews": null,
-      "summary": "A one-hour pedal-powered bar ride through Brighton with drinks and music on board and a sober driver steering; priced per group of up to eight passengers."
+      "summary": "A one-hour pedal-powered bar ride through Brighton with drinks and music on board and a sober driver steering; priced per group of up to eight passengers.",
+      "slug": "brighton-beer-bike-ride-with-drinks-and-music",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/a0d052973214da2c281a65b96e3fa33f3472af7117c0fe1f0fc01f0d73dd620e.jpg",
+      "description_md": "Gather a group of friends and climb aboard a pedal-powered beer bike for a 60-minute ride through Brighton, while a trained sober driver takes care of the steering so everyone can relax. The bike carries up to 15 guests and comes with cold drinks and a Bluetooth music system for your own soundtrack. It's a sociable way to see the seaside city while enjoying a drink together.",
+      "highlights": [
+        "60-minute beer bike ride",
+        "Trained sober driver steers",
+        "4 beers or half a bottle of prosecco per guest",
+        "Bluetooth music system on board",
+        "Room for up to 15 guests"
+      ],
+      "meeting_point": "Brighton (start coordinates 50.823625, -0.1504169); exact street address not stated on the page"
     }
   ]
 }

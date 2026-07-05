@@ -11,7 +11,18 @@
       "duration": "1.5 hours",
       "rating": null,
       "reviews": null,
-      "summary": "A guided tour of Northern Monk's brewery in the historic Old Flax Store, covering the brewing process from grain to glass, with three third-pint tastings and a brewery glass to take home."
+      "summary": "A guided tour of Northern Monk's brewery in the historic Old Flax Store, covering the brewing process from grain to glass, with three third-pint tastings and a brewery glass to take home.",
+      "slug": "leeds-northern-monk-brewery-tour-at-old-flax-store",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/ea7549e691d3dca915187812509d6d80305b86f509f32244ee31b2755e2e982e.jpg",
+      "description_md": "Join a guided tour of the original Northern Monk brewery, housed in the historic Old Flax Store in Leeds. Over around 90 minutes you'll explore the working brewery, learn how craft beer is made from raw ingredients through to serving, and hear the story of Northern Monk and its involvement in the local community. The experience includes tastings of the brewery's core and limited-edition beers.</description_md>\n<parameter name=\"meeting_point\">Northern Monk Refectory and Garden LDS, first floor (tour begins and ends here)",
+      "highlights": [
+        "Guided tour of the original Northern Monk brewery",
+        "Explore the historic Old Flax Store",
+        "Learn how craft beer is made",
+        "Three 1/3-pint beer tastings",
+        "Sample core and limited-edition brews",
+        "Hear the Northern Monk story"
+      ]
     },
     {
       "title": "Leeds: Guided Food Tour with 7 Stops",
@@ -20,7 +31,19 @@
       "duration": "4 hours",
       "rating": "5.0",
       "reviews": "4",
-      "summary": "A four-hour guided food tour of Leeds with seven stops, including the city's oldest pub, independent eateries, a bakery and Kirkgate Market."
+      "summary": "A four-hour guided food tour of Leeds with seven stops, including the city's oldest pub, independent eateries, a bakery and Kirkgate Market.",
+      "slug": "leeds-guided-food-tour-with-7-stops",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/4e11205158cda18ded31278e3b7eeb5e06dd45934106b3ab9da4be273e089c1f.png",
+      "description_md": "Discover the culinary side of Leeds on a four-hour guided walking food tour with seven stops. Led by a knowledgeable local guide, you will sample tastings at spots ranging from artisan bakeries and independent restaurants to street food at the covered market. Along the way you will hear local history, foodie facts and stories about the city, covering around a mile on foot.",
+      "highlights": [
+        "Seven generous food tastings",
+        "Visit Leeds' oldest pub",
+        "Explore Kirkgate covered market street food",
+        "Sample artisan bakery and international bites",
+        "Local history, facts and ghost stories",
+        "Guided walk of around one mile"
+      ],
+      "meeting_point": "Meet outside the Queens Hotel; your guide will wear a bright orange Leeds Food Tours hoodie or T-shirt."
     },
     {
       "title": "Leeds: Indian Food Tour with Tastings",
@@ -29,7 +52,17 @@
       "duration": "3 hours",
       "rating": null,
       "reviews": null,
-      "summary": "A three-hour guided tour of Leeds' Indian food scene, sampling regional dishes across four restaurants with a knowledgeable local guide."
+      "summary": "A three-hour guided tour of Leeds' Indian food scene, sampling regional dishes across four restaurants with a knowledgeable local guide.",
+      "slug": "leeds-indian-food-tour-with-tastings",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/b687c9aa8cad6bb190581991bfc5f269203f4b7c068814e7b0e78b29deff9aa2.jpg",
+      "description_md": "Discover the vibrant Indian food scene in Leeds on this guided walking tour. Over around three hours, you visit four of the city's top Indian establishments, sampling regional specialities from across the subcontinent. A knowledgeable local guide shares insights into Indian culinary culture and the chefs behind the signature dishes, taking in both established restaurants and newer venues.</description_md>\n<parameter name=\"meeting_point\">Next to the Black Prince Statue, Leeds",
+      "highlights": [
+        "Visit four top Indian restaurants",
+        "Taste various regional Indian dishes",
+        "Knowledgeable local guide throughout",
+        "Mix of established and new venues",
+        "Around three hours in total"
+      ]
     }
   ]
 }
