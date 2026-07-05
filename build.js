@@ -702,4 +702,9 @@ fs.writeFileSync(path.join(OUT, 'sitemap.xml'),
 fs.writeFileSync(path.join(OUT, 'robots.txt'),
   `User-agent: *\nAllow: /\n\nSitemap: ${site.base_url}/sitemap.xml\n`);
 
+// Build stamp — visit /version.txt on the live site to confirm which build is deployed.
+fs.writeFileSync(path.join(OUT, 'version.txt'),
+  `UK Brewery Tours — build ${new Date().toISOString()}\n` +
+  `${activeTours.length} own tours, ${allExperiences.length} partner experiences, ${cityGuides.length} city guides\n`);
+
 console.log(`Built ${urls.length} pages, ${stubCount} redirect stubs → docs/`);
