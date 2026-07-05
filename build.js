@@ -140,6 +140,37 @@ const humanDate = iso => {
   return `${d} ${months[mo - 1]} ${y}`;
 };
 
+/* ---------- GetYourGuide partner data + city guides ---------- */
+
+const AFF_QS = 'partner_id=YK95MF9&utm_medium=travel_agent';
+const affUrl = u => u + (u.includes('?') ? '&' : '?') + AFF_QS;
+const gygDir = path.join(ROOT, 'content', 'gyg');
+const cityGuides = fs.existsSync(gygDir)
+  ? fs.readdirSync(gygDir).filter(f => f.endsWith('.json')).map(f => JSON.parse(read('content/gyg/' + f)))
+  : [];
+const cityOrder = [...site.city_order, 'Edinburgh', 'Newcastle', 'Nottingham', 'York'];
+cityGuides.sort((a, b) => {
+  const ia = cityOrder.indexOf(a.name), ib = cityOrder.indexOf(b.name);
+  return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+});
+const guideFor = name => cityGuides.find(c => c.name === name);
+
+function partnerCard(g) {
+  const rating = g.rating ? `★ ${g.rating}${g.reviews ? ` (${Number(g.reviews).toLocaleString('en-GB')})` : ''}` : null;
+  const meta = [g.duration, rating].filter(Boolean).join(' · ');
+  return `<a class="partner-card" href="${affUrl(g.url)}" target="_blank" rel="sponsored noopener">
+    <span class="partner-tag">Partner · GetYourGuide</span>
+    <h3>${esc(g.title)}</h3>
+    ${meta ? `<p class="meta">${esc(meta)}</p>` : ''}
+    ${g.summary ? `<p class="sum">${esc(g.summary)}</p>` : ''}
+    <div class="price-row">
+      <span class="price">${g.price_gbp ? `From £${g.price_gbp}` : 'See prices'}</span>
+      <span class="btn btn-primary btn-sm">Buy tickets ↗</span>
+    </div>
+  </a>`;
+}
+const DISCLOSURE = `<p class="disclosure">Tours marked "Partner" are operated by third parties and booked through GetYourGuide; we may earn a commission at no extra cost to you.</p>`;
+
 /* ---------- components ---------- */
 
 function tourCard(t) {
@@ -209,17 +240,33 @@ const featuredCards = site.featured
   .map(tourCard).join('\n');
 
 const citiesWithTours = site.city_order.filter(c => activeTours.some(t => t.city === c));
-const cityNav = citiesWithTours
+const partnerOnlyGuides = cityGuides.filter(g => !citiesWithTours.includes(g.name) && (g.gyg_tours || []).length);
+const cityNav = [...citiesWithTours, ...partnerOnlyGuides.map(g => g.name)]
   .map(c => `<a href="#${c.toLowerCase()}">${c}</a>`).join('\n');
+
 const citySections = citiesWithTours.map(c => {
   const ct = activeTours.filter(t => t.city === c);
+  const guide = guideFor(c);
+  const explore = guide ? `<a class="explore" href="/tours/${guide.slug}/">${c} city guide →</a>` : '';
+  const gyg = guide && (guide.gyg_tours || []).length
+    ? `<h3 class="partner-head">Also bookable in ${c} — via our partner GetYourGuide</h3>
+       <div class="card-grid">${guide.gyg_tours.map(partnerCard).join('\n')}</div>`
+    : '';
   return `<section class="city-section" id="${c.toLowerCase()}">
   <div class="container">
-    <h2>${c} <span class="count">${ct.length} tour${ct.length > 1 ? 's' : ''}</span></h2>
+    <h2>${c} <span class="count">${ct.length} tour${ct.length > 1 ? 's' : ''}</span>${explore}</h2>
     <div class="card-grid">${ct.map(tourCard).join('\n')}</div>
+    ${gyg}
   </div>
 </section>`;
-}).join('\n');
+}).join('\n') + partnerOnlyGuides.map(g => `
+<section class="city-section" id="${g.slug}">
+  <div class="container">
+    <h2>${g.name} <span class="count">partner tours</span><a class="explore" href="/tours/${g.slug}/">${g.name} city guide →</a></h2>
+    <div class="card-grid">${g.gyg_tours.map(partnerCard).join('\n')}</div>
+  </div>
+</section>`).join('\n') + `
+<div class="container" style="padding-top:34px">${DISCLOSURE}</div>`;
 
 const blogCards = posts.map(postCard).join('\n');
 
@@ -293,11 +340,19 @@ for (const t of activeTours) {
     ? `<span class="price">£${t.price}</span><span class="pp">per person</span>`
     : `<span class="pp" style="font-size:1.05rem;font-weight:600">Price on enquiry</span>`;
 
+  const waHref = `${WHATSAPP}?text=${encodeURIComponent(`Hi! I'd like to book the ${t.name}.`)}`;
+  const waIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.6-1.2 1.2-1.7 1.2-.4.1-1 .1-1.6-.1a13 13 0 0 1-5.8-5.1c-.6-1-.9-2-.9-2.7 0-.8.4-1.4.7-1.7.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.3.3c-.1.2-.2.3 0 .6.2.3.9 1.4 1.9 2.3 1.3 1.2 2.4 1.5 2.7 1.7.3.1.5.1.7-.1l1-1.2c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.4 0 .1 0 .7-.2 1.2Z"/></svg>';
+  const ctaButtons = t.booking_url
+    ? `<a class="btn btn-primary" href="${t.booking_url}" target="_blank" rel="noopener">Buy tickets</a>
+       <a class="btn btn-outline" href="${waHref}">${waIcon} Ask us on WhatsApp</a>`
+    : `<a class="btn btn-primary" href="${waHref}">${waIcon} Book via WhatsApp</a>
+       <a class="btn btn-outline" href="/gift-vouchers/">Buy as a gift voucher</a>`;
+
   let content = fill(productTpl, {
     name: esc(t.name), city: esc(t.city), price: t.price || '',
     hero_image: hero, thumbs, facts,
     whatsapp_url: WHATSAPP,
-    whatsapp_text: encodeURIComponent(`Hi! I'd like to book the ${t.name}.`),
+    cta_buttons: ctaButtons,
     description_html: mdToHtml(t.description_md || t.summary || ''),
     includes_block: includesBlock, breweries_block: breweriesBlock, meeting_block: meetingBlock,
     related_cards: related.map(tourCard).join('\n'),
@@ -335,6 +390,63 @@ for (const p of posts) {
     title: `${p.title} | UK Brewery Tours`,
     description: p.description, content, nav: 'blog', ogImage: heroLocal || undefined,
     jsonld: { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: p.title, datePublished: p.date, dateModified: p.date, author: { '@type': 'Organization', name: 'UK Brewery Tours' }, image: heroLocal ? (heroLocal.startsWith('/') ? site.base_url + heroLocal : heroLocal) : undefined, mainEntityOfPage: `${site.base_url}/blog/${p.slug}/` },
+  });
+}
+
+/* ----- city guide pages ----- */
+
+for (const g of cityGuides) {
+  const own = activeTours.filter(t => t.city === g.name);
+  const gygCards = (g.gyg_tours || []).map(partnerCard).join('\n');
+  const heroImg = own[0] && own[0].images && own[0].images[0]
+    ? localizeUrl(own[0].images[0].url) : '/assets/img/hero-static.jpg';
+
+  const content = `<section class="page-hero">
+  <div class="container">
+    <nav class="breadcrumbs" style="padding:0 0 18px" aria-label="Breadcrumb">
+      <a href="/">Home</a><span class="sep">/</span><a href="/tours/">Tours</a><span class="sep">/</span>${g.name}
+    </nav>
+    <span class="kicker">City guide</span>
+    <h1>${g.name} brewery tours &amp; beer experiences</h1>
+  </div>
+</section>
+${own.length ? `<section class="section" style="padding-bottom:34px">
+  <div class="container">
+    <div class="section-head"><span class="kicker">Our tours</span><h2>Our ${g.name} tours</h2></div>
+    <div class="card-grid">${own.map(tourCard).join('\n')}</div>
+  </div>
+</section>` : ''}
+<section class="section" style="padding-top:44px;padding-bottom:34px">
+  <div class="container">
+    <div class="section-head"><span class="kicker">Eat &amp; drink</span><h2>Food &amp; drink in ${g.name}</h2></div>
+    <div class="prose">
+${mdToHtml(g.intro_md || '')}
+    </div>
+  </div>
+</section>
+${gygCards ? `<section class="section" style="padding-top:44px">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">More to book</span>
+      <h2>More ${g.name} tours &amp; experiences</h2>
+      <p>Hand-picked experiences from our partner GetYourGuide.</p>
+    </div>
+    <div class="card-grid">${gygCards}</div>
+    ${DISCLOSURE}
+  </div>
+</section>` : ''}
+<section class="section band-dark">
+  <div class="container cta-banner">
+    <h2>Planning a group day out in ${g.name}?</h2>
+    <p class="mt-2">We run private brewery tours and beer tastings for stags, hens, birthdays and corporate teams in most UK cities — from £29 per person.</p>
+    <p class="mt-3"><a class="btn btn-primary" href="/group-tours/">Plan a group tour</a> <a class="btn btn-outline-light" href="/tours/">Browse all tours</a></p>
+  </div>
+</section>`;
+
+  writePage(`tours/${g.slug}/index.html`, {
+    title: `${g.name} Brewery Tours & Beer Experiences | UK Brewery Tours`,
+    description: g.meta_description || `Brewery tours, beer tastings and food & drink experiences in ${g.name}.`,
+    content, nav: 'tours', ogImage: heroImg,
   });
 }
 
@@ -381,6 +493,7 @@ fs.writeFileSync(path.join(OUT, '404.html'), notFound);
 
 const urls = [
   '/', '/about/', '/contact/', '/tours/', '/gift-vouchers/', '/group-tours/', '/blog/', '/returns-policy/',
+  ...cityGuides.map(g => `/tours/${g.slug}/`),
   ...activeTours.map(t => `/tours/${t.old_slug}/`),
   ...posts.map(p => `/blog/${p.slug}/`),
 ];

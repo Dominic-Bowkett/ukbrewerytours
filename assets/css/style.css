@@ -204,83 +204,6 @@ h3 { font-size: 1.25rem; line-height: 1.3; }
 .hero .kicker { color: var(--amber); }
 .hero-ctas { display: flex; flex-wrap: wrap; gap: 14px; }
 
-/* ------------------------------------------------------------
-   Animated beer pour — looping CSS/SVG "video" in the home hero.
-   7s cycle: stream pours in → liquid rises with foam cap riding
-   the surface → stream stops, beer settles, bubbles rise → fade.
-   ------------------------------------------------------------ */
-.beer-pour {
-  position: absolute;
-  right: 6%;
-  top: 50%;
-  width: 220px;
-  height: 340px;
-  transform: translateY(-48%);
-  z-index: 1;
-  pointer-events: none;
-}
-.hero-inner { position: relative; z-index: 2; }
-
-.pour-stream, .pour-liquid, .pour-foam, .pour-bubbles, .pour-bubble {
-  transform-box: fill-box;
-}
-.pour-stream  { transform-origin: 50% 0;    animation: pourStream 7s linear infinite; }
-.pour-liquid  { transform-origin: 50% 100%; animation: pourLiquid 7s linear infinite; }
-.pour-foam    { transform-origin: 50% 100%; animation: pourFoam   7s linear infinite; }
-.pour-bubbles { animation: bubbleGate 7s linear infinite; }
-.pour-bubble  { animation: bubbleRise 3.5s linear infinite; }
-.pour-bubble:nth-of-type(2) { animation-delay: -.7s; }
-.pour-bubble:nth-of-type(3) { animation-delay: -1.4s; }
-.pour-bubble:nth-of-type(4) { animation-delay: -2.1s; }
-.pour-bubble:nth-of-type(5) { animation-delay: -2.8s; }
-.pour-bubble:nth-of-type(6) { animation-delay: -3.3s; }
-
-@keyframes pourStream {
-  0%       { transform: scaleY(0) scaleX(1);    opacity: 0; }
-  2%       { transform: scaleY(0) scaleX(1);    opacity: 1; animation-timing-function: ease-in; }
-  6%       { transform: scaleY(1) scaleX(1); }
-  50%      { transform: scaleY(1) scaleX(1);    opacity: 1; }
-  56%      { transform: scaleY(1) scaleX(.2);   opacity: 0; }
-  100%     { transform: scaleY(1) scaleX(.2);   opacity: 0; }
-}
-/* liquid + foam share keyframe stops and easing so the cap stays glued
-   to the rising surface */
-@keyframes pourLiquid {
-  0%, 4%   { transform: scaleY(0);    opacity: 1; animation-timing-function: cubic-bezier(.45,.15,.35,1); }
-  56%      { transform: scaleY(.8); }
-  63%      { transform: scaleY(.785); }
-  92%      { transform: scaleY(.785); opacity: 1; }
-  98%,100% { transform: scaleY(.785); opacity: 0; }
-}
-@keyframes pourFoam {
-  0%, 4%   { transform: translateY(284px) scaleY(.45); opacity: 1; animation-timing-function: cubic-bezier(.45,.15,.35,1); }
-  56%      { transform: translateY(54px)  scaleY(1); }
-  63%      { transform: translateY(58px)  scaleY(1); }
-  92%      { transform: translateY(58px)  scaleY(1); opacity: 1; }
-  98%,100% { transform: translateY(58px)  scaleY(1); opacity: 0; }
-}
-@keyframes bubbleGate {
-  0%, 30%  { opacity: 0; }
-  38%, 86% { opacity: 1; }
-  93%,100% { opacity: 0; }
-}
-@keyframes bubbleRise {
-  0%   { transform: translateY(0); }
-  100% { transform: translateY(-215px); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .pour-stream, .pour-bubbles, .pour-bubble { animation: none; opacity: 0; }
-  .pour-liquid { animation: none; transform: scaleY(.785); }
-  .pour-foam   { animation: none; transform: translateY(58px); }
-}
-@media (max-width: 1100px) {
-  .beer-pour { width: 170px; height: 262px; right: 4%; }
-}
-@media (max-width: 940px) {
-  .beer-pour { display: none; }
-}
-
 .trust-row {
   display: flex;
   flex-wrap: wrap;
@@ -562,6 +485,67 @@ h3 { font-size: 1.25rem; line-height: 1.3; }
 .includes-list li::before { content: "✓"; color: var(--amber-deep); font-weight: 700; }
 
 .brewery-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+
+/* ---------- partner (GetYourGuide) cards ---------- */
+
+.partner-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-decoration: none !important;
+  color: var(--ink);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.partner-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+.partner-tag {
+  align-self: flex-start;
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  background: var(--amber-soft);
+  color: #7a4407;
+  padding: 5px 11px;
+  border-radius: 999px;
+}
+.partner-card h3 { font-size: 1.08rem; }
+.partner-card .meta { font-size: .84rem; color: var(--ink-soft); }
+.partner-card .sum { font-size: .92rem; color: var(--ink-soft); flex: 1; }
+.partner-card .price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 13px;
+  border-top: 1px dashed var(--line);
+}
+.partner-card .price { font-family: var(--font-display); font-weight: 700; font-size: 1.02rem; }
+.btn-sm { padding: 9px 16px; font-size: .84rem; }
+
+.partner-head {
+  margin: 36px 0 16px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+.disclosure { font-size: .8rem; color: var(--ink-soft); margin-top: 20px; }
+
+.city-section h2 .explore {
+  margin-left: auto;
+  font-family: var(--font-body);
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--amber-deep);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.city-section h2 .explore:hover { text-decoration: underline; }
+.city-section h2 { flex-wrap: wrap; }
 
 /* ---------- blog ---------- */
 

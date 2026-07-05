@@ -50,57 +50,8 @@
 
   <main id="main">
 <section class="hero">
-  <img class="hero-bg" src="/assets/img/hero-bar-bg.jpg" alt="" fetchpriority="high">
+  <img class="hero-bg" src="/assets/img/hero-static.jpg" alt="" fetchpriority="high">
   <div class="hero-scrim"></div>
-  <div class="beer-pour" aria-hidden="true">
-    <svg viewBox="0 0 220 340" width="100%" height="100%">
-      <defs>
-        <clipPath id="glassClip">
-          <path d="M62,22 L158,22 L147,298 Q146,310 134,310 L86,310 Q74,310 73,298 Z"/>
-        </clipPath>
-        <linearGradient id="beerBody" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stop-color="#a86410"/>
-          <stop offset=".45" stop-color="#e09a2d"/>
-          <stop offset="1" stop-color="#c07a15"/>
-        </linearGradient>
-        <linearGradient id="streamGrad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stop-color="#d18a1e"/>
-          <stop offset=".5" stop-color="#f2b84d"/>
-          <stop offset="1" stop-color="#d18a1e"/>
-        </linearGradient>
-        <filter id="softBlur" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="5"/>
-        </filter>
-      </defs>
-
-      <ellipse cx="110" cy="326" rx="72" ry="9" fill="#000" opacity=".4" filter="url(#softBlur)"/>
-
-      <rect class="pour-stream" x="104" y="0" width="12" height="296" rx="6" fill="url(#streamGrad)"/>
-
-      <g clip-path="url(#glassClip)">
-        <rect class="pour-liquid" x="62" y="22" width="96" height="288" fill="url(#beerBody)"/>
-        <g class="pour-foam">
-          <rect x="58" y="8" width="104" height="30" rx="13" fill="#fffdf5"/>
-          <circle cx="76" cy="10" r="9" fill="#fffdf5"/>
-          <circle cx="98" cy="7" r="11" fill="#fffdf5"/>
-          <circle cx="122" cy="9" r="10" fill="#fffdf5"/>
-          <circle cx="143" cy="11" r="8" fill="#fffdf5"/>
-        </g>
-        <g class="pour-bubbles">
-          <circle class="pour-bubble" cx="86" cy="300" r="3" fill="#ffe9b8" opacity=".7"/>
-          <circle class="pour-bubble" cx="102" cy="304" r="2.4" fill="#ffe9b8" opacity=".6"/>
-          <circle class="pour-bubble" cx="116" cy="300" r="3.4" fill="#ffe9b8" opacity=".7"/>
-          <circle class="pour-bubble" cx="130" cy="305" r="2.2" fill="#ffe9b8" opacity=".6"/>
-          <circle class="pour-bubble" cx="94" cy="302" r="2.8" fill="#ffe9b8" opacity=".65"/>
-          <circle class="pour-bubble" cx="138" cy="301" r="2.6" fill="#ffe9b8" opacity=".6"/>
-        </g>
-      </g>
-
-      <path d="M62,22 L158,22 L147,298 Q146,310 134,310 L86,310 Q74,310 73,298 Z"
-            fill="none" stroke="rgba(255,252,245,.55)" stroke-width="3" stroke-linejoin="round"/>
-      <path d="M74,40 L80,285" stroke="rgba(255,255,255,.28)" stroke-width="7" stroke-linecap="round" fill="none"/>
-    </svg>
-  </div>
   <div class="container">
     <div class="hero-inner">
       <span class="kicker">Award-winning tours since 2014</span>
@@ -161,17 +112,17 @@
     </div>
   </a>
 <a class="tour-card" href="/tours/liverpool-microbrewery-experience/">
-    <div class="thumb"><img src="/assets/img/Delia-Debbie.jpg" alt="Liverpool Craft Beer Tour" loading="lazy"><span class="city-tag">Liverpool</span></div>
+    <div class="thumb"><img src="/assets/img/Delia-Debbie.jpg" alt="Liverpool Craft Beer Experience" loading="lazy"><span class="city-tag">Liverpool</span></div>
     <div class="body">
-      <h3>Liverpool Craft Beer Tour</h3>
+      <h3>Liverpool Craft Beer Experience</h3>
       <p class="meta">4 hours · Last Saturday of each month</p>
       <div class="price-row"><span class="price">£39.50 <small>per person</small></span><span class="go">View tour →</span></div>
     </div>
   </a>
 <a class="tour-card" href="/tours/manchester-microbrewery-experience/">
-    <div class="thumb"><img src="/assets/img/Manchester-microbrewery-exeperience.jpg" alt="Manchester Microbrewery Experience" loading="lazy"><span class="city-tag">Manchester</span></div>
+    <div class="thumb"><img src="/assets/img/Manchester-microbrewery-exeperience.jpg" alt="Manchester Craft Beer Experience" loading="lazy"><span class="city-tag">Manchester</span></div>
     <div class="body">
-      <h3>Manchester Microbrewery Experience</h3>
+      <h3>Manchester Craft Beer Experience</h3>
       <p class="meta">3.5 hours · Last Saturday of each month</p>
       <div class="price-row"><span class="price">£38.50 <small>per person</small></span><span class="go">View tour →</span></div>
     </div>
@@ -307,10 +258,10 @@
         <div>
           <h4>Tours</h4>
           <ul>
-            <li><a href="/tours/#london">London</a></li>
-            <li><a href="/tours/#bristol">Bristol</a></li>
-            <li><a href="/tours/#manchester">Manchester</a></li>
-            <li><a href="/tours/#leeds">Leeds</a></li>
+            <li><a href="/tours/london/">London</a></li>
+            <li><a href="/tours/bristol/">Bristol</a></li>
+            <li><a href="/tours/manchester/">Manchester</a></li>
+            <li><a href="/tours/leeds/">Leeds</a></li>
             <li><a href="/tours/">All tours →</a></li>
           </ul>
         </div>

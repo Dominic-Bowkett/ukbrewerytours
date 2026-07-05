@@ -41,7 +41,8 @@
         "context": "gallery"
       }
     ],
-    "active": true
+    "active": true,
+    "booking_url": "https://www.designmynight.com/london/whats-on/drinks-tasting/a-tasting-tour-of-londons-craft-breweries"
   },
   {
     "old_slug": "bermondsey-cheese-meat-beer-tour",
@@ -84,7 +85,8 @@
         "context": "gallery"
       }
     ],
-    "active": true
+    "active": true,
+    "booking_url": "https://www.designmynight.com/london/pubs/southwark/southwark-brewing-company-tap-room/bermondsey-cheese-meat-and-beer-tour"
   },
   {
     "old_slug": "bermondsey-microbrewery-experience",
@@ -164,7 +166,8 @@
         "context": "gallery"
       }
     ],
-    "active": true
+    "active": true,
+    "booking_url": "https://www.bristolbrewerytours.com/"
   },
   {
     "old_slug": "lewes-brewery-tours",
@@ -208,7 +211,7 @@
   },
   {
     "old_slug": "liverpool-microbrewery-experience",
-    "name": "Liverpool Craft Beer Tour",
+    "name": "Liverpool Craft Beer Experience",
     "city": "Liverpool",
     "price": "39.50",
     "duration": "4 hours",
@@ -241,11 +244,12 @@
         "context": "gallery"
       }
     ],
-    "active": true
+    "active": true,
+    "booking_url": "https://www.ramblingbeerco.com/liverpool-beer-tour/"
   },
   {
     "old_slug": "manchester-microbrewery-experience",
-    "name": "Manchester Microbrewery Experience",
+    "name": "Manchester Craft Beer Experience",
     "city": "Manchester",
     "price": "38.50",
     "duration": "3.5 hours",
@@ -278,7 +282,8 @@
         "context": "gallery"
       }
     ],
-    "active": true
+    "active": true,
+    "booking_url": "https://www.ramblingbeerco.com/manchester-beer-tour/"
   },
   {
     "old_slug": "leeds-heritage-pub-and-beer-tour",
@@ -419,7 +424,8 @@
         "context": "gallery"
       }
     ],
-    "active": true
+    "active": true,
+    "booking_url": "https://kent.designmynight.com/6093c0d4a9bfa915525eb288/kent-hop-farm-garden-tour-with-beer-tasting-1"
   },
   {
     "old_slug": "birmingham-microbrewery-experience",
@@ -540,7 +546,8 @@
         "context": "gallery"
       }
     ],
-    "active": true
+    "active": true,
+    "booking_url": "https://www.hall-woodhouse.co.uk/brewery/book-a-tour/"
   },
   {
     "old_slug": "cardiff-craft-beer-tasting-tour",

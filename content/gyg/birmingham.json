@@ -1,0 +1,35 @@
+{
+  "slug": "birmingham",
+  "name": "Birmingham",
+  "meta_description": "Discover Birmingham's beer scene: Victorian pubs, cask ale at The Wellington, Digbeth street food, plus bookable tastings and pub walking tours.",
+  "intro_md": "Birmingham rewards drinkers who look past the city-centre chains. Its Victorian pub heritage is remarkable: The Bartons Arms in Aston, all tilework and sweeping staircase, has one of the finest interiors in England, while The Wellington on Bennetts Hill keeps a constantly rotating line-up of cask ales that has made it the city's real-ale institution.\n\nDigbeth is where the newer energy lives. Dig Brew Co makes its beer in an old factory there, and Digbeth Dining Club gathers the city's best street food under the railway arches. For eating more widely, the Balti Triangle in Sparkbrook gave its name to a whole style of curry, and the market halls by the Bullring have fed the city for generations.\n\nDon't miss:\n\n- The Bartons Arms, a Victorian masterpiece in Aston\n- Cask ale at The Wellington on Bennetts Hill\n- Street food under the arches at Digbeth Dining Club\n- A balti on Ladypool Road in the Balti Triangle",
+  "gyg_tours": [
+    {
+      "title": "Birmingham British Beer Private Guided Tasting Tour",
+      "url": "https://www.getyourguide.com/birmingham-l2525/birmingham-british-beer-private-guided-tasting-tour-t1295462/",
+      "price_gbp": "263",
+      "duration": "2-3 hours",
+      "rating": "4.8",
+      "reviews": null,
+      "summary": "A private guided tasting tour of Birmingham's pubs and brewing heritage, with four to eight beer tastings depending on the option chosen and optional food pairings. The route passes city landmarks including Birmingham Cathedral and the Library of Birmingham."
+    },
+    {
+      "title": "Birmingham Slogging Gang Evening Walking Tour with Pub Stops",
+      "url": "https://www.getyourguide.com/birmingham-l2525/birmingham-slogging-gang-evening-walking-tour-with-pub-stops-t658722/",
+      "price_gbp": "25",
+      "duration": "2 hours",
+      "rating": "4.6",
+      "reviews": "36",
+      "summary": "An evening walking tour through Birmingham's late 19th-century gang history, led by a guide in Peaky Blinders character, with stops at four drinking establishments ranging from real ale pubs to gin palaces. Drinks are at your own expense."
+    },
+    {
+      "title": "Birmingham: Slogging Gangs Guided Walking Tour",
+      "url": "https://www.getyourguide.com/birmingham-l2525/birmingham-slogging-gangs-walking-tour-with-edward-shelby-t523929/",
+      "price_gbp": "20",
+      "duration": "2 hours",
+      "rating": "4.1",
+      "reviews": "262",
+      "summary": "A two-hour guided walk through Birmingham's back streets telling the story of the city's slogging gangs and the real Peaky Blinders, taking in the Gunmakers Quarter and a local pub along the way."
+    }
+  ]
+}

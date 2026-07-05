@@ -1,0 +1,53 @@
+{
+  "slug": "liverpool",
+  "name": "Liverpool",
+  "meta_description": "Liverpool brewery tours, beer tastings and guided pub crawls — from the Baltic Triangle to historic city-centre pubs. Compare top-rated experiences.",
+  "intro_md": "Liverpool's drinking culture is woven into its architecture. The Philharmonic Dining Rooms on Hope Street is often called one of the most ornate pubs in Britain — Grade I listed, all mosaic and mahogany — and the Georgian Quarter around it is full of handsome spots for a pint. Down towards the old docks, the Baltic Triangle has become the city's creative quarter, home to Cains Brewery Village, where the Victorian brewery buildings now house bars, street food and the Baltic Market food hall.\n\nBetween the two, Ropewalks packs bars and late-night venues into former warehouses, while the traditional pubs around Dale Street keep older habits alive. It's a compact, walkable city — which makes it ideal pub crawl territory.\n\nDon't miss:\n\n- The Philharmonic Dining Rooms' Grade I-listed interior\n- Cains Brewery Village and Baltic Market\n- Ropewalks for bars in converted warehouses\n- The traditional pubs around Dale Street",
+  "gyg_tours": [
+    {
+      "title": "Liverpool: Brewery Bus Tour with 12 Beer and Pizza",
+      "url": "https://www.getyourguide.com/liverpool-l210/liverpool-brewery-bus-tour-with-12-beer-and-pizza-t439230/",
+      "price_gbp": "80",
+      "duration": "4 hours",
+      "rating": "5.0",
+      "reviews": "12",
+      "summary": "A four-hour minibus tour visiting four Liverpool breweries, with twelve beer tastings and pizza included, guided by a local with insights into the city's brewing heritage."
+    },
+    {
+      "title": "Liverpool: Guided Pub Crawl Tour with 3 Drinks",
+      "url": "https://www.getyourguide.com/liverpool-l210/liverpool-guided-pub-crawl-tour-with-3-drinks-t865889/",
+      "price_gbp": "29",
+      "duration": "2 hours",
+      "rating": "4.8",
+      "reviews": "8",
+      "summary": "A two-hour guided crawl of three of Liverpool's iconic pubs, with three half-pint drinks included and local history and culture along the way."
+    },
+    {
+      "title": "Liverpool: Albert Dock & Cavern Quarter Walking Food Tour",
+      "url": "https://www.getyourguide.com/liverpool-l210/liverpool-knowledge-quarter-baltic-triangle-food-tour-t1156293/",
+      "price_gbp": "70",
+      "duration": "3 hours",
+      "rating": "4.4",
+      "reviews": "2",
+      "summary": "A three-hour walking food tour through the waterfront, Liverpool ONE and the Cavern Quarter, sampling local specialities including Scouse, fish and chips, and local beer or cider."
+    },
+    {
+      "title": "Liverpool: Guided Food and Drink Tour with Full Lunch",
+      "url": "https://www.getyourguide.com/liverpool-l210/liverpool-guided-food-and-drink-tour-with-tastings-t519080/",
+      "price_gbp": "120",
+      "duration": "3 hours",
+      "rating": "5.0",
+      "reviews": "3",
+      "summary": "A three-hour guided food tour through the Georgian Quarter and Ropewalks, with five food stops at independent eateries and two paired drinks included."
+    },
+    {
+      "title": "Liverpool: Beer Bike Tour with Drinks and Music",
+      "url": "https://www.getyourguide.com/liverpool-l210/liverpool-beer-bike-tour-with-drinks-and-music-t1146213/",
+      "price_gbp": "40",
+      "duration": "1 hour",
+      "rating": "5.0",
+      "reviews": "3",
+      "summary": "An hour-long pedal-powered bike tour through Liverpool's Baltic Triangle, with drinks and music on board and a sober captain doing the steering."
+    }
+  ]
+}

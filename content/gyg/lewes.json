@@ -1,0 +1,35 @@
+{
+  "slug": "lewes",
+  "name": "Lewes",
+  "meta_description": "Lewes and Harvey's brewery: Sussex Best by the Ouse, historic town pubs and Brighton's beer scene — with bookable tastings 15 minutes away.",
+  "intro_md": "Lewes is a brewery town in the fullest sense. Harvey's has brewed beside the Ouse since 1790, and its Victorian Gothic brewhouse — affectionately known as Lewes Cathedral — still perfumes the town centre on brewing days. Sussex Best Bitter is the local currency, poured with care in pubs across the county.\n\nThe town drinks well beyond the brewery gates. The John Harvey Tavern sits opposite the brewery yard, the Lewes Arms tucks in behind the castle with its own gently eccentric traditions, and the Snowdrop Inn at the foot of Cliffe is a favourite for cask ale and food.\n\nBrighton is fifteen minutes away by train, bringing micropubs, taprooms and tasting experiences within easy reach — which is why the bookable experiences below are Brighton-based.\n\n**Don't miss**\n\n- The Harvey's brewery shop on Cliffe High Street\n- A pint of Sussex Best at the John Harvey Tavern\n- Bonfire Night, if you can time your visit for it",
+  "gyg_tours": [
+    {
+      "title": "Brighton: Local Beer Tasting Experience at a Micropub",
+      "url": "https://www.getyourguide.com/brighton-l440/brighton-local-beer-tasting-experience-at-a-micropub-t1172759/",
+      "price_gbp": "28",
+      "duration": "1 hour",
+      "rating": "5.0",
+      "reviews": "2",
+      "summary": "A one-hour guided tasting at BeerBelly micropub in Hove, sampling a selection of local beers and craft brews from UK breweries with the pub's owner."
+    },
+    {
+      "title": "Brighton Bar Crawl: 5+ Venues, Free Shots, Free Club Entry",
+      "url": "https://www.getyourguide.com/brighton-l440/brighton-s-1-rated-bar-crawlfree-shotsfree-club-entry-t491757/",
+      "price_gbp": "20",
+      "duration": "5 hours",
+      "rating": "4.5",
+      "reviews": "12",
+      "summary": "A five-hour guided crawl of at least five bars and clubs in central Brighton, with free shots, discounted drink deals and free entry to the final club included."
+    },
+    {
+      "title": "Brighton: Beer Bike Ride with Drinks and Music",
+      "url": "https://www.getyourguide.com/brighton-l440/brighton-beer-bike-ride-with-drinks-and-music-t1332475/",
+      "price_gbp": "320",
+      "duration": "1 hour",
+      "rating": null,
+      "reviews": null,
+      "summary": "A one-hour pedal-powered bar ride through Brighton with drinks and music on board and a sober driver steering; priced per group of up to eight passengers."
+    }
+  ]
+}

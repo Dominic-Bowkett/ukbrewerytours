@@ -1,0 +1,53 @@
+{
+  "slug": "manchester",
+  "name": "Manchester",
+  "meta_description": "Manchester brewery tours, craft beer tastings and historic pub walks — explore the Northern Quarter and beyond with top-rated guided experiences.",
+  "intro_md": "Manchester takes its beer seriously, and has done since the Victorians. The Northern Quarter is the obvious starting point — a dense grid of red-brick streets where craft beer bars sit alongside record shops and street art — while neighbouring Ancoats has grown into one of the city's best eating districts, with the restored Mackie Mayor market hall on Swan Street sitting handily between the two.\n\nThe city's pub heritage rewards a slow crawl. The Marble Arch on Rochdale Road pours beers from its own brewery beneath a gloriously tiled Victorian interior, and the Peveril of the Peak's green-glazed exterior makes it one of Manchester's most photographed pubs. In summer, the canalside pubs of Castlefield are a fine alternative.\n\nDon't miss:\n\n- The Northern Quarter's craft beer bars\n- Mackie Mayor food hall on Swan Street\n- The Marble Arch's tiled Victorian interior\n- Canalside pints in Castlefield",
+  "gyg_tours": [
+    {
+      "title": "Manchester: Craft Beer Tasting in the Northern Quarter",
+      "url": "https://www.getyourguide.com/manchester-l1128/manchester-craft-beer-tasting-in-the-northern-quarter-t1170695/",
+      "price_gbp": "37",
+      "duration": "1.5 hours",
+      "rating": "5.0",
+      "reviews": "2",
+      "summary": "A seated, guided tasting of five craft beers in Manchester's Northern Quarter, with an expert host covering tasting technique and beer styles."
+    },
+    {
+      "title": "Manchester: Pub Tour",
+      "url": "https://www.getyourguide.com/manchester-l1128/manchester-pub-tour-t982147/",
+      "price_gbp": "25",
+      "duration": "2 hours",
+      "rating": "4.7",
+      "reviews": "2",
+      "summary": "A two-hour guided tour of Manchester city-centre pubs exploring the city's drinking history and pub culture, finishing with a short pub quiz."
+    },
+    {
+      "title": "Manchester: Guided Walking Tour of Historic Pubs & City",
+      "url": "https://www.getyourguide.com/manchester-l1128/manchester-guided-walking-tour-of-historic-pubs-city-t1239477/",
+      "price_gbp": "15",
+      "duration": "2 hours",
+      "rating": "4.5",
+      "reviews": "4",
+      "summary": "A guided walk through Manchester's historic pubs, including the Old Wellington and Sinclair's Oyster Bar, run by a social enterprise whose guides have experienced homelessness."
+    },
+    {
+      "title": "Manchester & Salford: Guided Food and Drink Walking Tour",
+      "url": "https://www.getyourguide.com/salford-l98598/manchester-salford-guided-food-and-drink-walking-tour-t798372/",
+      "price_gbp": "85",
+      "duration": "3.5 hours",
+      "rating": "5.0",
+      "reviews": "5",
+      "summary": "A 3.5-hour walking tour spanning Manchester and Salford, taking in historic pubs, markets and street food, with food tastings and two drinks included."
+    },
+    {
+      "title": "Manchester: Beer Bike Tour with Drinks and Music",
+      "url": "https://www.getyourguide.com/manchester-l1128/manchester-beer-bike-tour-with-drinks-and-music-t1146426/",
+      "price_gbp": "40",
+      "duration": "75 minutes",
+      "rating": "5.0",
+      "reviews": "1",
+      "summary": "A 75-minute pedal-powered group bike ride through Manchester with beer or prosecco on board, music, and a sober captain doing the steering."
+    }
+  ]
+}

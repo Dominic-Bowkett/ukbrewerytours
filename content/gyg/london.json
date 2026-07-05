@@ -1,0 +1,53 @@
+{
+  "slug": "london",
+  "name": "London",
+  "meta_description": "London brewery tours, beer tastings and historic pub walks — from the Bermondsey Beer Mile to centuries-old taverns. Compare top-rated experiences.",
+  "intro_md": "London's beer story runs from coaching inns that served Dickens to railway-arch taprooms pouring hazy pale ales. The best-known modern chapter is the Bermondsey Beer Mile, a string of breweries and taprooms tucked beneath the railway arches south of Tower Bridge — pair it with a wander through Borough Market, one of the capital's oldest food markets, just up the road.\n\nThe City and Fleet Street keep the historic end of things alive, with centuries-old taverns like Ye Olde Cheshire Cheese hidden down narrow alleys, while Camden and Hackney anchor the craft scene in the north and east. Wherever you end up, the pub remains the point: settle in, order a pint of cask bitter, and take your time.\n\nDon't miss:\n\n- The Bermondsey Beer Mile's railway-arch taprooms (Saturdays are liveliest)\n- Borough Market for a pre-tour lunch\n- The historic pubs of Fleet Street and the City\n- Camden Town's market and brewery taprooms",
+  "gyg_tours": [
+    {
+      "title": "London: Bermondsey Craft Brewery Tour",
+      "url": "https://www.getyourguide.com/london-l57/london-bermondsey-craft-brewery-tour-t414567/",
+      "price_gbp": "49",
+      "duration": "3.5 hours",
+      "rating": "5.0",
+      "reviews": "4",
+      "summary": "A guided walk along the Bermondsey Beer Mile, visiting four railway-arch taprooms with tutored tastings led by an international beer judge."
+    },
+    {
+      "title": "London: Historic Pubs of Central London Walking Tour",
+      "url": "https://www.getyourguide.com/london-l57/drink-london-historical-walking-pub-tour-t27204/",
+      "price_gbp": "29",
+      "duration": "3.5 hours",
+      "rating": "4.9",
+      "reviews": "1176",
+      "summary": "A guided walk of around two miles through central London, calling at four historic taverns — some dating back to the 16th century — with stories of the city's drinking culture along the way."
+    },
+    {
+      "title": "London: Royal Historic Pubs Walking Tour",
+      "url": "https://www.getyourguide.com/london-l57/london-royal-historic-pubs-walking-tour-t430700/",
+      "price_gbp": "29",
+      "duration": "2.5 hours",
+      "rating": "5.0",
+      "reviews": "630",
+      "summary": "A walking tour of four tucked-away pubs near Buckingham Palace, pairing British beers with tales of Churchill, royalty and other national figures."
+    },
+    {
+      "title": "3 Locks Brewing Company: Guided tasting and brewery tour",
+      "url": "https://www.getyourguide.com/london-l57/3-locks-brewery-guided-tasting-and-brewery-tour-t734568/",
+      "price_gbp": "25",
+      "duration": "1.5 hours",
+      "rating": "5.0",
+      "reviews": "22",
+      "summary": "A tour and tasting at an independent brewery in Camden Market, including six beers — some poured straight from the tank."
+    },
+    {
+      "title": "London: Small Group, Ancient Pubs and Historic Taverns Tour",
+      "url": "https://www.getyourguide.com/london-l57/london-historic-pubs-beer-tasting-t1188504/",
+      "price_gbp": "24",
+      "duration": "2 hours",
+      "rating": "4.9",
+      "reviews": "125",
+      "summary": "A small-group, two-hour walk through some of London's oldest pubs and taverns, combining beer tasting with centuries of local history. Non-drinkers are welcome."
+    }
+  ]
+}

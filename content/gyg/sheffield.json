@@ -1,0 +1,26 @@
+{
+  "slug": "sheffield",
+  "name": "Sheffield",
+  "meta_description": "Sheffield's beer scene: Kelham Island real ale pubs, the Sheffield Tap and Peak District brewery trips, with bookable tastings nearby.",
+  "intro_md": "Sheffield's claim to be one of England's great beer cities rests on solid foundations. Kelham Island, once a district of workshops and foundries, is now the heart of the city's drinking culture, with celebrated real ale pubs such as the Fat Cat and the Kelham Island Tavern pouring pints a few doors apart.\n\nLocal breweries including Abbeydale and Bradfield keep the cask tradition in good health, and the Sheffield Tap — a restored Edwardian refreshment room on the station platform — makes a memorable first pint in the city. Look out for Henderson's Relish too: the spicy Sheffield condiment appears on menus all over town.\n\nThe Peak District begins at the city's western edge, which puts Thornbridge's brewery in Bakewell within easy reach for a half-day trip of tastings and moorland air.\n\n**Don't miss**\n\n- A pint at the Fat Cat in Kelham Island\n- The Sheffield Tap's restored Edwardian bar\n- A trip to Thornbridge Brewery in Bakewell",
+  "gyg_tours": [
+    {
+      "title": "Bakewell: Thornbridge Brewery Tour & Beer Tasting Experience",
+      "url": "https://www.getyourguide.com/bakewell-l98811/bakewell-thornbridge-brewery-tour-beer-tasting-experience-t1360315/",
+      "price_gbp": "15",
+      "duration": "45 minutes",
+      "rating": null,
+      "reviews": null,
+      "summary": "A 45-minute guided tour of Thornbridge's Riverside brewery in Bakewell, home to the UK's only working Burton Union brewing set, finishing with a tasting of six beers in the taproom."
+    },
+    {
+      "title": "Sheffield: Gin Distillery Tasting Visit with Guided Tour",
+      "url": "https://www.getyourguide.com/sheffield-l95510/sheffield-gin-distillery-tasting-visit-with-guided-tour-t459657/",
+      "price_gbp": "18",
+      "duration": "1.5 hours",
+      "rating": "5.0",
+      "reviews": "40",
+      "summary": "A guided visit to Locksley Distilling Co. at Sheffield's historic Portland Works, with a look at the gin-making process and a tasting of the core range, including a gin and tonic."
+    }
+  ]
+}

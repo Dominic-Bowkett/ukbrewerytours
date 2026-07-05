@@ -1,0 +1,26 @@
+{
+  "slug": "york",
+  "name": "York",
+  "meta_description": "York's beer guide: historic pubs from the Blue Bell to the Golden Fleece, riverside taprooms and bookable brewery tastings near the city.",
+  "intro_md": "York is often said to have a pub for every day of the year, and while nobody quite agrees on the count, the quality is not in doubt. The Blue Bell on Fossgate keeps its tiny Edwardian interior intact, Ye Olde Starre Inne on Stonegate has been licensed since the seventeenth century, and the Golden Fleece leans agreeably beside the Shambles.\n\nFor something between pub and shrine, the House of the Trembling Madness on Stonegate serves an enormous beer list beneath a medieval roof, while Brew York's riverside taproom brings the city's brewing up to date. The Shambles Market food stalls are handy for lining the stomach between stops.\n\nBeyond the walls lies serious brewing country — Masham, home to Theakston and Black Sheep, makes a fine day trip.\n\n**Don't miss**\n\n- The unspoilt Edwardian bar at the Blue Bell\n- Beers under the beams at the House of the Trembling Madness\n- Brew York's taproom by the River Foss",
+  "gyg_tours": [
+    {
+      "title": "York: Brewery Tour, Six Tastings & Tapas",
+      "url": "https://www.getyourguide.com/york-l436/york-brewery-tour-six-tastings-tapas-t1239905/",
+      "price_gbp": "25",
+      "duration": "1.5 hours",
+      "rating": "4.7",
+      "reviews": null,
+      "summary": "A 1.5-hour small-group tour of a working Yorkshire brewery at Nun Monkton near York, led by the owner and head brewer, with six beer tastings and a spread of Yorkshire tapas."
+    },
+    {
+      "title": "York: Cellar Door Beer Tasting",
+      "url": "https://www.getyourguide.com/york-l436/york-cellar-door-beer-tasting-t1242504/",
+      "price_gbp": "25",
+      "duration": "1 day",
+      "rating": "4.7",
+      "reviews": null,
+      "summary": "A relaxed cellar-door tasting at the Winehouse Café in Nun Monkton near York, pairing bottled beers with Yorkshire tapas dishes, with bronze, silver and gold tiers to choose from."
+    }
+  ]
+}

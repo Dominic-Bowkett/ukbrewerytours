@@ -1,0 +1,26 @@
+{
+  "slug": "bristol",
+  "name": "Bristol",
+  "meta_description": "Plan a beer lover's day in Bristol: harbourside pubs, Wapping Wharf taprooms, West Country cider and bookable tastings, tours and experiences.",
+  "intro_md": "Bristol drinks well, and it always has. This is the West Country, so cider gets equal billing with beer — try The Apple, a barge on Welsh Back devoted to it — while the city's breweries have quietly built one of the strongest independent scenes in Britain. Wiper and True, Moor Beer and Left Handed Giant all brew here, and Bristol Beer Factory has long been a fixture south of the river.\n\nStart at the harbourside. King Street's cobbles hold the seventeenth-century Llandoger Trow, and a short walk brings you to Wapping Wharf, where the Cargo shipping containers house independent traders, restaurants and taprooms. St Nicholas Market, in the old city, is the spot for lunch — its Glass Arcade is packed with food stalls.\n\nDon't miss:\n\n- A pint at the Llandoger Trow on King Street\n- Cargo at Wapping Wharf for taprooms and street food\n- St Nicholas Market's Glass Arcade at lunchtime\n- A proper West Country cider at The Apple",
+  "gyg_tours": [
+    {
+      "title": "Bristol: Wine and Cider Tour with Tastings",
+      "url": "https://www.getyourguide.com/bristol-l445/bristol-wine-and-cider-tour-with-tastings-t1133077/",
+      "price_gbp": "22",
+      "duration": "1.5 hours",
+      "rating": "5.0",
+      "reviews": "3",
+      "summary": "A guided visit to an organic vineyard and cider farm on the edge of Bristol, with walks through the vines and orchards. Includes tastings of natural wines and award-winning ciders paired with local cheese."
+    },
+    {
+      "title": "Bristol: Local Craft Distillery's Gin Tasting Experience",
+      "url": "https://www.getyourguide.com/bristol-l445/bristol-local-craft-distillery-s-gin-tasting-experience-t1274890/",
+      "price_gbp": "34",
+      "duration": "2 hours",
+      "rating": "5.0",
+      "reviews": "2",
+      "summary": "A two-hour session at a small Bristol craft distillery, starting with a garnished gin and tonic before a guided tasting of five seasonal gins in the tasting room. Tonic water and mixers are provided."
+    }
+  ]
+}

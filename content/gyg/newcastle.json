@@ -1,0 +1,35 @@
+{
+  "slug": "newcastle",
+  "name": "Newcastle",
+  "meta_description": "Newcastle's beer guide: Ouseburn breweries, historic Quayside pubs and bookable brewery tours and tastings across the city.",
+  "intro_md": "Newcastle gave its name to one of the world's most travelled beers, but the city's drinking culture runs far deeper than the famous brown ale. Head east from the Quayside into the Ouseburn Valley and you'll find a proper beer quarter, where Brinkburn St Brewery pours its own craft beers and the Free Trade Inn serves a well-kept pint with a famous view of the Tyne bridges.\n\nIn the city centre, the Crown Posada is a slender Victorian treasure of stained glass and dark wood, while Blackfriars — a restored medieval friary — now brews its own beer at St Dominic's micro-brewery. Wylam Brewery, in the Palace of Arts in Exhibition Park, opens its taproom in grand surroundings.\n\nFor food, the Grainger Market is the place for a stottie and a browse.\n\n**Don't miss**\n\n- The view from the Free Trade Inn in Ouseburn\n- A pint under the stained glass at the Crown Posada\n- Wylam Brewery's taproom in Exhibition Park",
+  "gyg_tours": [
+    {
+      "title": "Brinkburn St. Brewery: Brewery Tour and Beer Tasting",
+      "url": "https://www.getyourguide.com/newcastle-upon-tyne-l444/brinkburn-st-brewery-brewery-tour-and-beer-tasting-t970919/",
+      "price_gbp": "30",
+      "duration": "2 hours",
+      "rating": "5.0",
+      "reviews": "6",
+      "summary": "A two-hour small-group tour of Brinkburn St Brewery in Newcastle's Ouseburn area, with tastings of the brewery's own craft beers, from session ales to IPAs and stouts."
+    },
+    {
+      "title": "Newcastle: Brewery Tour, Lunch, and Beer Tasting",
+      "url": "https://www.getyourguide.com/newcastle-upon-tyne-l444/newcastle-brewery-tour-lunch-and-beer-tasting-t1063679/",
+      "price_gbp": "65",
+      "duration": "3 hours",
+      "rating": "4.3",
+      "reviews": "7",
+      "summary": "A tour of St Dominic's micro-brewery at Blackfriars, a former Dominican friary dating from 1239, followed by a three-course lunch, a flight of beers and a beer gift pack to take home."
+    },
+    {
+      "title": "Newcastle: 3-Course Meal with Beer Flight",
+      "url": "https://www.getyourguide.com/newcastle-upon-tyne-l444/newcastle-3-course-meal-with-beer-flight-t1064353/",
+      "price_gbp": "64",
+      "duration": "2 hours",
+      "rating": null,
+      "reviews": null,
+      "summary": "A three-course meal at Dobson & Parnell on Newcastle's Quayside, paired with a flight of three artisan beers brewed at St Dominic's Brewery."
+    }
+  ]
+}

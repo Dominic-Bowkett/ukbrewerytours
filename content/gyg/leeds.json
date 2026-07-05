@@ -1,0 +1,35 @@
+{
+  "slug": "leeds",
+  "name": "Leeds",
+  "meta_description": "Leeds brewery tours, beer tastings and food tours — from Northern Monk's taproom to the city's historic pubs and markets. Compare top experiences.",
+  "intro_md": "Leeds has brewing in its bones — this was Tetley's city for nearly two centuries, and the former brewery's art deco headquarters still stands south of the river. The modern scene is led by Northern Monk, whose taproom occupies a Grade II-listed former flax store in Holbeck, with a further cluster of breweries out along the Kirkstall Road corridor.\n\nIn the centre, start at Whitelock's Ale House, tucked down a narrow yard off Briggate and trading since 1715, then wander through Kirkgate Market — one of the largest covered markets in Europe — before picking a route through the bars around Call Lane and the railway arches of Granary Wharf.\n\nDon't miss:\n\n- Whitelock's Ale House, the city's oldest pub\n- Northern Monk's taproom in Holbeck\n- Kirkgate Market for lunch\n- Canalside bars at Granary Wharf",
+  "gyg_tours": [
+    {
+      "title": "Leeds: Northern Monk Brewery Tour at Old Flax Store",
+      "url": "https://www.getyourguide.com/leeds-l1023/leeds-northern-monk-brewery-tour-at-old-flax-store-t1359136/",
+      "price_gbp": "25",
+      "duration": "1.5 hours",
+      "rating": null,
+      "reviews": null,
+      "summary": "A guided tour of Northern Monk's brewery in the historic Old Flax Store, covering the brewing process from grain to glass, with three third-pint tastings and a brewery glass to take home."
+    },
+    {
+      "title": "Leeds: Guided Food Tour with 7 Stops",
+      "url": "https://www.getyourguide.com/leeds-l1023/leeds-guided-food-tour-with-7-stops-t1136805/",
+      "price_gbp": "80",
+      "duration": "4 hours",
+      "rating": "5.0",
+      "reviews": "4",
+      "summary": "A four-hour guided food tour of Leeds with seven stops, including the city's oldest pub, independent eateries, a bakery and Kirkgate Market."
+    },
+    {
+      "title": "Leeds: Indian Food Tour with Tastings",
+      "url": "https://www.getyourguide.com/leeds-l1023/leeds-indian-food-tour-with-tastings-t1172693/",
+      "price_gbp": "100",
+      "duration": "3 hours",
+      "rating": null,
+      "reviews": null,
+      "summary": "A three-hour guided tour of Leeds' Indian food scene, sampling regional dishes across four restaurants with a knowledgeable local guide."
+    }
+  ]
+}

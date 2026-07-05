@@ -1,0 +1,44 @@
+{
+  "slug": "glasgow",
+  "name": "Glasgow",
+  "meta_description": "Explore Glasgow's beer heritage, from the Tennent's brewery to Finnieston, with bookable brewery tours, pub history walks and whisky tastings.",
+  "intro_md": "Glasgow's brewing story runs deeper than most visitors expect. Tennent's has brewed at Wellpark, on the eastern edge of the centre, for generations, and its lager remains the default pint in most of the city's pubs. Next door, Drygate makes modern craft beer in a converted box factory, while WEST brews German-style lagers inside the extraordinary Templeton building on Glasgow Green.\n\nThe pubs, though, are the heart of it. The Horse Shoe Bar near Central Station is famous for its enormous horseshoe-shaped counter, the Pot Still on Hope Street stocks hundreds of whiskies, and the West End's cobbled Ashton Lane strings its bars beneath the trees. Finnieston's stretch of Argyle Street has grown into the city's best run of eating and drinking.\n\nDon't miss:\n\n- A pint of lager at its source, Tennent's Wellpark Brewery\n- Drygate's taproom, right next door to Wellpark\n- A dram at the Pot Still on Hope Street\n- Dinner in Finnieston, then Ashton Lane after",
+  "gyg_tours": [
+    {
+      "title": "Glasgow: Tennent's Brewery Guided Tour and Free Pint",
+      "url": "https://www.getyourguide.com/glasgow-l438/glasgow-tennent-s-brewery-tour-t439419/",
+      "price_gbp": "21",
+      "duration": "1 hour",
+      "rating": "4.8",
+      "reviews": "294",
+      "summary": "A guided tour of Tennent's Wellpark Brewery, going behind the scenes of the brewing process and the brand's heritage collection. It finishes with a complimentary pint of Tennent's Lager."
+    },
+    {
+      "title": "Glasgow: Pub History Tour with Beer & Cider Tasting",
+      "url": "https://www.getyourguide.com/glasgow-l438/glasgow-walking-tour-with-beer-tasting-t182027/",
+      "price_gbp": "39",
+      "duration": "2 hours",
+      "rating": "4.8",
+      "reviews": "85",
+      "summary": "A guided walk through Glasgow's brewing history, from Blythswood Square through the High Street and Merchant City, telling how the city became a major beer exporter. Includes tutored tastings of Scottish craft beers along the way."
+    },
+    {
+      "title": "Glasgow: Scottish Rogue Whisky Bar Walking Tour",
+      "url": "https://www.getyourguide.com/glasgow-l438/glasgow-scottish-rogue-whisky-pub-crawl-t887228/",
+      "price_gbp": "62",
+      "duration": "2.5 hours",
+      "rating": "5.0",
+      "reviews": "10",
+      "summary": "A walking tour linking Glasgow's history with its whisky culture, visiting three pubs with a 25ml dram to sample at each, led by a local expert guide."
+    },
+    {
+      "title": "Glasgow: Guided City Highlights Tour & Whisky Tasting (5pm)",
+      "url": "https://www.getyourguide.com/glasgow-l438/glasgow-city-highlights-walking-tour-and-whisky-tasting-t415974/",
+      "price_gbp": "59",
+      "duration": "2 hours",
+      "rating": "4.7",
+      "reviews": "24",
+      "summary": "A guided evening walk past Glasgow's main landmarks followed by a tutored tasting of three full drams of Scotch whisky in a local venue."
+    }
+  ]
+}

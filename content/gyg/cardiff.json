@@ -1,0 +1,35 @@
+{
+  "slug": "cardiff",
+  "name": "Cardiff",
+  "meta_description": "Eat and drink your way around Cardiff: Victorian arcades, the Central Market, Welsh ales, plus bookable food tours and beer experiences.",
+  "intro_md": "Cardiff is compact enough to drink your way around on foot, which suits it nicely. Brains has been the city's brewer since the 1880s and its beers remain the staple pour across the centre, while Tiny Rebel — the Newport brewery — runs a much-loved bar on Westgate Street opposite the Principality Stadium. For Welsh cask ale in a proper pub, the City Arms on Quay Street is the reliable choice.\n\nThe real treasures are the Victorian and Edwardian arcades: narrow, glass-roofed lanes threaded between St Mary Street and The Hayes, filled with independent cafés and shops. Cardiff Central Market has traded under its iron roof since Victorian times, and Womanby Street — one of the city's oldest — is the place for live music and a late drink.\n\nDon't miss:\n\n- The arcades between St Mary Street and The Hayes\n- Cardiff Central Market's food stalls\n- A Welsh pint at the City Arms or Tiny Rebel Cardiff\n- Live music on Womanby Street",
+  "gyg_tours": [
+    {
+      "title": "Cardiff: Beer Bike Tour with Drinks and Music",
+      "url": "https://www.getyourguide.com/cardiff-l449/cardiff-beer-bike-tour-with-drinks-and-music-t1146401/",
+      "price_gbp": "320",
+      "duration": "1 hour",
+      "rating": "5.0",
+      "reviews": "1",
+      "summary": "A private pedal-powered party bike tour through central Cardiff for groups of up to eight, with a trained sober captain steering. Beer or prosecco is included, along with music over a Bluetooth speaker."
+    },
+    {
+      "title": "Cardiff: City Flavors Guided Food Tour with 8 Tastings",
+      "url": "https://www.getyourguide.com/cardiff-l449/cardiff-city-flavors-guided-food-tour-with-8-tastings-t1071662/",
+      "price_gbp": "89",
+      "duration": "3 hours",
+      "rating": "4.9",
+      "reviews": "11",
+      "summary": "A three-hour guided food walk through Cardiff city centre with eight or more tastings of traditional and modern Welsh food, led by an official Wales Tourist Guide in groups capped at eight."
+    },
+    {
+      "title": "Cardiff: Guided Welsh Food Walking Tour",
+      "url": "https://www.getyourguide.com/cardiff-l449/cardiff-guided-walking-food-tour-welsh-food-tour-t667336/",
+      "price_gbp": "53",
+      "duration": "2.5 hours",
+      "rating": "5.0",
+      "reviews": "1",
+      "summary": "A guided walking tour with seven tastings of Welsh food and drink, taking in landmarks including the castle and market while meeting local producers. Expect regional specialities such as Welsh cheese, laverbread and cider."
+    }
+  ]
+}

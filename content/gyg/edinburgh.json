@@ -1,0 +1,53 @@
+{
+  "slug": "edinburgh",
+  "name": "Edinburgh",
+  "meta_description": "From Old Town pub history to Leith's craft breweries — plan Edinburgh beer tastings, brewery tours and historic pub walks worth booking.",
+  "intro_md": "Edinburgh was once one of Britain's great brewing cities, with dozens of breweries at work around 1900, and the trade shaped whole districts. That heritage is still easy to taste. The Old Town's historic pubs cluster along the Grassmarket and Cowgate, the Café Royal's Victorian interior is worth the visit alone, and the Sheep Heid Inn in Duddingston is said to be the city's oldest pub.\n\nThe modern scene has settled in Leith. Down towards the water, Newbarns, Moonwake and Campervan all brew within walking distance of one another, and the Shore has become one of Scotland's best places to eat. Back in the centre, Rose Street's pub run and the Bow Bar on Victoria Street cover the traditional end, the latter with a formidable cask and whisky list.\n\nDon't miss:\n\n- Leith's brewery cluster: Newbarns, Moonwake and Campervan\n- A pint beneath the Café Royal's Victorian ceilings\n- The Bow Bar on Victoria Street for cask ale and whisky\n- The Sheep Heid Inn, Edinburgh's oldest pub by repute",
+  "gyg_tours": [
+    {
+      "title": "Edinburgh: Pub History Tour with Beer & Cider Tasting",
+      "url": "https://www.getyourguide.com/edinburgh-l44/edinburgh-old-town-guided-walking-tour-and-beer-tasting-t120247/",
+      "price_gbp": "44",
+      "duration": "2 hours",
+      "rating": "4.7",
+      "reviews": "283",
+      "summary": "A guided two-hour walk tracing Edinburgh's brewing history from the 1100s to today's craft scene, with tutored tastings of award-winning Scottish beers in three pubs along the way."
+    },
+    {
+      "title": "Edinburgh: Underground Beer Tasting in Lost Close",
+      "url": "https://www.getyourguide.com/edinburgh-l44/edinburgh-underground-beer-tasting-in-lost-close-t1119003/",
+      "price_gbp": "23",
+      "duration": "1 hour",
+      "rating": "5.0",
+      "reviews": "5",
+      "summary": "A tutored tasting of four locally brewed beers held in the Lost Close, a historic underground site in the Old Town, with storytelling about Edinburgh's brewing past."
+    },
+    {
+      "title": "Edinburgh: Leith Brewery Tour and Craft Beer Tasting",
+      "url": "https://www.getyourguide.com/edinburgh-l44/edinburgh-leith-brewery-tour-and-craft-beer-tasting-t294615/",
+      "price_gbp": "30",
+      "duration": "1.5 hours",
+      "rating": "5.0",
+      "reviews": "1",
+      "summary": "A guided brewery tour in Edinburgh's port district of Leith, covering how the beer is made before a tasting session of the brewery's craft range."
+    },
+    {
+      "title": "Leith Brewery Trail: Craft Beers and History Tour",
+      "url": "https://www.getyourguide.com/edinburgh-l44/leith-brewery-trail-craft-beers-and-history-tour-t1290234/",
+      "price_gbp": "85",
+      "duration": "3 hours",
+      "rating": "5.0",
+      "reviews": "5",
+      "summary": "A three-hour walking trail visiting three of Leith's craft breweries — Newbarns, Campervan and Moonwake — with beer tastings at each stop plus snacks and pizza along the way."
+    },
+    {
+      "title": "Edinburgh: Harry Potter Walking Tour and Beer Tasting",
+      "url": "https://www.getyourguide.com/edinburgh-l44/edinburgh-harry-potter-walking-tour-and-beer-tasting-t708044/",
+      "price_gbp": "49",
+      "duration": "5 hours",
+      "rating": "4.9",
+      "reviews": "8",
+      "summary": "A guided walk around the Edinburgh locations associated with J.K. Rowling and the Harry Potter books, followed by a tasting of Scottish beers in an underground cellar with a local expert."
+    }
+  ]
+}
