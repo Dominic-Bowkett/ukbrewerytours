@@ -207,7 +207,8 @@
         "context": "gallery"
       }
     ],
-    "active": true
+    "active": true,
+    "booking_url": "https://www.designmynight.com/uk/whats-on/food-drink/beer-tours-of-lewes-"
   },
   {
     "old_slug": "liverpool-microbrewery-experience",
