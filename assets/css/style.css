@@ -862,6 +862,10 @@ details .a { padding: 0 0 20px; color: var(--ink-soft); font-size: .97rem; }
 
 @media (max-width: 700px) {
   .section { padding: 60px 0; }
+  /* roomier side gutters on mobile so content isn't tight against the edges */
+  .container { padding-left: 30px; padding-right: 30px; }
+  /* trim the booking-card's inner padding so its interior stays comfortable as the outer gutter grows */
+  .booking-card { padding: 28px 24px; }
   .hero-inner { padding: 84px 0 68px; max-width: 100% !important; }
   /* keep the home search + fields fully within the mobile viewport */
   .hero-search, .hero-search .filter-field, .hero-search .filter-field.grow { min-width: 0 !important; max-width: 100% !important; }
