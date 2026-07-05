@@ -4,7 +4,7 @@ slug: brighton-brewery-tours
 old_url: /2023/07/29/brighton-brewery-tours-gift-voucher-perfect-beer-lovers-gift/
 description: "Give a Brighton brewery tours gift voucher: flexible craft brewery tours and beer tastings in Brighton — a unique, memorable gift for any beer lover."
 date: "2023-07-29"
-hero_image: "https://www.ukbrewerytours.com/wp-content/uploads/2023/07/Brighton-brewery-tours-gift-voucher.jpg"
+hero_image: "/assets/img/blog-brighton-seafront.jpg"
 ---
 
 ![Brighton brewery tours gift voucher](https://www.ukbrewerytours.com/wp-content/uploads/2023/07/Brighton-brewery-tours-gift-voucher.jpg)
@@ -40,8 +40,6 @@ Additionally, some vouchers may come with additional perks such as discounts on 
 Don't miss out on the opportunity to explore Brighton's vibrant craft brewery scene. Purchase a Brighton brewery tours gift voucher and give the gift of a unique and memorable experience to your beer-loving friends and family.
 
 ## Unforgettable Beer Tasting Experiences
-
-![Friends enjoying craft beer on a seafront terrace near the pier](/assets/img/blog-brighton-seafront.jpg)
 
 As part of the Brighton brewery tours gift voucher, you can embark on an unforgettable beer tasting experience. This sensory journey is not only enjoyable but also educational, giving you the opportunity to explore different beer flavors, aromas, and styles.
 

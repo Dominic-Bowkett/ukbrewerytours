@@ -30,7 +30,7 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+html { scroll-behavior: smooth; scroll-padding-top: 90px; overflow-x: hidden; }
 
 body {
   font-family: var(--font-body);
@@ -39,6 +39,7 @@ body {
   color: var(--ink);
   background: var(--cream);
   -webkit-font-smoothing: antialiased;
+  overflow-x: clip; /* contain any stray wide element (e.g. embedded widgets) on mobile; sticky-safe */
 }
 
 img { max-width: 100%; display: block; }
@@ -141,6 +142,8 @@ h3 { font-size: 1.25rem; line-height: 1.3; }
 @media (max-width: 560px) { .giftup-modal__panel { padding: 24px 18px; } .giftup-modal { padding: 16px; } }
 
 .btn svg { width: 18px; height: 18px; flex: none; }
+/* paired CTA buttons inside a paragraph get vertical spacing so they don't touch when they wrap/stack on mobile */
+p > .btn { margin-bottom: 10px; }
 
 /* ---------- header ---------- */
 
@@ -611,7 +614,9 @@ h3 { font-size: 1.25rem; line-height: 1.3; }
   box-shadow: var(--shadow);
 }
 /* home hero search */
-.hero-search { margin: 30px 0 14px; max-width: 640px; }
+.hero-search { margin: 30px 0 14px; max-width: 100%; width: 100%; }
+.hero-search .filter-field input, .hero-search .filter-field select { min-width: 0; }
+.hero-search .filter-field.grow { min-width: 220px; }
 .hero-search .btn { margin-bottom: 1px; }
 .hero-search-links { font-size: .95rem; color: rgba(247, 241, 229, .8); }
 .hero-search-links a { color: var(--amber); font-weight: 600; }
@@ -857,5 +862,10 @@ details .a { padding: 0 0 20px; color: var(--ink-soft); font-size: .97rem; }
 
 @media (max-width: 700px) {
   .section { padding: 60px 0; }
-  .hero-inner { padding: 84px 0 68px; }
+  .hero-inner { padding: 84px 0 68px; max-width: 100% !important; }
+  /* keep the home search + fields fully within the mobile viewport */
+  .hero-search, .hero-search .filter-field, .hero-search .filter-field.grow { min-width: 0 !important; max-width: 100% !important; }
+  .hero-search select, .hero-search input, .hero-search .btn { width: 100% !important; min-width: 0 !important; max-width: 100% !important; }
+  .hero h1 { font-size: 2rem; }
+  .hero .lede { font-size: 1.05rem; }
 }

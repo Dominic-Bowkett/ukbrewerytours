@@ -2,7 +2,7 @@
   <img class="hero-bg" src="/assets/img/hero-static.jpg" alt="" fetchpriority="high">
   <div class="hero-scrim"></div>
   <div class="container">
-    <div class="hero-inner">
+    <div class="hero-inner" style="max-width:780px">
       <span class="kicker">Award-winning tours since 2014</span>
       <h1>Discover the best craft beer in the UK</h1>
       <p class="lede">Brewery tours and tutored beer tastings in cities across the UK — led by beer sommeliers, brewers and certified experts. Small groups, working breweries, proper beer.</p>
@@ -16,11 +16,11 @@
         </div>
         <div class="filter-field grow">
           <label for="h-q">Search</label>
-          <input id="h-q" type="search" name="q" placeholder="Search tours, cities, experiences…">
+          <input id="h-q" type="search" name="q" placeholder="Search tours or a city…">
         </div>
         <button class="btn btn-primary" type="submit">Find tours</button>
       </form>
-      <p class="hero-search-links">or <a href="/tours/">browse all {{tour_count}} tours</a> · <a href="/gift-vouchers/">buy a gift voucher</a></p>
+      <p class="hero-search-links">or <a href="/tours/">browse all {{total_count}} tours &amp; experiences</a> · <a href="/gift-vouchers/">buy a gift voucher</a></p>
       <div class="trust-row">
         <span class="chip"><span class="star">★★★★★</span> {{google_rating}} on Google · {{google_reviews}} reviews</span>
         <span class="chip">Est. 2014</span>
@@ -41,7 +41,7 @@
     <div class="card-grid">
 {{featured_cards}}
     </div>
-    <p class="center mt-4"><a class="btn btn-dark" href="/tours/">See all {{tour_count}} tours →</a></p>
+    <p class="center mt-4"><a class="btn btn-dark" href="/tours/">See all {{total_count}} tours &amp; experiences →</a></p>
   </div>
 </section>
 

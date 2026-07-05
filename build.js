@@ -274,7 +274,7 @@ const DISCLOSURE = `<p class="disclosure">Experiences marked "Partner" are opera
 
 function tourCard(t) {
   const img = localizeUrl((t.images && t.images[0] && t.images[0].url) || '');
-  const price = t.price ? `£${t.price} <small>per person</small>` : `<small>price on enquiry</small>`;
+  const price = t.price ? `£${t.price} <small>pp</small>` : `<small>price on enquiry</small>`;
   const meta = [t.duration, t.schedule && t.schedule.split('(')[0].trim()].filter(Boolean).join(' · ');
   const days = parseDays(t.schedule).join(',');
   return `<a class="tour-card" href="/tours/${t.old_slug}/" data-card data-city="${esc(t.city)}" data-name="${esc(t.name.toLowerCase())}" data-days="${days}">
@@ -392,6 +392,7 @@ const pageTokens = {
   google_reviews: site.google_reviews,
   tour_count: String(activeTours.length),
   partner_count: String(allExperiences.length),
+  total_count: String(activeTours.length + allExperiences.length),
   city_count: String(citiesWithTours.length),
 };
 

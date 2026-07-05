@@ -4,7 +4,7 @@ slug: camden-town-brewery-tours
 old_url: /2023/07/29/discover-camden-town-brewery-tours-fun-informative-and-tasty/
 description: "Explore Camden Town's craft beer scene on a guided brewery tour: behind-the-scenes brewing, beer tastings, booking info and tips for a great day out."
 date: "2023-07-29"
-hero_image: "https://www.ukbrewerytours.com/wp-content/uploads/2023/07/Camden-Town-Brewery-Tours.jpg"
+hero_image: "/assets/img/blog-camden-canal.jpg"
 ---
 
 ![Camden Town Brewery Tours](https://www.ukbrewerytours.com/wp-content/uploads/2023/07/Camden-Town-Brewery-Tours.jpg)
@@ -61,8 +61,6 @@ Camden Town Brewery Tours offers a fun, informative, and tasty experience for al
 During the tour, you'll get the chance to visit local breweries and enjoy unique beer experiences that will leave a lasting impression. From the guided brewery tours to the in-depth explanations of the brewing process, you'll come away with a newfound appreciation for craft beer.
 
 ## Exploring the Craft Beer Scene in Camden Town
-
-![Drinking craft beer on a canal-side terrace in north London](/assets/img/blog-camden-canal.jpg)
 
 If you're a craft beer enthusiast, then Camden Town Brewery Tours are the perfect choice for you. Their knowledgeable guides will take you on a journey through the vibrant and exciting craft beer scene in Camden Town.
 

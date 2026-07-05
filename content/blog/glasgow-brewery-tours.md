@@ -4,7 +4,7 @@ slug: glasgow-brewery-tours
 old_url: /2023/07/30/glasgow-brewery-tours-gift-voucher-perfect-beer-experience/
 description: "Give a Glasgow brewery tours gift voucher: flexible tours of Drygate, Tennent's and WEST with tastings — the perfect present for beer enthusiasts."
 date: "2023-07-30"
-hero_image: "https://www.ukbrewerytours.com/wp-content/uploads/2023/07/Glasgow-brewery-tours-gift-voucher.jpg"
+hero_image: "/assets/img/blog-glasgow-taproom.jpg"
 ---
 
 ![Glasgow brewery tours gift voucher](https://www.ukbrewerytours.com/wp-content/uploads/2023/07/Glasgow-brewery-tours-gift-voucher.jpg)
@@ -86,8 +86,6 @@ The West Brewery Tour provides a unique insight into the history and culture of 
 Book your spot on one of these top-rated brewery tours in Glasgow, and treat yourself to an unforgettable beer experience. Who knows, you might even discover your new favourite brew!
 
 ## Brewery Tours and Tastings in Glasgow
-
-![A tasting flight of craft beers in a cosy taproom](/assets/img/blog-glasgow-taproom.jpg)
 
 One of the best things about brewery tours in Glasgow is the opportunity to indulge in a variety of beer tastings. Whether you're a seasoned beer enthusiast or just starting to explore the world of craft beer, these tours offer a chance to sample a range of delicious brews while learning about the brewing process.
 
