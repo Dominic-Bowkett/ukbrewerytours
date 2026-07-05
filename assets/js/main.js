@@ -12,7 +12,6 @@ if (toggle && nav) {
 const filterForm = document.querySelector('[data-filter]');
 if (filterForm) {
   const citySel = filterForm.querySelector('[data-filter-city]');
-  const daySel = filterForm.querySelector('[data-filter-day]');
   const qInput = filterForm.querySelector('[data-filter-q]');
   const grid = document.querySelector('[data-tours-grid]');
   const countEl = document.querySelector('[data-filter-count]');
@@ -21,21 +20,17 @@ if (filterForm) {
 
   const apply = () => {
     const city = citySel.value;
-    const day = daySel.value;
     const q = qInput.value.trim().toLowerCase();
     let visible = 0;
     for (const c of cards) {
-      const days = c.dataset.days || '';
       const okCity = !city || c.dataset.city === city;
-      // Partner experiences carry no day tags — they run various days, so keep them for any day.
-      const okDay = !day || days === '' || days.split(',').includes(day);
       const okQ = !q || (c.dataset.name || '').includes(q) || (c.dataset.city || '').toLowerCase().includes(q);
-      const show = okCity && okDay && okQ;
+      const show = okCity && okQ;
       c.hidden = !show;
       if (show) visible++;
     }
     if (countEl) {
-      countEl.textContent = (city || day || q)
+      countEl.textContent = (city || q)
         ? `Showing ${visible} tour${visible === 1 ? '' : 's'} & experience${visible === 1 ? '' : 's'}`
         : `${cards.length} tours & experiences`;
     }
@@ -43,17 +38,14 @@ if (filterForm) {
   };
 
   citySel.addEventListener('change', apply);
-  daySel.addEventListener('change', apply);
   qInput.addEventListener('input', apply);
   document.querySelectorAll('[data-filter-reset]').forEach(btn =>
-    btn.addEventListener('click', () => { citySel.value = ''; daySel.value = ''; qInput.value = ''; apply(); }));
+    btn.addEventListener('click', () => { citySel.value = ''; qInput.value = ''; apply(); }));
 
-  // Deep-link support: /tours/?city=Manchester&day=Sat&q=beer (e.g. from the home search)
+  // Deep-link support: /tours/?city=Manchester&q=beer (e.g. from the home search)
   const params = new URLSearchParams(location.search);
   const preCity = params.get('city');
   if (preCity && [...citySel.options].some(o => o.value === preCity)) citySel.value = preCity;
-  const preDay = params.get('day');
-  if (preDay && [...daySel.options].some(o => o.value === preDay)) daySel.value = preDay;
   const preQ = params.get('q');
   if (preQ) qInput.value = preQ;
   apply();

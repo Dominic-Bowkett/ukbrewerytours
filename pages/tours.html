@@ -5,7 +5,7 @@
     <div class="hero-inner" style="max-width:760px">
       <span class="kicker">All tours &amp; experiences</span>
       <h1>Brewery tours &amp; beer tastings across the UK</h1>
-      <p class="lede">{{tour_count}} of our own guided tours plus {{partner_count}} hand-picked partner experiences in {{city_count}}+ UK cities. Filter by city or day, or explore a city below.</p>
+      <p class="lede">{{tour_count}} of our own guided tours plus {{partner_count}} hand-picked partner experiences in {{city_count}}+ UK cities. Filter by city, search, or explore a city below.</p>
     </div>
   </div>
 </section>
@@ -18,13 +18,6 @@
         <select id="f-city" data-filter-city>
           <option value="">All cities</option>
           {{city_options}}
-        </select>
-      </div>
-      <div class="filter-field">
-        <label for="f-day">Day</label>
-        <select id="f-day" data-filter-day>
-          <option value="">Any day</option>
-          {{day_options}}
         </select>
       </div>
       <div class="filter-field grow">

@@ -158,6 +158,15 @@ const DAY_ORDER = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 const AFF_QS = 'partner_id=YK95MF9&utm_medium=travel_agent';
 const affUrl = u => u + (u.includes('?') ? '&' : '?') + AFF_QS;
+
+// Stamp our DesignMyNight rep_id onto any designmynight.com booking link (incl. subdomains).
+const DMN_REP = site.designmynight_rep_id;
+function decorateBooking(url) {
+  if (url && DMN_REP && /designmynight\.com/i.test(url) && !url.includes('rep_id=')) {
+    return url + (url.includes('?') ? '&' : '?') + 'rep_id=' + DMN_REP;
+  }
+  return url;
+}
 const gygSlug = u => u.replace(/\/$/, '').split('/').pop().replace(/-t\d+$/, '');
 const GYG_IMG_DIR = path.join(ROOT, 'assets', 'img', 'gyg');
 const gygImgs = new Set(fs.existsSync(GYG_IMG_DIR) ? fs.readdirSync(GYG_IMG_DIR) : []);
@@ -309,10 +318,6 @@ const exploreTiles = tileCities.map(c => {
 }).join('\n');
 
 const cityOptions = allCityNames.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
-const dayOptions = DAY_ORDER.map(d => {
-  const names = { Mon: 'Mondays', Tue: 'Tuesdays', Wed: 'Wednesdays', Thu: 'Thursdays', Fri: 'Fridays', Sat: 'Saturdays', Sun: 'Sundays' };
-  return `<option value="${d}">${names[d]}</option>`;
-}).join('');
 
 // One merged grid: our own tours and partner experiences together, grouped by
 // city (our own first within each city) so a city's options sit side by side.
@@ -331,7 +336,6 @@ const pageTokens = {
   featured_cards: featuredCards,
   explore_tiles: exploreTiles,
   city_options: cityOptions,
-  day_options: dayOptions,
   all_tours_grid: allToursGrid,
   disclosure: DISCLOSURE,
   blog_cards: blogCards,
@@ -404,7 +408,7 @@ for (const t of activeTours) {
   const waHref = `${WHATSAPP}?text=${encodeURIComponent(`Hi! I'd like to book the ${t.name}.`)}`;
   const waIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.6-1.2 1.2-1.7 1.2-.4.1-1 .1-1.6-.1a13 13 0 0 1-5.8-5.1c-.6-1-.9-2-.9-2.7 0-.8.4-1.4.7-1.7.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.3.3c-.1.2-.2.3 0 .6.2.3.9 1.4 1.9 2.3 1.3 1.2 2.4 1.5 2.7 1.7.3.1.5.1.7-.1l1-1.2c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.4 0 .1 0 .7-.2 1.2Z"/></svg>';
   const ctaButtons = t.booking_url
-    ? `<a class="btn btn-primary" href="${t.booking_url}" target="_blank" rel="noopener">Buy tickets</a>
+    ? `<a class="btn btn-primary" href="${decorateBooking(t.booking_url)}" target="_blank" rel="noopener">Buy tickets</a>
        <a class="btn btn-outline" href="${waHref}">${waIcon} Ask us on WhatsApp</a>`
     : `<a class="btn btn-primary" href="${waHref}">${waIcon} Book via WhatsApp</a>
        <a class="btn btn-outline" href="/gift-vouchers/">Buy as a gift voucher</a>`;
