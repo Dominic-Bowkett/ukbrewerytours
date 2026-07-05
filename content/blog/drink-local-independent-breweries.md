@@ -58,7 +58,7 @@ A few simple habits go a long way:
 - **Look for the Indie Beer seal** on the pump clip, can or label. Hundreds of independent breweries have signed up to display it.
 - **Use the beer checker** at indiebeer.uk if you are unsure who owns a particular brand. A quick search tells you whether a brewery is truly independent.
 - **Ask at the bar.** Good pubs are usually proud of their local and independent lines and happy to point you to them.
-- **Buy direct** from the brewery's own taproom, shop or website whenever you can, so more of your money reaches the people who made the beer.
+- **Buy direct** from the brewery's own taproom, shop or website whenever you can — [many run their own tours you can book directly](/breweries/) — so more of your money reaches the people who made the beer.
 - **Visit the source.** Nothing beats seeing where and how your beer is made, meeting the brewers and tasting straight from the tank. Spending a day exploring small producers on one of our [brewery tours](/tours/) is one of the most enjoyable ways to discover independent breweries you will happily champion for years. Search for [a brewery tour near you](/blog/brewery-tours-near-me/) and you will often find an independent brewer within easy reach.
 
 Once you start noticing the seal and asking the question, it becomes second nature, and you will be surprised how quickly your regular order shifts towards genuinely local beer.

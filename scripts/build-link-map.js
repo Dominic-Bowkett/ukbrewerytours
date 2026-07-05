@@ -40,6 +40,7 @@ const map = { site: 'ukbrewerytours.com', updated: 'FALLBACK-INTENT (Ahrefs plan
 
 // hubs
 map.pages.push({ url: '/tours/', primary_keyword: 'uk brewery tours', cluster: 'pillar', role: 'hub' });
+map.pages.push({ url: '/breweries/', primary_keyword: 'breweries you can visit uk', cluster: 'pillar', role: 'hub', preferred_anchors: ['breweries that run their own tours', 'book direct with the brewery'] });
 map.pages.push({ url: '/blog/', primary_keyword: 'brewery tours blog', cluster: 'blog', role: 'hub' });
 
 // blog posts

@@ -496,10 +496,20 @@ ${brewSections}
       <p class="disclosure" style="margin-top:44px">These breweries take bookings directly on their own websites — links go straight to the brewery, and we don't take a booking or earn commission on them. Details and prices were correct at the time of research; always confirm on the brewery's own page. Spotted one we've missed? <a href="/contact/">Let us know</a>.</p>
     </div>
   </section>`;
+  const brewAll = bd.regions.flatMap(r => r.breweries);
+  const brewJsonld = [
+    { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: site.base_url + '/' },
+      { '@type': 'ListItem', position: 2, name: 'Breweries', item: site.base_url + '/breweries/' },
+    ] },
+    { '@context': 'https://schema.org', '@type': 'ItemList', name: 'UK breweries that run their own tours',
+      numberOfItems: brewAll.length,
+      itemListElement: brewAll.map((b, i) => ({ '@type': 'ListItem', position: i + 1, name: `${b.brewery} — ${b.tour_name}`, url: b.url })) },
+  ];
   writePage('breweries/index.html', {
     title: `${bd.total} UK Breweries That Run Their Own Tours | UK Brewery Tours`,
     description: `A directory of ${bd.total} UK breweries offering tours and tastings booked directly on their own sites — Harvey's, Fuller's, Timothy Taylor's and more, grouped by region.`,
-    content: brewContent, nav: 'breweries', ogImage: '/assets/img/breweries/london.jpg',
+    content: brewContent, nav: 'breweries', ogImage: '/assets/img/breweries/london.jpg', jsonld: brewJsonld,
   });
 }
 
@@ -780,7 +790,7 @@ const notFound = fill(layout, {
 fs.writeFileSync(path.join(OUT, '404.html'), notFound);
 
 const urls = [
-  '/', '/about/', '/contact/', '/tours/', '/gift-vouchers/', '/group-tours/', '/blog/', '/returns-policy/',
+  '/', '/about/', '/contact/', '/tours/', '/breweries/', '/gift-vouchers/', '/group-tours/', '/blog/', '/returns-policy/',
   ...cityGuides.map(g => `/tours/${g.slug}/`),
   ...activeTours.map(t => `/tours/${t.old_slug}/`),
   ...posts.map(p => `/blog/${p.slug}/`),

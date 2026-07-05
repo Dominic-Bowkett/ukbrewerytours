@@ -6,8 +6,17 @@
       "url": "/tours/",
       "primary_keyword": "uk brewery tours",
       "cluster": "pillar",
+      "role": "hub"
+    },
+    {
+      "url": "/breweries/",
+      "primary_keyword": "breweries you can visit uk",
+      "cluster": "pillar",
       "role": "hub",
-      "inbound_internal": 7
+      "preferred_anchors": [
+        "breweries that run their own tours",
+        "book direct with the brewery"
+      ]
     },
     {
       "url": "/blog/",
@@ -25,8 +34,8 @@
         "state of UK craft beer in 2026",
         "UK craft beer in 2026"
       ],
-      "inbound_internal": 5,
-      "outbound_internal": 5,
+      "inbound_internal": 0,
+      "outbound_internal": 0,
       "banned_anchors": [
         "click here",
         "read more",
@@ -44,8 +53,8 @@
         "cask ale comeback",
         "the return of cask ale"
       ],
-      "inbound_internal": 3,
-      "outbound_internal": 5,
+      "inbound_internal": 0,
+      "outbound_internal": 0,
       "banned_anchors": [
         "click here",
         "read more",
@@ -63,8 +72,8 @@
         "why stout is booming",
         "the stout boom"
       ],
-      "inbound_internal": 6,
-      "outbound_internal": 4,
+      "inbound_internal": 0,
+      "outbound_internal": 0,
       "banned_anchors": [
         "click here",
         "read more",
@@ -82,8 +91,8 @@
         "craft lager",
         "the rise of craft lager"
       ],
-      "inbound_internal": 3,
-      "outbound_internal": 5,
+      "inbound_internal": 0,
+      "outbound_internal": 0,
       "banned_anchors": [
         "click here",
         "read more",
@@ -101,8 +110,8 @@
         "the new IPA",
         "how IPA is changing"
       ],
-      "inbound_internal": 3,
-      "outbound_internal": 4,
+      "inbound_internal": 0,
+      "outbound_internal": 0,
       "banned_anchors": [
         "click here",
         "read more",
@@ -120,8 +129,8 @@
         "brewery tours are booming",
         "why brewery tours are booming"
       ],
-      "inbound_internal": 7,
-      "outbound_internal": 5,
+      "inbound_internal": 0,
+      "outbound_internal": 0,
       "banned_anchors": [
         "click here",
         "read more",
@@ -139,8 +148,8 @@
         "Indie Beer Week 2026",
         "Indie Beer Week"
       ],
-      "inbound_internal": 3,
-      "outbound_internal": 4,
+      "inbound_internal": 0,
+      "outbound_internal": 0,
       "banned_anchors": [
         "click here",
         "read more",
@@ -158,8 +167,8 @@
         "supporting independent breweries",
         "why drinking local matters"
       ],
-      "inbound_internal": 10,
-      "outbound_internal": 5,
+      "inbound_internal": 0,
+      "outbound_internal": 0,
       "banned_anchors": [
         "click here",
         "read more",
@@ -177,8 +186,8 @@
         "alcohol-free craft beer",
         "low and no beer"
       ],
-      "inbound_internal": 3,
-      "outbound_internal": 4,
+      "inbound_internal": 0,
+      "outbound_internal": 0,
       "banned_anchors": [
         "click here",
         "read more",
@@ -196,8 +205,8 @@
         "best UK beer cities",
         "UK cities for beer lovers"
       ],
-      "inbound_internal": 8,
-      "outbound_internal": 14,
+      "inbound_internal": 0,
+      "outbound_internal": 0,
       "banned_anchors": [
         "click here",
         "read more",
@@ -215,8 +224,8 @@
         "difference between beer and lager",
         "beer vs lager"
       ],
-      "inbound_internal": 5,
-      "outbound_internal": 5,
+      "inbound_internal": 0,
+      "outbound_internal": 0,
       "banned_anchors": [
         "click here",
         "read more",
@@ -234,8 +243,8 @@
         "calories in a pint of Guinness",
         "Guinness calories"
       ],
-      "inbound_internal": 2,
-      "outbound_internal": 3,
+      "inbound_internal": 0,
+      "outbound_internal": 0,
       "banned_anchors": [
         "click here",
         "read more",
@@ -253,8 +262,8 @@
         "Baby Guinness",
         "the Baby Guinness shot"
       ],
-      "inbound_internal": 2,
-      "outbound_internal": 3,
+      "inbound_internal": 0,
+      "outbound_internal": 0,
       "banned_anchors": [
         "click here",
         "read more",
@@ -272,8 +281,8 @@
         "London beer gardens",
         "London's best beer gardens"
       ],
-      "inbound_internal": 1,
-      "outbound_internal": 4,
+      "inbound_internal": 0,
+      "outbound_internal": 0,
       "banned_anchors": [
         "click here",
         "read more",
@@ -292,7 +301,7 @@
         "brewery tours in Brighton"
       ],
       "inbound_internal": 0,
-      "outbound_internal": 3,
+      "outbound_internal": 0,
       "banned_anchors": [
         "click here",
         "read more",
@@ -310,8 +319,8 @@
         "Camden Town brewery tours",
         "Camden brewery tours"
       ],
-      "inbound_internal": 1,
-      "outbound_internal": 3,
+      "inbound_internal": 0,
+      "outbound_internal": 0,
       "banned_anchors": [
         "click here",
         "read more",
@@ -330,7 +339,7 @@
         "brewery tours in Glasgow"
       ],
       "inbound_internal": 0,
-      "outbound_internal": 3,
+      "outbound_internal": 0,
       "banned_anchors": [
         "click here",
         "read more",
@@ -349,7 +358,7 @@
         "brewery tours in Leeds"
       ],
       "inbound_internal": 0,
-      "outbound_internal": 4,
+      "outbound_internal": 0,
       "banned_anchors": [
         "click here",
         "read more",
@@ -368,7 +377,7 @@
         "brewery tours in Kent"
       ],
       "inbound_internal": 0,
-      "outbound_internal": 4,
+      "outbound_internal": 0,
       "banned_anchors": [
         "click here",
         "read more",
@@ -386,8 +395,8 @@
         "brewery tours near you",
         "brewery tours near me"
       ],
-      "inbound_internal": 4,
-      "outbound_internal": 3,
+      "inbound_internal": 0,
+      "outbound_internal": 0,
       "banned_anchors": [
         "click here",
         "read more",
@@ -406,7 +415,7 @@
         "Hawkstone brewery tours"
       ],
       "inbound_internal": 0,
-      "outbound_internal": 3,
+      "outbound_internal": 0,
       "banned_anchors": [
         "click here",
         "read more",
@@ -424,8 +433,8 @@
         "Anspach & Hobday",
         "Anspach and Hobday"
       ],
-      "inbound_internal": 1,
-      "outbound_internal": 3,
+      "inbound_internal": 0,
+      "outbound_internal": 0,
       "banned_anchors": [
         "click here",
         "read more",
@@ -443,8 +452,8 @@
         "Bianca Road Brewery",
         "Bianca Road"
       ],
-      "inbound_internal": 1,
-      "outbound_internal": 3,
+      "inbound_internal": 0,
+      "outbound_internal": 0,
       "banned_anchors": [
         "click here",
         "read more",
@@ -468,8 +477,7 @@
       "url": "/tours/bristol/",
       "primary_keyword": "bristol brewery tours",
       "cluster": "city-bristol",
-      "role": "hub",
-      "inbound_internal": 1
+      "role": "hub"
     },
     {
       "url": "/tours/burnley/",
@@ -481,36 +489,31 @@
       "url": "/tours/cardiff/",
       "primary_keyword": "cardiff brewery tours",
       "cluster": "city-cardiff",
-      "role": "hub",
-      "inbound_internal": 1
+      "role": "hub"
     },
     {
       "url": "/tours/edinburgh/",
       "primary_keyword": "edinburgh brewery tours",
       "cluster": "city-edinburgh",
-      "role": "hub",
-      "inbound_internal": 1
+      "role": "hub"
     },
     {
       "url": "/tours/glasgow/",
       "primary_keyword": "glasgow brewery tours",
       "cluster": "city-glasgow",
-      "role": "hub",
-      "inbound_internal": 1
+      "role": "hub"
     },
     {
       "url": "/tours/kent/",
       "primary_keyword": "kent brewery tours",
       "cluster": "city-kent",
-      "role": "hub",
-      "inbound_internal": 1
+      "role": "hub"
     },
     {
       "url": "/tours/leeds/",
       "primary_keyword": "leeds brewery tours",
       "cluster": "city-leeds",
-      "role": "hub",
-      "inbound_internal": 2
+      "role": "hub"
     },
     {
       "url": "/tours/lewes/",
@@ -522,29 +525,25 @@
       "url": "/tours/liverpool/",
       "primary_keyword": "liverpool brewery tours",
       "cluster": "city-liverpool",
-      "role": "hub",
-      "inbound_internal": 1
+      "role": "hub"
     },
     {
       "url": "/tours/london/",
       "primary_keyword": "london brewery tours",
       "cluster": "city-london",
-      "role": "hub",
-      "inbound_internal": 3
+      "role": "hub"
     },
     {
       "url": "/tours/manchester/",
       "primary_keyword": "manchester brewery tours",
       "cluster": "city-manchester",
-      "role": "hub",
-      "inbound_internal": 1
+      "role": "hub"
     },
     {
       "url": "/tours/newcastle/",
       "primary_keyword": "newcastle brewery tours",
       "cluster": "city-newcastle",
-      "role": "hub",
-      "inbound_internal": 1
+      "role": "hub"
     },
     {
       "url": "/tours/nottingham/",
@@ -556,22 +555,19 @@
       "url": "/tours/sheffield/",
       "primary_keyword": "sheffield brewery tours",
       "cluster": "city-sheffield",
-      "role": "hub",
-      "inbound_internal": 1
+      "role": "hub"
     },
     {
       "url": "/tours/york/",
       "primary_keyword": "york brewery tours",
       "cluster": "city-york",
-      "role": "hub",
-      "inbound_internal": 1
+      "role": "hub"
     },
     {
       "url": "/tours/bermondsey-beer-tasting-tour/",
       "primary_keyword": "bermondsey beer tasting tour",
       "cluster": "city-london",
-      "role": "spoke",
-      "inbound_internal": 2
+      "role": "spoke"
     },
     {
       "url": "/tours/bermondsey-cheese-meat-beer-tour/",
@@ -619,8 +615,7 @@
       "url": "/tours/kent-hop-farm-tour-at-hukins-hops/",
       "primary_keyword": "kent hop farm tour at hukins hops",
       "cluster": "city-kent",
-      "role": "spoke",
-      "inbound_internal": 1
+      "role": "spoke"
     },
     {
       "url": "/tours/birmingham-microbrewery-experience/",
@@ -632,8 +627,7 @@
       "url": "/tours/glasgow-beer-tasting/",
       "primary_keyword": "glasgow beer tasting",
       "cluster": "city-glasgow",
-      "role": "spoke",
-      "inbound_internal": 1
+      "role": "spoke"
     },
     {
       "url": "/tours/dorset-brewery-tours/",
