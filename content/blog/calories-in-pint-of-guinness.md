@@ -13,7 +13,7 @@ Did you know a pint of Guinness Draught has about 210 calories? It's true. This 
 
 A pint of BrewDog Punk IPA, for example, has a big 292 calories. In contrast, a Carling lager pint has around 189 calories. Guinness stands out as a well-balanced option for those watching their calories. What's more, its great taste from Ireland stays the same around the world. This means everyone enjoys the same calories in their Guinness.
 
-So, when you're enjoying a pint of Guinness next time, remember its special flavour and calorie content. You'll find it easier to include in your diet.
+So, when you're enjoying a pint of Guinness next time, remember its special flavour and calorie content. You'll find it easier to include in your diet. And if it's the iconic black-and-cream look you love, [the Baby Guinness shot](/blog/baby-guinness/) recreates it in miniature.
 
 ## Understanding the Calorie Content of Guinness
 
@@ -25,7 +25,7 @@ The caloric details of Guinness show what's inside. A 100ml serving has 34 calor
 
 ### Comparing Guinness to Other Beers
 
-Comparing Guinness to other beers shows why some pick it. For example, BrewDog Punk IPA has about 292 calories per pint, and Carling has about 189 calories per pint. Regular lagers range from 180-220 calories per pint. This shows Guinness's rich flavour comes with a balanced calorie count.
+Comparing Guinness to other beers shows why some pick it. For example, BrewDog Punk IPA has about 292 calories per pint, and Carling has about 189 calories per pint. Regular lagers range from 180-220 calories per pint, and the [difference between a stout and a lager](/blog/difference-between-beer-and-lager/) shows in more than just the calorie count. This shows Guinness's rich flavour comes with a balanced calorie count.
 
 It's important to remember beer calories change with serving size and how it's made. Think about this when planning your diet.
 
@@ -55,7 +55,7 @@ For a less calorie-packed drink, consider options like Skinny Lager. It has only
 
 ![Guinness stout calorie count](https://www.ukbrewerytours.com/wp-content/uploads/2024/06/Guinness-stout-calorie-count-1024x585.jpg)
 
-Guinness stout is loved for its deep flavour and modest calorie amount. It's important for beer fans to see how it compares to other beers in calories and nutrients.
+Guinness stout is loved for its deep flavour and modest calorie amount — one reason [stout is booming in 2026](/blog/why-stout-is-booming-2026/). It's important for beer fans to see how it compares to other beers in calories and nutrients.
 
 ### Calorie Comparisons
 

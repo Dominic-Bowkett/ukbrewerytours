@@ -7,7 +7,7 @@ date: "2023-08-07"
 hero_image: "/assets/img/blog-tasting-flight-hero.jpg"
 ---
 
-Are you a beer lover searching for a unique experience? Look no further! Brewery tours near you offer the chance to taste craft beers and witness the art of brewing firsthand.
+Are you a beer lover searching for a unique experience? Look no further! Brewery tours near you offer the chance to taste craft beers and witness the art of brewing firsthand. There's a reason [brewery tours are booming](/blog/why-brewery-tours-booming-2026/) right now — they're one of the most rewarding days out for anyone who loves good beer.
 
 ### Key Takeaways
 
@@ -45,7 +45,7 @@ With guided brewery tours, you'll have the opportunity to discover local UK brew
 
 ### Brewery Tours Near Me
 
-Guided brewery tours are available throughout the UK, so you won't have to travel too far to find one near you. A simple online search for "brewery tours in [location]" or "brewery tours near me" will give you plenty of options to choose from. Alternatively, ask at your local pub or bottle shop for recommendations!
+Guided brewery tours are available throughout the UK, so you won't have to travel too far to find one near you. A simple online search for "brewery tours in [location]" or "brewery tours near me" will give you plenty of options to choose from. Alternatively, ask at your local pub or bottle shop for recommendations! And if you're happy to travel, it's worth seeking out [the best UK cities for beer](/blog/best-uk-beer-cities-2026/), where the brewery scene is especially rich.
 
 ## Discover Local Breweries and Their Unique Craft Brews
 
@@ -72,7 +72,7 @@ On a brewery tour, you can sample a variety of different brews and find the ones
 
 ### Support Local Businesses and Their Passion for Craft Beer
 
-By taking a local brewery tour, you're not only getting a great experience for yourself, but you're also supporting your local economy. These independent breweries are often run by passionate people who truly love what they do, and your support can help them continue to thrive.
+By taking a local brewery tour, you're not only getting a great experience for yourself, but you're also supporting your local economy. [These independent breweries](/blog/drink-local-independent-breweries/) are often run by passionate people who truly love what they do, and your support can help them continue to thrive.
 
 So why not book a local brewery tour today? It's a great way to support your community and enjoy some flavourful, unique craft beers!
 

@@ -9,7 +9,7 @@ hero_image: "https://www.ukbrewerytours.com/wp-content/uploads/2025/07/Hawkstone
 
 ![Hawkstone brewery tour experience with visitors sampling craft beer](https://www.ukbrewerytours.com/wp-content/uploads/2025/07/Hawkstone-brewery-tour-experience-with-visitors-sampling-craft-beer.jpeg)
 
-Step into the world of premium lager crafting with Hawkstone brewery tours, where expert guides reveal the secrets behind our award-winning brews. Discover the perfect blend of history, craftsmanship, and generous sampling in a stunning Cotswolds setting. Whether you're a beer enthusiast or simply looking for a unique day out, our 2-hour immersive experience offers something special for everyone.
+Step into the world of premium lager crafting with Hawkstone brewery tours, where expert guides reveal the secrets behind our award-winning brews. Discover the perfect blend of history, craftsmanship, and generous sampling in a stunning Cotswolds setting. Whether you're a beer enthusiast or simply looking for a unique day out, our 2-hour immersive experience offers something special for everyone. Hawkstone tours are part of [the rise of brewery experiences](/blog/why-brewery-tours-booming-2026/) drawing more people than ever behind the scenes across the UK.
 
 ## Ready for an Unforgettable Brewery Experience?
 
@@ -71,11 +71,13 @@ Our brewing process includes a longer maturing process called lagering – simil
 
 ![Craft and expertise highlighted during Hawkstone brewery tours](https://www.ukbrewerytours.com/wp-content/uploads/2025/07/Craft-and-expertise-highlighted-during-Hawkstone-brewery-tours.jpeg)
 
-The perfect blend of barley, belligerence, and outright brewing skill goes into every batch. Our expert brewers combine traditional methods with modern techniques to create our distinctive flavor profiles.
+The perfect blend of barley, belligerence, and outright brewing skill goes into every batch. Our expert brewers combine traditional methods with modern techniques to create our distinctive flavor profiles. Booking a tour is also a hands-on way of [supporting independent breweries](/blog/drink-local-independent-breweries/) that put craft before scale.
 
 ## Plan Your Hawkstone Brewery Tour
 
 ![Panoramic view of Hawkstone brewery where tours take place](https://www.ukbrewerytours.com/wp-content/uploads/2025/07/Panoramic-view-of-Hawkstone-brewery-where-tours-take-place-1024x585.jpeg)
+
+The brewery sits in the heart of the Cotswolds, but if the journey is a stretch you'll also find plenty of other [brewery tours near you](/blog/brewery-tours-near-me/) to enjoy closer to home.
 
 ### Essential Information
 

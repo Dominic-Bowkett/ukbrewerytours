@@ -23,17 +23,17 @@ We receive a lot of questions about this one. There are several types of lagers,
 
 ## Lager vs. Pilsner: what's the difference?
 
-In fact, Pilsner is a sort of beer, named after the Czech city of Plzen, which is located in central Europe. Pilsners use a different yeast and have a more hop-forward flavour profile than other beers. Pilsners are simply lagers that have been spiced up with additional hops.
+In fact, Pilsner is a sort of beer, named after the Czech city of Plzen, which is located in central Europe. Pilsners use a different yeast and have a more hop-forward flavour profile than other beers. Pilsners are simply lagers that have been spiced up with additional hops — and if that hop character appeals, it's worth seeing [how IPA is evolving](/blog/new-ipa-lower-abv-more-bitter/) as the ultimate hop-forward ale.
 
 Josef Groll, a Bavarian brewer, invented Pilsner in 1842. In order to improve the quality of Czech lager, Groll set out to make an excellent brew. When Groll introduced a particular yeast from Bavaria to Plzen, he created a clear beer that was golden in colour and had a sharp flavour. Pilsener Urquell was so popular that it still exists today. If you're looking to get a taste of Pilsner, this is a great place to start!
 
 ## Lager vs Pilsner: Which one is better?
 
-Good pilsners are dry, peppery and hop-forward lagers. Steamworks' Craft Lager is an excellent illustration of this. "A harmonious link between the ancient and the new world" is a fitting description of a true pilsner-style beer.
+Good pilsners are dry, peppery and hop-forward lagers, and this bolder end of the spectrum sits right at the heart of [the rise of craft lager](/blog/craft-lager-rise-uk/). Steamworks' Craft Lager is an excellent illustration of this. "A harmonious link between the ancient and the new world" is a fitting description of a true pilsner-style beer.
 
 ## What is the process of brewing lager?
 
-A brewer begins by making wort, a sugar-rich liquid derived from malt and hops, which is then used to brew the beer. The final result is influenced greatly by the wort's composition. Darker beers tend to have more sugar in their wort, which leads to a higher concentration of alcohol (possibly), and so on. Lager, on the other hand, is fermented at the bottom, whilst ales are fermented at the top.
+A brewer begins by making wort, a sugar-rich liquid derived from malt and hops, which is then used to brew the beer. The final result is influenced greatly by the wort's composition. Darker beers tend to have more sugar in their wort, which leads to a higher concentration of alcohol (possibly), and so on. Lager, on the other hand, is fermented at the bottom, whilst ales are fermented at the top — the traditional family behind [cask ale's comeback](/blog/cask-ale-comeback-2026/) on British bars.
 
 Saccharomyces Carlsbergensis, the yeast used for lager, is named for Christian Hansen, the brewer.
 
@@ -47,7 +47,7 @@ Brewers realised that yeast could be "harvested" at the conclusion of fermentati
 
 ## Lagers with varying levels of darkness and lightness.
 
-Light-colored lagers are the most popular, but dark lagers are also widely available. There are several types of bock beers to choose from. The typical bottom-fermented German bock, Weihenstephaner Korbinian, is a fine choice. A black beer from Bavaria, Dunkel (dark in German) is a malty, sweet brew. German black beer is the darkest and driest variety with roasty flavours. The Czech Republic's dark lager, erné in Czech, is quite similar to Schwarzbier, which is slightly sweeter.
+Light-colored lagers are the most popular, but dark lagers are also widely available. There are several types of bock beers to choose from. The typical bottom-fermented German bock, Weihenstephaner Korbinian, is a fine choice. A black beer from Bavaria, Dunkel (dark in German) is a malty, sweet brew. German black beer is the darkest and driest variety with roasty flavours, though those roasty notes are more often associated with [the stout revival](/blog/why-stout-is-booming-2026/), which is brewed as an ale rather than a lager. The Czech Republic's dark lager, erné in Czech, is quite similar to Schwarzbier, which is slightly sweeter.
 
 If you're looking for a light-colored beer, the Bavarian Helles Lager is your best option. 'Helles' is German for 'pale'. If you're looking for a light, malty, and refreshing beer, this one is for you. Since its inception, it has been known as the Bavarian equivalent to the popular Pilsner. You want a taste? Hoppebrau Helles or Kurpfalzbräu Helles are two good options.
 

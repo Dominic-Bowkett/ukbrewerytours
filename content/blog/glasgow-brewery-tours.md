@@ -21,7 +21,7 @@ By purchasing a brewery tour gift voucher, you are treating your loved one to a 
 
 ## Discover Glasgow Brewery Tours
 
-Are you a beer lover looking to explore the vibrant brewery scene in Glasgow? Look no further than Glasgow Brewery Tours, offering a variety of tours that cater to all tastes and interests.
+Are you a beer lover looking to explore the vibrant brewery scene in Glasgow? Look no further than [Glasgow Brewery Tours](/tours/glasgow/), offering a variety of tours that cater to all tastes and interests.
 
 | Tour Name | Description |
 |-----------|-------------|
@@ -31,7 +31,7 @@ Are you a beer lover looking to explore the vibrant brewery scene in Glasgow? Lo
 
 With these tours, you can learn about the brewing process from expert guides while enjoying a variety of beer samples along the way. Plus, you'll have the opportunity to meet the local brewers, who are passionate about sharing their craft.
 
-No matter which tour you choose, Glasgow Brewery Tours promises a fun and informative experience that immerses you in the city's thriving beer scene.
+No matter which tour you choose, Glasgow Brewery Tours promises a fun and informative experience that immerses you in the city's thriving beer scene — Glasgow is firmly one of [the UK's best beer cities](/blog/best-uk-beer-cities-2026/) for beer lovers.
 
 ## Gift Vouchers for Brewery Tours in Glasgow
 
@@ -87,7 +87,7 @@ Book your spot on one of these top-rated brewery tours in Glasgow, and treat you
 
 ## Brewery Tours and Tastings in Glasgow
 
-One of the best things about brewery tours in Glasgow is the opportunity to indulge in a variety of beer tastings. Whether you're a seasoned beer enthusiast or just starting to explore the world of craft beer, these tours offer a chance to sample a range of delicious brews while learning about the brewing process.
+One of the best things about brewery tours in Glasgow is the opportunity to indulge in a variety of [beer tastings](/tours/glasgow-beer-tasting/). Whether you're a seasoned beer enthusiast or just starting to explore the world of craft beer, these tours offer a chance to sample a range of delicious brews while learning about the brewing process.
 
 Many tours include a guided tasting session, where participants can try out different styles of beer and learn about the distinct flavours and aromas that make them unique. You'll have the chance to ask questions, get tasting notes from the experts, and discover new favourites to add to your collection.
 

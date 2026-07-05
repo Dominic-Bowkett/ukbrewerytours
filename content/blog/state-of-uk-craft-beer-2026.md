@@ -33,11 +33,11 @@ Add the broader backdrop — cautious consumer spending, a long-running dip in o
 
 Here is where the honest picture gets genuinely encouraging, and where the headlines tend to stop short. Despite all of the above, independent brewers' production has returned to pre-pandemic levels. That is a remarkable recovery given everything the sector has weathered since 2020.
 
-Even better, independently brewed cask beer — that most British of formats, the living, breathing beer served straight from the cask — is in double-digit growth. After years of obituaries written for real ale, cask is quietly having a moment again. Drinkers are rediscovering that a well-kept pint of cask, at cellar temperature and bursting with character, is one of the best-value luxuries in the country.
+Even better, independently brewed cask beer — that most British of formats, the living, breathing beer served straight from the cask — is in [double-digit growth](/blog/cask-ale-comeback-2026/). After years of obituaries written for real ale, cask is quietly having a moment again. Drinkers are rediscovering that a well-kept pint of cask, at cellar temperature and bursting with character, is one of the best-value luxuries in the country.
 
 Why the resurgence? A few threads seem to be pulling in the same direction:
 
-- **Local roots are a genuine advantage.** SIBA's own research points to independents winning custom precisely because they are local, distinctive and part of the community in a way global brands cannot fake.
+- **Local roots are a genuine advantage.** SIBA's own research points to [independents winning custom precisely because they are local](/blog/drink-local-independent-breweries/), distinctive and part of the community in a way global brands cannot fake.
 - **Value and provenance matter more in a tight economy.** When money is careful, people want their pint to mean something — and beer brewed a few miles away, by people they can name, delivers that.
 - **Cask is uniquely British and uniquely fresh.** It is a format the multinationals largely ceded, which leaves the field open to the small and the passionate.
 
@@ -55,9 +55,9 @@ For drinkers, the practical upshot is worth keeping an eye on. It pays to know w
 
 So where does this leave you, pint in hand, in 2026? In a better place than the gloom suggests, provided you are willing to be a slightly more deliberate drinker.
 
-The sector is leaner, and yes, some cherished names have gone. But the breweries coming through this period are, almost by definition, the resilient, well-run and genuinely loved ones. The froth of the boom years is settling, and what remains is often the good stuff. Cask is growing, production is back to full health, and the appetite for local, characterful beer is strong.
+The sector is leaner, and yes, some cherished names have gone. But the breweries coming through this period are, almost by definition, the resilient, well-run and genuinely loved ones. The froth of the boom years is settling, and what remains is often the good stuff. Cask is growing, production is back to full health, and the appetite for local, characterful beer is strong. Newer styles are thriving too, with [the rise of alcohol-free beer](/blog/alcohol-free-craft-beer-uk/) giving brewers one of their fastest-growing categories almost from nothing.
 
-The best thing any of us can do is simple and enjoyable: drink local, drink cask, and go and meet the people who make it. Visiting a working brewery is the fastest way to understand why all this matters — you taste the beer at its freshest, you see the graft behind it, and you put money directly into the hands of independent producers. If you fancy doing exactly that, one of our [brewery tours](/tours/) is a genuinely useful way to support the breweries riding out this crisis while having a very good day of it.
+The best thing any of us can do is simple and enjoyable: drink local, drink cask, and go and meet the people who make it. [Visiting a working brewery](/blog/why-brewery-tours-booming-2026/) is the fastest way to understand why all this matters — you taste the beer at its freshest, you see the graft behind it, and you put money directly into the hands of independent producers. If you fancy doing exactly that, one of our [brewery tours](/tours/) is a genuinely useful way to support the breweries riding out this crisis while having a very good day of it.
 
 A few easy ways to back British beer this year:
 

@@ -11,7 +11,7 @@ hero_image: "https://www.ukbrewerytours.com/wp-content/uploads/2024/06/Anspach-a
 
 Did you know Anspach & Hobday Brewery launched their first Beddington Farm Beer Festival? It's a big step in their journey.
 
-**Anspach and Hobday Brewery** sits at London's heart, leading the craft beer movement. They have won over craft beer fans from the start. Their focus on quality means they make some of London's best artisanal beers.
+**Anspach and Hobday Brewery** sits at London's heart, one of the [independent breweries](/blog/drink-local-independent-breweries/) leading the craft beer movement. They have won over craft beer fans from the start. Their focus on quality means they make some of London's best artisanal beers.
 
 The brewery works to build a community by holding events and working with global brewers. They showed their commitment to community by joining the Craft Beer Cares charity event. This festival brought together over 30 breweries from seven countries.
 
@@ -53,7 +53,7 @@ They have chosen cool places to showcase their brewing skills. One great event i
 
 ## Exploring the Bermondsey Beer Mile
 
-The **Bermondsey Beer Mile** is framed by old railway arches. It lets visitors check out various breweries and taprooms. This makes it a special spot for craft beer in London. It stretches around one mile and features well-known breweries like Anspach & Hobday, Brew By Numbers, and Fourpure Brewing Co.
+The **Bermondsey Beer Mile** is framed by old railway arches. It lets visitors check out various breweries and taprooms. This makes it a special spot for craft beer in London. It stretches around one mile and features well-known breweries like Anspach & Hobday, Brew By Numbers, Fourpure Brewing Co, and the [nearby Bianca Road Brewery](/blog/bianca-road-brewery/).
 
 ### Historical Significance
 
@@ -65,7 +65,7 @@ Recently, Bermondsey has become a hotspot for craft beer fans. The Anspach & Hob
 
 ## Brewery Tours and Tasting Experiences
 
-Anspach & Hobday Brewery offers a variety of fun tours and tasting events. These are great for anyone who loves craft beer in London. You can join in on a tour every week at the **Bermondsey Beer Mile**. There, you'll get a peek inside how craft beer is made. They offer different tours like the Bermondsey Cheese Meat & Beer Tour for £65.00. There's also the Bermondsey Microbrewery Experience at £54.00, and the Bermondsey Beer Tasting Tour for £44.00.
+Anspach & Hobday Brewery offers a variety of fun tours and tasting events. These are great for anyone who loves craft beer in London. You can join in on a tour every week at the **Bermondsey Beer Mile**. There, you'll get a peek inside how craft beer is made. They offer different tours like the Bermondsey Cheese Meat & Beer Tour for £65.00. There's also the Bermondsey Microbrewery Experience at £54.00, and our [Bermondsey Beer Tasting Tour](/tours/bermondsey-beer-tasting-tour/) for £44.00.
 
 The tasting events at the brewery happen from 13:00 to 16:00, but only if you're over 18. At these events, you get to try four different beers in small amounts. This lets you taste some of Anspach & Hobday's best beers. Plus, you can buy their merchandise and beer to take home at a 10% discount. This makes the **brewery tours** and tasting even more exciting.
 

@@ -15,11 +15,11 @@ For years, "buy local" was something we nodded along to without thinking too har
 
 Part of this is a reaction against sameness. When every high street offers the same handful of global brands, a beer made by fifteen people in a railway arch or a converted barn starts to feel like something worth seeking out. It has a story, a postcode and a human face. A local brewery is also part of the local economy in a way a multinational never can be: it employs local people, buys from local suppliers, sponsors the pub quiz and turns up at the summer fete.
 
-There is a flavour argument too. Independent breweries tend to brew in smaller batches, take more risks, and turn beer around quickly, so what you drink is fresher and more distinctive. You are far more likely to find a genuinely interesting saison, a proper cask mild or an experimental single-hop pale from a small brewer than from a corporate portfolio built around a few reliable sellers.
+There is a flavour argument too. Independent breweries tend to brew in smaller batches, take more risks, and turn beer around quickly, so what you drink is fresher and more distinctive. You are far more likely to find a genuinely interesting saison, a proper cask mild, a bold stout from one of the [independent stout brewers](/blog/why-stout-is-booming-2026/) leading its revival, or an experimental single-hop pale from a small brewer than from a corporate portfolio built around a few reliable sellers.
 
 ## The Maths Behind the Closures
 
-The pressure on small brewers is real, and the numbers are sobering. Breweries have been closing at an average of around three a week, and the total number of UK breweries has fallen noticeably over the past few years. Crucially, this is not a story about people going off beer. Demand for local, independent beer remains strong. The problem is structural.
+[The pressure on small brewers](/blog/state-of-uk-craft-beer-2026/) is real, and the numbers are sobering. Breweries have been closing at an average of around three a week, and the total number of UK breweries has fallen noticeably over the past few years. Crucially, this is not a story about people going off beer. Demand for local, independent beer remains strong. The problem is structural.
 
 Several forces are squeezing small producers at once:
 
@@ -51,7 +51,7 @@ This is not about shaming anyone for their taste. Plenty of these beers are perf
 
 ## How to Spot a Genuinely Independent Brewery
 
-The encouraging news is that it has never been easier to check. In response to exactly this confusion, the Society of Independent Brewers and Associates (SIBA) launched its "Indie Beer" campaign, complete with a seal that appears on the pump clips, cans and bottles of genuinely independent UK brewers. Spot the mark and you can drink with confidence.
+The encouraging news is that it has never been easier to check. In response to exactly this confusion, the Society of Independent Brewers and Associates (SIBA) launched its "Indie Beer" campaign, complete with a seal that appears on the pump clips, cans and bottles of genuinely independent UK brewers. Spot the mark and you can drink with confidence. It also runs [Indie Beer Week](/blog/indie-beer-week-2026-guide/) each year, a nationwide celebration of the small breweries the seal is designed to protect.
 
 A few simple habits go a long way:
 
@@ -59,7 +59,7 @@ A few simple habits go a long way:
 - **Use the beer checker** at indiebeer.uk if you are unsure who owns a particular brand. A quick search tells you whether a brewery is truly independent.
 - **Ask at the bar.** Good pubs are usually proud of their local and independent lines and happy to point you to them.
 - **Buy direct** from the brewery's own taproom, shop or website whenever you can, so more of your money reaches the people who made the beer.
-- **Visit the source.** Nothing beats seeing where and how your beer is made, meeting the brewers and tasting straight from the tank. Spending a day exploring small producers on one of our [brewery tours](/tours/) is one of the most enjoyable ways to discover independent breweries you will happily champion for years.
+- **Visit the source.** Nothing beats seeing where and how your beer is made, meeting the brewers and tasting straight from the tank. Spending a day exploring small producers on one of our [brewery tours](/tours/) is one of the most enjoyable ways to discover independent breweries you will happily champion for years. Search for [a brewery tour near you](/blog/brewery-tours-near-me/) and you will often find an independent brewer within easy reach.
 
 Once you start noticing the seal and asking the question, it becomes second nature, and you will be surprised how quickly your regular order shifts towards genuinely local beer.
 

@@ -11,15 +11,15 @@ This isn't a fad born of nostalgia. It's a genuine change in what British drinke
 
 ## Why Lager Became the Coolest Thing on the Board Again
 
-The craft beer scene has always run on novelty. For much of the 2010s that meant a relentless arms race of double dry-hopped this and triple-fruited that. It was thrilling for a while, but palate fatigue is real. When every beer is turned up to eleven, nothing stands out, and a lot of drinkers found themselves quietly longing for something they could enjoy by the pint rather than admire by the third of a glass.
+The [craft beer scene](/blog/state-of-uk-craft-beer-2026/) has always run on novelty. For much of the 2010s that meant a relentless arms race of double dry-hopped this and triple-fruited that. It was thrilling for a while, but palate fatigue is real. When every beer is turned up to eleven, nothing stands out, and a lot of drinkers found themselves quietly longing for something they could enjoy by the pint rather than admire by the third of a glass. Even the IPA, long the flag-bearer of that arms race, is now [shifting towards lower ABV and more bitterness](/blog/new-ipa-lower-abv-more-bitter/).
 
-Craft lager answered that longing. It's the beer you can drink two or three of across an evening without your palate waving a white flag. Drinkability, once treated as a slightly boring virtue, has become genuinely aspirational again.
+Craft lager answered that longing. It's the beer you can drink two or three of across an evening without your palate waving a white flag. That same appetite for something you can genuinely enjoy by the pint has also fuelled [alcohol-free craft lager](/blog/alcohol-free-craft-beer-uk/), now one of the fastest-growing corners of the bar. Drinkability, once treated as a slightly boring virtue, has become genuinely aspirational again.
 
 There's also a technical prestige at work. There is nowhere to hide in a well-made lager. If your fermentation, your hygiene and your process aren't dialled in, a pale lager will expose every flaw mercilessly. A stout can bury a rough edge under roast and sweetness; a hazy IPA can drown it in hops. A flawless helles cannot. Producing one has become a kind of badge of honour among British brewers, which is precisely why so many of the country's best are now determined to prove they can do it.
 
 ## What "Craft Lager" Actually Means
 
-It's worth clearing up a common muddle, because "lager" has been doing a lot of heavy lifting for decades as shorthand for cold, fizzy and forgettable. Lager isn't a flavour so much as a method. It refers to beers made with lager yeast, fermented cool and then conditioned cold for an extended period, a process brewers call lagering.
+It's worth clearing up a common muddle, because "lager" has been doing a lot of heavy lifting for decades as shorthand for cold, fizzy and forgettable. Lager isn't a flavour so much as a method. It refers to beers made with lager yeast, fermented cool and then conditioned cold for an extended period, a process brewers call lagering. If the labels still trip you up, our explainer on [the difference between beer and lager](/blog/difference-between-beer-and-lager/) untangles it.
 
 Craft lager, then, is that same family of beer made with care rather than at industrial pace and scale. Where a mass-market lager might be rushed through conditioning to keep the tanks turning, a craft brewery will give it the slow, cold rest it needs to develop a soft, rounded character. The result is a beer with real depth: bready malt, a whisper of noble hop, a clean bitterness and a finish that invites the next sip.
 

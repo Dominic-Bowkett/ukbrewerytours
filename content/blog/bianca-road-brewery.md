@@ -23,7 +23,7 @@ Exploring **Bianca Road Brewery** takes you deep into London's craft brewing spi
 
 Guided tours provide a deep look into how beer is made, from hop to glass. Visitors talk with beer experts and try selected beers. These experiences show the brewery's commitment to quality beer and fun times. Specific details like the number of beers tasted, the tour's length, and meals included make the tours full of beer learning.
 
-Tours are offered in many places, including London. They range from guided tours to tastings and learning about beer's history. The Bermondsey Beer Mile, with about 20 places to drink beer, shows how important tours are for enjoying London's microbrewery culture. The variety in these tours, along with London's brewing heritage, turns searching for a "brewery near me" into a thrilling adventure.
+Tours are offered in many places, including London. They range from guided tours to tastings and learning about beer's history. The Bermondsey Beer Mile, with about 20 places to drink beer, shows how important tours are for enjoying London's microbrewery culture — [the Bermondsey beer mile tour](/tours/bermondsey-beer-tasting-tour/) is a great way to take several of them in on foot. The variety in these tours, along with London's brewing heritage, turns searching for a "brewery near me" into a thrilling adventure.
 
 Tours are available on most days, including weekends and specific dates. This makes it easy for visitors to find a suitable time. There are also discounts, offering savings from 22% to 63%. This makes the experience even more tempting.
 
@@ -39,7 +39,7 @@ London has become a top spot for craft beer in the UK, with 129 breweries within
 
 ### Local Breweries Making a Mark
 
-Local breweries like Bianca Road, Hackney Church Brew Co, and Signature Brew stand out in London's beer world. They are known for their unique tastes and innovation. These breweries help build community by joining in events like the Lockdown Room Craft Beer Festival. This event, with 12 local breweries, showcases a wide variety of craft beers. It's a celebration of brewing craft and connects beer lovers.
+[Independent London breweries](/blog/drink-local-independent-breweries/) like Bianca Road, Hackney Church Brew Co, and Signature Brew stand out in London's beer world. They are known for their unique tastes and innovation. These breweries help build community by joining in events like the Lockdown Room Craft Beer Festival. This event, with 12 local breweries, showcases a wide variety of craft beers. It's a celebration of brewing craft and connects beer lovers.
 
 At the London Brewers' Market in Greenwich Market, you'll find Hackney Brewery, Bianca Road Brew Co, and Solvay Society from 6pm to 10:30pm. Old Spitalfields Market is another vibrant place, starting at 11am. It features The Five Points Brewing Company and Brewheadz. These markets help strengthen London's status as a centre for craft beer.
 
@@ -57,7 +57,7 @@ Bianca Road Brewery is famous for its unique flavours and brews. The place can h
 
 ### Small Batch Brewing Techniques
 
-Small batch brewing is key at Bianca Road Brewery. It lets them keep a close eye on every beer's quality and uniqueness. With its spot in Bermondsey, among famous craft beer spots, it shines in London's craft beer community. Their beers are a true representation of the craft and commitment behind the **artisanal beer** movement. They offer a memorable choice for anyone wanting an authentic experience.
+Small batch brewing is key at Bianca Road Brewery. It lets them keep a close eye on every beer's quality and uniqueness. With its spot in Bermondsey, among famous craft beer spots such as [Anspach & Hobday](/blog/anspach-and-hobday-brewery/), it shines in London's craft beer community. Their beers are a true representation of the craft and commitment behind the **artisanal beer** movement. They offer a memorable choice for anyone wanting an authentic experience.
 
 ## Bianca Road Brewery Experience: Tours and Tastings
 

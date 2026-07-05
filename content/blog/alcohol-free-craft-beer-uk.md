@@ -13,7 +13,7 @@ This is not a passing fad. It reflects a real, lasting shift in how the UK drink
 
 The headline is simple: more of us are moderating. Rather than swearing off drinking altogether, plenty of people are looking to drink a little less, a little more thoughtfully, without missing out on the social ritual of a good beer in hand. This "mindful drinking" movement has moved from the fringes to the mainstream, and alcohol-free beer sits right at its heart.
 
-The numbers tell the story. No- and low-alcohol beer is one of the fastest-growing categories in the entire drinks industry, with sales climbing at a double-digit pace and supermarkets, pubs and breweries all expanding their ranges to keep up. What was once a token single option gathering dust at the end of the fridge is now a whole section, and in many pubs a proper draught line.
+The numbers tell the story. No- and low-alcohol beer is [one of the fastest-growing categories](/blog/state-of-uk-craft-beer-2026/) in the entire drinks industry, with sales climbing at a double-digit pace and supermarkets, pubs and breweries all expanding their ranges to keep up. What was once a token single option gathering dust at the end of the fridge is now a whole section, and in many pubs a proper draught line.
 
 Crucially, this is not about rejecting alcohol so much as building a better balance into everyday life. Some people alternate an alcohol-free pint with a full-strength one to stay fresher for longer. Others reach for a 0.0 on a school night, before an early start, or simply because they fancy the taste of beer without the fuzzy head the next morning. The appeal cuts across generations, though younger drinkers in particular treat a low-ABV choice as entirely normal rather than something to explain.
 
@@ -42,7 +42,7 @@ The category now has genuine stars, and tasting your way through them is half th
 
 - **Lucky Saint** helped change the conversation with its 0.5% unfiltered lager, a beer designed from the ground up to be good in its own right rather than a compromise. Its success, and its own pub in London, signalled that this was a serious category.
 - **Guinness 0.0** brought the nation's most famous stout to the alcohol-free world, and its arrival on draught in pubs and at chains like Wetherspoons did an enormous amount to normalise ordering a 0.0 at the bar.
-- **The craft breweries** have followed enthusiastically. Most now offer a 0.5% version of their flagship, whether that is a crisp lager, a tropical, hazy pale ale bursting with modern hops, or a rich, roasty stout. The variety on offer today would have been unthinkable a few years ago.
+- **The craft breweries** have followed enthusiastically. Most now offer a 0.5% version of their flagship, whether that is a [crisp lager](/blog/craft-lager-rise-uk/), a tropical, hazy pale ale bursting with modern hops in the mould of today's [lower-ABV IPAs](/blog/new-ipa-lower-abv-more-bitter/), or a rich, roasty stout. The variety on offer today would have been unthinkable a few years ago.
 
 The through-line is quality. This is no longer a niche of bland lagers but a flavour-forward segment where brewers are investing real craft and innovation, and where the beer is chosen because it tastes good, not merely because it happens to be alcohol-free.
 

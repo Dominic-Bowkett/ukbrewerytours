@@ -17,16 +17,16 @@ That living quality is the whole point. It also makes cask ale genuinely uniquel
 
 Two things define the cask experience:
 
-- **Temperature:** Cask ale is served cool, at roughly 11 to 13 degrees Celsius, never ice cold. That is warmer than a lager but a long way from the "warm beer" myth. At this temperature the flavours actually open up, which a near-frozen pint simply cannot do.
+- **Temperature:** Cask ale is served cool, at roughly 11 to 13 degrees Celsius, never ice cold. That is [warmer than a lager](/blog/difference-between-beer-and-lager/) but a long way from the "warm beer" myth. At this temperature the flavours actually open up, which a near-frozen pint simply cannot do.
 - **Carbonation:** The soft, gentle fizz comes from the beer's own secondary fermentation, not from a gas cylinder. That is why a good pint of cask feels rounder and smoother in the mouth than its keg cousin.
 
 Because it is alive, cask ale is also perishable. A tapped cask has only a few days at its best, which is why a well-kept pint is a small act of craft on the part of the landlord, and why finding one in perfect condition is such a pleasure.
 
 ## The numbers behind cask ale's comeback
 
-For years the story around cask was one of slow decline, and it would be dishonest to pretend the wider picture is uniformly rosy. British brewing is under real pressure, with rising costs and pub closures making life hard for producers of every kind. Yet within that challenging market, one figure stands out: independently brewed cask beer is in double-digit growth.
+For years the story around cask was one of slow decline, and it would be dishonest to pretend the wider picture is uniformly rosy. [British brewing is under real pressure](/blog/state-of-uk-craft-beer-2026/), with rising costs and pub closures making life hard for producers of every kind. Yet within that challenging market, one figure stands out: independently brewed cask beer is in double-digit growth.
 
-That matters because it points to where the energy is. The growth is being driven by small and independent breweries, the same producers leaning into their local roots and brewing distinctive beer for people who care what is in their glass. Rather than competing with global lager brands on price and marketing budget, independents are winning on character, provenance and freshness, exactly the qualities cask ale delivers.
+That matters because it points to where the energy is. The growth is being driven by [small and independent breweries](/blog/drink-local-independent-breweries/), the same producers leaning into their local roots and brewing distinctive beer for people who care what is in their glass. Rather than competing with global lager brands on price and marketing budget, independents are winning on character, provenance and freshness, exactly the qualities cask ale delivers.
 
 Heritage names are being rediscovered too. Classic bitters and long-established brands that once looked old-fashioned are turning up on more and more bars as drinkers seek them out. The narrative has flipped: cask is no longer the format that pubs quietly retire, but one they are proud to showcase.
 
@@ -38,7 +38,7 @@ Why the shift? A few threads come together:
 
 - **Authenticity over hype.** A generation raised on craft beer, natural wine and small-batch everything instinctively gets cask. It is local, hand-made and hard to fake.
 - **Value and sessionability.** Cask ales are often lower in alcohol and gentler on the wallet than punchy keg craft beers, which makes them ideal for a relaxed few pints rather than one and done.
-- **Flavour and variety.** From pale and hoppy to dark and biscuity, cask offers an enormous range. Ordering it is a little adventure, because the guest ales change and the same beer can taste subtly different from one great cellar to the next.
+- **Flavour and variety.** From pale and hoppy to dark and biscuity, cask offers an enormous range, and the darker end of that spectrum is thriving in its own right, with [stout booming too](/blog/why-stout-is-booming-2026/). Ordering it is a little adventure, because the guest ales change and the same beer can taste subtly different from one great cellar to the next.
 - **A sense of place.** Drinking cask connects you to the pub, the brewery and the region in a way a globally identical lager never can.
 
 For younger drinkers looking for something real, cask ale ticks every box, and they are ordering it without a trace of irony.

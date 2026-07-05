@@ -19,9 +19,9 @@ This is what people mean by "experiential consumption", and it is reshaping the 
 
 ## Why Manchester, Edinburgh and Bristol Are Leading the Charge
 
-The clearest evidence is on the ground at Britain's beer festivals. Cities like Manchester, Edinburgh and Bristol have seen significant growth in attendance at their beer festivals and events, driven by that same cultural pull toward shared, hands-on experiences and a sense of community.
+The clearest evidence is on the ground at Britain's beer festivals, from local tap takeovers to national celebrations like [Indie Beer Week](/blog/indie-beer-week-2026-guide/). Cities like [Manchester, Edinburgh and Bristol](/blog/best-uk-beer-cities-2026/) have seen significant growth in attendance at their beer festivals and events, driven by that same cultural pull toward shared, hands-on experiences and a sense of community.
 
-It is no accident that these three cities are out in front. Each has a dense, fiercely independent brewing scene and a population that treats supporting local makers as a point of pride.
+It is no accident that these three cities are out in front. Each has a dense, fiercely independent brewing scene and a population that treats [supporting local makers](/blog/drink-local-independent-breweries/) as a point of pride.
 
 - **Manchester** has turned festival season into a fixture of the city's calendar, from big warehouse-scale craft events to long-running neighbourhood institutions that pull in thousands of drinkers a year.
 - **Bristol** pairs its harbourside setting with one of the country's most adventurous independent scenes, drawing crowds who come as much for the atmosphere as the beer list.
@@ -71,4 +71,4 @@ The beauty of it is how well it suits almost any group. Whether you are a commit
 
 The brewery-tour boom of 2026 is not a fad, and it is not really about beer volumes at all. It is about a lasting change in what we want from a drink: connection over quantity, stories over stuff, and time spent with other people over another quiet night in. Beer, with its deep ties to place and community, happens to be a perfect vehicle for all of that.
 
-So if you have been meaning to book that tour, take the trend as your nudge. The tanks are gleaming, the taprooms are buzzing, and there has rarely been a better time to go and see for yourself where your favourite pint really comes from.
+So if you have been meaning to book that tour, take the trend as your nudge and find a [brewery tour near you](/blog/brewery-tours-near-me/). The tanks are gleaming, the taprooms are buzzing, and there has rarely been a better time to go and see for yourself where your favourite pint really comes from.

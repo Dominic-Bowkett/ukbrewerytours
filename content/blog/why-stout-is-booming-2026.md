@@ -13,7 +13,7 @@ This is not a fleeting fad dreamed up by marketers. The shift shows up in the sa
 
 Let's start with the numbers, because they are striking. While much of the craft beer category has been under pressure, stout was the only craft segment to grow, nearly doubling its volume sales compared with the previous year. That is an extraordinary result in a market where most styles have been flat or falling.
 
-The contrast is what makes it remarkable. Craft ales and craft lagers have both been slipping, squeezed by rising costs and cautious spending. Stout went the other way entirely, and it did so at pace. When almost double the volume moves in twelve months, that is not a rounding error or a good quarter. It is a change in what people want to drink.
+The contrast is what makes it remarkable. Craft ales and craft lagers have both been slipping, squeezed by rising costs and cautious spending, even if [cask ale is quietly staging its own comeback](/blog/cask-ale-comeback-2026/). Stout went the other way entirely, and it did so at pace. When almost double the volume moves in twelve months, that is not a rounding error or a good quarter. It is a change in what people want to drink.
 
 Part of the story is simply that stout was underrated for a long time. It was pigeonholed as a winter drink, an older person's pint, or something you only had on a trip to Dublin. That reputation has fallen away, and a style that never really went anywhere has been rediscovered by a whole new audience.
 
@@ -21,7 +21,7 @@ Part of the story is simply that stout was underrated for a long time. It was pi
 
 You cannot talk about stout in 2026 without talking about Guinness. The brand has enjoyed a cultural moment that few beers ever manage. It has become the pint of choice for a younger crowd, a fixture on social media, and a genuine talking point rather than just a drink.
 
-Some of that is heritage doing its work. The Netflix drama drawing on the Guinness family story put the name in front of millions, and the pour itself, the two-part ritual and the settling surge, turned out to be perfect for short-form video. The much-shared habit of trying to "split the G" on the first sip gave people a reason to order one and share it. Around big sporting weekends, particularly the Six Nations rugby, a creamy stout became the obvious pint in hand.
+Some of that is heritage doing its work. The Netflix drama drawing on the Guinness family story put the name in front of millions, and the pour itself, the two-part ritual and the settling surge, turned out to be perfect for short-form video. The much-shared habit of trying to "split the G" on the first sip gave people a reason to order one and share it. Around big sporting weekends, particularly the Six Nations rugby, a creamy stout became the obvious pint in hand. Guinness has even lent its look to the cocktail menu, inspiring [the Baby Guinness](/blog/baby-guinness/), a layered shot built to resemble a tiny pint.
 
 The knock-on effect matters more than any single campaign. When one dark beer becomes fashionable, it lifts the whole style. Drinkers who came for Guinness stayed for stout in general, and independent brewers have been quick to offer their own smooth, nitro-poured answers. New challenger brands have appeared precisely because the category is suddenly worth competing in. A rising tide, as they say, and this one is jet black with a creamy head.
 
@@ -53,7 +53,7 @@ Perhaps the most telling sign of stout's revival is who is drinking it. This is 
 
 The reason ties back to everything above. Where stout was once seen as bitter and hard work, the modern nitro pint reads as smooth, creamy and approachable, closer to a treat than a test. It pairs beautifully with food, from oysters to chocolate pudding, and it carries a certain quiet confidence at the bar. For a generation happy to drink less but better, a well-poured stout fits perfectly: characterful, satisfying and worth savouring.
 
-There is a practical angle too. Stout is often lower in alcohol than its dark, rich appearance suggests. A standard dry stout is usually around four per cent, gentler than many lagers, and if you are curious about the nutritional side, we looked at exactly that on one of our [brewery tours](/blog/calories-in-pint-of-guinness/). The takeaway is that a classic stout is rarely the indulgence people assume it to be.
+There is a practical angle too. Stout is often lower in alcohol than its dark, rich appearance suggests. A standard dry stout is usually around four per cent, [gentler than many lagers](/blog/difference-between-beer-and-lager/), and if you are curious about the nutritional side, we broke down [the calories in a pint of Guinness](/blog/calories-in-pint-of-guinness/). The takeaway is that a classic stout is rarely the indulgence people assume it to be.
 
 ## Why 2026 is stout's year
 

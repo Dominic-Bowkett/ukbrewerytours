@@ -9,7 +9,7 @@ hero_image: "/assets/img/blog-kent-hop-garden-hero.jpg"
 
 Are you a craft beer enthusiast looking for the ultimate brewery tour experience? Look no further than Kent, the home of some of the best breweries in the UK.
 
-A brewery tour in Kent is not just your average beer tasting session. It's an adventure that takes you behind the scenes of local breweries, where you can witness the intricate process of crafting artisanal beers.
+A [brewery tour in Kent](/tours/kent/) is not just your average beer tasting session. It's an adventure that takes you behind the scenes of local breweries, where you can witness the intricate process of crafting artisanal beers.
 
 With a variety of microbreweries in Kent, you'll also get to taste unique brews that you won't find anywhere else. And if you're looking for the perfect gift for a beer lover, UK Brewery Tours gift vouchers are the way to go.
 
@@ -33,7 +33,7 @@ Some of the most popular breweries in Kent include Shepherd Neame, Britain's old
 
 ### Explore the Brewing Process Firsthand
 
-One of the unique aspects of a brewery tour in Kent is the chance to experience the brewing process firsthand. Guided tours often take you behind the scenes of the brewery, where you can see the ingredients being used and learn about the intricate process of creating craft beer.
+One of the unique aspects of a brewery tour in Kent is the chance to experience the brewing process firsthand. Guided tours often take you behind the scenes of the brewery, where you can see the ingredients being used and learn about the intricate process of creating craft beer. Kent has long been the heartland of English hop growing, so you can even join [the Kent hop farm tour](/tours/kent-hop-farm-tour-at-hukins-hops/) to see where those signature aromas begin.
 
 You can also engage in beer tasting experiences, where you'll get the chance to sample a wide range of beers and learn about different brewing styles and techniques.
 
@@ -73,7 +73,7 @@ So why settle for mass-produced beer when you can taste unique and flavourful br
 
 ## Discover Kent's Finest Breweries
 
-Kent boasts a rich history of brewing, and its breweries are among the finest in the UK. From traditional ale houses to contemporary microbreweries, there is a diverse range of establishments to discover on a brewery tour of Kent.
+Kent boasts a rich history of brewing, and its breweries are among the finest in the UK, standing comfortably alongside [the UK's best beer destinations](/blog/best-uk-beer-cities-2026/). From traditional ale houses to contemporary microbreweries, there is a diverse range of establishments to discover on a brewery tour of Kent.
 
 ### Shepherd Neame Brewery
 

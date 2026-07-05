@@ -11,7 +11,7 @@ hero_image: "https://www.ukbrewerytours.com/wp-content/uploads/2024/06/Beer-gard
 
 Did you know The Refinery in Bankside has over 1283 reviews? This makes it the most talked-about spot in London. It shows how much people love being outdoors in London's beer gardens.
 
-London is famous for its beer gardens. They offer fun both inside and out. Time Out praises their special vibe, with beautiful plants and lively moods for outdoor parties. Some places serve amazing cocktails and others have stunning views of the city or river. And if it rains, you can still have fun. London has great pubs and rooftop bars too.
+London is famous for its beer gardens. It ranks among [the UK's best beer cities](/blog/best-uk-beer-cities-2026/) for drinking outdoors. They offer fun both inside and out. Time Out praises their special vibe, with beautiful plants and lively moods for outdoor parties. Some places serve amazing cocktails and others have stunning views of the city or river. And if it rains, you can still have fun. London has great pubs and rooftop bars too.
 
 Looking for the best outdoor beer gardens in London? You'll find fantastic spots. The Rising Sun in Richmond is perfect for its burgers and drinks. And The Guildford Arms in Greenwich offers cosy heated spaces. Whether in sunshine or under the stars, London's beer gardens are the place to be.
 
@@ -21,7 +21,7 @@ London has some amazing beer terraces with scenic views and varied drinks. These
 
 ### The People's Park Tavern
 
-The People's Park Tavern in Hackney is a standout spot. It's known for a great atmosphere and its micro-brewery. It offers around 70 world beers, with something for everyone. The outdoor space has fun activities like "Live Music" and student discounts. Guests can try delicious food like seafood linguine and burgers.
+The People's Park Tavern in Hackney is a standout spot. It's known for a great atmosphere and its micro-brewery, one of the many small producers you can discover on our [London brewery tours](/tours/london/). It offers around 70 world beers, with something for everyone. The outdoor space has fun activities like "Live Music" and student discounts. Guests can try delicious food like seafood linguine and burgers.
 
 ### The Mitre, Hampton Court
 
@@ -33,7 +33,7 @@ Flat Iron Square in London Bridge shows the city's cosmopolitan side. It offers 
 
 ### Two Tribes Brewery & Campfire Taproom
 
-Two Tribes Brewery & Campfire Taproom in Kings Cross offers a unique beer garden experience. This spot combines craft beer with fire-cooked barbecue in an outdoor setting. Electronic music adds to the lively atmosphere. It's great for any time of day. Places like this highlight the community feel of London's best outdoor drinking spots.
+Two Tribes Brewery & Campfire Taproom in Kings Cross offers a unique beer garden experience. This spot combines craft beer with fire-cooked barbecue in an outdoor setting. Electronic music adds to the lively atmosphere. It's great for any time of day, and it's close to Camden, making it easy to pair with [Camden Town brewery tours](/blog/camden-town-brewery-tours/). Places like this highlight the community feel of London's best outdoor drinking spots.
 
 ## Hidden Gems: Lesser-Known London Beer Garden Bars
 
