@@ -16,6 +16,9 @@ const tours = JSON.parse(read('content/tours.json'));
 const activeTours = tours.filter(t => t.active);
 const WHATSAPP = `https://wa.me/${site.whatsapp}`;
 const WA_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.6-1.2 1.2-1.7 1.2-.4.1-1 .1-1.6-.1a13 13 0 0 1-5.8-5.1c-.6-1-.9-2-.9-2.7 0-.8.4-1.4.7-1.7.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.3.3c-.1.2-.2.3 0 .6.2.3.9 1.4 1.9 2.3 1.3 1.2 2.4 1.5 2.7 1.7.3.1.5.1.7-.1l1-1.2c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.4 0 .1 0 .7-.2 1.2Z"/></svg>';
+// Group-booking WhatsApp button — identical green button used on every tour & experience page.
+const groupBtn = (name) => `<a class="btn btn-whatsapp" href="${WHATSAPP}?text=${encodeURIComponent(`Hi! I'd like to enquire about a group booking for the ${name}.`)}">${WA_ICON} Group booking enquiry</a>`;
+const TOUR_DISCLAIMER = '<p class="tour-disclaimer">Tours, itineraries and pricing may be subject to change. Please confirm with the organiser, or <a href="/contact/">get in touch</a> and we’ll happily check for you.</p>';
 const YEAR = '2026';
 
 /* ---------- helpers ---------- */
@@ -339,6 +342,7 @@ const pageTokens = {
   all_tours_grid: allToursGrid,
   disclosure: DISCLOSURE,
   blog_cards: blogCards,
+  wa_icon: WA_ICON,
   whatsapp_url: WHATSAPP,
   email: site.email,
   google_rating: site.google_rating,
@@ -405,19 +409,18 @@ for (const t of activeTours) {
     ? `<span class="price">£${t.price}</span><span class="pp">per person</span>`
     : `<span class="pp" style="font-size:1.05rem;font-weight:600">Price on enquiry</span>`;
 
-  const waHref = `${WHATSAPP}?text=${encodeURIComponent(`Hi! I'd like to book the ${t.name}.`)}`;
-  const waIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.6-1.2 1.2-1.7 1.2-.4.1-1 .1-1.6-.1a13 13 0 0 1-5.8-5.1c-.6-1-.9-2-.9-2.7 0-.8.4-1.4.7-1.7.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.3.3c-.1.2-.2.3 0 .6.2.3.9 1.4 1.9 2.3 1.3 1.2 2.4 1.5 2.7 1.7.3.1.5.1.7-.1l1-1.2c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.4 0 .1 0 .7-.2 1.2Z"/></svg>';
   const ctaButtons = t.booking_url
     ? `<a class="btn btn-primary" href="${decorateBooking(t.booking_url)}" target="_blank" rel="noopener">Buy tickets</a>
-       <a class="btn btn-outline" href="${waHref}">${waIcon} Ask us on WhatsApp</a>`
-    : `<a class="btn btn-primary" href="${waHref}">${waIcon} Book via WhatsApp</a>
-       <a class="btn btn-outline" href="/gift-vouchers/">Buy as a gift voucher</a>`;
+       ${groupBtn(t.name)}`
+    : `${groupBtn(t.name)}
+       <a class="btn btn-outline" href="/gift-vouchers/">Buy a gift voucher</a>`;
 
   let content = fill(productTpl, {
     name: esc(t.name), city: esc(t.city), price: t.price || '',
     hero_image: hero, thumbs, facts,
     whatsapp_url: WHATSAPP,
     cta_buttons: ctaButtons,
+    tour_disclaimer: TOUR_DISCLAIMER,
     description_html: mdToHtml(t.description_md || t.summary || ''),
     includes_block: includesBlock, breweries_block: breweriesBlock, meeting_block: meetingBlock,
     related_cards: related.map(tourCard).join('\n'),
@@ -584,9 +587,10 @@ for (const t of allGyg) {
     <aside class="booking-card">
       <div class="price-line">${priceLine}</div>
       <a class="btn btn-primary" href="${aff}" target="_blank" rel="sponsored noopener">Book on GetYourGuide ↗</a>
-      <a class="btn btn-whatsapp" href="${WHATSAPP}?text=${encodeURIComponent(`Hi! I'd like to enquire about a group booking for the ${t.title} in ${t.city}.`)}">${WA_ICON} Group booking enquiry</a>
+      ${groupBtn(t.title)}
       <p class="note">${ratingStr ? esc(ratingStr) + ' · ' : ''}Free cancellation on most tours · <a href="/tours/${guide ? guide.slug : ''}/">More ${esc(t.city)} tours</a></p>
-      <p class="disclosure" style="margin-top:14px">Booked via GetYourGuide, our partner. We may earn a commission at no extra cost to you. Group enquiries are handled directly by us.</p>
+      ${TOUR_DISCLAIMER}
+      <p class="disclosure" style="margin-top:12px">Booked via GetYourGuide, our partner. We may earn a commission at no extra cost to you. Group enquiries are handled directly by us.</p>
     </aside>
   </div>
 </section>

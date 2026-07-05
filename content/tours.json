@@ -246,7 +246,7 @@
       }
     ],
     "active": true,
-    "booking_url": "https://www.ramblingbeerco.com/liverpool-beer-tour/"
+    "booking_url": "https://www.designmynight.com/liverpool/whats-on/food-drink/liverpool-craft-beer-experience"
   },
   {
     "old_slug": "manchester-microbrewery-experience",
@@ -284,7 +284,7 @@
       }
     ],
     "active": true,
-    "booking_url": "https://www.ramblingbeerco.com/manchester-beer-tour/"
+    "booking_url": "https://www.designmynight.com/manchester/whats-on/walks-tours/manchester-microbrewery-experience"
   },
   {
     "old_slug": "leeds-heritage-pub-and-beer-tour",
@@ -661,5 +661,33 @@
       }
     ],
     "active": true
+  },
+  {
+    "old_slug": "hackney-wick-craft-beer-experience",
+    "name": "Hackney Wick Craft Beer Experience",
+    "city": "London",
+    "price": "41.25",
+    "duration": "2 hours",
+    "schedule": "Selected Saturdays, 12:30pm–2:30pm",
+    "meeting_point": "The White Building, Unit 7 Queens Yard, London E9 5EN (outside Crate Brewery car park)",
+    "summary": "A 2-hour guided tour of Hackney Wick’s canal-side microbreweries and craft beer bars, led by a local beer expert and professional brewer — five beer tastings across three venues, plus a shareable cheese platter.",
+    "description_md": "Hackney Wick has become one of east London’s most exciting craft beer neighbourhoods — a cluster of microbreweries and taprooms tucked into canal-side warehouses. This guided tour is led by a local beer expert and professional brewer.\n\n# What you’ll do\n\nOver about two hours you’ll visit three venues — two working breweries and a craft beer bar — tasting five different beers in 1/3 and 1/2 pint measures so you can explore a range of styles. A shareable cheese platter is included along the way (vegan alternatives available), and your guide explains what you’re drinking and how it’s made. The walking route is roughly a mile.\n\n# Good to know\n\n- Selected Saturdays, 12:30pm–2:30pm\n- Meet outside Crate Brewery car park: The White Building, Unit 7 Queens Yard, E9 5EN (nearest station Hackney Wick)\n- Over 18s only; groups of up to 25\n- Approximately 1 mile of walking; all venues and toilets are step-free and wheelchair accessible",
+    "includes": [
+      "Visits to three venues (two breweries and one craft beer bar)",
+      "Five beers in 1/2 and 1/3 pint measures",
+      "Shareable cheese platter (vegan option available)",
+      "Expert-led tasting by a local brewer"
+    ],
+    "breweries": [
+      "Crate Brewery"
+    ],
+    "images": [
+      {
+        "url": "/assets/img/hackney-wick-craft-beer-experience.jpg",
+        "context": "hero"
+      }
+    ],
+    "active": true,
+    "booking_url": "https://www.designmynight.com/london/bars/hackney/crate-bar-pizzeria/hackney-wick-brewery-tour-and-tasting"
   }
 ]
