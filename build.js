@@ -346,7 +346,7 @@ const layout = read('templates/layout.html');
 
 function writePage(outPath, { title, description, content, nav, ogImage, jsonld, robots }) {
   const canonical = site.base_url + ('/' + outPath).replace(/\/index\.html$/, '/');
-  const navKeys = ['tours', 'vouchers', 'groups', 'blog', 'about'];
+  const navKeys = ['tours', 'breweries', 'vouchers', 'groups', 'blog', 'about'];
   const navMap = {};
   for (const k of navKeys) navMap['nav_' + k] = nav === k ? 'aria-current="page"' : '';
   let og = ogImage || '/assets/img/hms-hops.jpg';
@@ -449,6 +449,58 @@ const staticPages = [
 for (const p of staticPages) {
   const content = fill(read('pages/' + p.src), pageTokens);
   writePage(p.out, { ...p, content });
+}
+
+/* ----- direct-booking breweries directory (/breweries/) ----- */
+if (fs.existsSync(path.join(ROOT, 'content', 'breweries.json'))) {
+  const bd = JSON.parse(read('content/breweries.json'));
+  const brewRegionImg = s => fs.existsSync(path.join(ROOT, 'assets', 'img', 'breweries', s + '.jpg'))
+    ? `/assets/img/breweries/${s}.jpg` : '/assets/img/hero-static.jpg';
+  const brewPrice = p => {
+    if (!p) return '';
+    const s = String(p).trim();
+    return /^\d/.test(s)
+      ? `<span class="brew-price">£${esc(s.replace(/^£/, ''))}</span>`
+      : `<span class="brew-price poa">${esc(s)}</span>`;
+  };
+  const brewJump = bd.regions.map(r =>
+    `<a href="#${r.slug}">${esc(r.region)}<span>${r.breweries.length}</span></a>`).join('');
+  const brewSections = bd.regions.map(r => {
+    const cards = r.breweries.map(b => `<article class="brew-card">
+        <h3>${esc(b.brewery)}</h3>
+        <a class="brew-tour" href="${esc(b.url)}" target="_blank" rel="noopener nofollow">${esc(b.tour_name)}<span aria-hidden="true"> ↗</span></a>
+        <div class="brew-meta"><span class="brew-loc">${esc(b.location)}</span>${brewPrice(b.price_gbp)}</div>
+        ${b.notes ? `<p class="brew-notes">${esc(b.notes)}</p>` : ''}
+      </article>`).join('\n');
+    return `<div class="brew-region" id="${r.slug}">
+      <div class="brew-region-head" style="background-image:url('${brewRegionImg(r.slug)}')">
+        <div class="brew-region-head-inner"><h2>${esc(r.region)}</h2><span class="brew-region-count">${r.breweries.length} breweries</span></div>
+      </div>
+      <div class="brew-grid">
+${cards}
+      </div>
+    </div>`;
+  }).join('\n');
+  const brewContent = `<section class="page-hero brew-hero">
+    <div class="container">
+      <span class="kicker">Book direct</span>
+      <h1>UK breweries that run their own tours</h1>
+      <p class="lede">${bd.total} breweries across the UK that sell tours and tastings directly through their own websites — from Harvey's in Lewes to BrewDog in Ellon. You book straight with the brewery; we've gathered them here so you can find one near you. For our own guided small-group tours, browse <a href="/tours/">all our brewery tours</a>.</p>
+      <div class="brew-stats"><span><strong>${bd.total}</strong> breweries</span><span><strong>${bd.regions.length}</strong> regions</span><span><strong>Direct</strong> booking</span></div>
+    </div>
+  </section>
+  <nav class="brew-jump" aria-label="Jump to region"><div class="container">${brewJump}</div></nav>
+  <section class="section" style="padding-top:44px">
+    <div class="container">
+${brewSections}
+      <p class="disclosure" style="margin-top:44px">These breweries take bookings directly on their own websites — links go straight to the brewery, and we don't take a booking or earn commission on them. Details and prices were correct at the time of research; always confirm on the brewery's own page. Spotted one we've missed? <a href="/contact/">Let us know</a>.</p>
+    </div>
+  </section>`;
+  writePage('breweries/index.html', {
+    title: `${bd.total} UK Breweries That Run Their Own Tours | UK Brewery Tours`,
+    description: `A directory of ${bd.total} UK breweries offering tours and tastings booked directly on their own sites — Harvey's, Fuller's, Timothy Taylor's and more, grouped by region.`,
+    content: brewContent, nav: 'breweries', ogImage: '/assets/img/breweries/london.jpg',
+  });
 }
 
 /* ----- product pages ----- */

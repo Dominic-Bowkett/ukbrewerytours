@@ -45,7 +45,7 @@ With guided brewery tours, you'll have the opportunity to discover local UK brew
 
 ### Brewery Tours Near Me
 
-Guided brewery tours are available throughout the UK, so you won't have to travel too far to find one near you. A simple online search for "brewery tours in [location]" or "brewery tours near me" will give you plenty of options to choose from. Alternatively, ask at your local pub or bottle shop for recommendations! And if you're happy to travel, it's worth seeking out [the best UK cities for beer](/blog/best-uk-beer-cities-2026/), where the brewery scene is especially rich.
+Guided brewery tours are available throughout the UK, so you won't have to travel too far to find one near you. A simple online search for "brewery tours in [location]" or "brewery tours near me" will give you plenty of options to choose from — and many [breweries run their own tours you can book directly](/breweries/), listed here by region. Alternatively, ask at your local pub or bottle shop for recommendations! And if you're happy to travel, it's worth seeking out [the best UK cities for beer](/blog/best-uk-beer-cities-2026/), where the brewery scene is especially rich.
 
 ## Discover Local Breweries and Their Unique Craft Brews
 
