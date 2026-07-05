@@ -6,10 +6,28 @@
       <span class="kicker">Award-winning tours since 2014</span>
       <h1>Discover the best craft beer in the UK</h1>
       <p class="lede">Brewery tours and tutored beer tastings in cities across the UK — led by beer sommeliers, brewers and certified experts. Small groups, working breweries, proper beer.</p>
-      <div class="hero-ctas">
-        <a class="btn btn-primary" href="/tours/">Browse all tours</a>
-        <a class="btn btn-outline-light" href="/gift-vouchers/">Buy a gift voucher</a>
-      </div>
+      <form class="hero-search filter-bar" action="/tours/" method="get">
+        <div class="filter-field">
+          <label for="h-city">City</label>
+          <select id="h-city" name="city">
+            <option value="">All cities</option>
+            {{city_options}}
+          </select>
+        </div>
+        <div class="filter-field">
+          <label for="h-day">Day</label>
+          <select id="h-day" name="day">
+            <option value="">Any day</option>
+            {{day_options}}
+          </select>
+        </div>
+        <div class="filter-field grow">
+          <label for="h-q">Search</label>
+          <input id="h-q" type="search" name="q" placeholder="Search tours, cities, experiences…">
+        </div>
+        <button class="btn btn-primary" type="submit">Find tours</button>
+      </form>
+      <p class="hero-search-links">or <a href="/tours/">browse all {{tour_count}} tours</a> · <a href="/gift-vouchers/">buy a gift voucher</a></p>
       <div class="trust-row">
         <span class="chip"><span class="star">★★★★★</span> {{google_rating}} on Google · {{google_reviews}} reviews</span>
         <span class="chip">Est. 2014</span>

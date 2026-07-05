@@ -6,35 +6,12 @@
       <span class="kicker">All tours &amp; experiences</span>
       <h1>Brewery tours &amp; beer tastings across the UK</h1>
       <p class="lede">{{tour_count}} of our own guided tours plus {{partner_count}} hand-picked partner experiences in {{city_count}}+ UK cities. Filter by city or day, or explore a city below.</p>
-      <div class="hero-ctas">
-        <a class="btn btn-primary" href="#filter">Find a tour</a>
-        <a class="btn btn-outline-light" href="/group-tours/">Private group tours</a>
-      </div>
     </div>
   </div>
 </section>
 
-<section class="section" style="padding-bottom:20px">
+<section class="section" id="filter" style="padding-top:40px">
   <div class="container">
-    <div class="section-head">
-      <span class="kicker">Explore by city</span>
-      <h2>Pick your city</h2>
-      <p>Every city has its own guide — our tours, bookable experiences and where to eat and drink.</p>
-    </div>
-    <div class="city-tiles">
-{{explore_tiles}}
-    </div>
-  </div>
-</section>
-
-<section class="section" id="filter" style="padding-top:30px">
-  <div class="container">
-    <div class="section-head">
-      <span class="kicker">Our tours</span>
-      <h2>Book a UK Brewery Tours original</h2>
-      <p>Our own award-winning guided tours and tastings, led by beer experts.</p>
-    </div>
-
     <form class="filter-bar" data-filter aria-label="Filter tours">
       <div class="filter-field">
         <label for="f-city">City</label>
@@ -52,32 +29,30 @@
       </div>
       <div class="filter-field grow">
         <label for="f-q">Search</label>
-        <input id="f-q" type="search" placeholder="Search tours…" data-filter-q autocomplete="off">
+        <input id="f-q" type="search" placeholder="Search tours, cities, experiences…" data-filter-q autocomplete="off">
       </div>
       <button type="button" class="btn btn-outline btn-sm" data-filter-reset>Reset</button>
     </form>
-
     <p class="filter-count" data-filter-count aria-live="polite"></p>
 
-    <div class="card-grid" data-our-grid>
-{{our_tours_grid}}
+    <div class="card-grid" data-tours-grid>
+{{all_tours_grid}}
     </div>
     <p class="filter-empty" data-filter-empty hidden>No tours match those filters. <button type="button" class="linklike" data-filter-reset>Clear filters</button> or <a href="/group-tours/">ask about a private tour</a>.</p>
+    {{disclosure}}
   </div>
 </section>
 
 <section class="section band-cream" style="border-top:1px solid var(--line)">
   <div class="container">
     <div class="section-head">
-      <span class="kicker">More to book · Partner experiences</span>
-      <h2>Brewery tours, tastings &amp; pub walks</h2>
-      <p>Hand-picked experiences across the UK, bookable through our partner GetYourGuide — filtered by the city you choose above.</p>
+      <span class="kicker">Explore by city</span>
+      <h2>Pick your city</h2>
+      <p>Every city has its own guide — our tours, bookable experiences and where to eat and drink.</p>
     </div>
-    <div class="card-grid" data-partner-grid>
-{{partner_grid}}
+    <div class="city-tiles">
+{{explore_tiles}}
     </div>
-    <p class="filter-empty" data-partner-empty hidden>No partner experiences in that city yet — try another city or clear the filter.</p>
-    {{disclosure}}
   </div>
 </section>
 

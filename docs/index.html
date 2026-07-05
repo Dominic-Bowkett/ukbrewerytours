@@ -58,10 +58,28 @@
       <span class="kicker">Award-winning tours since 2014</span>
       <h1>Discover the best craft beer in the UK</h1>
       <p class="lede">Brewery tours and tutored beer tastings in cities across the UK — led by beer sommeliers, brewers and certified experts. Small groups, working breweries, proper beer.</p>
-      <div class="hero-ctas">
-        <a class="btn btn-primary" href="/tours/">Browse all tours</a>
-        <a class="btn btn-outline-light" href="/gift-vouchers/">Buy a gift voucher</a>
-      </div>
+      <form class="hero-search filter-bar" action="/tours/" method="get">
+        <div class="filter-field">
+          <label for="h-city">City</label>
+          <select id="h-city" name="city">
+            <option value="">All cities</option>
+            <option value="London">London</option><option value="Bristol">Bristol</option><option value="Manchester">Manchester</option><option value="Liverpool">Liverpool</option><option value="Leeds">Leeds</option><option value="Lewes">Lewes</option><option value="Kent">Kent</option><option value="Birmingham">Birmingham</option><option value="Glasgow">Glasgow</option><option value="Cardiff">Cardiff</option><option value="Dorset">Dorset</option><option value="Sheffield">Sheffield</option><option value="Lancashire">Lancashire</option><option value="Edinburgh">Edinburgh</option><option value="Newcastle">Newcastle</option><option value="York">York</option>
+          </select>
+        </div>
+        <div class="filter-field">
+          <label for="h-day">Day</label>
+          <select id="h-day" name="day">
+            <option value="">Any day</option>
+            <option value="Mon">Mondays</option><option value="Tue">Tuesdays</option><option value="Wed">Wednesdays</option><option value="Thu">Thursdays</option><option value="Fri">Fridays</option><option value="Sat">Saturdays</option><option value="Sun">Sundays</option>
+          </select>
+        </div>
+        <div class="filter-field grow">
+          <label for="h-q">Search</label>
+          <input id="h-q" type="search" name="q" placeholder="Search tours, cities, experiences…">
+        </div>
+        <button class="btn btn-primary" type="submit">Find tours</button>
+      </form>
+      <p class="hero-search-links">or <a href="/tours/">browse all 15 tours</a> · <a href="/gift-vouchers/">buy a gift voucher</a></p>
       <div class="trust-row">
         <span class="chip"><span class="star">★★★★★</span> 5.0 on Google · 81 reviews</span>
         <span class="chip">Est. 2014</span>

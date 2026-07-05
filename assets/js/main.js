@@ -8,48 +8,38 @@ if (toggle && nav) {
   });
 }
 
-// Tours page filtering (city / day / keyword)
+// Tours page filtering (city / day / keyword) over one merged grid
 const filterForm = document.querySelector('[data-filter]');
 if (filterForm) {
   const citySel = filterForm.querySelector('[data-filter-city]');
   const daySel = filterForm.querySelector('[data-filter-day]');
   const qInput = filterForm.querySelector('[data-filter-q]');
-  const ourGrid = document.querySelector('[data-our-grid]');
-  const partnerGrid = document.querySelector('[data-partner-grid]');
+  const grid = document.querySelector('[data-tours-grid]');
   const countEl = document.querySelector('[data-filter-count]');
-  const ourEmpty = document.querySelector('[data-filter-empty]');
-  const partnerEmpty = document.querySelector('[data-partner-empty]');
-  const ourCards = ourGrid ? [...ourGrid.querySelectorAll('[data-card]')] : [];
-  const partnerCards = partnerGrid ? [...partnerGrid.querySelectorAll('[data-card]')] : [];
+  const emptyEl = document.querySelector('[data-filter-empty]');
+  const cards = grid ? [...grid.querySelectorAll('[data-card]')] : [];
 
   const apply = () => {
     const city = citySel.value;
     const day = daySel.value;
     const q = qInput.value.trim().toLowerCase();
-    let ourVisible = 0;
-    for (const c of ourCards) {
+    let visible = 0;
+    for (const c of cards) {
+      const days = c.dataset.days || '';
       const okCity = !city || c.dataset.city === city;
-      const okDay = !day || (c.dataset.days || '').split(',').includes(day);
+      // Partner experiences carry no day tags — they run various days, so keep them for any day.
+      const okDay = !day || days === '' || days.split(',').includes(day);
       const okQ = !q || (c.dataset.name || '').includes(q) || (c.dataset.city || '').toLowerCase().includes(q);
       const show = okCity && okDay && okQ;
       c.hidden = !show;
-      if (show) ourVisible++;
-    }
-    let partnerVisible = 0;
-    for (const c of partnerCards) {
-      const okCity = !city || c.dataset.city === city;
-      const okQ = !q || (c.dataset.name || '').includes(q) || (c.dataset.city || '').toLowerCase().includes(q);
-      const show = okCity && okQ;
-      c.hidden = !show;
-      if (show) partnerVisible++;
+      if (show) visible++;
     }
     if (countEl) {
-      const bits = [`${ourVisible} of our tour${ourVisible === 1 ? '' : 's'}`];
-      if (partnerCards.length) bits.push(`${partnerVisible} partner experience${partnerVisible === 1 ? '' : 's'}`);
-      countEl.textContent = (city || day || q) ? `Showing ${bits.join(' · ')}` : '';
+      countEl.textContent = (city || day || q)
+        ? `Showing ${visible} tour${visible === 1 ? '' : 's'} & experience${visible === 1 ? '' : 's'}`
+        : `${cards.length} tours & experiences`;
     }
-    if (ourEmpty) ourEmpty.hidden = ourVisible !== 0;
-    if (partnerEmpty) partnerEmpty.hidden = partnerVisible !== 0;
+    if (emptyEl) emptyEl.hidden = visible !== 0;
   };
 
   citySel.addEventListener('change', apply);
@@ -58,10 +48,14 @@ if (filterForm) {
   document.querySelectorAll('[data-filter-reset]').forEach(btn =>
     btn.addEventListener('click', () => { citySel.value = ''; daySel.value = ''; qInput.value = ''; apply(); }));
 
-  // Deep-link support: /tours/?city=Manchester
+  // Deep-link support: /tours/?city=Manchester&day=Sat&q=beer (e.g. from the home search)
   const params = new URLSearchParams(location.search);
   const preCity = params.get('city');
-  if (preCity && [...citySel.options].some(o => o.value === preCity)) { citySel.value = preCity; }
+  if (preCity && [...citySel.options].some(o => o.value === preCity)) citySel.value = preCity;
+  const preDay = params.get('day');
+  if (preDay && [...daySel.options].some(o => o.value === preDay)) daySel.value = preDay;
+  const preQ = params.get('q');
+  if (preQ) qInput.value = preQ;
   apply();
 }
 

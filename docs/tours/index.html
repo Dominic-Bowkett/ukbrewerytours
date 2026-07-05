@@ -58,74 +58,12 @@
       <span class="kicker">All tours &amp; experiences</span>
       <h1>Brewery tours &amp; beer tastings across the UK</h1>
       <p class="lede">15 of our own guided tours plus 45 hand-picked partner experiences in 13+ UK cities. Filter by city or day, or explore a city below.</p>
-      <div class="hero-ctas">
-        <a class="btn btn-primary" href="#filter">Find a tour</a>
-        <a class="btn btn-outline-light" href="/group-tours/">Private group tours</a>
-      </div>
     </div>
   </div>
 </section>
 
-<section class="section" style="padding-bottom:20px">
+<section class="section" id="filter" style="padding-top:40px">
   <div class="container">
-    <div class="section-head">
-      <span class="kicker">Explore by city</span>
-      <h2>Pick your city</h2>
-      <p>Every city has its own guide — our tours, bookable experiences and where to eat and drink.</p>
-    </div>
-    <div class="city-tiles">
-<a class="city-tile" href="/tours/london/" style="background-image:url('/assets/img/city/london.jpg')">
-    <span class="city-tile-scrim"></span>
-    <span class="city-tile-body"><span class="city-tile-name">London</span><span class="city-tile-count">7 tours &amp; experiences</span></span>
-  </a>
-<a class="city-tile" href="/tours/bristol/" style="background-image:url('/assets/img/city/bristol.jpg')">
-    <span class="city-tile-scrim"></span>
-    <span class="city-tile-body"><span class="city-tile-name">Bristol</span><span class="city-tile-count">3 tours &amp; experiences</span></span>
-  </a>
-<a class="city-tile" href="/tours/manchester/" style="background-image:url('/assets/img/city/manchester.jpg')">
-    <span class="city-tile-scrim"></span>
-    <span class="city-tile-body"><span class="city-tile-name">Manchester</span><span class="city-tile-count">6 tours &amp; experiences</span></span>
-  </a>
-<a class="city-tile" href="/tours/liverpool/" style="background-image:url('/assets/img/city/liverpool.jpg')">
-    <span class="city-tile-scrim"></span>
-    <span class="city-tile-body"><span class="city-tile-name">Liverpool</span><span class="city-tile-count">6 tours &amp; experiences</span></span>
-  </a>
-<a class="city-tile" href="/tours/leeds/" style="background-image:url('/assets/img/city/leeds.jpg')">
-    <span class="city-tile-scrim"></span>
-    <span class="city-tile-body"><span class="city-tile-name">Leeds</span><span class="city-tile-count">5 tours &amp; experiences</span></span>
-  </a>
-<a class="city-tile" href="/tours/birmingham/" style="background-image:url('/assets/img/city/birmingham.jpg')">
-    <span class="city-tile-scrim"></span>
-    <span class="city-tile-body"><span class="city-tile-name">Birmingham</span><span class="city-tile-count">4 tours &amp; experiences</span></span>
-  </a>
-<a class="city-tile" href="/tours/glasgow/" style="background-image:url('/assets/img/city/glasgow.jpg')">
-    <span class="city-tile-scrim"></span>
-    <span class="city-tile-body"><span class="city-tile-name">Glasgow</span><span class="city-tile-count">5 tours &amp; experiences</span></span>
-  </a>
-<a class="city-tile" href="/tours/cardiff/" style="background-image:url('/assets/img/city/cardiff.jpg')">
-    <span class="city-tile-scrim"></span>
-    <span class="city-tile-body"><span class="city-tile-name">Cardiff</span><span class="city-tile-count">4 tours &amp; experiences</span></span>
-  </a>
-<a class="city-tile" href="/tours/edinburgh/" style="background-image:url('/assets/img/city/edinburgh.jpg')">
-    <span class="city-tile-scrim"></span>
-    <span class="city-tile-body"><span class="city-tile-name">Edinburgh</span><span class="city-tile-count">5 tours &amp; experiences</span></span>
-  </a>
-<a class="city-tile" href="/tours/newcastle/" style="background-image:url('/assets/img/city/newcastle.jpg')">
-    <span class="city-tile-scrim"></span>
-    <span class="city-tile-body"><span class="city-tile-name">Newcastle</span><span class="city-tile-count">3 tours &amp; experiences</span></span>
-  </a>
-    </div>
-  </div>
-</section>
-
-<section class="section" id="filter" style="padding-top:30px">
-  <div class="container">
-    <div class="section-head">
-      <span class="kicker">Our tours</span>
-      <h2>Book a UK Brewery Tours original</h2>
-      <p>Our own award-winning guided tours and tastings, led by beer experts.</p>
-    </div>
-
     <form class="filter-bar" data-filter aria-label="Filter tours">
       <div class="filter-field">
         <label for="f-city">City</label>
@@ -143,14 +81,13 @@
       </div>
       <div class="filter-field grow">
         <label for="f-q">Search</label>
-        <input id="f-q" type="search" placeholder="Search tours…" data-filter-q autocomplete="off">
+        <input id="f-q" type="search" placeholder="Search tours, cities, experiences…" data-filter-q autocomplete="off">
       </div>
       <button type="button" class="btn btn-outline btn-sm" data-filter-reset>Reset</button>
     </form>
-
     <p class="filter-count" data-filter-count aria-live="polite"></p>
 
-    <div class="card-grid" data-our-grid>
+    <div class="card-grid" data-tours-grid>
 <a class="tour-card" href="/tours/bermondsey-beer-tasting-tour/" data-card data-city="London" data-name="bermondsey beer tasting tour" data-days="">
     <div class="thumb"><img src="/assets/img/Bermondsey-AandH-Upstairs.jpg" alt="Bermondsey Beer Tasting Tour" loading="lazy"><span class="city-tag">London</span></div>
     <div class="body">
@@ -167,123 +104,6 @@
       <div class="price-row"><span class="price">£65 <small>per person</small></span><span class="go">View tour →</span></div>
     </div>
   </a>
-<a class="tour-card" href="/tours/bristol-craft-beer-experience/" data-card data-city="Bristol" data-name="bristol craft beer experience" data-days="Sat">
-    <div class="thumb"><img src="/assets/img/bristol-craft-beer-experience.jpg" alt="Bristol Craft Beer Experience" loading="lazy"><span class="city-tag">Bristol</span></div>
-    <div class="body">
-      <h3>Bristol Craft Beer Experience</h3>
-      <p class="meta">4 hours (11:45am to approx. 4pm) · Selected Saturdays — at least monthly, with more dates in summer</p>
-      <div class="price-row"><span class="price">£69 <small>per person</small></span><span class="go">View tour →</span></div>
-    </div>
-  </a>
-<a class="tour-card" href="/tours/lewes-brewery-tours/" data-card data-city="Lewes" data-name="lewes brewery tours" data-days="Sat">
-    <div class="thumb"><img src="/assets/img/5210fc2d-549b-4dd8-a488-5a9b38a1293b.jpg" alt="Lewes Brewery Tours" loading="lazy"><span class="city-tag">Lewes</span></div>
-    <div class="body">
-      <h3>Lewes Brewery Tours</h3>
-      <p class="meta">Saturdays</p>
-      <div class="price-row"><span class="price">£39.50 <small>per person</small></span><span class="go">View tour →</span></div>
-    </div>
-  </a>
-<a class="tour-card" href="/tours/liverpool-microbrewery-experience/" data-card data-city="Liverpool" data-name="liverpool craft beer experience" data-days="Sat">
-    <div class="thumb"><img src="/assets/img/Delia-Debbie.jpg" alt="Liverpool Craft Beer Experience" loading="lazy"><span class="city-tag">Liverpool</span></div>
-    <div class="body">
-      <h3>Liverpool Craft Beer Experience</h3>
-      <p class="meta">4 hours · Last Saturday of each month</p>
-      <div class="price-row"><span class="price">£39.50 <small>per person</small></span><span class="go">View tour →</span></div>
-    </div>
-  </a>
-<a class="tour-card" href="/tours/manchester-microbrewery-experience/" data-card data-city="Manchester" data-name="manchester craft beer experience" data-days="Sat">
-    <div class="thumb"><img src="/assets/img/Manchester-microbrewery-exeperience.jpg" alt="Manchester Craft Beer Experience" loading="lazy"><span class="city-tag">Manchester</span></div>
-    <div class="body">
-      <h3>Manchester Craft Beer Experience</h3>
-      <p class="meta">3.5 hours · Last Saturday of each month</p>
-      <div class="price-row"><span class="price">£38.50 <small>per person</small></span><span class="go">View tour →</span></div>
-    </div>
-  </a>
-<a class="tour-card" href="/tours/leeds-heritage-pub-and-beer-tour/" data-card data-city="Leeds" data-name="the leeds heritage pub tour" data-days="Thu,Fri,Sat">
-    <div class="thumb"><img src="/assets/img/Leeds-Heritage-Pub-and-Brewery-Tour-Guests-outside-The-Tetley.jpg" alt="The Leeds Heritage Pub Tour" loading="lazy"><span class="city-tag">Leeds</span></div>
-    <div class="body">
-      <h3>The Leeds Heritage Pub Tour</h3>
-      <p class="meta">3.5 hours · Thursday/Friday/Saturday</p>
-      <div class="price-row"><span class="price">£38 <small>per person</small></span><span class="go">View tour →</span></div>
-    </div>
-  </a>
-<a class="tour-card" href="/tours/leeds-craft-beer-experience/" data-card data-city="Leeds" data-name="leeds craft beer experience" data-days="Sat,Sun">
-    <div class="thumb"><img src="/assets/img/leeds-craft-beer-experience.jpg" alt="Leeds Craft Beer Experience" loading="lazy"><span class="city-tag">Leeds</span></div>
-    <div class="body">
-      <h3>Leeds Craft Beer Experience</h3>
-      <p class="meta">4 hours · Saturdays at 1:15pm</p>
-      <div class="price-row"><span class="price">£50 <small>per person</small></span><span class="go">View tour →</span></div>
-    </div>
-  </a>
-<a class="tour-card" href="/tours/kent-hop-farm-tour-at-hukins-hops/" data-card data-city="Kent" data-name="kent hop farm tour at hukins hops" data-days="Sat">
-    <div class="thumb"><img src="/assets/img/craft-beer-tasting-and-281146280.jpg" alt="Kent Hop Farm Tour at Hukins Hops" loading="lazy"><span class="city-tag">Kent</span></div>
-    <div class="body">
-      <h3>Kent Hop Farm Tour at Hukins Hops</h3>
-      <p class="meta">Approximately 2 hours · Selected Saturdays during the season, with 11am, 1pm and 3pm time slots</p>
-      <div class="price-row"><span class="price">£27.50 <small>per person</small></span><span class="go">View tour →</span></div>
-    </div>
-  </a>
-<a class="tour-card" href="/tours/birmingham-microbrewery-experience/" data-card data-city="Birmingham" data-name="birmingham microbrewery experience" data-days="Sat">
-    <div class="thumb"><img src="/assets/img/birmingham-craft-beer-experience.jpg" alt="Birmingham Microbrewery Experience" loading="lazy"><span class="city-tag">Birmingham</span></div>
-    <div class="body">
-      <h3>Birmingham Microbrewery Experience</h3>
-      <p class="meta">Approximately 4 hours · Saturdays only</p>
-      <div class="price-row"><span class="price"><small>price on enquiry</small></span><span class="go">View tour →</span></div>
-    </div>
-  </a>
-<a class="tour-card" href="/tours/glasgow-beer-tasting/" data-card data-city="Glasgow" data-name="glasgow beer tasting" data-days="Sat,Sun">
-    <div class="thumb"><img src="/assets/img/platform-entrance.jpg" alt="Glasgow Beer Tasting" loading="lazy"><span class="city-tag">Glasgow</span></div>
-    <div class="body">
-      <h3>Glasgow Beer Tasting</h3>
-      <p class="meta">60 minutes · Afternoons, evenings and weekends</p>
-      <div class="price-row"><span class="price"><small>price on enquiry</small></span><span class="go">View tour →</span></div>
-    </div>
-  </a>
-<a class="tour-card" href="/tours/dorset-brewery-tours/" data-card data-city="Dorset" data-name="dorset brewery tours: badger ales" data-days="">
-    <div class="thumb"><img src="/assets/img/Badger-brewery-images-1.jpg" alt="Dorset Brewery Tours: Badger Ales" loading="lazy"><span class="city-tag">Dorset</span></div>
-    <div class="body">
-      <h3>Dorset Brewery Tours: Badger Ales</h3>
-      <p class="meta">Selected dates — booking recommended, essential for large groups</p>
-      <div class="price-row"><span class="price">£17 <small>per person</small></span><span class="go">View tour →</span></div>
-    </div>
-  </a>
-<a class="tour-card" href="/tours/cardiff-craft-beer-tasting-tour/" data-card data-city="Cardiff" data-name="cardiff beer tasting tour" data-days="">
-    <div class="thumb"><img src="/assets/img/E_CE-HBXsAYjM-g.jpg" alt="Cardiff Beer Tasting Tour" loading="lazy"><span class="city-tag">Cardiff</span></div>
-    <div class="body">
-      <h3>Cardiff Beer Tasting Tour</h3>
-      <p class="meta">2.5-3 hours</p>
-      <div class="price-row"><span class="price">£45 <small>per person</small></span><span class="go">View tour →</span></div>
-    </div>
-  </a>
-<a class="tour-card" href="/tours/heist-brewery-tours/" data-card data-city="Sheffield" data-name="heist brewery tours" data-days="Fri">
-    <div class="thumb"><img src="/assets/img/HEISTContentDay-18.Nov_.22-42.jpg" alt="Heist Brewery Tours" loading="lazy"><span class="city-tag">Sheffield</span></div>
-    <div class="body">
-      <h3>Heist Brewery Tours</h3>
-      <p class="meta">1 hour · Every Friday 16:00-17:00</p>
-      <div class="price-row"><span class="price"><small>price on enquiry</small></span><span class="go">View tour →</span></div>
-    </div>
-  </a>
-<a class="tour-card" href="/tours/moorhouses-brewery-tours/" data-card data-city="Lancashire" data-name="moorhouse's brewery tours" data-days="">
-    <div class="thumb"><img src="/assets/img/MoorhousesBrewery-Tour-hires-66-scaled.jpg" alt="Moorhouse's Brewery Tours" loading="lazy"><span class="city-tag">Lancashire</span></div>
-    <div class="body">
-      <h3>Moorhouse's Brewery Tours</h3>
-      <p class="meta">45 minutes (guided tour) · By prior appointment only</p>
-      <div class="price-row"><span class="price"><small>price on enquiry</small></span><span class="go">View tour →</span></div>
-    </div>
-  </a>
-    </div>
-    <p class="filter-empty" data-filter-empty hidden>No tours match those filters. <button type="button" class="linklike" data-filter-reset>Clear filters</button> or <a href="/group-tours/">ask about a private tour</a>.</p>
-  </div>
-</section>
-
-<section class="section band-cream" style="border-top:1px solid var(--line)">
-  <div class="container">
-    <div class="section-head">
-      <span class="kicker">More to book · Partner experiences</span>
-      <h2>Brewery tours, tastings &amp; pub walks</h2>
-      <p>Hand-picked experiences across the UK, bookable through our partner GetYourGuide — filtered by the city you choose above.</p>
-    </div>
-    <div class="card-grid" data-partner-grid>
 <a class="tour-card partner" href="/tours/experiences/london-bermondsey-craft-brewery-tour/" data-card data-city="London" data-name="london: bermondsey craft brewery tour" data-days="">
     <div class="thumb"><img src="/assets/img/gyg/london-bermondsey-craft-brewery-tour.jpg" alt="London: Bermondsey Craft Brewery Tour" loading="lazy"><span class="city-tag">London</span><span class="partner-flag">Partner</span></div>
     <div class="body">
@@ -324,6 +144,14 @@
       <div class="price-row"><span class="price">£24 <small>from</small></span><span class="go">View details →</span></div>
     </div>
   </a>
+<a class="tour-card" href="/tours/bristol-craft-beer-experience/" data-card data-city="Bristol" data-name="bristol craft beer experience" data-days="Sat">
+    <div class="thumb"><img src="/assets/img/bristol-craft-beer-experience.jpg" alt="Bristol Craft Beer Experience" loading="lazy"><span class="city-tag">Bristol</span></div>
+    <div class="body">
+      <h3>Bristol Craft Beer Experience</h3>
+      <p class="meta">4 hours (11:45am to approx. 4pm) · Selected Saturdays — at least monthly, with more dates in summer</p>
+      <div class="price-row"><span class="price">£69 <small>per person</small></span><span class="go">View tour →</span></div>
+    </div>
+  </a>
 <a class="tour-card partner" href="/tours/experiences/bristol-wine-and-cider-tour-with-tastings/" data-card data-city="Bristol" data-name="bristol: wine and cider tour with tastings" data-days="">
     <div class="thumb"><img src="/assets/img/gyg/bristol-wine-and-cider-tour-with-tastings.jpg" alt="Bristol: Wine and Cider Tour with Tastings" loading="lazy"><span class="city-tag">Bristol</span><span class="partner-flag">Partner</span></div>
     <div class="body">
@@ -338,6 +166,14 @@
       <h3>Bristol: Local Craft Distillery's Gin Tasting Experience</h3>
       <p class="meta">2 hours · ★ 5.0 (2)</p>
       <div class="price-row"><span class="price">£34 <small>from</small></span><span class="go">View details →</span></div>
+    </div>
+  </a>
+<a class="tour-card" href="/tours/manchester-microbrewery-experience/" data-card data-city="Manchester" data-name="manchester craft beer experience" data-days="Sat">
+    <div class="thumb"><img src="/assets/img/Manchester-microbrewery-exeperience.jpg" alt="Manchester Craft Beer Experience" loading="lazy"><span class="city-tag">Manchester</span></div>
+    <div class="body">
+      <h3>Manchester Craft Beer Experience</h3>
+      <p class="meta">3.5 hours · Last Saturday of each month</p>
+      <div class="price-row"><span class="price">£38.50 <small>per person</small></span><span class="go">View tour →</span></div>
     </div>
   </a>
 <a class="tour-card partner" href="/tours/experiences/manchester-craft-beer-tasting-in-the-northern-quarter/" data-card data-city="Manchester" data-name="manchester: craft beer tasting in the northern quarter" data-days="">
@@ -380,6 +216,14 @@
       <div class="price-row"><span class="price">£40 <small>from</small></span><span class="go">View details →</span></div>
     </div>
   </a>
+<a class="tour-card" href="/tours/liverpool-microbrewery-experience/" data-card data-city="Liverpool" data-name="liverpool craft beer experience" data-days="Sat">
+    <div class="thumb"><img src="/assets/img/Delia-Debbie.jpg" alt="Liverpool Craft Beer Experience" loading="lazy"><span class="city-tag">Liverpool</span></div>
+    <div class="body">
+      <h3>Liverpool Craft Beer Experience</h3>
+      <p class="meta">4 hours · Last Saturday of each month</p>
+      <div class="price-row"><span class="price">£39.50 <small>per person</small></span><span class="go">View tour →</span></div>
+    </div>
+  </a>
 <a class="tour-card partner" href="/tours/experiences/liverpool-brewery-bus-tour-with-12-beer-and-pizza/" data-card data-city="Liverpool" data-name="liverpool: brewery bus tour with 12 beer and pizza" data-days="">
     <div class="thumb"><img src="/assets/img/gyg/liverpool-brewery-bus-tour-with-12-beer-and-pizza.jpg" alt="Liverpool: Brewery Bus Tour with 12 Beer and Pizza" loading="lazy"><span class="city-tag">Liverpool</span><span class="partner-flag">Partner</span></div>
     <div class="body">
@@ -420,6 +264,22 @@
       <div class="price-row"><span class="price">£40 <small>from</small></span><span class="go">View details →</span></div>
     </div>
   </a>
+<a class="tour-card" href="/tours/leeds-heritage-pub-and-beer-tour/" data-card data-city="Leeds" data-name="the leeds heritage pub tour" data-days="Thu,Fri,Sat">
+    <div class="thumb"><img src="/assets/img/Leeds-Heritage-Pub-and-Brewery-Tour-Guests-outside-The-Tetley.jpg" alt="The Leeds Heritage Pub Tour" loading="lazy"><span class="city-tag">Leeds</span></div>
+    <div class="body">
+      <h3>The Leeds Heritage Pub Tour</h3>
+      <p class="meta">3.5 hours · Thursday/Friday/Saturday</p>
+      <div class="price-row"><span class="price">£38 <small>per person</small></span><span class="go">View tour →</span></div>
+    </div>
+  </a>
+<a class="tour-card" href="/tours/leeds-craft-beer-experience/" data-card data-city="Leeds" data-name="leeds craft beer experience" data-days="Sat,Sun">
+    <div class="thumb"><img src="/assets/img/leeds-craft-beer-experience.jpg" alt="Leeds Craft Beer Experience" loading="lazy"><span class="city-tag">Leeds</span></div>
+    <div class="body">
+      <h3>Leeds Craft Beer Experience</h3>
+      <p class="meta">4 hours · Saturdays at 1:15pm</p>
+      <div class="price-row"><span class="price">£50 <small>per person</small></span><span class="go">View tour →</span></div>
+    </div>
+  </a>
 <a class="tour-card partner" href="/tours/experiences/leeds-northern-monk-brewery-tour-at-old-flax-store/" data-card data-city="Leeds" data-name="leeds: northern monk brewery tour at old flax store" data-days="">
     <div class="thumb"><img src="/assets/img/gyg/leeds-northern-monk-brewery-tour-at-old-flax-store.jpg" alt="Leeds: Northern Monk Brewery Tour at Old Flax Store" loading="lazy"><span class="city-tag">Leeds</span><span class="partner-flag">Partner</span></div>
     <div class="body">
@@ -442,6 +302,14 @@
       <h3>Leeds: Indian Food Tour with Tastings</h3>
       <p class="meta">3 hours</p>
       <div class="price-row"><span class="price">£100 <small>from</small></span><span class="go">View details →</span></div>
+    </div>
+  </a>
+<a class="tour-card" href="/tours/lewes-brewery-tours/" data-card data-city="Lewes" data-name="lewes brewery tours" data-days="Sat">
+    <div class="thumb"><img src="/assets/img/5210fc2d-549b-4dd8-a488-5a9b38a1293b.jpg" alt="Lewes Brewery Tours" loading="lazy"><span class="city-tag">Lewes</span></div>
+    <div class="body">
+      <h3>Lewes Brewery Tours</h3>
+      <p class="meta">Saturdays</p>
+      <div class="price-row"><span class="price">£39.50 <small>per person</small></span><span class="go">View tour →</span></div>
     </div>
   </a>
 <a class="tour-card partner" href="/tours/experiences/brighton-local-beer-tasting-experience-at-a-micropub/" data-card data-city="Lewes" data-name="brighton: local beer tasting experience at a micropub" data-days="">
@@ -468,6 +336,22 @@
       <div class="price-row"><span class="price">£320 <small>from</small></span><span class="go">View details →</span></div>
     </div>
   </a>
+<a class="tour-card" href="/tours/kent-hop-farm-tour-at-hukins-hops/" data-card data-city="Kent" data-name="kent hop farm tour at hukins hops" data-days="Sat">
+    <div class="thumb"><img src="/assets/img/craft-beer-tasting-and-281146280.jpg" alt="Kent Hop Farm Tour at Hukins Hops" loading="lazy"><span class="city-tag">Kent</span></div>
+    <div class="body">
+      <h3>Kent Hop Farm Tour at Hukins Hops</h3>
+      <p class="meta">Approximately 2 hours · Selected Saturdays during the season, with 11am, 1pm and 3pm time slots</p>
+      <div class="price-row"><span class="price">£27.50 <small>per person</small></span><span class="go">View tour →</span></div>
+    </div>
+  </a>
+<a class="tour-card" href="/tours/birmingham-microbrewery-experience/" data-card data-city="Birmingham" data-name="birmingham microbrewery experience" data-days="Sat">
+    <div class="thumb"><img src="/assets/img/birmingham-craft-beer-experience.jpg" alt="Birmingham Microbrewery Experience" loading="lazy"><span class="city-tag">Birmingham</span></div>
+    <div class="body">
+      <h3>Birmingham Microbrewery Experience</h3>
+      <p class="meta">Approximately 4 hours · Saturdays only</p>
+      <div class="price-row"><span class="price"><small>price on enquiry</small></span><span class="go">View tour →</span></div>
+    </div>
+  </a>
 <a class="tour-card partner" href="/tours/experiences/birmingham-british-beer-private-guided-tasting-tour/" data-card data-city="Birmingham" data-name="birmingham british beer private guided tasting tour" data-days="">
     <div class="thumb"><img src="/assets/img/gyg/birmingham-british-beer-private-guided-tasting-tour.jpg" alt="Birmingham British Beer Private Guided Tasting Tour" loading="lazy"><span class="city-tag">Birmingham</span><span class="partner-flag">Partner</span></div>
     <div class="body">
@@ -490,6 +374,14 @@
       <h3>Birmingham: Slogging Gangs Guided Walking Tour</h3>
       <p class="meta">2 hours · ★ 4.1 (262)</p>
       <div class="price-row"><span class="price">£20 <small>from</small></span><span class="go">View details →</span></div>
+    </div>
+  </a>
+<a class="tour-card" href="/tours/glasgow-beer-tasting/" data-card data-city="Glasgow" data-name="glasgow beer tasting" data-days="Sat,Sun">
+    <div class="thumb"><img src="/assets/img/platform-entrance.jpg" alt="Glasgow Beer Tasting" loading="lazy"><span class="city-tag">Glasgow</span></div>
+    <div class="body">
+      <h3>Glasgow Beer Tasting</h3>
+      <p class="meta">60 minutes · Afternoons, evenings and weekends</p>
+      <div class="price-row"><span class="price"><small>price on enquiry</small></span><span class="go">View tour →</span></div>
     </div>
   </a>
 <a class="tour-card partner" href="/tours/experiences/glasgow-tennent-s-brewery-tour/" data-card data-city="Glasgow" data-name="glasgow: tennent's brewery guided tour and free pint" data-days="">
@@ -524,6 +416,14 @@
       <div class="price-row"><span class="price">£59 <small>from</small></span><span class="go">View details →</span></div>
     </div>
   </a>
+<a class="tour-card" href="/tours/cardiff-craft-beer-tasting-tour/" data-card data-city="Cardiff" data-name="cardiff beer tasting tour" data-days="">
+    <div class="thumb"><img src="/assets/img/E_CE-HBXsAYjM-g.jpg" alt="Cardiff Beer Tasting Tour" loading="lazy"><span class="city-tag">Cardiff</span></div>
+    <div class="body">
+      <h3>Cardiff Beer Tasting Tour</h3>
+      <p class="meta">2.5-3 hours</p>
+      <div class="price-row"><span class="price">£45 <small>per person</small></span><span class="go">View tour →</span></div>
+    </div>
+  </a>
 <a class="tour-card partner" href="/tours/experiences/cardiff-beer-bike-tour-with-drinks-and-music/" data-card data-city="Cardiff" data-name="cardiff: beer bike tour with drinks and music" data-days="">
     <div class="thumb"><img src="/assets/img/gyg/cardiff-beer-bike-tour-with-drinks-and-music.jpg" alt="Cardiff: Beer Bike Tour with Drinks and Music" loading="lazy"><span class="city-tag">Cardiff</span><span class="partner-flag">Partner</span></div>
     <div class="body">
@@ -548,6 +448,22 @@
       <div class="price-row"><span class="price">£53 <small>from</small></span><span class="go">View details →</span></div>
     </div>
   </a>
+<a class="tour-card" href="/tours/dorset-brewery-tours/" data-card data-city="Dorset" data-name="dorset brewery tours: badger ales" data-days="">
+    <div class="thumb"><img src="/assets/img/Badger-brewery-images-1.jpg" alt="Dorset Brewery Tours: Badger Ales" loading="lazy"><span class="city-tag">Dorset</span></div>
+    <div class="body">
+      <h3>Dorset Brewery Tours: Badger Ales</h3>
+      <p class="meta">Selected dates — booking recommended, essential for large groups</p>
+      <div class="price-row"><span class="price">£17 <small>per person</small></span><span class="go">View tour →</span></div>
+    </div>
+  </a>
+<a class="tour-card" href="/tours/heist-brewery-tours/" data-card data-city="Sheffield" data-name="heist brewery tours" data-days="Fri">
+    <div class="thumb"><img src="/assets/img/HEISTContentDay-18.Nov_.22-42.jpg" alt="Heist Brewery Tours" loading="lazy"><span class="city-tag">Sheffield</span></div>
+    <div class="body">
+      <h3>Heist Brewery Tours</h3>
+      <p class="meta">1 hour · Every Friday 16:00-17:00</p>
+      <div class="price-row"><span class="price"><small>price on enquiry</small></span><span class="go">View tour →</span></div>
+    </div>
+  </a>
 <a class="tour-card partner" href="/tours/experiences/bakewell-thornbridge-brewery-tour-beer-tasting-experience/" data-card data-city="Sheffield" data-name="bakewell: thornbridge brewery tour &amp; beer tasting experience" data-days="">
     <div class="thumb"><img src="/assets/img/gyg/bakewell-thornbridge-brewery-tour-beer-tasting-experience.jpg" alt="Bakewell: Thornbridge Brewery Tour &amp; Beer Tasting Experience" loading="lazy"><span class="city-tag">Sheffield</span><span class="partner-flag">Partner</span></div>
     <div class="body">
@@ -562,6 +478,14 @@
       <h3>Sheffield: Gin Distillery Tasting Visit with Guided Tour</h3>
       <p class="meta">1.5 hours · ★ 5.0 (40)</p>
       <div class="price-row"><span class="price">£18 <small>from</small></span><span class="go">View details →</span></div>
+    </div>
+  </a>
+<a class="tour-card" href="/tours/moorhouses-brewery-tours/" data-card data-city="Lancashire" data-name="moorhouse's brewery tours" data-days="">
+    <div class="thumb"><img src="/assets/img/MoorhousesBrewery-Tour-hires-66-scaled.jpg" alt="Moorhouse's Brewery Tours" loading="lazy"><span class="city-tag">Lancashire</span></div>
+    <div class="body">
+      <h3>Moorhouse's Brewery Tours</h3>
+      <p class="meta">45 minutes (guided tour) · By prior appointment only</p>
+      <div class="price-row"><span class="price"><small>price on enquiry</small></span><span class="go">View tour →</span></div>
     </div>
   </a>
 <a class="tour-card partner" href="/tours/experiences/edinburgh-old-town-guided-walking-tour-and-beer-tasting/" data-card data-city="Edinburgh" data-name="edinburgh: pub history tour with beer &amp; cider tasting" data-days="">
@@ -645,8 +569,60 @@
     </div>
   </a>
     </div>
-    <p class="filter-empty" data-partner-empty hidden>No partner experiences in that city yet — try another city or clear the filter.</p>
+    <p class="filter-empty" data-filter-empty hidden>No tours match those filters. <button type="button" class="linklike" data-filter-reset>Clear filters</button> or <a href="/group-tours/">ask about a private tour</a>.</p>
     <p class="disclosure">Experiences marked "Partner" are operated by third parties and booked through GetYourGuide, our booking partner; we may earn a commission at no extra cost to you.</p>
+  </div>
+</section>
+
+<section class="section band-cream" style="border-top:1px solid var(--line)">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">Explore by city</span>
+      <h2>Pick your city</h2>
+      <p>Every city has its own guide — our tours, bookable experiences and where to eat and drink.</p>
+    </div>
+    <div class="city-tiles">
+<a class="city-tile" href="/tours/london/" style="background-image:url('/assets/img/city/london.jpg')">
+    <span class="city-tile-scrim"></span>
+    <span class="city-tile-body"><span class="city-tile-name">London</span><span class="city-tile-count">7 tours &amp; experiences</span></span>
+  </a>
+<a class="city-tile" href="/tours/bristol/" style="background-image:url('/assets/img/city/bristol.jpg')">
+    <span class="city-tile-scrim"></span>
+    <span class="city-tile-body"><span class="city-tile-name">Bristol</span><span class="city-tile-count">3 tours &amp; experiences</span></span>
+  </a>
+<a class="city-tile" href="/tours/manchester/" style="background-image:url('/assets/img/city/manchester.jpg')">
+    <span class="city-tile-scrim"></span>
+    <span class="city-tile-body"><span class="city-tile-name">Manchester</span><span class="city-tile-count">6 tours &amp; experiences</span></span>
+  </a>
+<a class="city-tile" href="/tours/liverpool/" style="background-image:url('/assets/img/city/liverpool.jpg')">
+    <span class="city-tile-scrim"></span>
+    <span class="city-tile-body"><span class="city-tile-name">Liverpool</span><span class="city-tile-count">6 tours &amp; experiences</span></span>
+  </a>
+<a class="city-tile" href="/tours/leeds/" style="background-image:url('/assets/img/city/leeds.jpg')">
+    <span class="city-tile-scrim"></span>
+    <span class="city-tile-body"><span class="city-tile-name">Leeds</span><span class="city-tile-count">5 tours &amp; experiences</span></span>
+  </a>
+<a class="city-tile" href="/tours/birmingham/" style="background-image:url('/assets/img/city/birmingham.jpg')">
+    <span class="city-tile-scrim"></span>
+    <span class="city-tile-body"><span class="city-tile-name">Birmingham</span><span class="city-tile-count">4 tours &amp; experiences</span></span>
+  </a>
+<a class="city-tile" href="/tours/glasgow/" style="background-image:url('/assets/img/city/glasgow.jpg')">
+    <span class="city-tile-scrim"></span>
+    <span class="city-tile-body"><span class="city-tile-name">Glasgow</span><span class="city-tile-count">5 tours &amp; experiences</span></span>
+  </a>
+<a class="city-tile" href="/tours/cardiff/" style="background-image:url('/assets/img/city/cardiff.jpg')">
+    <span class="city-tile-scrim"></span>
+    <span class="city-tile-body"><span class="city-tile-name">Cardiff</span><span class="city-tile-count">4 tours &amp; experiences</span></span>
+  </a>
+<a class="city-tile" href="/tours/edinburgh/" style="background-image:url('/assets/img/city/edinburgh.jpg')">
+    <span class="city-tile-scrim"></span>
+    <span class="city-tile-body"><span class="city-tile-name">Edinburgh</span><span class="city-tile-count">5 tours &amp; experiences</span></span>
+  </a>
+<a class="city-tile" href="/tours/newcastle/" style="background-image:url('/assets/img/city/newcastle.jpg')">
+    <span class="city-tile-scrim"></span>
+    <span class="city-tile-body"><span class="city-tile-name">Newcastle</span><span class="city-tile-count">3 tours &amp; experiences</span></span>
+  </a>
+    </div>
   </div>
 </section>
 

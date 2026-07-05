@@ -15,6 +15,7 @@ const site = JSON.parse(read('content/site.json'));
 const tours = JSON.parse(read('content/tours.json'));
 const activeTours = tours.filter(t => t.active);
 const WHATSAPP = `https://wa.me/${site.whatsapp}`;
+const WA_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.6-1.2 1.2-1.7 1.2-.4.1-1 .1-1.6-.1a13 13 0 0 1-5.8-5.1c-.6-1-.9-2-.9-2.7 0-.8.4-1.4.7-1.7.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.3.3c-.1.2-.2.3 0 .6.2.3.9 1.4 1.9 2.3 1.3 1.2 2.4 1.5 2.7 1.7.3.1.5.1.7-.1l1-1.2c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.4 0 .1 0 .7-.2 1.2Z"/></svg>';
 const YEAR = '2026';
 
 /* ---------- helpers ---------- */
@@ -313,8 +314,16 @@ const dayOptions = DAY_ORDER.map(d => {
   return `<option value="${d}">${names[d]}</option>`;
 }).join('');
 
-const ourToursGrid = activeTours.map(tourCard).join('\n');
-const partnerGrid = allGyg.map(partnerCard).join('\n');
+// One merged grid: our own tours and partner experiences together, grouped by
+// city (our own first within each city) so a city's options sit side by side.
+const mergedTours = [
+  ...activeTours.map(t => ({ city: t.city, own: 1, html: tourCard(t) })),
+  ...allGyg.map(t => ({ city: t.city, own: 0, html: partnerCard(t) })),
+].sort((a, b) => {
+  const ia = cityOrder.indexOf(a.city), ib = cityOrder.indexOf(b.city);
+  return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib) || (b.own - a.own) || a.city.localeCompare(b.city);
+});
+const allToursGrid = mergedTours.map(m => m.html).join('\n');
 
 const blogCards = posts.map(postCard).join('\n');
 
@@ -323,8 +332,7 @@ const pageTokens = {
   explore_tiles: exploreTiles,
   city_options: cityOptions,
   day_options: dayOptions,
-  our_tours_grid: ourToursGrid,
-  partner_grid: partnerGrid,
+  all_tours_grid: allToursGrid,
   disclosure: DISCLOSURE,
   blog_cards: blogCards,
   whatsapp_url: WHATSAPP,
@@ -572,9 +580,9 @@ for (const t of allGyg) {
     <aside class="booking-card">
       <div class="price-line">${priceLine}</div>
       <a class="btn btn-primary" href="${aff}" target="_blank" rel="sponsored noopener">Book on GetYourGuide ↗</a>
-      <a class="btn btn-outline" href="/tours/${guide ? guide.slug : ''}/">More ${esc(t.city)} tours</a>
-      <p class="note">${ratingStr ? esc(ratingStr) + ' · ' : ''}Free cancellation on most tours</p>
-      <p class="disclosure" style="margin-top:14px">Booked via GetYourGuide, our partner. We may earn a commission at no extra cost to you.</p>
+      <a class="btn btn-whatsapp" href="${WHATSAPP}?text=${encodeURIComponent(`Hi! I'd like to enquire about a group booking for the ${t.title} in ${t.city}.`)}">${WA_ICON} Group booking enquiry</a>
+      <p class="note">${ratingStr ? esc(ratingStr) + ' · ' : ''}Free cancellation on most tours · <a href="/tours/${guide ? guide.slug : ''}/">More ${esc(t.city)} tours</a></p>
+      <p class="disclosure" style="margin-top:14px">Booked via GetYourGuide, our partner. We may earn a commission at no extra cost to you. Group enquiries are handled directly by us.</p>
     </aside>
   </div>
 </section>
