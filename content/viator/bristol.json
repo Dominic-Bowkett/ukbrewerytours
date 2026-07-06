@@ -6,27 +6,42 @@
       "url": "https://www.viator.com/tours/Bristol/Self-Guided-Mystery-Craft-Beer-Tour-Explore-Old-Market-Bristol/d4293-144944P2",
       "city": "Bristol",
       "type": "beer-brewery",
-      "image": "bristol-beer-brewery",
+      "image": "self-guided-mystery-craft-beer-tour-explore-old-market-bristol-144944p2",
       "slug": "self-guided-mystery-craft-beer-tour-explore-old-market-bristol-144944p2",
-      "summary": "Discover Bristol's craft beer scene on this brewery and beer-tasting experience, bristol Self-Led Craft Beer Tasting and Walking Tour. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+      "summary": "This self-led walking tour offers an introduction to Bristol's craft beer scene, one of the UK's top destinations for the style. Starting in the evening…",
+      "duration": "3 to 5 hours",
+      "rating": "4.5",
+      "reviews": 19,
+      "description_md": "This self-led walking tour offers an introduction to Bristol's craft beer scene, one of the UK's top destinations for the style. Starting in the evening at Moor Beer Co, a popular local brewery near Temple Meads station, guests enjoy several tastings before continuing at their own pace to five further pubs, taprooms and bars. Tokens are exchanged for beer at each venue, with seven different Bristol-brewed beers included as a mixture of half pints and third pints. A welcome bag containing snacks, a map and an information booklet is provided, and the tour ends on Old Market Street. As a private, self-guided experience it suits independent-minded travellers who prefer to explore at their own pace.",
+      "price_gbp": 33
     },
     {
       "title": "Food & drink Tour: Bristol Hotspots & Hidden Treasures",
       "url": "https://www.viator.com/tours/Bristol/Food-and-drink-tour-Bristol-Hotspots-and-Hidden-Treasures/d4293-405113P1",
       "city": "Bristol",
       "type": "food",
-      "image": "bristol-food",
+      "image": "food-and-drink-tour-bristol-hotspots-and-hidden-treasures-405113p1",
       "slug": "food-and-drink-tour-bristol-hotspots-and-hidden-treasures-405113p1",
-      "summary": "A guided food-and-drink experience in Bristol, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+      "summary": "This 3.5-hour guided walking tour explores Bristol's food and drink scene, taking in both well-known hotspots and lesser-known hidden treasures. Led by…",
+      "duration": "3 hours 30 minutes",
+      "rating": "5.0",
+      "reviews": 11,
+      "description_md": "This 3.5-hour guided walking tour explores Bristol's food and drink scene, taking in both well-known hotspots and lesser-known hidden treasures. Led by local hosts, the small-group experience visits a series of tasting stops where you sample enough food to fill you up alongside some of the city's best drinks. The route begins on the corner of Park Street and Park Row and finishes at the Brewhouse in Redcliffe, with additional drinks included at one restaurant stop. Limited to a maximum of ten travellers, it offers a relaxed and sociable way to discover Bristol's independent eateries and bars.",
+      "price_gbp": 94
     },
     {
       "title": "Bristol Private Cocktail Class",
       "url": "https://www.viator.com/tours/Bristol/Cocktail-Classes/d4293-152324P2",
       "city": "Bristol",
       "type": "distillery-spirits",
-      "image": "bristol-distillery-spirits",
+      "image": "cocktail-classes-152324p2",
       "slug": "cocktail-classes-152324p2",
-      "summary": "A gin, whisky and spirits experience in Bristol with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+      "summary": "This private cocktail-making class gives your group the exclusive company of a mixologist in the centre of Bristol. Rather than watching someone else at…",
+      "duration": "2 hours",
+      "rating": "4.7",
+      "reviews": 15,
+      "description_md": "This private cocktail-making class gives your group the exclusive company of a mixologist in the centre of Bristol. Rather than watching someone else at work, you get behind the bar yourself to learn the secrets of mixing and shaking delicious cocktails. The two-hour session includes three cocktails each along with expert tips throughout. As it is a private booking with exclusive use of the venue, you can enjoy the experience without the crowds.",
+      "price_gbp": 61
     }
   ]
 }

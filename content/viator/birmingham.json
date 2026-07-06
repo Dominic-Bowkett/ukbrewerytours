@@ -8,16 +8,22 @@
       "type": "distillery-spirits",
       "image": "birmingham-distillery-spirits",
       "slug": "whisky-tasting-experience-334291p1",
-      "summary": "A gin, whisky and spirits experience in Birmingham with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+      "summary": "Gin, whisky and spirits experience in Birmingham — Birmingham Whisky Talk and Tasting Experience. Booked via our partner Viator.",
+      "description_md": "Birmingham Whisky Talk and Tasting Experience is a gin, whisky and spirits experience in Birmingham. You will go behind the scenes to see how the spirits are made and enjoy expert-led tastings along the way. Full details, the exact itinerary, live availability, up-to-date prices and traveller reviews are all on Viator. Booking is handled by our partner Viator; we may earn a commission at no extra cost to you."
     },
     {
       "title": "Birmingham Slogging Gangs Walking and Food Tour (Porky Blinders Food Tour with a Peaky Blinder)",
       "url": "https://www.viator.com/tours/Birmingham/Porky-Blinders-Food-Tour-with-a-Peaky-Blinder/d22776-339867P3",
       "city": "Birmingham",
       "type": "food",
-      "image": "birmingham-food",
+      "image": "porky-blinders-food-tour-with-a-peaky-blinder-339867p3",
       "slug": "porky-blinders-food-tour-with-a-peaky-blinder-339867p3",
-      "summary": "A guided food-and-drink experience in Birmingham, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+      "summary": "The Birmingham Slogging Gangs Walking and Food Tour is a three-hour guided walk through the city, themed around the Peaky Blinders and the real gangs of…",
+      "duration": "3 hours",
+      "rating": "5.0",
+      "reviews": 21,
+      "description_md": "The Birmingham Slogging Gangs Walking and Food Tour is a three-hour guided walk through the city, themed around the Peaky Blinders and the real gangs of Victorian Birmingham. Led in English by a costumed guide, it blends local history and culture with food and drink tastings along the way. The tour begins outside The Rainbow pub in Bordesley, where guests look for a gang member in a flat cap and cravat, and finishes at Turtle Bay in the city centre. Dinner, alcoholic beverages and all drinks are included, and the group is limited to a maximum of 14 travellers.",
+      "price_gbp": 30
     }
   ]
 }

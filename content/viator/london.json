@@ -6,9 +6,14 @@
       "url": "https://www.viator.com/tours/London/Brewery-tour-and-tasting/d737-116890P1",
       "city": "London",
       "type": "beer-brewery",
-      "image": "london-beer-brewery",
+      "image": "brewery-tour-and-tasting-116890p1",
       "slug": "brewery-tour-and-tasting-116890p1",
-      "summary": "Discover London's craft beer scene on this brewery and beer-tasting experience, brewery tour and tasting. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+      "summary": "Discover some of the exciting new tastes of London beer without venturing out to the outskirts of the city. Spend a couple of hours at the award-winning…",
+      "duration": "2 hours",
+      "rating": "4.9",
+      "reviews": 8,
+      "description_md": "Discover some of the exciting new tastes of London beer without venturing out to the outskirts of the city. Spend a couple of hours at the award-winning Fourpure Brewing Company headquarters in Bermondsey on this exclusive behind-the-scenes tour. Sample the brewery's lagers, stouts, ales and more with an expert brewer to guide you through the experience. Afterwards, discover how these brews are made with a guided tour of the brewhouse. The quiet small-group session is close to London Bridge and easily reached by public transport, with afternoon and evening slots available.",
+      "price_gbp": 30
     },
     {
       "title": "London Nano Brewery Craft Beer Tasting Experience",
@@ -17,7 +22,8 @@
       "type": "beer-brewery",
       "image": "london-beer-brewery",
       "slug": "10-craft-beer-tasting-experience-5553568p1",
-      "summary": "Discover London's craft beer scene on this brewery and beer-tasting experience, london Nano Brewery Craft Beer Tasting Experience. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+      "summary": "Craft beer and brewery experience in London — London Nano Brewery Craft Beer Tasting Experience. Booked via our partner Viator.",
+      "description_md": "London Nano Brewery Craft Beer Tasting Experience is a craft beer and brewery experience in London. You will explore London's craft beer scene with tastings and the stories behind the beers, in the company of a knowledgeable local host. Full details, the exact itinerary, live availability, up-to-date prices and traveller reviews are all on Viator. Booking is handled by our partner Viator; we may earn a commission at no extra cost to you."
     },
     {
       "title": "London: Fuller's Griffin Brewery Small-Group Tour",
@@ -26,61 +32,91 @@
       "type": "beer-brewery",
       "image": "london-beer-brewery",
       "slug": "london-fullers-griffin-brewery-tour-459162p1",
-      "summary": "Discover London's craft beer scene on this brewery and beer-tasting experience, fuller's Griffin Brewery Small-Group Tour. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+      "summary": "Craft beer and brewery experience in London — Fuller's Griffin Brewery Small-Group Tour. Booked via our partner Viator.",
+      "description_md": "London: Fuller's Griffin Brewery Small-Group Tour is a craft beer and brewery experience in London. You will explore London's craft beer scene with tastings and the stories behind the beers, in the company of a knowledgeable local host. Full details, the exact itinerary, live availability, up-to-date prices and traveller reviews are all on Viator. Booking is handled by our partner Viator; we may earn a commission at no extra cost to you."
     },
     {
       "title": "Shoreditch Craft Beer Tour",
       "url": "https://www.viator.com/tours/London/Shoreditch-Craft-Beer-Tour/d737-7812P27",
       "city": "London",
       "type": "beer-brewery",
-      "image": "london-beer-brewery",
+      "image": "shoreditch-craft-beer-tour-7812p27",
       "slug": "shoreditch-craft-beer-tour-7812p27",
-      "summary": "Discover London's craft beer scene on this brewery and beer-tasting experience, shoreditch Craft Beer Tour. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+      "summary": "Explore one of London's most lively and characterful areas and immerse yourself in the city's thriving craft beer scene on this walking tour of Bermondsey…",
+      "duration": "3 hours (approx.)",
+      "rating": "4.9",
+      "reviews": 103,
+      "description_md": "Explore one of London's most lively and characterful areas and immerse yourself in the city's thriving craft beer scene on this walking tour of Bermondsey and the South Bank. Over the course of several hours you'll visit a number of bustling pubs, breweries and other watering holes, and learn how beer is made. You'll also have the chance to try numerous different brews along the way. As you go, your guide shares stories about the area and its history, taking you off the typical tourist trail. You can choose between a small-group or private tour to suit your preferences.",
+      "price_gbp": 118
     },
     {
       "title": "London: Borough Market Small-Group or Private Food Tour",
       "url": "https://www.viator.com/tours/London/Secret-Food-Tours-London/d737-7812P2",
       "city": "London",
       "type": "food",
-      "image": "london-food",
+      "image": "secret-food-tours-london-7812p2",
       "slug": "secret-food-tours-london-7812p2",
-      "summary": "A guided food-and-drink experience in London, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+      "summary": "Sample London's celebrated culinary scene on this small-group walking food tour, choosing between the classic London Bridge route and the trendier Soho…",
+      "price_gbp": 131,
+      "duration": "3 hours 30 minutes",
+      "rating": "4.9",
+      "reviews": 1648,
+      "description_md": "Sample London's celebrated culinary scene on this small-group walking food tour, choosing between the classic London Bridge route and the trendier Soho route. The London Bridge tour serves up British staples such as fish and chips, sausage rolls, a selection of British cheeses, and local beers and ciders, while the Soho tour explores hidden gems and fine cuisine at new and historic venues. Along the way your foodie guide shares London's latest gastronomic trends and points out landmarks including Tower Bridge and HMS Belfast. A private version is available for groups who would prefer a guide exclusively for their own party."
     },
     {
       "title": "London: Soho By Night Food & Drinks Small-Group Tour",
       "url": "https://www.viator.com/tours/London/Eating-London-Twilight-Soho-Food-and-Drinks-Tour/d737-6093P2",
       "city": "London",
       "type": "food",
-      "image": "london-food",
+      "image": "eating-london-twilight-soho-food-and-drinks-tour-6093p2",
       "slug": "eating-london-twilight-soho-food-and-drinks-tour-6093p2",
-      "summary": "A guided food-and-drink experience in London, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+      "summary": "Take a deep dive into Soho's dynamic dining and drinking scene on this twilight small-group food and drinks tour. Led by an insider guide, you'll visit a…",
+      "duration": "3 hours 30 minutes",
+      "rating": "4.8",
+      "reviews": 366,
+      "description_md": "Take a deep dive into Soho's dynamic dining and drinking scene on this twilight small-group food and drinks tour. Led by an insider guide, you'll visit a range of favourite local eateries and bars, sampling multicultural specialities from gourmet tacos to Chinese dumplings in Europe's oldest Chinatown. Between bites you'll learn about the neighbourhood's culinary history and culture, and enjoy drinks at a lounge bar and a traditional English pub well away from the tourist traps. The intimate small-group format, capped at twelve travellers, keeps the atmosphere relaxed and sociable throughout."
     },
     {
       "title": "London: Bombay Sapphire Gin Distillery Tour With Cocktail",
       "url": "https://www.viator.com/tours/London/Bombay-Sapphire-Distillery-Tour-and-Tasting/d737-35079P1",
       "city": "London",
       "type": "distillery-spirits",
-      "image": "london-distillery-spirits",
+      "image": "bombay-sapphire-distillery-tour-and-tasting-35079p1",
       "slug": "bombay-sapphire-distillery-tour-and-tasting-35079p1",
-      "summary": "A gin, whisky and spirits experience in London with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+      "summary": "Go behind the scenes at one of the world's best-known gin distilleries on this 90-minute guided tour of Bombay Sapphire's home at Laverstoke Mill. Led by…",
+      "price_gbp": 30,
+      "duration": "1 hour 30 minutes",
+      "rating": "4.6",
+      "reviews": 692,
+      "description_md": "Go behind the scenes at one of the world's best-known gin distilleries on this 90-minute guided tour of Bombay Sapphire's home at Laverstoke Mill. Led by an insider guide, you'll discover the secrets of the distilling process, learn about the botanicals used in the gin, and explore the production spaces set within striking Victorian architecture. A short film in the cinema room reveals how the gin is made, while a self-serve G&T and a cocktail of your choosing at the Mill Bar accompany your visit. The historic riverside site, once a paper mill for the Bank of England, sits 15 miles outside Winchester on the River Test."
     },
     {
       "title": "London Sipsmith Distillery Tour and Tasting",
       "url": "https://www.viator.com/tours/London/Sipsmith-Distillery-Tour-and-Complimentary-Tasting/d737-69840P1",
       "city": "London",
       "type": "distillery-spirits",
-      "image": "london-distillery-spirits",
+      "image": "sipsmith-distillery-tour-and-complimentary-tasting-69840p1",
       "slug": "sipsmith-distillery-tour-and-complimentary-tasting-69840p1",
-      "summary": "A gin, whisky and spirits experience in London with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+      "summary": "Learn about Sipsmith's gin distilling methods and history on this small-group tour in London. Led by a guide, you and a group of just 15 people or fewer…",
+      "duration": "1 hour 30 minutes",
+      "rating": "4.7",
+      "reviews": 19,
+      "description_md": "Learn about Sipsmith's gin distilling methods and history on this small-group tour in London. Led by a guide, you and a group of just 15 people or fewer are taken through the craft distilling process, accompanied by a gin-based welcome cocktail and several tastings along the way. The intimate atmosphere leaves plenty of chances to ask questions and engage with the distillery. The experience lasts around 1 hour 30 minutes and includes four complimentary samples and a take-home gift bag.",
+      "price_gbp": 30
     },
     {
       "title": "London South: Borough Market & Beefeater Gin Distillery Tour",
       "url": "https://www.viator.com/tours/London/Borough-Market-and-Gin-Distillery-Small-Group-Tour/d737-3858P132",
       "city": "London",
       "type": "distillery-spirits",
-      "image": "london-distillery-spirits",
+      "image": "borough-market-and-gin-distillery-small-group-tour-3858p132",
       "slug": "borough-market-and-gin-distillery-small-group-tour-3858p132",
-      "summary": "A gin, whisky and spirits experience in London with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+      "summary": "Tick off two of London's most-celebrated culinary institutions on this half-day tour of Borough Market and the Beefeater gin distillery. Designed with…",
+      "price_gbp": 80,
+      "duration": "4 hours",
+      "rating": "4.8",
+      "reviews": 6,
+      "description_md": "Tick off two of London's most-celebrated culinary institutions on this half-day tour of Borough Market and the Beefeater gin distillery. Designed with food and drink lovers in mind, it lets you sample British and international snacks you may never have heard of before and purchase whatever lunch appeals to you most at the market. After hopping on the Tube to the distillery at Kennington, you immerse yourself in London gin history and enjoy samples of Beefeater gin. Headsets are provided so you can hear your guide's every word, and the walking tour lasts approximately four hours."
     }
   ]
 }

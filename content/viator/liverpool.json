@@ -8,7 +8,8 @@
       "type": "food",
       "image": "liverpool-food",
       "slug": "eat-and-explore-liverpool-walking-tour-163922p2",
-      "summary": "A guided food-and-drink experience in Liverpool, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+      "summary": "Guided food-and-drink experience in Liverpool — Eat and Explore Liverpool Walking Tour. Booked via our partner Viator.",
+      "description_md": "Eat and Explore Liverpool Walking Tour is a guided food-and-drink experience in Liverpool. You will graze your way around Liverpool, sampling local flavours, independent spots and hidden gems as your guide shares the stories behind them. Full details, the exact itinerary, live availability, up-to-date prices and traveller reviews are all on Viator. Booking is handled by our partner Viator; we may earn a commission at no extra cost to you."
     },
     {
       "title": "Liverpool with a City Host: Cocktails, Craft Beer and Pub Food",
@@ -17,16 +18,22 @@
       "type": "food",
       "image": "liverpool-food",
       "slug": "liverpool-with-a-city-host-cocktails-craft-beer-and-pub-food-30791p414",
-      "summary": "A guided food-and-drink experience in Liverpool, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+      "summary": "Guided food-and-drink experience in Liverpool — Cocktails, Craft Beer and Pub Food. Booked via our partner Viator.",
+      "description_md": "Liverpool with a City Host: Cocktails, Craft Beer and Pub Food is a guided food-and-drink experience in Liverpool. You will graze your way around Liverpool, sampling local flavours, independent spots and hidden gems as your guide shares the stories behind them. Full details, the exact itinerary, live availability, up-to-date prices and traveller reviews are all on Viator. Booking is handled by our partner Viator; we may earn a commission at no extra cost to you."
     },
     {
       "title": "Walking and Drinking Evening Tour in Liverpool",
       "url": "https://www.viator.com/tours/Liverpool/Walking-and-Drinking-Evening-Tour/d940-6724P5",
       "city": "Liverpool",
       "type": "other",
-      "image": "liverpool-other",
+      "image": "walking-and-drinking-evening-tour-6724p5",
       "slug": "walking-and-drinking-evening-tour-6724p5",
-      "summary": "A drinks-focused tasting experience in Liverpool. Booked through our partner Viator — see the full details, live availability and prices on their site."
+      "summary": "This evening walking tour pairs sightseeing of Liverpool's highlights with three pub stops to sample drinks along the way. Led by an English-speaking…",
+      "duration": "2 hours 15 minutes",
+      "rating": "5.0",
+      "reviews": 39,
+      "description_md": "This evening walking tour pairs sightseeing of Liverpool's highlights with three pub stops to sample drinks along the way. Led by an English-speaking guide in a small group, the route takes in landmarks including the city's two cathedrals, Chinatown and the famous Cavern Club. Between the sights you pause for a drink while your guide shares the history behind the city and its Beatles connections. The relaxed, personalised format blends local culture and traditional pubs over roughly two and a quarter hours.",
+      "price_gbp": 30
     }
   ]
 }

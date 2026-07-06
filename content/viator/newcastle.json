@@ -6,27 +6,39 @@
       "url": "https://www.viator.com/tours/Newcastle-upon-Tyne/Food-Tour/d23189-123884P1",
       "city": "Newcastle",
       "type": "food",
-      "image": "newcastle-food",
+      "image": "food-tour-123884p1",
       "slug": "food-tour-123884p1",
-      "summary": "A guided food-and-drink experience in Newcastle, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+      "summary": "This private four-hour walking tour introduces you to Newcastle upon Tyne's authentic food scene in the company of a local guide. Rather than picking…",
+      "duration": "4 hours",
+      "rating": "4.9",
+      "reviews": 138,
+      "description_md": "This private four-hour walking tour introduces you to Newcastle upon Tyne's authentic food scene in the company of a local guide. Rather than picking restaurants at random, you are led to some of the city's top culinary haunts to sample their wares and meet the people behind them. Highlights include a wander through the bustling Grainger Market, visits to independent eateries and the discovery of a hidden gem at Blackfriars Medieval Friary. A licensed guide and food tastings are included, along with insider facts about local dishes and city sights you might otherwise miss. As a private experience just for your group, it offers a personalised pace and plenty of individual attention."
     },
     {
       "title": "Ouseburn Food Tour with Tour of Victoria Tunnel",
       "url": "https://www.viator.com/tours/Newcastle-upon-Tyne/Ouseburn-Food-Tour-Including-Tour-Of-Victorian-Tunnels/d23189-123884P7",
       "city": "Newcastle",
       "type": "food",
-      "image": "newcastle-food",
+      "image": "ouseburn-food-tour-including-tour-of-victorian-tunnels-123884p7",
       "slug": "ouseburn-food-tour-including-tour-of-victorian-tunnels-123884p7",
-      "summary": "A guided food-and-drink experience in Newcastle, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+      "summary": "Spend half a day discovering Newcastle's most creative and delicious neighbourhood on this award-winning small-group tour. It begins with a private guided…",
+      "duration": "4 hours",
+      "rating": "5.0",
+      "reviews": 16,
+      "description_md": "Spend half a day discovering Newcastle's most creative and delicious neighbourhood on this award-winning small-group tour. It begins with a private guided walk through the historic Victoria Tunnel before you eat and drink your way around the Ouseburn Valley. Along the way you sample dishes from a Michelin Guide restaurant and tuck into local favourites from the likes of a brewery, an urban farm and independent eateries. The route is set against a backdrop of the area's celebrated street art and graffiti, with a private guide pointing out hidden places to eat. Lunch, snacks and both alcoholic and soft drinks are included."
     },
     {
       "title": "The Ultimate Cheese & Wine Food Tour",
       "url": "https://www.viator.com/tours/Newcastle-upon-Tyne/The-Ultimate-Cheese-and-Wine-Tour/d23189-123884P2",
       "city": "Newcastle",
       "type": "food",
-      "image": "newcastle-food",
+      "image": "the-ultimate-cheese-and-wine-tour-123884p2",
       "slug": "the-ultimate-cheese-and-wine-tour-123884p2",
-      "summary": "A guided food-and-drink experience in Newcastle, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+      "summary": "This small-group cheese-and-wine tour offers a relaxed introduction to Newcastle upon Tyne, pairing local delicacies with the city's culture and history.…",
+      "duration": "3 hours 30 minutes",
+      "rating": "4.9",
+      "reviews": 15,
+      "description_md": "This small-group cheese-and-wine tour offers a relaxed introduction to Newcastle upon Tyne, pairing local delicacies with the city's culture and history. Limited to a maximum of 12 guests, you visit a selection of eateries to sample generous portions of fine cheeses accompanied by a variety of wines. Along the way the tour takes in a food market and Newcastle Castle, with your guide sharing the inside scoop on local heritage. Lunch samples and alcoholic beverages are included, and the afternoon tour starts near Newcastle Rail Station. It is a great choice for first-time visitors and food lovers alike."
     },
     {
       "title": "Newcastle Private Historic Pub Tour",
@@ -35,7 +47,8 @@
       "type": "beer-brewery",
       "image": "newcastle-beer-brewery",
       "slug": "newcastle-pub-tour-8607p105",
-      "summary": "Discover Newcastle's craft beer scene on this brewery and beer-tasting experience, newcastle Private Historic Pub Tour. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+      "summary": "Craft beer and brewery experience in Newcastle — Newcastle Private Historic Pub Tour. Booked via our partner Viator.",
+      "description_md": "Newcastle Private Historic Pub Tour is a craft beer and brewery experience in Newcastle. You will explore Newcastle's craft beer scene with tastings and the stories behind the beers, in the company of a knowledgeable local host. Full details, the exact itinerary, live availability, up-to-date prices and traveller reviews are all on Viator. Booking is handled by our partner Viator; we may earn a commission at no extra cost to you."
     },
     {
       "title": "Newcastle beer or prosecco bike tour",
@@ -44,7 +57,8 @@
       "type": "beer-brewery",
       "image": "newcastle-beer-brewery",
       "slug": "beer-bike-tour-in-newcastle-187055p4",
-      "summary": "Discover Newcastle's craft beer scene on this brewery and beer-tasting experience, newcastle beer or prosecco bike tour. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+      "summary": "Craft beer and brewery experience in Newcastle — Newcastle beer or prosecco bike tour. Booked via our partner Viator.",
+      "description_md": "Newcastle beer or prosecco bike tour is a craft beer and brewery experience in Newcastle. You will explore Newcastle's craft beer scene with tastings and the stories behind the beers, in the company of a knowledgeable local host. Full details, the exact itinerary, live availability, up-to-date prices and traveller reviews are all on Viator. Booking is handled by our partner Viator; we may earn a commission at no extra cost to you."
     }
   ]
 }

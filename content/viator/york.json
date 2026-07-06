@@ -6,9 +6,13 @@
       "url": "https://www.viator.com/tours/York/York-Breweries-Bus-Tours/d5446-52843P1",
       "city": "York",
       "type": "beer-brewery",
-      "image": "york-beer-brewery",
+      "image": "york-breweries-bus-tours-52843p1",
       "slug": "york-breweries-bus-tours-52843p1",
-      "summary": "Discover York's craft beer scene on this brewery and beer-tasting experience, york Breweries Bus Tours. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+      "summary": "This lively small-group tour takes you behind the scenes at three of York's top breweries. After being collected from a central meeting point at the York…",
+      "duration": "5 hours",
+      "rating": "5.0",
+      "reviews": 78,
+      "description_md": "This lively small-group tour takes you behind the scenes at three of York's top breweries. After being collected from a central meeting point at the York Tap beside the railway station, you travel between the breweries in a comfortable, air-conditioned minibus. At each stop you meet the brewers, learn how beer is made and enjoy a range of tastings, with snacks and bottled water provided along the way. Round-trip minibus transport is included and the group is limited to a maximum of eight people. The experience lasts around five hours and is restricted to those aged 18 and over."
     },
     {
       "title": "York Small-Group Food Tour With Tastings",
@@ -17,7 +21,8 @@
       "type": "food",
       "image": "york-food",
       "slug": "york-food-tour-62324p3",
-      "summary": "A guided food-and-drink experience in York, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+      "summary": "Guided food-and-drink experience in York — York Small-Group Food Tour With Tastings. Booked via our partner Viator.",
+      "description_md": "York Small-Group Food Tour With Tastings is a guided food-and-drink experience in York. You will graze your way around York, sampling local flavours, independent spots and hidden gems as your guide shares the stories behind them. Full details, the exact itinerary, live availability, up-to-date prices and traveller reviews are all on Viator. Booking is handled by our partner Viator; we may earn a commission at no extra cost to you."
     },
     {
       "title": "York Food Tour: Hidden Gems of the City",
@@ -26,7 +31,8 @@
       "type": "food",
       "image": "york-food",
       "slug": "the-hidden-gems-foodie-tour-of-york-324623p1",
-      "summary": "A guided food-and-drink experience in York, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+      "summary": "Guided food-and-drink experience in York — Hidden Gems of the City. Booked via our partner Viator.",
+      "description_md": "York Food Tour: Hidden Gems of the City is a guided food-and-drink experience in York. You will graze your way around York, sampling local flavours, independent spots and hidden gems as your guide shares the stories behind them. Full details, the exact itinerary, live availability, up-to-date prices and traveller reviews are all on Viator. Booking is handled by our partner Viator; we may earn a commission at no extra cost to you."
     },
     {
       "title": "York Gin Tour and Tasting at the Hooting Owl Distillery",
@@ -35,7 +41,8 @@
       "type": "distillery-spirits",
       "image": "york-distillery-spirits",
       "slug": "distillery-tour-and-tasting-464662p1",
-      "summary": "A gin, whisky and spirits experience in York with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+      "summary": "Gin, whisky and spirits experience in York — York Gin Tour and Tasting at the Hooting Owl Distillery. Booked via our partner Viator.",
+      "description_md": "York Gin Tour and Tasting at the Hooting Owl Distillery is a gin, whisky and spirits experience in York. You will go behind the scenes to see how the spirits are made and enjoy expert-led tastings along the way. Full details, the exact itinerary, live availability, up-to-date prices and traveller reviews are all on Viator. Booking is handled by our partner Viator; we may earn a commission at no extra cost to you."
     },
     {
       "title": "2-hour Chocolate Tasting Tour of York",
@@ -44,17 +51,22 @@
       "type": "food",
       "image": "york-food",
       "slug": "2-hour-guided-chocolate-tour-and-tasting-in-york-49063p7",
-      "summary": "A guided food-and-drink experience in York, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site.",
-      "duration": "2 hours"
+      "summary": "Guided food-and-drink experience in York — 2-hour Chocolate Tasting Tour of York. Booked via our partner Viator.",
+      "duration": "2 hours",
+      "description_md": "2-hour Chocolate Tasting Tour of York is a guided food-and-drink experience in York. You will graze your way around York, sampling local flavours, independent spots and hidden gems as your guide shares the stories behind them. Full details, the exact itinerary, live availability, up-to-date prices and traveller reviews are all on Viator. Booking is handled by our partner Viator; we may earn a commission at no extra cost to you."
     },
     {
       "title": "York Afternoon Tea Cruise",
       "url": "https://www.viator.com/tours/York/York-Afternoon-Tea-Cruise/d5446-46275P4",
       "city": "York",
       "type": "food",
-      "image": "york-food",
+      "image": "york-afternoon-tea-cruise-46275p4",
       "slug": "york-afternoon-tea-cruise-46275p4",
-      "summary": "A guided food-and-drink experience in York, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+      "summary": "This relaxed sightseeing experience combines a leisurely river cruise along the River Ouse with a traditional afternoon tea served on board. You board the…",
+      "duration": "1 hour 30 minutes",
+      "rating": "3.9",
+      "reviews": 93,
+      "description_md": "This relaxed sightseeing experience combines a leisurely river cruise along the River Ouse with a traditional afternoon tea served on board. You board the Captain James Cook at King's Staith Landing in central York and cruise out of the city, taking in the scenic riverbanks and passing landmarks such as Bishopthorpe Palace, home to the Archbishop of York. As you go, you tuck into a generous afternoon tea of finger sandwiches, scones and pastries, accompanied by tea and coffee, with the option to upgrade to a glass of prosecco. Live commentary from the skipper shares the history of the city and its bridges along the way. The cruise lasts around an hour and a half and is a gentle way to see York from the water."
     }
   ]
 }

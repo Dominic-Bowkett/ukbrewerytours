@@ -8,16 +8,22 @@
       "type": "beer-brewery",
       "image": "leeds-beer-brewery",
       "slug": "harrogate-beer-tours-211190p1",
-      "summary": "Discover Leeds's craft beer scene on this brewery and beer-tasting experience, harrogate Small-Group Evening Beer and Pub Walking Tour. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+      "summary": "Craft beer and brewery experience in Leeds — Harrogate Small-Group Evening Beer and Pub Walking Tour. Booked via our partner Viator.",
+      "description_md": "Harrogate Small-Group Evening Beer and Pub Walking Tour is a craft beer and brewery experience in Leeds. You will explore Leeds's craft beer scene with tastings and the stories behind the beers, in the company of a knowledgeable local host. Full details, the exact itinerary, live availability, up-to-date prices and traveller reviews are all on Viator. Booking is handled by our partner Viator; we may earn a commission at no extra cost to you."
     },
     {
       "title": "Leeds Heritage Beer Guided Tour",
       "url": "https://www.viator.com/tours/Leeds/Leeds-Heritage-Beer-Tours/d26342-163283P1",
       "city": "Leeds",
       "type": "beer-brewery",
-      "image": "leeds-beer-brewery",
+      "image": "leeds-heritage-beer-tours-163283p1",
       "slug": "leeds-heritage-beer-tours-163283p1",
-      "summary": "Discover Leeds's craft beer scene on this brewery and beer-tasting experience, leeds Heritage Beer Guided Tour. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+      "summary": "Get to know Leeds' historic beer industry on a small-group tour, limited to ten people, of some of the city's best-loved pubs. The tour begins at The…",
+      "duration": "3 hours 30 minutes",
+      "rating": "5.0",
+      "reviews": 39,
+      "description_md": "Get to know Leeds' historic beer industry on a small-group tour, limited to ten people, of some of the city's best-loved pubs. The tour begins at The Tetley arts hub, set in the iconic former Tetley brewery, and takes in the former flagship Adelphi, The Duck & Drake on Leeds' oldest street, the White Swan and the 300-year-old Whitelock's Ale House. Five half pints of locally brewed beer from highly rated breweries are included, alongside in-depth local knowledge from an experienced beer-industry guide. Along the way you'll hear about local history and walk some of the city's oldest streets. The experience lasts approximately three and a half hours and is suitable for adults aged 18 and over.",
+      "price_gbp": 30
     },
     {
       "title": "Leeds Craft Beer Guided Tour",
@@ -26,16 +32,21 @@
       "type": "beer-brewery",
       "image": "leeds-beer-brewery",
       "slug": "leeds-craft-beer-tour-163283p2",
-      "summary": "Discover Leeds's craft beer scene on this brewery and beer-tasting experience, leeds Craft Beer Guided Tour. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+      "summary": "Craft beer and brewery experience in Leeds — Leeds Craft Beer Guided Tour. Booked via our partner Viator.",
+      "description_md": "Leeds Craft Beer Guided Tour is a craft beer and brewery experience in Leeds. You will explore Leeds's craft beer scene with tastings and the stories behind the beers, in the company of a knowledgeable local host. Full details, the exact itinerary, live availability, up-to-date prices and traveller reviews are all on Viator. Booking is handled by our partner Viator; we may earn a commission at no extra cost to you."
     },
     {
       "title": "Leeds Breweries Bus Tours",
       "url": "https://www.viator.com/tours/Leeds/Leeds-Breweries-Bus-Tours/d26342-52843P2",
       "city": "Leeds",
       "type": "beer-brewery",
-      "image": "leeds-beer-brewery",
+      "image": "leeds-breweries-bus-tours-52843p2",
       "slug": "leeds-breweries-bus-tours-52843p2",
-      "summary": "Discover Leeds's craft beer scene on this brewery and beer-tasting experience, leeds Breweries Bus Tours. Booked through our partner Viator — check live dates, the full itinerary and prices on their site."
+      "summary": "Make the most of your time in Leeds by joining a Leeds Breweries Bus Tour, which takes in three local breweries in a single day. A driver handles all…",
+      "duration": "5 hours",
+      "rating": "5.0",
+      "reviews": 39,
+      "description_md": "Make the most of your time in Leeds by joining a Leeds Breweries Bus Tour, which takes in three local breweries in a single day. A driver handles all transport between the sites in an air-conditioned minivan, so there is no need to plan any logistics. At each stop you meet the brewers, hear about their techniques and enjoy included beer tastings. It is a hassle-free, time-saving way for beer fans to sample the city's craft breweries."
     },
     {
       "title": "Leeds: Small-Group Food Tour of Hidden Gems",
@@ -44,25 +55,35 @@
       "type": "food",
       "image": "leeds-food",
       "slug": "leeds-food-tours-local-leeds-207594p1",
-      "summary": "A guided food-and-drink experience in Leeds, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+      "summary": "Guided food-and-drink experience in Leeds — Small-Group Food Tour of Hidden Gems. Booked via our partner Viator.",
+      "description_md": "Leeds: Small-Group Food Tour of Hidden Gems is a guided food-and-drink experience in Leeds. You will graze your way around Leeds, sampling local flavours, independent spots and hidden gems as your guide shares the stories behind them. Full details, the exact itinerary, live availability, up-to-date prices and traveller reviews are all on Viator. Booking is handled by our partner Viator; we may earn a commission at no extra cost to you."
     },
     {
       "title": "Harrogate Walking Food Tour",
       "url": "https://www.viator.com/tours/Leeds/Harrogate-Walking-Food-Tour/d26342-62324P1",
       "city": "Leeds",
       "type": "food",
-      "image": "leeds-food",
+      "image": "harrogate-walking-food-tour-62324p1",
       "slug": "harrogate-walking-food-tour-62324p1",
-      "summary": "A guided food-and-drink experience in Leeds, taking in local flavours, independent spots and hidden gems. Booked through our partner Viator — see the full itinerary, live availability and prices on their site."
+      "summary": "Explore Harrogate on a half-day lunchtime walking food tour, strolling past the town's key sights while stopping at five different eateries and venues.…",
+      "duration": "3 hours",
+      "rating": "4.9",
+      "reviews": 275,
+      "description_md": "Explore Harrogate on a half-day lunchtime walking food tour, strolling past the town's key sights while stopping at five different eateries and venues. Along the way you sample a range of local treats and produce, much of it from independent establishments that support local suppliers. A friendly, knowledgeable guide shares stories about Harrogate's history and character between stops. Over roughly three hours the tastings add up to the equivalent of a hearty meal.",
+      "price_gbp": 101
     },
     {
       "title": "Drinks Ahoy — Canal Boat Tour (Whisky Cruise)",
       "url": "https://www.viator.com/tours/Leeds/Whisky-Cruise/d26342-103450P6",
       "city": "Leeds",
       "type": "distillery-spirits",
-      "image": "leeds-distillery-spirits",
+      "image": "whisky-cruise-103450p6",
       "slug": "whisky-cruise-103450p6",
-      "summary": "A gin, whisky and spirits experience in Leeds with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+      "summary": "Step aboard the Dalesman canal boat for a Yorkshire Dales canal cruise with a difference. Guests choose their favourite drink and let the host pour it,…",
+      "duration": "2 hours",
+      "rating": "5.0",
+      "reviews": 4,
+      "description_md": "Step aboard the Dalesman canal boat for a Yorkshire Dales canal cruise with a difference. Guests choose their favourite drink and let the host pour it, whether that be gin, a cocktail, whisky, wine, craft beer or cider. Just like a pub but afloat, this narrowboat follows a scenic route along the Leeds-Liverpool Canal while you learn a little about the canals and the boats. The two-hour experience includes five drink tokens and offers an immersive, quintessentially Yorkshire day out. It is strictly for adults and makes an ideal choice for a party or get-together."
     },
     {
       "title": "Leeds: Gin & Tonic Tasting Session",
@@ -71,7 +92,8 @@
       "type": "distillery-spirits",
       "image": "leeds-distillery-spirits",
       "slug": "gin-creation-session-243641p1",
-      "summary": "A gin, whisky and spirits experience in Leeds with distillery visits and expert-led tastings. Booked through our partner Viator — see full details, live availability and prices on their site."
+      "summary": "Gin, whisky and spirits experience in Leeds — Gin & Tonic Tasting Session. Booked via our partner Viator.",
+      "description_md": "Leeds: Gin & Tonic Tasting Session is a gin, whisky and spirits experience in Leeds. You will go behind the scenes to see how the spirits are made and enjoy expert-led tastings along the way. Full details, the exact itinerary, live availability, up-to-date prices and traveller reviews are all on Viator. Booking is handled by our partner Viator; we may earn a commission at no extra cost to you."
     }
   ]
 }
