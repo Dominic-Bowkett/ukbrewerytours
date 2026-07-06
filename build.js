@@ -224,10 +224,13 @@ const dmnImgDir = path.join(ROOT, 'assets', 'img', 'dmn');
 const dmnImgs = new Set(fs.existsSync(dmnImgDir) ? fs.readdirSync(dmnImgDir) : []);
 const viatorImgDir = path.join(ROOT, 'assets', 'img', 'viator');
 const viatorImgs = new Set(fs.existsSync(viatorImgDir) ? fs.readdirSync(viatorImgDir) : []);
+const brewExpImgDir = path.join(ROOT, 'assets', 'img', 'breweries');
+const brewExpImgs = new Set(fs.existsSync(brewExpImgDir) ? fs.readdirSync(brewExpImgDir) : []);
 const SOURCES = {
-  gyg: { name: 'GetYourGuide', imgs: gygImgs, dir: 'gyg', book: u => affUrl(u), rel: 'sponsored noopener', cta: 'Book on GetYourGuide ↗' },
-  dmn: { name: 'DesignMyNight', imgs: dmnImgs, dir: 'dmn', book: u => decorateBooking(u), rel: 'noopener', cta: 'Book on DesignMyNight ↗' },
-  viator: { name: 'Viator', imgs: viatorImgs, dir: 'viator', book: u => viatorAff(u), rel: 'sponsored noopener', cta: 'Book on Viator ↗' },
+  gyg: { name: 'GetYourGuide', flag: 'Partner', imgs: gygImgs, dir: 'gyg', book: u => affUrl(u), rel: 'sponsored noopener', cta: 'Book on GetYourGuide ↗' },
+  dmn: { name: 'DesignMyNight', flag: 'Partner', imgs: dmnImgs, dir: 'dmn', book: u => decorateBooking(u), rel: 'noopener', cta: 'Book on DesignMyNight ↗' },
+  viator: { name: 'Viator', flag: 'Partner', imgs: viatorImgs, dir: 'viator', book: u => viatorAff(u), rel: 'sponsored noopener', cta: 'Book on Viator ↗' },
+  direct: { name: 'the brewery', flag: 'Book direct', imgs: brewExpImgs, dir: 'breweries', book: u => u, rel: 'noopener nofollow', cta: 'Book at the brewery ↗' },
 };
 const dmnSlug = u => u.replace(/\/$/, '').split('/').pop().split('?')[0];
 const expImage = e => {
@@ -268,6 +271,15 @@ if (fs.existsSync(viatorDir)) {
     }
   }
 }
+// Direct-booking breweries (content/brewery-experiences.json) — link straight to the brewery, no affiliate.
+const brewExpFile = path.join(ROOT, 'content', 'brewery-experiences.json');
+const allDirect = fs.existsSync(brewExpFile)
+  ? JSON.parse(read('content/brewery-experiences.json')).map(b => ({
+      ...b, source: 'direct',
+      description_md: b.notes,
+      duration: b.tour_name,                 // shown as the card's meta line
+    }))
+  : [];
 
 // Combine, drop partner listings that duplicate our own tours, and de-dupe slugs.
 const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -275,8 +287,12 @@ const ownByCity = {};
 for (const t of activeTours) (ownByCity[t.city] = ownByCity[t.city] || []).push(norm(t.name));
 const seenSlugs = new Set();
 const seenTitleKeys = new Set();                 // city|normalised-title — drops cross-partner duplicates
+// For dropping a direct brewery when the same venue is already listed via an affiliate partner.
+const BREW_STOP = new Set('brewery breweries brewing brew co company ltd the and of at with tap taproom tour tours tasting tastings experience experiences small group private guided free pint admission tickets ale ales beer beers craft lager town house'.split(' ').concat(cityGuides.map(g => g.name.toLowerCase())));
+const distinctTokens = s => new Set((s || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(w => w.length >= 4 && !BREW_STOP.has(w)));
+const partnerTokensByCity = {};                  // city -> array of token Sets from affiliate partners
 const allExperiences = [];
-for (const e of [...allGyg, ...allDmn, ...allViator]) {
+for (const e of [...allGyg, ...allDmn, ...allViator, ...allDirect]) {
   const canon = (e.url || '').split('?')[0].replace(/\/$/, '');
   if (ownBookingUrls.has(canon)) continue;      // same booking URL as one of our tours — skip
   const en = norm(e.title);
@@ -284,6 +300,14 @@ for (const e of [...allGyg, ...allDmn, ...allViator]) {
   const tkey = e.city + '|' + en;
   if (seenTitleKeys.has(tkey)) continue;        // same experience already listed via another partner
   if (seenSlugs.has(e.slug)) continue;          // avoid duplicate on-site pages
+  if (e.source === 'direct') {
+    // skip a direct brewery if an affiliate partner already lists that venue in the same city
+    const bt = distinctTokens(e.brewery || e.title);
+    const partners = partnerTokensByCity[e.city] || [];
+    if (bt.size && partners.some(pt => [...bt].some(w => pt.has(w)))) continue;
+  } else {
+    (partnerTokensByCity[e.city] = partnerTokensByCity[e.city] || []).push(distinctTokens(e.title));
+  }
   seenTitleKeys.add(tkey);
   seenSlugs.add(e.slug);
   allExperiences.push(e);
@@ -296,8 +320,11 @@ function partnerCard(g) {
   const img = expImage(g);
   const rating = g.rating ? `★ ${g.rating}${g.reviews ? ` (${Number(g.reviews).toLocaleString('en-GB')})` : ''}` : null;
   const meta = [g.duration, rating].filter(Boolean).join(' · ');
-  return `<a class="tour-card partner" href="/tours/experiences/${g.slug}/" data-card data-city="${esc(g.city)}" data-name="${esc(g.title.toLowerCase())}" data-days="">
-    <div class="thumb"><img src="${img}" alt="${esc(g.title)}" loading="lazy"><span class="city-tag">${esc(g.city)}</span><span class="partner-flag">Partner</span></div>
+  const flag = (SOURCES[g.source] && SOURCES[g.source].flag) || 'Partner';
+  const flagClass = g.source === 'direct' ? 'partner-flag direct-flag' : 'partner-flag';
+  const searchName = [g.title, g.city, g.location].filter(Boolean).join(' ').toLowerCase();
+  return `<a class="tour-card partner" href="/tours/experiences/${g.slug}/" data-card data-city="${esc(g.city)}" data-name="${esc(searchName)}" data-days="">
+    <div class="thumb"><img src="${img}" alt="${esc(g.title)}" loading="lazy"><span class="city-tag">${esc(g.city)}</span><span class="${flagClass}">${esc(flag)}</span></div>
     <div class="body">
       <h3>${esc(g.title)}</h3>
       ${meta ? `<p class="meta">${esc(meta)}</p>` : ''}
@@ -305,7 +332,7 @@ function partnerCard(g) {
     </div>
   </a>`;
 }
-const DISCLOSURE = `<p class="disclosure">Experiences marked "Partner" are operated by third parties and booked through our partners (GetYourGuide, DesignMyNight and Viator); we may earn a commission at no extra cost to you.</p>`;
+const DISCLOSURE = `<p class="disclosure">Experiences marked "Partner" are operated by third parties and booked through our partners (GetYourGuide, DesignMyNight and Viator); we may earn a commission at no extra cost to you. Those marked "Book direct" are booked straight with the brewery on their own website — no commission to us.</p>`;
 
 /* ---------- components ---------- */
 
@@ -428,7 +455,8 @@ const pageTokens = {
   google_rating: site.google_rating,
   google_reviews: site.google_reviews,
   tour_count: String(activeTours.length),
-  partner_count: String(allExperiences.length),
+  partner_count: String(allExperiences.filter(e => e.source !== 'direct').length),
+  brewery_count: String(allExperiences.filter(e => e.source === 'direct').length),
   total_count: String(activeTours.length + allExperiences.length),
   city_count: String(citiesWithTours.length),
 };
@@ -609,6 +637,8 @@ for (const g of cityGuides) {
   const own = activeTours.filter(t => t.city === g.name);
   const banner = cityHeroImage(g.name);
   const gygTours = (expByCity[g.name] || []);
+  const directExp = gygTours.filter(e => e.source === 'direct');
+  const partnerExp = gygTours.filter(e => e.source !== 'direct');
   const ownCount = own.length, expCount = gygTours.length;
 
   // A short punchy hero tagline (first sentence of the intro, trimmed).
@@ -616,7 +646,8 @@ for (const g of cityGuides) {
   const heroTag = firstSentence.length > 150 ? firstSentence.slice(0, 147) + '…' : firstSentence;
   const countBits = [
     ownCount ? `${ownCount} of our tour${ownCount > 1 ? 's' : ''}` : null,
-    expCount ? `${expCount} partner experience${expCount > 1 ? 's' : ''}` : null,
+    partnerExp.length ? `${partnerExp.length} partner experience${partnerExp.length > 1 ? 's' : ''}` : null,
+    directExp.length ? `${directExp.length} brewer${directExp.length > 1 ? 'ies' : 'y'} to visit direct` : null,
   ].filter(Boolean).join(' · ');
 
   const content = `<section class="city-hero" style="background-image:url('${banner}')">
@@ -644,6 +675,7 @@ ${(ownCount || expCount) ? `<section class="section" id="tours">
     </div>
     <div class="card-grid">${[...own.map(tourCard), ...gygTours.map(partnerCard)].join('\n')}</div>
     ${expCount ? DISCLOSURE : ''}
+    ${directExp.length ? `<p class="mt-3" style="text-align:center"><a class="btn btn-outline" href="/breweries/">See all 126 UK breweries you can visit direct →</a></p>` : ''}
   </div>
 </section>` : ''}
 <section class="section band-cream" style="border-top:1px solid var(--line)">
@@ -682,30 +714,32 @@ ${mdToHtml(g.intro_md || '')}
 
 for (const t of allExperiences) {
   const src = SOURCES[t.source];
+  const direct = t.source === 'direct';
   const img = expImage(t);
   const guide = guideFor(t.city);
   const ratingStr = t.rating ? `★ ${t.rating}${t.reviews ? ` · ${Number(t.reviews).toLocaleString('en-GB')} reviews` : ''}` : null;
   const chips = [t.duration && `<span class="exp-chip">${ICONS.clock}${esc(t.duration)}</span>`,
     ratingStr && `<span class="exp-chip star">${esc(ratingStr)}</span>`,
-    `<span class="exp-chip">${ICONS.pin}${esc(t.city)}</span>`].filter(Boolean).join('');
+    `<span class="exp-chip">${ICONS.pin}${esc(direct ? t.location : t.city)}</span>`].filter(Boolean).join('');
   const highlights = (t.highlights || []).length
     ? `<h2>Highlights</h2><ul class="includes-list">${t.highlights.map(h => `<li>${esc(h)}</li>`).join('')}</ul>` : '';
   const meeting = t.meeting_point
-    ? `<h2>Meeting point</h2><p>${esc(t.meeting_point)}</p>` : '';
-  const desc = mdToHtml(t.description_md || t.summary || '');
+    ? `<h2>Meeting point</h2><p>${esc(t.meeting_point)}</p>`
+    : (direct && t.location ? `<h2>Where</h2><p>${esc(t.location)}</p>` : '');
+  const desc = (direct && t.tour_name ? `<p><strong>${esc(t.tour_name)}</strong></p>` : '') + mdToHtml(t.description_md || t.summary || '');
   const related = (expByCity[t.city] || []).filter(x => x.slug !== t.slug).slice(0, 3);
   const bookUrl = src.book(t.url);
   const priceLine = t.price_gbp
-    ? `<span class="price">£${t.price_gbp}</span><span class="pp">per person from</span>`
-    : `<span class="pp" style="font-weight:600;font-size:1.05rem">See live prices</span>`;
+    ? `<span class="price">£${t.price_gbp}</span><span class="pp">per person${direct ? '' : ' from'}</span>`
+    : `<span class="pp" style="font-weight:600;font-size:1.05rem">${direct ? 'See prices on the brewery’s site' : 'See live prices'}</span>`;
 
   const content = `<section class="exp-hero" style="background-image:url('${img}')">
   <div class="exp-hero-scrim"></div>
   <div class="container">
     <nav class="breadcrumbs city-crumbs" aria-label="Breadcrumb">
-      <a href="/">Home</a><span class="sep">/</span><a href="/tours/">Tours</a><span class="sep">/</span><a href="/tours/${guide ? guide.slug : ''}/">${esc(t.city)}</a><span class="sep">/</span>Experience
+      <a href="/">Home</a><span class="sep">/</span><a href="/tours/">Tours</a><span class="sep">/</span>${guide ? `<a href="/tours/${guide.slug}/">${esc(t.city)}</a><span class="sep">/</span>` : ''}${direct ? 'Brewery' : 'Experience'}
     </nav>
-    <span class="partner-flag-lg">Partner experience · ${src.name}</span>
+    <span class="partner-flag-lg${direct ? ' direct' : ''}">${direct ? `Book direct · ${esc(t.brewery || 'the brewery')}` : `Partner experience · ${src.name}`}</span>
     <h1>${esc(t.title)}</h1>
     <div class="exp-chips">${chips}</div>
   </div>
@@ -725,7 +759,7 @@ for (const t of allExperiences) {
       <a class="btn btn-outline" href="/gift-vouchers/" data-giftup-open>🎁 Buy a gift voucher</a>
       <p class="note">${ratingStr ? esc(ratingStr) + ' · ' : ''}${guide ? `<a href="/tours/${guide.slug}/">More ${esc(t.city)} tours</a>` : `<a href="/tours/">All tours</a>`}</p>
       ${TOUR_DISCLAIMER}
-      <p class="disclosure" style="margin-top:12px">Booked via ${src.name}, our partner. We may earn a commission at no extra cost to you. Group enquiries are handled directly by us.</p>
+      <p class="disclosure" style="margin-top:12px">${direct ? 'Run and booked directly with the brewery on their own website — we don’t take a booking or earn commission on it. Group enquiries are handled directly by us.' : `Booked via ${src.name}, our partner. We may earn a commission at no extra cost to you. Group enquiries are handled directly by us.`}</p>
     </aside>
   </div>
 </section>
