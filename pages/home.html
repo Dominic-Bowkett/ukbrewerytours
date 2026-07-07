@@ -5,13 +5,20 @@
     <div class="hero-inner" style="max-width:780px">
       <span class="kicker">Award-winning tours since 2014</span>
       <h1>Discover the best craft beer in the UK</h1>
-      <p class="lede">Brewery tours and tutored beer tastings in cities across the UK — led by beer sommeliers, brewers and certified experts. Small groups, working breweries, proper beer.</p>
+      <p class="lede">Brewery tours and tutored beer tastings in cities across the UK — led by beer sommeliers, brewers and certified experts. Now with hand-picked English wine tastings and whisky distillery experiences too.</p>
       <form class="hero-search filter-bar" action="/tours/" method="get">
         <div class="filter-field">
           <label for="h-city">City</label>
           <select id="h-city" name="city">
             <option value="">All cities</option>
             {{city_options}}
+          </select>
+        </div>
+        <div class="filter-field">
+          <label for="h-type">Type</label>
+          <select id="h-type" name="type">
+            <option value="">All types</option>
+            {{type_options}}
           </select>
         </div>
         <div class="filter-field grow">

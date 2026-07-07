@@ -26,7 +26,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/style.css?v=baafeb4b">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"UK Brewery Tours","url":"https://www.ukbrewerytours.com","email":"info@ukbrewerytours.com","foundingDate":"2014","description":"Award-winning brewery tours and beer tasting events across the UK."}</script>
 </head>
 <body>
@@ -66,7 +66,7 @@
     <div class="hero-inner" style="max-width:780px">
       <span class="kicker">Award-winning tours since 2014</span>
       <h1>Discover the best craft beer in the UK</h1>
-      <p class="lede">Brewery tours and tutored beer tastings in cities across the UK — led by beer sommeliers, brewers and certified experts. Small groups, working breweries, proper beer.</p>
+      <p class="lede">Brewery tours and tutored beer tastings in cities across the UK — led by beer sommeliers, brewers and certified experts. Now with hand-picked English wine tastings and whisky distillery experiences too.</p>
       <form class="hero-search filter-bar" action="/tours/" method="get">
         <div class="filter-field">
           <label for="h-city">City</label>
@@ -75,13 +75,20 @@
             <option value="London">London</option><option value="Bristol">Bristol</option><option value="Manchester">Manchester</option><option value="Liverpool">Liverpool</option><option value="Leeds">Leeds</option><option value="Lewes">Lewes</option><option value="Kent">Kent</option><option value="Brighton">Brighton</option><option value="Birmingham">Birmingham</option><option value="Glasgow">Glasgow</option><option value="Cardiff">Cardiff</option><option value="Blandford Forum">Blandford Forum</option><option value="Sheffield">Sheffield</option><option value="Burnley">Burnley</option><option value="Edinburgh">Edinburgh</option><option value="Newcastle">Newcastle</option><option value="Nottingham">Nottingham</option><option value="York">York</option>
           </select>
         </div>
+        <div class="filter-field">
+          <label for="h-type">Type</label>
+          <select id="h-type" name="type">
+            <option value="">All types</option>
+            <option value="beer">Beer</option><option value="wine">Wine</option><option value="spirits">Whisky & spirits</option><option value="food">Food & drink</option><option value="other">Other</option>
+          </select>
+        </div>
         <div class="filter-field grow">
           <label for="h-q">Search</label>
           <input id="h-q" type="search" name="q" placeholder="Search tours or a city…">
         </div>
         <button class="btn btn-primary" type="submit">Find tours</button>
       </form>
-      <p class="hero-search-links">or <a href="/tours/">browse all 270 tours &amp; experiences</a> · <a href="/gift-vouchers/">buy a gift voucher</a></p>
+      <p class="hero-search-links">or <a href="/tours/">browse all 269 tours &amp; experiences</a> · <a href="/gift-vouchers/">buy a gift voucher</a></p>
       <div class="trust-row">
         <span class="chip"><span class="star">★★★★★</span> 5.0 on Google · 81 reviews</span>
         <span class="chip">Est. 2014</span>
@@ -165,7 +172,7 @@
     </div>
   </a>
     </div>
-    <p class="center mt-4"><a class="btn btn-dark" href="/tours/">See all 270 tours &amp; experiences →</a></p>
+    <p class="center mt-4"><a class="btn btn-dark" href="/tours/">See all 269 tours &amp; experiences →</a></p>
   </div>
 </section>
 
@@ -344,6 +351,6 @@
     })(window, document, "script", "https://cdn.giftup.app/dist/gift-up.js", "giftup");
   </script>
 
-  <script src="/assets/js/main.js" defer></script>
+  <script src="/assets/js/main.js?v=baafeb4b" defer></script>
 </body>
 </html>

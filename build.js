@@ -6,10 +6,14 @@
  */
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const ROOT = __dirname;
 const OUT = path.join(ROOT, 'docs');
 const read = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
+
+// Content hash of CSS + JS — appended as ?v= to bust browser/CDN caches on every change.
+const assetVer = crypto.createHash('md5').update(read('assets/css/style.css') + read('assets/js/main.js')).digest('hex').slice(0, 8);
 
 const site = JSON.parse(read('content/site.json'));
 const tours = JSON.parse(read('content/tours.json'));
@@ -413,7 +417,7 @@ function writePage(outPath, { title, description, content, nav, ogImage, jsonld,
   if (og.startsWith('/')) og = site.base_url + og;
   const blocks = Array.isArray(jsonld) ? jsonld : (jsonld ? [jsonld] : []);
   const html = fill(layout, {
-    title, description: esc(description), canonical, og_image: og,
+    title, description: esc(description), canonical, og_image: og, asset_ver: assetVer,
     content, whatsapp_url: WHATSAPP, year: YEAR,
     robots: robots ? `<meta name="robots" content="${robots}">` : '',
     structured_data: blocks.map(b => `<script type="application/ld+json">${JSON.stringify(b)}</script>`).join('\n  '),
@@ -870,7 +874,7 @@ const notFound = fill(layout, {
   title: 'Page not found | UK Brewery Tours',
   description: 'Sorry, that page has moved or no longer exists.',
   canonical: site.base_url + '/404.html', og_image: site.base_url + '/assets/img/hms-hops.jpg',
-  whatsapp_url: WHATSAPP, year: YEAR, structured_data: '',
+  whatsapp_url: WHATSAPP, year: YEAR, structured_data: '', asset_ver: assetVer,
   nav_tours: '', nav_vouchers: '', nav_groups: '', nav_blog: '', nav_about: '',
   content: `<section class="section center"><div class="container">
     <div class="kicker">404</div>

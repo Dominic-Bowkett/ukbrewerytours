@@ -2,20 +2,6 @@
   "name": "London",
   "viator_experiences": [
     {
-      "title": "Brewery tour and tasting",
-      "url": "https://www.viator.com/tours/London/Brewery-tour-and-tasting/d737-116890P1",
-      "city": "London",
-      "type": "beer-brewery",
-      "image": "brewery-tour-and-tasting-116890p1",
-      "slug": "brewery-tour-and-tasting-116890p1",
-      "summary": "Discover some of the exciting new tastes of London beer without venturing out to the outskirts of the city. Spend a couple of hours at the award-winning…",
-      "duration": "2 hours",
-      "rating": "4.9",
-      "reviews": 8,
-      "description_md": "Discover some of the exciting new tastes of London beer without venturing out to the outskirts of the city. Spend a couple of hours at the award-winning Fourpure Brewing Company headquarters in Bermondsey on this exclusive behind-the-scenes tour. Sample the brewery's lagers, stouts, ales and more with an expert brewer to guide you through the experience. Afterwards, discover how these brews are made with a guided tour of the brewhouse. The quiet small-group session is close to London Bridge and easily reached by public transport, with afternoon and evening slots available.",
-      "price_gbp": 30
-    },
-    {
       "title": "London Nano Brewery Craft Beer Tasting Experience",
       "url": "https://www.viator.com/tours/London/10-Craft-Beer-Tasting-Experience/d737-5553568P1",
       "city": "London",
