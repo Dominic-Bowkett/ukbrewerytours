@@ -918,6 +918,8 @@ details .a { padding: 0 0 20px; color: var(--ink-soft); font-size: .97rem; }
   background: var(--cream);
   box-shadow: var(--shadow);
 }
+/* a real photo used in a band crops to a tidy banner shape */
+.illus-band.photo img { aspect-ratio: 16 / 9; object-fit: cover; }
 
 /* illustration header inside a "how it works" step card */
 .step { overflow: hidden; }
