@@ -323,7 +323,7 @@ function partnerCard(g) {
   const flag = (SOURCES[g.source] && SOURCES[g.source].flag) || 'Partner';
   const flagClass = g.source === 'direct' ? 'partner-flag direct-flag' : 'partner-flag';
   const searchName = [g.title, g.city, g.location].filter(Boolean).join(' ').toLowerCase();
-  return `<a class="tour-card partner" href="/tours/experiences/${g.slug}/" data-card data-city="${esc(g.city)}" data-name="${esc(searchName)}" data-days="">
+  return `<a class="tour-card partner" href="/tours/experiences/${g.slug}/" data-card data-city="${esc(g.city)}" data-name="${esc(searchName)}" data-days="" data-type="${esc(g.type || 'beer')}">
     <div class="thumb"><img src="${img}" alt="${esc(g.title)}" loading="lazy"><span class="city-tag">${esc(g.city)}</span><span class="${flagClass}">${esc(flag)}</span></div>
     <div class="body">
       <h3>${esc(g.title)}</h3>
@@ -341,7 +341,7 @@ function tourCard(t) {
   const price = t.price ? `£${t.price} <small>pp</small>` : `<small>price on enquiry</small>`;
   const meta = [t.duration, t.schedule && t.schedule.split('(')[0].trim()].filter(Boolean).join(' · ');
   const days = parseDays(t.schedule).join(',');
-  return `<a class="tour-card" href="/tours/${t.old_slug}/" data-card data-city="${esc(t.city)}" data-name="${esc(t.name.toLowerCase())}" data-days="${days}">
+  return `<a class="tour-card" href="/tours/${t.old_slug}/" data-card data-city="${esc(t.city)}" data-name="${esc(t.name.toLowerCase())}" data-days="${days}" data-type="${esc(t.type || 'beer')}">
     <div class="thumb"><img src="${img}" alt="${esc(t.name)}" loading="lazy"><span class="city-tag">${esc(t.city)}</span></div>
     <div class="body">
       <h3>${esc(t.name)}</h3>
@@ -442,10 +442,20 @@ const allToursGrid = mergedTours.map(m => m.html).join('\n');
 
 const blogCards = posts.map(postCard).join('\n');
 
+// Experience type (beer / wine / whiskey…) — powers the tours-page "type" filter.
+const TYPE_LABELS = { beer: 'Beer', wine: 'Wine', whiskey: 'Whisky', gin: 'Gin' };
+const typeLabel = t => TYPE_LABELS[t] || (t.charAt(0).toUpperCase() + t.slice(1));
+const typesPresent = [...new Set([
+  ...activeTours.map(t => t.type || 'beer'),
+  ...allExperiences.map(e => e.type || 'beer'),
+])].sort((a, b) => (a === 'beer' ? 0 : 1) - (b === 'beer' ? 0 : 1) || a.localeCompare(b));
+const typeOptions = typesPresent.map(t => `<option value="${t}">${typeLabel(t)}</option>`).join('');
+
 const pageTokens = {
   featured_cards: featuredCards,
   explore_tiles: exploreTiles,
   city_options: cityOptions,
+  type_options: typeOptions,
   all_tours_grid: allToursGrid,
   disclosure: DISCLOSURE,
   blog_cards: blogCards,
@@ -641,6 +651,19 @@ for (const g of cityGuides) {
   const partnerExp = gygTours.filter(e => e.source !== 'direct');
   const ownCount = own.length, expCount = gygTours.length;
 
+  // Adapt the copy to the drink types on offer in this city (beer / wine / both).
+  const cityTypes = new Set([...own.map(t => t.type || 'beer'), ...gygTours.map(e => e.type || 'beer')]);
+  const hasBeer = cityTypes.has('beer'), hasWine = cityTypes.has('wine');
+  const h1Drinks = hasBeer && hasWine ? 'beer &amp; wine tours &amp; tastings'
+    : hasWine ? 'wine tours &amp; tastings'
+    : 'brewery tours &amp; beer experiences';
+  const titleDrinks = hasBeer && hasWine ? 'Beer & Wine Tours & Tastings'
+    : hasWine ? 'Wine Tours & Tastings'
+    : 'Brewery Tours & Beer Tasting';
+  const expNoun = hasBeer && hasWine ? 'beer and wine tours, tastings and food &amp; drink experiences'
+    : hasWine ? 'wine tours, tastings and vineyard experiences'
+    : 'brewery tours, tastings and food &amp; drink experiences';
+
   // A short punchy hero tagline (first sentence of the intro, trimmed).
   const firstSentence = (g.intro_md || '').split(/(?<=[.!?])\s/)[0].replace(/\s+/g, ' ').trim();
   const heroTag = firstSentence.length > 150 ? firstSentence.slice(0, 147) + '…' : firstSentence;
@@ -657,7 +680,7 @@ for (const g of cityGuides) {
       <a href="/">Home</a><span class="sep">/</span><a href="/tours/">Tours</a><span class="sep">/</span>${g.name}
     </nav>
     <span class="kicker">${g.name} · city guide</span>
-    <h1>${g.name} brewery tours &amp; beer experiences</h1>
+    <h1>${g.name} ${h1Drinks}</h1>
     ${heroTag ? `<p class="lede">${esc(heroTag)}</p>` : ''}
     ${countBits ? `<div class="city-hero-stats">${countBits}</div>` : ''}
     <div class="hero-ctas">
@@ -670,8 +693,8 @@ ${(ownCount || expCount) ? `<section class="section" id="tours">
   <div class="container">
     <div class="section-head">
       <span class="kicker">Tours &amp; experiences</span>
-      <h2>Brewery tours &amp; experiences in ${g.name}</h2>
-      <p>${ownCount ? 'Our own guided tours plus hand-picked' : 'Hand-picked'} brewery tours, tastings and food &amp; drink experiences${ownCount ? '' : ', bookable through our partner GetYourGuide'} — all in one place.</p>
+      <h2>Tours &amp; experiences in ${g.name}</h2>
+      <p>${ownCount ? 'Our own guided tours plus hand-picked' : 'Hand-picked'} ${expNoun}${ownCount ? '' : ', bookable through our partner GetYourGuide'} — all in one place.</p>
     </div>
     <div class="card-grid">${[...own.map(tourCard), ...gygTours.map(partnerCard)].join('\n')}</div>
     ${expCount ? DISCLOSURE : ''}
@@ -704,7 +727,7 @@ ${mdToHtml(g.intro_md || '')}
   };
 
   writePage(`tours/${g.slug}/index.html`, {
-    title: `${g.name} Brewery Tours & Beer Tasting | Book Online | UK Brewery Tours`,
+    title: `${g.name} ${titleDrinks} | Book Online | UK Brewery Tours`,
     description: g.meta_description || `Brewery tours, beer tastings and food & drink experiences in ${g.name}. Compare and book top-rated tours online.`,
     content, nav: 'tours', ogImage: banner, jsonld: crumbLd,
   });

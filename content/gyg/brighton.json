@@ -1,0 +1,74 @@
+{
+  "slug": "brighton",
+  "name": "Brighton",
+  "meta_description": "Brighton & Sussex wine tours and tastings — visit award-winning South Downs vineyards famous for English sparkling wine, from vintage-bus day trips to vineyard walks.",
+  "intro_md": "Brighton is the gateway to England's most celebrated wine country. Just inland, the chalky slopes of the South Downs share the same geology as the Champagne region, and Sussex has become the heart of English sparkling wine — its estates regularly beating Champagne houses in blind tastings.\n\nFrom the seafront you're within easy reach of award-winning vineyards like Ridgeview, Rathfinny, Albourne and Bolney. Many run guided tours and tastings, and a string of operators will pick you up in Brighton — by vintage Routemaster bus, minibus or even e-bike — for a day among the vines with a proper vineyard lunch.\n\n**Don't miss**\n\n- A traditional-method sparkling wine tasting on the South Downs\n- A vintage-bus day trip to two Sussex vineyards with lunch\n- The views from Devil's Dyke between tastings",
+  "gyg_tours": [
+    {
+      "title": "From Brighton: Sussex Wine Tour on a Vintage Bus with Lunch",
+      "url": "https://www.getyourguide.com/brighton-l440/wine-tour-of-sussex-on-iconic-vintage-london-bus-t446353/",
+      "type": "wine",
+      "price_gbp": "145",
+      "duration": "6.5 hours",
+      "rating": "4.7",
+      "reviews": "19",
+      "summary": "A day trip from Brighton aboard a 1960s Routemaster bus to two award-winning Sussex vineyards, with tutored tastings and a homemade vineyard lunch.",
+      "slug": "wine-tour-of-sussex-on-iconic-vintage-london-bus",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/f1c0f422173fba3b248ad60ddd5d038eed43e938284529ec242d71cfad2a47f1.png",
+      "description_md": "Explore English wine country in style on a guided day trip from Brighton aboard a vintage 1960s London Routemaster bus, complete with conductor and ticket machine. You'll visit two award-winning Sussex vineyards for tutored tastings and learn what makes the South Downs so good for English wine, with a homemade lunch of seasonal Sussex produce — and an included glass of wine — served among the vines. There's time to browse the cellar-door shops before heading back.",
+      "highlights": [
+        "Ride an iconic 1960s Routemaster bus",
+        "Visit two award-winning Sussex vineyards",
+        "Tutored tastings of English wine",
+        "Homemade, locally sourced vineyard lunch",
+        "Buy wines at the cellar-door shops",
+        "Scenery of the South Downs"
+      ],
+      "meeting_point": "Leonardo Hotel Brighton (formerly Jury's Inn), behind Brighton railway station"
+    },
+    {
+      "title": "From Brighton: Sussex Vineyard Tour by Minibus with Pickup",
+      "url": "https://www.getyourguide.com/brighton-l440/sussex-vineyard-tour-by-minibus-pick-up-and-drop-off-t648702/",
+      "type": "wine",
+      "price_gbp": "155",
+      "duration": "5 hours",
+      "rating": "5.0",
+      "reviews": "",
+      "summary": "A small-group minibus tour from Brighton to the family-owned Albourne Estate for a tasting of five English wines, with South Downs views and door-to-door pickup.",
+      "slug": "sussex-vineyard-tour-by-minibus-pick-up-and-drop-off",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/e1364b5d4a34f815ade319acf7251c199cafa2caabc5b065b28998d8ff769f7e.jpg",
+      "description_md": "A relaxed small-group day out from Brighton to the boutique, family-owned Albourne Estate in the South Downs National Park. After door-to-door hotel pickup you'll enjoy a guided tasting of five of Albourne's sparkling and still English wines, with the option of a self-guided vineyard trail, plus a stop at the Devil's Dyke viewpoint and a traditional country pub along the way. Air-conditioned minibus throughout.",
+      "highlights": [
+        "Guided tasting of five Albourne Estate wines",
+        "Boutique, family-owned vineyard",
+        "Views across the South Downs National Park",
+        "Optional self-guided vineyard trail",
+        "Air-conditioned minibus with door-to-door pickup",
+        "Stop at the Devil's Dyke viewpoint"
+      ],
+      "meeting_point": "Hotel pickup in the Brighton & Hove (BN3) area"
+    },
+    {
+      "title": "Bodiam: Oastbrook Estate Vineyard Tour and Wine Tasting",
+      "url": "https://www.getyourguide.com/robertsbridge-l244123/bodiam-vineyard-tour-and-wine-tasting-experience-t960221/",
+      "type": "wine",
+      "price_gbp": "45",
+      "duration": "2.5 hours",
+      "rating": "5.0",
+      "reviews": "1",
+      "summary": "A guided tour of Oastbrook Estate vineyard near Bodiam in East Sussex, tasting four award-winning wines with a cheese board and views from the balcony.",
+      "slug": "bodiam-vineyard-tour-and-wine-tasting-experience",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/6a51fc23676765c78beb636176e3e8551625f70b10f886245f253c94ee5d56fe.jpg",
+      "description_md": "Oastbrook is a small, characterful estate in the Rother Valley near Bodiam Castle. On this guided experience you'll walk the vineyard to learn how grapes are grown in the English countryside and how Oastbrook's award-winning wines are made, then settle in for a tasting of four wines paired with a cheese board — finishing on the balcony with a glass and a view across the vines.",
+      "highlights": [
+        "Guided tour of a characterful East Sussex vineyard",
+        "Taste four award-winning wines",
+        "Learn the story and methods of Oastbrook",
+        "Cheese board included with the tasting",
+        "Relax on the balcony with vineyard views",
+        "Near historic Bodiam Castle"
+      ],
+      "meeting_point": "First car park, Oastbrook Estate, Bodiam, East Sussex TN32 5XA"
+    }
+  ]
+}

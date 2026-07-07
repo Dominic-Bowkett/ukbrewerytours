@@ -25,6 +25,7 @@ if (toggle && nav) {
 const filterForm = document.querySelector('[data-filter]');
 if (filterForm) {
   const citySel = filterForm.querySelector('[data-filter-city]');
+  const typeSel = filterForm.querySelector('[data-filter-type]');
   const qInput = filterForm.querySelector('[data-filter-q]');
   const grid = document.querySelector('[data-tours-grid]');
   const countEl = document.querySelector('[data-filter-count]');
@@ -33,17 +34,19 @@ if (filterForm) {
 
   const apply = () => {
     const city = citySel.value;
+    const type = typeSel ? typeSel.value : '';
     const q = qInput.value.trim().toLowerCase();
     let visible = 0;
     for (const c of cards) {
       const okCity = !city || c.dataset.city === city;
+      const okType = !type || (c.dataset.type || 'beer') === type;
       const okQ = !q || (c.dataset.name || '').includes(q) || (c.dataset.city || '').toLowerCase().includes(q);
-      const show = okCity && okQ;
+      const show = okCity && okType && okQ;
       c.hidden = !show;
       if (show) visible++;
     }
     if (countEl) {
-      countEl.textContent = (city || q)
+      countEl.textContent = (city || type || q)
         ? `Showing ${visible} tour${visible === 1 ? '' : 's'} & experience${visible === 1 ? '' : 's'}`
         : `${cards.length} tours & experiences`;
     }
@@ -51,14 +54,17 @@ if (filterForm) {
   };
 
   citySel.addEventListener('change', apply);
+  if (typeSel) typeSel.addEventListener('change', apply);
   qInput.addEventListener('input', apply);
   document.querySelectorAll('[data-filter-reset]').forEach(btn =>
-    btn.addEventListener('click', () => { citySel.value = ''; qInput.value = ''; apply(); }));
+    btn.addEventListener('click', () => { citySel.value = ''; if (typeSel) typeSel.value = ''; qInput.value = ''; apply(); }));
 
-  // Deep-link support: /tours/?city=Manchester&q=beer (e.g. from the home search)
+  // Deep-link support: /tours/?city=Manchester&type=wine&q=beer (e.g. from the home search)
   const params = new URLSearchParams(location.search);
   const preCity = params.get('city');
   if (preCity && [...citySel.options].some(o => o.value === preCity)) citySel.value = preCity;
+  const preType = params.get('type');
+  if (preType && typeSel && [...typeSel.options].some(o => o.value === preType)) typeSel.value = preType;
   const preQ = params.get('q');
   if (preQ) qInput.value = preQ;
   apply();

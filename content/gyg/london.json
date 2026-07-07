@@ -104,6 +104,50 @@
         "Explore hidden streets and courtyards",
         "Small-group, roughly 2-hour walking tour"
       ]
+    },
+    {
+      "title": "London: Full-Day English Wine Tour with Lunch",
+      "url": "https://www.getyourguide.com/london-l57/london-full-day-english-wine-tour-with-lunch-t222855/",
+      "type": "wine",
+      "price_gbp": "150",
+      "duration": "8 hours",
+      "rating": "4.9",
+      "reviews": "15",
+      "summary": "A full day from London Bridge visiting three award-winning English vineyards by coach, with guided tastings at each and a country lunch with a glass of English wine.",
+      "slug": "london-full-day-english-wine-tour-with-lunch",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/5c8ae32f3718f.jpeg",
+      "description_md": "Leave the city behind for a full day in English wine country. Travelling by comfortable coach from London Bridge, you'll visit three award-winning vineyards in the countryside south of the capital, with an expert guide sharing the story of England's fast-rising wine scene along the way. Each stop includes a guided tasting, and a traditional English lunch — with a glass of English wine — is served at a country pub. Water, snacks and a reusable goodie bag are included.",
+      "highlights": [
+        "Visit and taste at three award-winning English vineyards",
+        "Expert guide on English wine history and production",
+        "Comfortable coach from London Bridge",
+        "Scenic countryside and quintessential English villages",
+        "Traditional lunch with a glass of English wine",
+        "Water, snacks and a reusable goodie bag included"
+      ],
+      "meeting_point": "In front of the entrance to Southwark Crown Court, near London Bridge station"
+    },
+    {
+      "title": "London: Wine Tasting Bus Tour with a Sommelier",
+      "url": "https://www.getyourguide.com/london-l57/wine-tasting-london-bus-tour-t1283328/",
+      "type": "wine",
+      "price_gbp": "42",
+      "duration": "1.5 hours",
+      "rating": "4.4",
+      "reviews": "",
+      "summary": "A 90-minute panoramic bus tour of London led by a sommelier, tasting four European wines paired with cheeses as you pass Big Ben and Tower Bridge.",
+      "slug": "wine-tasting-london-bus-tour",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/11982e92a1c6b1a395b1408ca0ba8d6dbbfd1d169aa38b8cd633997c1e6039fc.jpeg",
+      "description_md": "See London's landmarks and taste your way around Europe at the same time. Aboard a double-decker bus, a professional sommelier guides you through four carefully chosen wines, each paired with a complementary cheese, over a 90-minute panoramic loop past Big Ben, Tower Bridge and more. You'll vote on your favourite and take home a branded tasting card as a souvenir.",
+      "highlights": [
+        "90-minute panoramic tour of central London",
+        "Four European wines paired with cheeses",
+        "Guided by a professional sommelier",
+        "Views of Big Ben, Tower Bridge and more",
+        "Vote on your favourite wine",
+        "Take home a branded tasting card"
+      ],
+      "meeting_point": "Golden Tours Bus Stop 1, Bulleid Way, London SW1W 9SR"
     }
   ]
 }

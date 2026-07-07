@@ -3,5 +3,72 @@
   "name": "Kent",
   "meta_description": "Kent's beer heritage: hop gardens, oast houses, Shepherd Neame in Faversham and Whitstable oysters — drinking well in the Garden of England.",
   "intro_md": "Kent grew the hops that built British beer. For centuries the county's hop gardens supplied the nation's brewers, and the white-cowled oast houses where the harvest was dried still punctuate the Weald — many now homes, a few still working. East Kent Goldings, the celebrated local hop, remains prized by brewers around the world.\n\nFaversham is the county's beer capital, home to Shepherd Neame, Britain's oldest brewer, which traces its history to 1698 and runs regular tours of its creekside brewery. In Canterbury, the Foundry Brew Pub brews in the city centre, and the Parrot — one of the city's oldest inns — pours local ales beneath ancient beams.\n\nOn the coast, a plate of Whitstable oysters with a dark beer is one of England's great pairings.\n\n**Don't miss**\n\n- A tour of Shepherd Neame in Faversham\n- Oysters and a pint in Whitstable\n- Oast houses along the lanes of the Kentish Weald",
-  "gyg_tours": []
+  "gyg_tours": [
+    {
+      "title": "Kent: Balfour Vineyard Walk and Wine Tasting",
+      "url": "https://www.getyourguide.com/staplehurst-l155999/kent-balfour-vineyard-walk-and-wine-tasting-t684738/",
+      "type": "wine",
+      "price_gbp": "25",
+      "duration": "1 hour",
+      "rating": "5.0",
+      "reviews": "1",
+      "summary": "A guided walk through Balfour's Nanette's Vineyard in the Kentish Weald, followed by a tutored tasting of three award-winning English wines overlooking the vines.",
+      "slug": "kent-balfour-vineyard-walk-and-wine-tasting",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/8708e4018671fa4bdc0cdfc25c34707c2e905bbfadfd30ba5aa1a48825cbbc64.jpg",
+      "description_md": "Join a relaxed guided walk through Nanette's Vineyard at Balfour Winery, one of Kent's most celebrated English wine estates. Your host explains how the vines are grown and how award-winning still and sparkling wines are made, before a tutored tasting of three wines in an elegant tasting room looking out over the vineyard. Afterwards you're welcome to linger on the estate and explore its ancient woodland.",
+      "highlights": [
+        "Guided walk through a picturesque Kent vineyard",
+        "Learn how English still and sparkling wine is made",
+        "Tutored tasting of three award-winning wines",
+        "Elegant tasting room overlooking the vines",
+        "Explore ancient woodland on the estate",
+        "Knowledgeable, welcoming hosts"
+      ],
+      "meeting_point": "Welcome desk inside the main door, Balfour Winery, Staplehurst, Kent"
+    },
+    {
+      "title": "Kent: Tour and Wine Tasting at Westwell Wine Estate",
+      "url": "https://www.getyourguide.com/charing-l155889/kent-tour-and-wine-tasting-at-westwell-wine-estate-t696744/",
+      "type": "wine",
+      "price_gbp": "30",
+      "duration": "2 hours",
+      "rating": "5.0",
+      "reviews": "",
+      "summary": "A guided vineyard and winery tour at Westwell near Charing, tasting low-intervention English wines straight from the tank with sweeping views over the Kent Downs.",
+      "slug": "kent-tour-and-wine-tasting-at-westwell-wine-estate",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/d668191379fee966b72f1f83e1e57ac9bc8256c898062985c6ea828deac6d548.jpg",
+      "description_md": "Westwell is a family-run, low-intervention wine estate on the North Downs near Charing. This two-hour experience takes you through the vineyard to learn about their sustainable approach to viticulture, then into the winery to taste wines drawn straight from the tank — following this vintage's progress through production. There's a chance to buy exclusive cellar-door bottles you won't find elsewhere.",
+      "highlights": [
+        "Guided walk through the vineyard",
+        "Sweeping views over the Kent Downs",
+        "Taste low-intervention wines straight from the tank",
+        "Learn about sustainable English winemaking",
+        "Visit the working winery",
+        "Buy exclusive cellar-door wines"
+      ],
+      "meeting_point": "Westwell Wine Estate, Charing, Kent — follow the path up from the car park to the main entrance"
+    },
+    {
+      "title": "Kent: Squerryes Wine Tour and Tasting",
+      "url": "https://www.getyourguide.com/westerham-l155877/kent-squerryes-wine-tour-and-tasting-t696711/",
+      "type": "wine",
+      "price_gbp": "40",
+      "duration": "1.5 hours",
+      "rating": "5.0",
+      "reviews": "",
+      "summary": "A tour through the vines of the historic Squerryes estate on the chalky North Downs at Westerham, finishing with a tutored tasting of three vintage English sparkling wines.",
+      "slug": "kent-squerryes-wine-tour-and-tasting",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/d8486a7f5f19fe8741811ba83defd15c08e1da4ef0bb6bc1add9e73baf10bd9d.jpg",
+      "description_md": "Squerryes is a 300-year-old family estate at Westerham, where the chalk soils of the North Downs — the same geology as the Champagne region — produce award-winning English sparkling wine. This guided experience walks you through the vines and the four-generation history of the Warde family, explaining terroir and method, before a tutored tasting of three vintage sparkling wines in the tasting room. Roughly 45 minutes outdoors and 45 minutes indoors; seasonal, May to October.",
+      "highlights": [
+        "Walk the vines on the chalk North Downs",
+        "300-year-old family wine estate",
+        "Learn about terroir and traditional-method sparkling wine",
+        "Tutored tasting of three vintage sparkling wines",
+        "Around 45 minutes outdoors and 45 indoors",
+        "Seasonal experience, May to October"
+      ],
+      "meeting_point": "The terrace at Squerryes Wine Estate, Westerham, Kent"
+    }
+  ]
 }
