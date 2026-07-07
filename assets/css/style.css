@@ -10,6 +10,7 @@
   --stout-3: #3a2b1e;
   --cream: #f7f1e5;
   --paper: #fffdf7;
+  --mist: #eceae3;
   --ink: #241a12;
   --ink-soft: #6b5a49;
   --line: #e6dac4;
@@ -529,6 +530,9 @@ p > .btn { margin-bottom: 10px; }
 
 /* ---------- band variants ---------- */
 .band-cream { background: var(--cream); }
+.band-mist { background: var(--mist); }
+/* seams between a mist band and adjacent cream keep a hairline for definition */
+.band-mist + .band-cream, .band-cream + .band-mist { border-top: 1px solid var(--line); }
 
 /* ---------- city hero banner (city guide + experience pages) ---------- */
 .city-hero, .exp-hero {
