@@ -32,6 +32,7 @@
     "Burnley"
   ],
   "redirects": {
+    "/tours/experiences/wye-valley-brewery-x/": "/tours/experiences/wye-valley-brewery/",
     "/contact-us/": "/contact/",
     "/london-brewery-tours/": "/tours/london/",
     "/london-brewery-tour/": "/tours/london/",

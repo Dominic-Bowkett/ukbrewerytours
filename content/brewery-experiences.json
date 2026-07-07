@@ -854,20 +854,6 @@
     "image": "brew-5"
   },
   {
-    "slug": "wye-valley-brewery-x",
-    "brewery": "Wye Valley Brewery",
-    "title": "Wye Valley Brewery",
-    "tour_name": "Brewery Tour",
-    "url": "https://www.wyevalleybrewery.co.uk/shop/brewery-tours/brewerytour-brewery-tour.html",
-    "city": "Wales",
-    "on_guide": false,
-    "region": "Wales",
-    "location": "Stoke Lacy, Herefordshire (England, on the Welsh border)",
-    "price_gbp": "35",
-    "notes": "Fully online-bookable dated tickets (£35pp) for selected Saturdays 2-4pm; guided tour of the 9-acre site, free beer and light snacks in the brewery bar, plus a gift pack. Note: technically just over the border in Herefordshire, England.",
-    "image": "brew-6"
-  },
-  {
     "slug": "gower-brewery",
     "brewery": "Gower Brewery",
     "title": "Gower Brewery",
