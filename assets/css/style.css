@@ -901,3 +901,34 @@ details .a { padding: 0 0 20px; color: var(--ink-soft); font-size: .97rem; }
 .brew-price.poa { background: var(--amber-soft); color: var(--amber-deep); font-weight: 600; }
 .brew-notes { margin: 12px 0 0; font-size: .88rem; color: var(--ink-soft); line-height: 1.5; }
 @media (max-width: 560px) { .brew-grid { grid-template-columns: 1fr; } .brew-region-head { min-height: 128px; } }
+
+/* ---------- on-brand illustrations ---------- */
+
+/* full-width illustrated band (sits on cream) */
+.illus-band { max-width: 1000px; margin: 0 auto; }
+.illus-band.narrow { max-width: 760px; }
+.illus-band img {
+  display: block;
+  width: 100%;
+  border-radius: var(--radius);
+  background: var(--cream);
+  box-shadow: var(--shadow);
+}
+
+/* illustration header inside a "how it works" step card */
+.step { overflow: hidden; }
+.step-illus {
+  display: block;
+  width: calc(100% + 56px);
+  margin: -30px -28px 24px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center;
+  background: var(--cream);
+  border-bottom: 1px solid var(--line);
+}
+
+/* let a split frame carry an illustration without cropping it hard */
+.frame.illus-frame { box-shadow: var(--shadow); }
+.frame.illus-frame img { background: var(--cream); }
+.frame.illus-frame.tall img { aspect-ratio: 4 / 5; object-fit: contain; }
