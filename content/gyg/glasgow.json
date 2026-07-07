@@ -45,6 +45,7 @@
     },
     {
       "title": "Glasgow: Scottish Rogue Whisky Bar Walking Tour",
+      "type": "distillery-spirits",
       "url": "https://www.getyourguide.com/glasgow-l438/glasgow-scottish-rogue-whisky-pub-crawl-t887228/",
       "price_gbp": "62",
       "duration": "2.5 hours",
@@ -63,6 +64,7 @@
     },
     {
       "title": "Glasgow: Guided City Highlights Tour & Whisky Tasting (5pm)",
+      "type": "distillery-spirits",
       "url": "https://www.getyourguide.com/glasgow-l438/glasgow-city-highlights-walking-tour-and-whisky-tasting-t415974/",
       "price_gbp": "59",
       "duration": "2 hours",
@@ -81,6 +83,50 @@
         "Small group of up to 10"
       ],
       "meeting_point": "7 George Square, outside Glasgow City Chambers (guide wears an orange jacket)"
+    },
+    {
+      "title": "Glasgow: Clydeside Distillery Tour and Whisky Tasting",
+      "url": "https://www.getyourguide.com/glasgow-l438/glasgow-clydeside-distillery-tour-and-whisky-tasting-t332061/",
+      "type": "whiskey",
+      "price_gbp": "20",
+      "duration": "1 hour",
+      "rating": "4.7",
+      "reviews": "927",
+      "summary": "A guided tour of Glasgow's Clydeside Distillery in the historic Old Pumphouse by the River Clyde, ending with a tasting of three single malt drams.",
+      "slug": "glasgow-clydeside-distillery-tour-and-whisky-tasting",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/5dd7cc599fc76.jpeg",
+      "description_md": "The Clydeside is a single malt Scotch whisky distillery in the heart of Glasgow, housed in the historic Old Pumphouse of 1877 on the banks of the River Clyde. The tour tells the story of Glasgow's whisky trade through film and animation, takes you into the picturesque Still House to see the copper stills at work, and finishes with a tasting of three Clydeside expressions in the tasting room — with an engraved dram glass to keep.",
+      "highlights": [
+        "Tour the historic 1877 Old Pumphouse",
+        "See the copper stills with River Clyde views",
+        "Learn the story of Glasgow's whisky industry",
+        "Taste three Clydeside single malt expressions",
+        "Keep an engraved dram glass",
+        "Whisky bar for cocktails and flights afterwards"
+      ],
+      "meeting_point": "The Clydeside Distillery, 100 Stobcross Road, Glasgow"
+    },
+    {
+      "title": "Glasgow: Glengoyne Distillery Tour with Whisky & Chocolate",
+      "url": "https://www.getyourguide.com/glasgow-l438/glengoyne-distillery-guided-tour-whiskey-tasting-t263502/",
+      "type": "whiskey",
+      "price_gbp": "40",
+      "duration": "1.5 hours",
+      "rating": "4.9",
+      "reviews": "321",
+      "summary": "A guided tour of the traditional Highland Glengoyne Distillery just outside Glasgow, with a tutored tasting of three single malts paired with hand-made Scottish chocolate.",
+      "slug": "glengoyne-distillery-guided-tour-whiskey-tasting",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/372fc5962017266ccf1c6bb9474b0fe6725f368c827b67f48e8b9e7b997ca6ae.jpg",
+      "description_md": "Just 14 miles from Glasgow, Glengoyne is a beautiful traditional Highland distillery and home of an award-winning single malt. This guided tour walks you through every stage of production, from mash tun to copper stills to the No.1 Warehouse, before a tutored tasting of three Glengoyne Highland Single Malts — each perfectly paired with a bespoke chocolate hand-made in Edinburgh.",
+      "highlights": [
+        "See every stage of whisky-making",
+        "Traditional Highland distillery near Glasgow",
+        "Tutored tasting of three Glengoyne single malts",
+        "Bespoke Scottish chocolate pairings",
+        "Learn how cask wood shapes the whisky",
+        "Free on-site parking"
+      ],
+      "meeting_point": "Glengoyne Distillery, Dumgoyne, Killearn, Glasgow G63 9LB"
     }
   ]
 }

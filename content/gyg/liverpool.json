@@ -48,6 +48,7 @@
     },
     {
       "title": "Liverpool: Albert Dock & Cavern Quarter Walking Food Tour",
+      "type": "food",
       "url": "https://www.getyourguide.com/liverpool-l210/liverpool-knowledge-quarter-baltic-triangle-food-tour-t1156293/",
       "price_gbp": "70",
       "duration": "3 hours",
@@ -69,6 +70,7 @@
     },
     {
       "title": "Liverpool: Guided Food and Drink Tour with Full Lunch",
+      "type": "food",
       "url": "https://www.getyourguide.com/liverpool-l210/liverpool-guided-food-and-drink-tour-with-tastings-t519080/",
       "price_gbp": "120",
       "duration": "3 hours",

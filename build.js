@@ -218,6 +218,39 @@ cityGuides.sort((a, b) => {
 });
 const guideFor = name => cityGuides.find(c => c.name === name);
 
+// City → region, for the tours-page Region filter. Real cities map to their region;
+// broad region names that appear as a "city" (on direct-brewery listings) map to themselves.
+const REGION_BY_CITY = {
+  London: 'London',
+  Bristol: 'South West England', 'Blandford Forum': 'South West England',
+  Manchester: 'North West England', Liverpool: 'North West England', Burnley: 'North West England',
+  Leeds: 'Yorkshire & North East England', Sheffield: 'Yorkshire & North East England', York: 'Yorkshire & North East England', Newcastle: 'Yorkshire & North East England',
+  Lewes: 'South East England', Kent: 'South East England', Brighton: 'South East England',
+  Birmingham: 'Midlands', Nottingham: 'Midlands',
+  Glasgow: 'Scotland', Edinburgh: 'Scotland',
+  Cardiff: 'Wales',
+};
+const REGION_ALIAS = {
+  'The Midlands': 'Midlands', 'Wales': 'Wales', 'Scotland': 'Scotland',
+  'South East England': 'South East England', 'South West England': 'South West England',
+  'North West England': 'North West England', 'East of England': 'East of England',
+  'Yorkshire & the North East': 'Yorkshire & North East England',
+};
+const regionOf = e => e.region || REGION_BY_CITY[e.city] || REGION_ALIAS[e.city] || '';
+const REAL_CITIES = new Set(Object.keys(REGION_BY_CITY));
+
+// Drink-type taxonomy. Raw values in the data (incl. the older Viator tags) are
+// normalised into a clean, user-facing set for the tours-page Type filter.
+const TYPE_NORMALIZE = {
+  '': 'beer', beer: 'beer', 'beer-brewery': 'beer',
+  wine: 'wine',
+  whiskey: 'spirits', whisky: 'spirits', 'distillery-spirits': 'spirits',
+  food: 'food', other: 'other',
+};
+const normType = t => TYPE_NORMALIZE[t || ''] || 'other';
+const TYPE_LABELS = { beer: 'Beer', wine: 'Wine', spirits: 'Whisky & spirits', food: 'Food & drink', other: 'Other' };
+const TYPE_ORDER = ['beer', 'wine', 'spirits', 'food', 'other'];
+
 // Partner sources: GetYourGuide + DesignMyNight. Each has its own image dir, affiliate
 // link builder and CTA/label. Experiences from both share one on-site listing system.
 const dmnImgDir = path.join(ROOT, 'assets', 'img', 'dmn');
@@ -323,7 +356,7 @@ function partnerCard(g) {
   const flag = (SOURCES[g.source] && SOURCES[g.source].flag) || 'Partner';
   const flagClass = g.source === 'direct' ? 'partner-flag direct-flag' : 'partner-flag';
   const searchName = [g.title, g.city, g.location].filter(Boolean).join(' ').toLowerCase();
-  return `<a class="tour-card partner" href="/tours/experiences/${g.slug}/" data-card data-city="${esc(g.city)}" data-name="${esc(searchName)}" data-days="" data-type="${esc(g.type || 'beer')}">
+  return `<a class="tour-card partner" href="/tours/experiences/${g.slug}/" data-card data-city="${esc(g.city)}" data-region="${esc(regionOf(g))}" data-name="${esc(searchName)}" data-days="" data-type="${esc(normType(g.type))}">
     <div class="thumb"><img src="${img}" alt="${esc(g.title)}" loading="lazy"><span class="city-tag">${esc(g.city)}</span><span class="${flagClass}">${esc(flag)}</span></div>
     <div class="body">
       <h3>${esc(g.title)}</h3>
@@ -341,7 +374,7 @@ function tourCard(t) {
   const price = t.price ? `£${t.price} <small>pp</small>` : `<small>price on enquiry</small>`;
   const meta = [t.duration, t.schedule && t.schedule.split('(')[0].trim()].filter(Boolean).join(' · ');
   const days = parseDays(t.schedule).join(',');
-  return `<a class="tour-card" href="/tours/${t.old_slug}/" data-card data-city="${esc(t.city)}" data-name="${esc(t.name.toLowerCase())}" data-days="${days}" data-type="${esc(t.type || 'beer')}">
+  return `<a class="tour-card" href="/tours/${t.old_slug}/" data-card data-city="${esc(t.city)}" data-region="${esc(regionOf(t))}" data-name="${esc(t.name.toLowerCase())}" data-days="${days}" data-type="${esc(normType(t.type))}">
     <div class="thumb"><img src="${img}" alt="${esc(t.name)}" loading="lazy"><span class="city-tag">${esc(t.city)}</span></div>
     <div class="body">
       <h3>${esc(t.name)}</h3>
@@ -427,7 +460,14 @@ const exploreTiles = tileCities.map(c => {
   </a>`;
 }).join('\n');
 
-const cityOptions = allCityNames.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
+// City dropdown = real cities only (broad regions live in the Region dropdown instead).
+const cityOptions = allCityNames.filter(c => REAL_CITIES.has(c)).map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
+// Region dropdown, ordered roughly north-to-south-ish but simplest: alphabetical.
+const regionsPresent = [...new Set([
+  ...activeTours.map(regionOf),
+  ...allExperiences.map(regionOf),
+].filter(Boolean))].sort();
+const regionOptions = regionsPresent.map(r => `<option value="${esc(r)}">${esc(r)}</option>`).join('');
 
 // One merged grid: our own tours and partner experiences together, grouped by
 // city (our own first within each city) so a city's options sit side by side.
@@ -442,19 +482,16 @@ const allToursGrid = mergedTours.map(m => m.html).join('\n');
 
 const blogCards = posts.map(postCard).join('\n');
 
-// Experience type (beer / wine / whiskey…) — powers the tours-page "type" filter.
-const TYPE_LABELS = { beer: 'Beer', wine: 'Wine', whiskey: 'Whisky', gin: 'Gin' };
-const typeLabel = t => TYPE_LABELS[t] || (t.charAt(0).toUpperCase() + t.slice(1));
-const typesPresent = [...new Set([
-  ...activeTours.map(t => t.type || 'beer'),
-  ...allExperiences.map(e => e.type || 'beer'),
-])].sort((a, b) => (a === 'beer' ? 0 : 1) - (b === 'beer' ? 0 : 1) || a.localeCompare(b));
-const typeOptions = typesPresent.map(t => `<option value="${t}">${typeLabel(t)}</option>`).join('');
+// Drink-type filter options (normalised categories, in a fixed sensible order).
+const typesPresent = [...new Set([...activeTours, ...allExperiences].map(e => normType(e.type)))]
+  .sort((a, b) => TYPE_ORDER.indexOf(a) - TYPE_ORDER.indexOf(b));
+const typeOptions = typesPresent.map(t => `<option value="${t}">${TYPE_LABELS[t] || t}</option>`).join('');
 
 const pageTokens = {
   featured_cards: featuredCards,
   explore_tiles: exploreTiles,
   city_options: cityOptions,
+  region_options: regionOptions,
   type_options: typeOptions,
   all_tours_grid: allToursGrid,
   disclosure: DISCLOSURE,
@@ -651,18 +688,23 @@ for (const g of cityGuides) {
   const partnerExp = gygTours.filter(e => e.source !== 'direct');
   const ownCount = own.length, expCount = gygTours.length;
 
-  // Adapt the copy to the drink types on offer in this city (beer / wine / both).
-  const cityTypes = new Set([...own.map(t => t.type || 'beer'), ...gygTours.map(e => e.type || 'beer')]);
-  const hasBeer = cityTypes.has('beer'), hasWine = cityTypes.has('wine');
-  const h1Drinks = hasBeer && hasWine ? 'beer &amp; wine tours &amp; tastings'
-    : hasWine ? 'wine tours &amp; tastings'
-    : 'brewery tours &amp; beer experiences';
-  const titleDrinks = hasBeer && hasWine ? 'Beer & Wine Tours & Tastings'
-    : hasWine ? 'Wine Tours & Tastings'
-    : 'Brewery Tours & Beer Tasting';
-  const expNoun = hasBeer && hasWine ? 'beer and wine tours, tastings and food &amp; drink experiences'
-    : hasWine ? 'wine tours, tastings and vineyard experiences'
-    : 'brewery tours, tastings and food &amp; drink experiences';
+  // Adapt the copy to the drink types on offer in this city (beer / wine / whisky…).
+  const cityCats = new Set([...own, ...gygTours].map(e => normType(e.type)));
+  const drinks = [];
+  if (cityCats.has('beer')) drinks.push('beer');
+  if (cityCats.has('wine')) drinks.push('wine');
+  if (cityCats.has('spirits')) drinks.push('whisky');
+  const joinWith = (a, amp) => a.length <= 1 ? a.join('') : a.slice(0, -1).join(', ') + amp + a[a.length - 1];
+  const onlyBeer = drinks.length === 1 && drinks[0] === 'beer';
+  const h1Drinks = onlyBeer ? 'brewery tours &amp; beer experiences'
+    : drinks.length ? `${joinWith(drinks, ' &amp; ')} tours &amp; tastings`
+    : 'food &amp; drink experiences';
+  const titleDrinks = onlyBeer ? 'Brewery Tours & Beer Tasting'
+    : drinks.length ? `${joinWith(drinks.map(d => d[0].toUpperCase() + d.slice(1)), ' & ')} Tours & Tastings`
+    : 'Food & Drink Experiences';
+  const expNoun = onlyBeer ? 'brewery tours, tastings and food &amp; drink experiences'
+    : drinks.length ? `${joinWith(drinks, ' &amp; ')} tours, tastings and food &amp; drink experiences`
+    : 'food &amp; drink experiences';
 
   // A short punchy hero tagline (first sentence of the intro, trimmed).
   const firstSentence = (g.intro_md || '').split(/(?<=[.!?])\s/)[0].replace(/\s+/g, ' ').trim();

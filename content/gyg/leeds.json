@@ -26,6 +26,7 @@
     },
     {
       "title": "Leeds: Guided Food Tour with 7 Stops",
+      "type": "food",
       "url": "https://www.getyourguide.com/leeds-l1023/leeds-guided-food-tour-with-7-stops-t1136805/",
       "price_gbp": "80",
       "duration": "4 hours",
@@ -47,6 +48,7 @@
     },
     {
       "title": "Leeds: Indian Food Tour with Tastings",
+      "type": "food",
       "url": "https://www.getyourguide.com/leeds-l1023/leeds-indian-food-tour-with-tastings-t1172693/",
       "price_gbp": "100",
       "duration": "3 hours",

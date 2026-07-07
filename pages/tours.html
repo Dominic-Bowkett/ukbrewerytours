@@ -14,6 +14,13 @@
   <div class="container">
     <form class="filter-bar" data-filter aria-label="Filter tours">
       <div class="filter-field">
+        <label for="f-region">Region</label>
+        <select id="f-region" data-filter-region>
+          <option value="">All regions</option>
+          {{region_options}}
+        </select>
+      </div>
+      <div class="filter-field">
         <label for="f-city">City</label>
         <select id="f-city" data-filter-city>
           <option value="">All cities</option>

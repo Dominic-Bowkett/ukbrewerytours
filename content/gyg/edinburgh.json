@@ -103,6 +103,49 @@
         "Small group with local guide"
       ],
       "meeting_point": "Tron Kirk Market on the Royal Mile, opposite Bella Italia (about 10 minutes' walk from Waverley Station)"
+    },
+    {
+      "title": "Edinburgh: The Scotch Whisky Experience Tour and Tasting",
+      "url": "https://www.getyourguide.com/edinburgh-l44/edinburgh-the-scotch-whisky-experience-tour-and-tasting-t223509/",
+      "type": "whiskey",
+      "price_gbp": "25",
+      "duration": "50–75 minutes",
+      "rating": "4.7",
+      "reviews": "6179",
+      "summary": "A guided journey through Scotland's five whisky regions beside Edinburgh Castle, ending with a tutored tasting in a vault holding almost 3,500 bottles.",
+      "slug": "edinburgh-the-scotch-whisky-experience-tour-and-tasting",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/a10090e1141371e30479b2819d78beb0cc66cd6c681be69f9432837a6da028a0.jpg",
+      "description_md": "At the top of the Royal Mile beside Edinburgh Castle, the Scotch Whisky Experience is the perfect introduction to Scotland's national drink. A guided tour walks you through how whisky is made and matured and takes you on a sensory journey across the country's five whisky-producing regions, before a tutored tasting in the world-famous collection vault — home to almost 3,500 bottles. Named Scotland's Best Visitor Attraction 2024.",
+      "highlights": [
+        "Learn how Scotch whisky is made and matured",
+        "Explore the aromas of Scotland's five whisky regions",
+        "Tutored tasting in a vault of almost 3,500 bottles",
+        "Right beside Edinburgh Castle on the Royal Mile",
+        "Award-winning attraction with expert guides"
+      ],
+      "meeting_point": "The Scotch Whisky Experience, 354 Castlehill, top of the Royal Mile, beside Edinburgh Castle"
+    },
+    {
+      "title": "Edinburgh: Holyrood Distillery Whisky & Gin Tour",
+      "url": "https://www.getyourguide.com/edinburgh-l44/edinburgh-holyrood-distillery-whisky-gin-tour-t399377/",
+      "type": "whiskey",
+      "price_gbp": "27",
+      "duration": "1 hour",
+      "rating": "4.6",
+      "reviews": "1043",
+      "summary": "A guided tour of Edinburgh's Holyrood Distillery — a modern craft whisky and gin maker minutes from the Royal Mile — with a welcome cocktail and tutored tastings.",
+      "slug": "edinburgh-holyrood-distillery-whisky-gin-tour",
+      "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=390,height=400,dpr=2/tour_img/55f56165a61abbacb67c4b02ed44a1f427f5b646b46519800a2e450202517c32.jpg",
+      "description_md": "Holyrood is a modern craft distillery in the heart of Edinburgh, a ten-minute walk from the Royal Mile, making both single malt whisky and award-winning gin. This guided tour takes you through the production areas and the distillery's experimental approach to flavour, with a welcome seasonal cocktail on arrival and tutored tastings of their spirits — including Height of Arrows gin and single malt whisky.",
+      "highlights": [
+        "Guided tour of a modern city-centre distillery",
+        "See how both whisky and gin are made",
+        "Welcome seasonal cocktail on arrival",
+        "Tutored tasting of whisky and award-winning gin",
+        "Learn about experimental flavour and cask ageing",
+        "Ten minutes from the Royal Mile"
+      ],
+      "meeting_point": "Holyrood Distillery, 19 St Leonard's Lane, Edinburgh"
     }
   ]
 }

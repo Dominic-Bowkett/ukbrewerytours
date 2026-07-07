@@ -7,6 +7,7 @@
     {
       "title": "Bristol: Wine and Cider Tour with Tastings",
       "url": "https://www.getyourguide.com/bristol-l445/bristol-wine-and-cider-tour-with-tastings-t1133077/",
+      "type": "wine",
       "price_gbp": "22",
       "duration": "1.5 hours",
       "rating": "5.0",
@@ -28,6 +29,7 @@
     {
       "title": "Bristol: Local Craft Distillery's Gin Tasting Experience",
       "url": "https://www.getyourguide.com/bristol-l445/bristol-local-craft-distillery-s-gin-tasting-experience-t1274890/",
+      "type": "distillery-spirits",
       "price_gbp": "34",
       "duration": "2 hours",
       "rating": "5.0",

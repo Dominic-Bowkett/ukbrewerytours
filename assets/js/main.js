@@ -24,6 +24,7 @@ if (toggle && nav) {
 // Tours page filtering (city / day / keyword) over one merged grid
 const filterForm = document.querySelector('[data-filter]');
 if (filterForm) {
+  const regionSel = filterForm.querySelector('[data-filter-region]');
   const citySel = filterForm.querySelector('[data-filter-city]');
   const typeSel = filterForm.querySelector('[data-filter-type]');
   const qInput = filterForm.querySelector('[data-filter-q]');
@@ -33,34 +34,39 @@ if (filterForm) {
   const cards = grid ? [...grid.querySelectorAll('[data-card]')] : [];
 
   const apply = () => {
+    const region = regionSel ? regionSel.value : '';
     const city = citySel.value;
     const type = typeSel ? typeSel.value : '';
     const q = qInput.value.trim().toLowerCase();
     let visible = 0;
     for (const c of cards) {
+      const okRegion = !region || c.dataset.region === region;
       const okCity = !city || c.dataset.city === city;
       const okType = !type || (c.dataset.type || 'beer') === type;
       const okQ = !q || (c.dataset.name || '').includes(q) || (c.dataset.city || '').toLowerCase().includes(q);
-      const show = okCity && okType && okQ;
+      const show = okRegion && okCity && okType && okQ;
       c.hidden = !show;
       if (show) visible++;
     }
     if (countEl) {
-      countEl.textContent = (city || type || q)
+      countEl.textContent = (region || city || type || q)
         ? `Showing ${visible} tour${visible === 1 ? '' : 's'} & experience${visible === 1 ? '' : 's'}`
         : `${cards.length} tours & experiences`;
     }
     if (emptyEl) emptyEl.hidden = visible !== 0;
   };
 
+  if (regionSel) regionSel.addEventListener('change', apply);
   citySel.addEventListener('change', apply);
   if (typeSel) typeSel.addEventListener('change', apply);
   qInput.addEventListener('input', apply);
   document.querySelectorAll('[data-filter-reset]').forEach(btn =>
-    btn.addEventListener('click', () => { citySel.value = ''; if (typeSel) typeSel.value = ''; qInput.value = ''; apply(); }));
+    btn.addEventListener('click', () => { if (regionSel) regionSel.value = ''; citySel.value = ''; if (typeSel) typeSel.value = ''; qInput.value = ''; apply(); }));
 
-  // Deep-link support: /tours/?city=Manchester&type=wine&q=beer (e.g. from the home search)
+  // Deep-link support: /tours/?region=Scotland&city=Manchester&type=wine&q=beer
   const params = new URLSearchParams(location.search);
+  const preRegion = params.get('region');
+  if (preRegion && regionSel && [...regionSel.options].some(o => o.value === preRegion)) regionSel.value = preRegion;
   const preCity = params.get('city');
   if (preCity && [...citySel.options].some(o => o.value === preCity)) citySel.value = preCity;
   const preType = params.get('type');
