@@ -414,7 +414,7 @@ const layout = read('templates/layout.html');
 const voucherModalTpl = read('templates/voucher-modal.html');
 const voucherEverywhere = false;
 
-function writePage(outPath, { title, description, content, nav, ogImage, jsonld, robots, voucher }) {
+function writePage(outPath, { title, description, content, nav, ogImage, jsonld, robots, voucher, voucherPrint }) {
   const canonical = site.base_url + ('/' + outPath).replace(/\/index\.html$/, '/');
   const navKeys = ['tours', 'breweries', 'vouchers', 'groups', 'blog', 'about'];
   const navMap = {};
@@ -427,7 +427,10 @@ function writePage(outPath, { title, description, content, nav, ogImage, jsonld,
     title, description: esc(description), canonical, og_image: og, asset_ver: assetVer,
     content, whatsapp_url: WHATSAPP, year: YEAR,
     voucher_modal: useVoucher ? voucherModalTpl : '',
-    voucher_script: useVoucher ? `  <script src="/assets/js/voucher.js?v=${assetVer}" defer></script>` : '',
+    voucher_script: [
+      useVoucher ? `  <script src="/assets/js/voucher.js?v=${assetVer}" defer></script>` : '',
+      voucherPrint ? `  <script src="/assets/js/voucher-print.js?v=${assetVer}" defer></script>` : '',
+    ].filter(Boolean).join('\n'),
     robots: robots ? `<meta name="robots" content="${robots}">` : '',
     structured_data: blocks.map(b => `<script type="application/ld+json">${JSON.stringify(b)}</script>`).join('\n  '),
     ...navMap,
@@ -544,6 +547,8 @@ const staticPages = [
   { src: 'voucher-thank-you.html', out: 'gift-vouchers/thank-you/index.html', nav: 'vouchers', title: 'Thank you — your gift voucher is on its way | UK Brewery Tours', description: 'Your gift voucher purchase is complete.', robots: 'noindex,nofollow' },
   // Hidden internal test page for the in-house voucher flow. Not linked, not indexed.
   { src: 'demo-gift-voucher.html', out: 'demo/gift-voucher/index.html', nav: '', title: 'Voucher demo (internal)', description: 'Internal demo of the in-house gift voucher flow.', robots: 'noindex,nofollow', voucher: true },
+  // Printable vouchers. Reached only via a signed link in the voucher email.
+  { src: 'my-vouchers.html', out: 'my-vouchers/index.html', nav: '', title: 'Your gift vouchers | UK Brewery Tours', description: 'Print or save your UK Brewery Tours gift voucher.', robots: 'noindex,nofollow', voucherPrint: true },
 ];
 
 for (const p of staticPages) {

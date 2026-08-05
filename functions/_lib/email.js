@@ -73,7 +73,21 @@ const HOW_TO_REDEEM = `<div style="background:${CREAM};border-radius:10px;paddin
   <div style="margin-top:8px;color:${INK_SOFT};">Vouchers never expire and can be used across multiple bookings until the balance runs out.</div>
 </div>`;
 
-export function voucherEmailHtml({ order, vouchers }) {
+/** Button linking to the printable version — the email itself is the voucher. */
+function printBlock(printUrl, count) {
+  if (!printUrl) return '';
+  return `<div style="text-align:center;margin:26px 0 0;">
+    <a href="${printUrl}" style="display:inline-block;background:${AMBER};color:#2b1a05;text-decoration:none;font-weight:600;padding:13px 26px;border-radius:999px;font-size:15px;">
+      Print or save as PDF
+    </a>
+    <div style="font-size:13px;color:${INK_SOFT};margin-top:10px;line-height:1.6;">
+      This email is your voucher — the code above is all you need to book.
+      Use the button if you'd like a printed copy${count > 1 ? ' (each voucher prints on its own page)' : ''}.
+    </div>
+  </div>`;
+}
+
+export function voucherEmailHtml({ order, vouchers, printUrl }) {
   const toSelf = order.send_to_self === 1;
   const greetingName = toSelf ? order.purchaser_name : order.recipient_name;
   const total = vouchers.reduce((s, v) => s + v.amount_pence, 0);
@@ -104,8 +118,9 @@ export function voucherEmailHtml({ order, vouchers }) {
     ${vouchers.length > 1 ? `<p style="margin:0 0 16px;font-size:14px;color:${INK_SOFT};">Total value: <strong style="color:${STOUT};">${formatMoney(total)}</strong> — each code is redeemed separately.</p>` : ''}
     ${tourNote}
     ${HOW_TO_REDEEM}
-    <p style="margin:22px 0 6px;font-size:14px;line-height:1.7;">Cheers,<br>The UK Brewery Tours team</p>
-    <p style="margin:0 0 26px;font-size:12px;color:${INK_SOFT};">Tip: print this email or save it — you'll need the code${vouchers.length > 1 ? 's' : ''} when booking.</p>
+    ${printBlock(printUrl, vouchers.length)}
+    <p style="margin:26px 0 6px;font-size:14px;line-height:1.7;">Cheers,<br>The UK Brewery Tours team</p>
+    <p style="margin:0 0 26px;font-size:12px;color:${INK_SOFT};">Keep this email safe — you'll need the code${vouchers.length > 1 ? 's' : ''} when booking.</p>
   </td></tr>`);
 }
 

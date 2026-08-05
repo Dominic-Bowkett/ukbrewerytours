@@ -1,0 +1,38 @@
+<section class="section voucher-print-page">
+  <div class="container narrow">
+
+    <div class="no-print">
+      <div class="kicker">Your gift vouchers</div>
+      <h1>Print or save your voucher</h1>
+      <p class="lede mt-2">
+        Your voucher code has already been emailed — that email is all you need to book.
+        This page is here if you'd like a printed copy or a PDF to hand over as a gift.
+      </p>
+
+      <div class="print-toolbar" data-print-toolbar hidden>
+        <div class="print-pick" data-print-pick hidden>
+          <span class="print-pick__label">Include:</span>
+          <div class="print-pick__opts" data-print-opts></div>
+          <button class="btn btn-text" type="button" data-print-all-toggle>Select all</button>
+        </div>
+        <div class="print-actions">
+          <button class="btn btn-primary" type="button" data-print-go>Print / Save as PDF</button>
+        </div>
+        <p class="print-hint">
+          In the print dialog choose <strong>Save as PDF</strong> as the destination.
+          Each voucher prints on its own A4 page.
+        </p>
+      </div>
+
+      <p class="vf-error mt-3" data-print-error hidden></p>
+      <p class="muted mt-3" data-print-loading>Loading your vouchers…</p>
+    </div>
+
+    <div data-print-sheets></div>
+
+    <p class="no-print mt-4">
+      <a class="btn btn-outline" href="/tours/">Browse tours</a>
+      <a class="btn btn-outline" href="/contact/">Contact us</a>
+    </p>
+  </div>
+</section>

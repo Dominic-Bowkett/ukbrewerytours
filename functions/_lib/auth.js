@@ -2,7 +2,8 @@
 // Uses only Web Crypto, which is native to the Workers runtime (no npm deps).
 
 const enc = new TextEncoder();
-const ITERATIONS = 150000;
+// The Workers runtime rejects PBKDF2 above 100k iterations, so this is the ceiling.
+const ITERATIONS = 100000;
 const COOKIE_NAME = 'ubt_admin';
 const SESSION_HOURS = 12;
 
@@ -21,7 +22,8 @@ function safeEqual(a, b) {
 export async function hashPassword(password, salt, iterations = ITERATIONS) {
   const key = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveBits']);
   const bits = await crypto.subtle.deriveBits(
-    { name: 'PBKDF2', salt: enc.encode(salt), iterations, hash: 'SHA-256' },
+    // Clamped: a stored value above the runtime cap would throw instead of failing the login.
+    { name: 'PBKDF2', salt: enc.encode(salt), iterations: Math.min(iterations, ITERATIONS), hash: 'SHA-256' },
     key,
     256,
   );
@@ -63,6 +65,20 @@ export async function verifySession(token, secret) {
   } catch {
     return null;
   }
+}
+
+/**
+ * Signed token letting a customer view their own vouchers without logging in.
+ * Bound to the order id, so it grants access to that order and nothing else.
+ * No expiry: vouchers never expire, so the link in their email must keep working.
+ */
+export async function orderToken(orderId, secret) {
+  return (await hmac(secret, `order:${orderId}`)).slice(0, 32);
+}
+
+export async function verifyOrderToken(orderId, token, secret) {
+  if (!orderId || !token) return false;
+  return safeEqual(token, await orderToken(orderId, secret));
 }
 
 export function sessionCookie(token, { secure = true } = {}) {

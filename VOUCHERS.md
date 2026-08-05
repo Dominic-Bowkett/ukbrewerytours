@@ -20,7 +20,8 @@ see [Going live](#7-going-live).
 |---|---|
 | `functions/api/create-checkout.js` | Validates the form, reserves codes, opens Stripe Checkout |
 | `functions/api/stripe-webhook.js` | Confirms payment, activates codes, sends the emails |
-| `functions/api/admin/*` | Login, session gate, voucher list/detail/redeem |
+| `functions/api/my-vouchers.js` | Token-secured voucher data for the printable page |
+| `functions/api/admin/*` | Login, session gate, voucher list/detail/redeem/refund |
 | `functions/_lib/*` | Shared helpers: codes, auth, Stripe, email templates |
 | `migrations/0001_initial.sql` | D1 schema (`orders`, `vouchers`, `redemptions`, `admin_users`) |
 | `admin/` | Admin dashboard + login page (copied to `docs/admin/` at build) |
@@ -28,6 +29,7 @@ see [Going live](#7-going-live).
 | `assets/js/voucher.js` | Form behaviour: prefill, stepper, totals, checkout |
 | `pages/demo-gift-voucher.html` | Hidden test page (`/demo/gift-voucher/`) |
 | `pages/voucher-thank-you.html` | Post-payment landing page |
+| `pages/my-vouchers.html` + `assets/js/voucher-print.js` | Printable A4 vouchers, one per page |
 | `scripts/create-admin.mjs` | Generates admin logins |
 
 ---
@@ -152,6 +154,39 @@ the note. A voucher can be part-redeemed any number of times until it hits £0.
 **Voucher codes** look like `UBT-K7M2-P9WR`. They're case-insensitive and the
 dashes are optional when searching. The alphabet excludes `I`, `O`, `0` and `1`
 so codes are unambiguous over the phone.
+
+## Refunding a voucher
+
+Same screen, the red **Refund** panel below Redeem. Enter an amount (or
+**Refund full £X**), pick a reason, add a note, and confirm.
+
+This calls Stripe and puts the money back on the card the customer paid with —
+it takes 5–10 days to reach their statement. The refunded value is taken off
+the voucher balance at the same time, so a refunded voucher can't still be
+spent on a tour. Refund history is logged alongside redemptions.
+
+- Partial refunds are fine, and can be repeated up to the original amount.
+- Refunding is blocked on unpaid vouchers and on anything already fully refunded.
+- If Stripe rejects the refund, nothing is written locally — the voucher is
+  left exactly as it was.
+
+## Printable vouchers
+
+**The email is the voucher.** It contains the code and is all a customer needs
+to book — nothing is posted, and no PDF is attached.
+
+The email also carries a **Print or save as PDF** button linking to
+`/my-vouchers/`, where they can print or use their browser's "Save as PDF".
+Each voucher renders on its own A4 page, and when an order has several the
+customer can tick which ones to include.
+
+That page is secured by a signed token in the link (an HMAC of the order id).
+Without a valid token it returns 403, so codes can't be guessed or enumerated,
+and unpaid orders never expose a code. The page returns no emails or payment
+details and is marked `no-store` so no shared cache retains it.
+
+Because the PDF is produced by the browser, none of this costs CPU on the
+Cloudflare free tier.
 
 ---
 

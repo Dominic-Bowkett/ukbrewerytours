@@ -149,6 +149,21 @@ code { font-family: "SF Mono", Consolas, "Courier New", monospace; }
 
 .redeem-form { margin-top: 24px; padding-top: 22px; border-top: 1px solid var(--line); }
 .redeem-form h3 { font-size: 1rem; margin-bottom: 14px; }
+.redeem-form h3 .sub { font-weight: 400; color: var(--ink-soft); font-size: .85rem; }
+.redeem-form select {
+  width: 100%; padding: 10px 12px; border: 1px solid var(--line);
+  border-radius: 9px; font: inherit; background: #fff;
+}
+.redeem-form select:focus { outline: 2px solid var(--amber); outline-offset: -1px; }
+
+/* refunds move real money — visually distinct from redemption */
+.refund-form { border-top-color: #e8cfcd; }
+.btn-danger { background: var(--red); color: #fff; }
+.btn-danger:hover:not(:disabled) { background: #93201a; }
+.refund-hint { font-size: .78rem; margin-top: 12px; line-height: 1.55; }
+.refund-amt { color: var(--red); }
+.pill-refunded { background: #f0e0df; color: #8f2a22; }
+.balance-box.four { grid-template-columns: repeat(4, 1fr); }
 .redeem-row { display: grid; grid-template-columns: 150px 1fr; gap: 12px; }
 .field label { display: block; font-size: .78rem; font-weight: 600; margin-bottom: 5px; color: var(--ink-soft); }
 .field input { width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 9px; font: inherit; background: #fff; }

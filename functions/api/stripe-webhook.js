@@ -7,6 +7,7 @@
 
 import { verifyWebhook } from '../_lib/stripe.js';
 import { sendEmail, voucherEmailHtml, receiptEmailHtml } from '../_lib/email.js';
+import { orderToken } from '../_lib/auth.js';
 
 export async function onRequestPost({ request, env }) {
   const raw = await request.text();
@@ -48,12 +49,17 @@ export async function onRequestPost({ request, env }) {
   try {
     const deliverTo = order.send_to_self === 1 ? order.purchaser_email : order.recipient_email;
 
+    // Signed link to the printable version — unguessable, and scoped to this order.
+    const origin = env.BASE_URL || new URL(request.url).origin;
+    const token = await orderToken(order.id, env.ADMIN_SESSION_SECRET);
+    const printUrl = `${origin}/my-vouchers/?order=${order.id}&t=${token}`;
+
     await sendEmail(env, {
       to: deliverTo,
       subject: order.send_to_self === 1
         ? `Your UK Brewery Tours gift voucher${vouchers.length > 1 ? 's' : ''}`
         : `${order.purchaser_name || 'Someone'} has sent you a UK Brewery Tours gift voucher`,
-      html: voucherEmailHtml({ order, vouchers }),
+      html: voucherEmailHtml({ order, vouchers, printUrl }),
       replyTo: 'info@ukbrewerytours.com',
     });
 

@@ -36,6 +36,34 @@ export async function createCheckoutSession(env, {
   return json;
 }
 
+/**
+ * Refund part or all of a payment back to the customer's card.
+ * `idempotencyKey` stops a double-click or retry from refunding twice.
+ */
+export async function createRefund(env, { paymentIntent, amountPence, reason, idempotencyKey }) {
+  const p = new URLSearchParams();
+  p.set('payment_intent', paymentIntent);
+  if (amountPence) p.set('amount', String(amountPence));
+  // Stripe only accepts this fixed set; anything else is a validation error.
+  if (reason && ['duplicate', 'fraudulent', 'requested_by_customer'].includes(reason)) {
+    p.set('reason', reason);
+  }
+
+  const res = await fetch('https://api.stripe.com/v1/refunds', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+      ...(idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : {}),
+    },
+    body: p.toString(),
+  });
+
+  const json = await res.json();
+  if (!res.ok) throw new Error(json?.error?.message || `Stripe refund failed (${res.status})`);
+  return json;
+}
+
 function toHex(buf) {
   return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
 }

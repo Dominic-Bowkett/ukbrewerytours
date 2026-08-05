@@ -60,6 +60,7 @@ const dt = s => s ? new Date(s.replace(' ', 'T') + 'Z').toLocaleDateString('en-G
 const LABEL = {
   active: 'Unused', partially_redeemed: 'Part-redeemed',
   redeemed: 'Redeemed', pending: 'Unpaid', void: 'Void',
+  refunded: 'Refunded',
 };
 
 let page = 1, hasMore = false;
@@ -114,24 +115,28 @@ async function openVoucher(code) {
   modal.hidden = false;
   detail.innerHTML = '<p class="muted pad">Loading…</p>';
   try {
-    const { voucher: v, redemptions } = await api('/api/admin/voucher/' + encodeURIComponent(code));
-    const spent = v.amount_pence - v.balance_pence;
-    const redeemable = v.balance_pence > 0 && v.status !== 'pending' && v.status !== 'void';
+    const { voucher: v, redemptions, refunds = [] } = await api('/api/admin/voucher/' + encodeURIComponent(code));
+    const refunded = v.refunded_pence || 0;
+    const spent = v.amount_pence - v.balance_pence - refunded;
+    const redeemable = v.balance_pence > 0 && v.status !== 'pending' && v.status !== 'void' && v.status !== 'refunded';
+    const refundable = refunded < v.amount_pence && v.status !== 'pending' && v.status !== 'void';
+    const maxRefund = v.amount_pence - refunded;
 
     detail.innerHTML = `
       <div class="detail-head">
         <code class="big-code">${esc(v.code)}</code>
         <span class="pill pill-${v.status}">${LABEL[v.status] || v.status}</span>
       </div>
-      <div class="balance-box">
+      <div class="balance-box${refunded ? ' four' : ''}">
         <div><span>Original</span><strong>${money(v.amount_pence)}</strong></div>
         <div><span>Redeemed</span><strong>${money(spent)}</strong></div>
+        ${refunded ? `<div><span>Refunded</span><strong>${money(refunded)}</strong></div>` : ''}
         <div class="hl"><span>Balance</span><strong>${money(v.balance_pence)}</strong></div>
       </div>
 
       ${redeemable ? `
         <form class="redeem-form" id="redeemForm">
-          <h3>Redeem</h3>
+          <h3>Redeem <span class="sub">— customer used it on a tour</span></h3>
           <div class="redeem-row">
             <div class="field"><label for="amt">Amount (£)</label>
               <input id="amt" type="number" step="0.01" min="0.01" max="${(v.balance_pence / 100).toFixed(2)}" placeholder="0.00"></div>
@@ -143,7 +148,33 @@ async function openVoucher(code) {
             <button class="btn btn-primary" type="submit">Redeem amount</button>
             <button class="btn btn-outline" type="button" id="redeemFull">Redeem full ${money(v.balance_pence)}</button>
           </div>
-        </form>` : `<p class="muted done-note">${v.status === 'pending' ? 'Not paid for — nothing to redeem.' : 'This voucher is fully redeemed.'}</p>`}
+        </form>` : `<p class="muted done-note">${
+          v.status === 'pending' ? 'Not paid for — nothing to redeem.'
+          : v.status === 'refunded' ? 'Fully refunded — cannot be redeemed.'
+          : 'This voucher is fully redeemed.'}</p>`}
+
+      ${refundable ? `
+        <form class="redeem-form refund-form" id="refundForm">
+          <h3>Refund <span class="sub">— money back to their card</span></h3>
+          <div class="redeem-row">
+            <div class="field"><label for="ramt">Amount (£)</label>
+              <input id="ramt" type="number" step="0.01" min="0.01" max="${(maxRefund / 100).toFixed(2)}" placeholder="0.00"></div>
+            <div class="field"><label for="rreason">Reason</label>
+              <select id="rreason">
+                <option value="requested_by_customer">Requested by customer</option>
+                <option value="duplicate">Duplicate</option>
+                <option value="fraudulent">Fraudulent</option>
+              </select></div>
+          </div>
+          <div class="field" style="margin-top:12px"><label for="rnote">Note (optional)</label>
+            <input id="rnote" type="text" placeholder="e.g. Couldn't make any dates"></div>
+          <p class="error" id="refundError" hidden></p>
+          <div class="redeem-actions">
+            <button class="btn btn-danger" type="submit">Refund amount</button>
+            <button class="btn btn-outline" type="button" id="refundFull">Refund full ${money(maxRefund)}</button>
+          </div>
+          <p class="muted refund-hint">Refunds go back to the original card via Stripe and take 5–10 days to appear. Refunded value is taken off the voucher balance.</p>
+        </form>` : (refunded >= v.amount_pence ? '<p class="muted done-note">Fully refunded.</p>' : '')}
 
       <div class="meta-grid">
         <div><span>Bought by</span>${esc(v.purchaser_name || '—')}<br><span class="muted">${esc(v.purchaser_email)}</span></div>
@@ -158,7 +189,15 @@ async function openVoucher(code) {
         <tr><td>${dt(r.created_at)}</td><td><strong>−${money(r.amount_pence)}</strong></td>
         <td class="muted">balance ${money(r.balance_after_pence)}</td>
         <td class="muted">${esc(r.note || '')}</td><td class="muted">${esc(r.redeemed_by || '')}</td></tr>`).join('')}
-      </tbody></table>` : '<p class="muted">Not yet redeemed.</p>'}`;
+      </tbody></table>` : '<p class="muted">Not yet redeemed.</p>'}
+
+      ${refunds.length ? `
+        <h3 class="hist-title">Refund history</h3>
+        <table class="hist"><tbody>${refunds.map(r => `
+          <tr><td>${dt(r.created_at)}</td><td><strong class="refund-amt">−${money(r.amount_pence)}</strong></td>
+          <td class="muted">${esc((r.reason || '').replace(/_/g, ' '))}</td>
+          <td class="muted">${esc(r.note || '')}</td><td class="muted">${esc(r.refunded_by || '')}</td></tr>`).join('')}
+        </tbody></table>` : ''}`;
 
     const form = document.getElementById('redeemForm');
     if (form) {
@@ -181,6 +220,44 @@ async function openVoucher(code) {
       form.addEventListener('submit', e => { e.preventDefault(); doRedeem({ amount: document.getElementById('amt').value }); });
       document.getElementById('redeemFull').addEventListener('click', () => {
         if (confirm(`Redeem the full remaining ${money(v.balance_pence)}?`)) doRedeem({ full: true });
+      });
+    }
+
+    const rForm = document.getElementById('refundForm');
+    if (rForm) {
+      const doRefund = async (payload) => {
+        const errEl = document.getElementById('refundError');
+        const btns = rForm.querySelectorAll('button');
+        errEl.hidden = true;
+        btns.forEach(b => { b.disabled = true; });
+        try {
+          const res = await api('/api/admin/refund', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              code: v.code,
+              reason: document.getElementById('rreason').value,
+              note: document.getElementById('rnote').value,
+              ...payload,
+            }),
+          });
+          alert(`Refunded ${money(res.refunded_pence)} to the customer's card.\n\nStripe refund: ${res.stripe_refund_id || 'n/a'}\nIt takes 5–10 days to appear on their statement.`);
+          await openVoucher(v.code);
+          load();
+        } catch (err) {
+          errEl.textContent = err.message;
+          errEl.hidden = false;
+          btns.forEach(b => { b.disabled = false; });
+        }
+      };
+      rForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const amt = document.getElementById('ramt').value;
+        if (!amt) { const el = document.getElementById('refundError'); el.textContent = 'Enter an amount to refund.'; el.hidden = false; return; }
+        if (confirm(`Refund £${Number(amt).toFixed(2)} to the customer's card?\n\nThis moves real money and cannot be undone.`)) doRefund({ amount: amt });
+      });
+      document.getElementById('refundFull').addEventListener('click', () => {
+        if (confirm(`Refund the full ${money(maxRefund)} to the customer's card?\n\nThis moves real money and cannot be undone.`)) doRefund({ full: true });
       });
     }
   } catch (err) {

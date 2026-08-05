@@ -18,5 +18,9 @@ export async function onRequestGet({ params, env }) {
     'SELECT amount_pence, balance_after_pence, redeemed_by, note, created_at FROM redemptions WHERE voucher_id=? ORDER BY id DESC',
   ).bind(voucher.id).all();
 
-  return Response.json({ voucher, redemptions });
+  const { results: refunds } = await env.DB.prepare(
+    'SELECT amount_pence, stripe_refund_id, reason, note, refunded_by, created_at FROM refunds WHERE voucher_id=? ORDER BY id DESC',
+  ).bind(voucher.id).all();
+
+  return Response.json({ voucher, redemptions, refunds });
 }

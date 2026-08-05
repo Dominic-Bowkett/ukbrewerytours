@@ -9,7 +9,8 @@
  */
 import { webcrypto as crypto } from 'node:crypto';
 
-const ITERATIONS = 150000;
+// Must match functions/_lib/auth.js — and the Workers runtime rejects anything above 100k.
+const ITERATIONS = 100000;
 const enc = new TextEncoder();
 
 const email = (process.argv[2] || '').trim().toLowerCase();
