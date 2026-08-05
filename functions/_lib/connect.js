@@ -735,3 +735,148 @@ export async function refundPaymentRequest(env, { row, amountPence, reason = nul
 
   return { ok: true, refundedTotal: total, feeReversedPence: feeReversed, stripeRefundId: refund?.id || null };
 }
+
+/* ========================================================================== *
+ * SENDING a payment request to the client.
+ * ========================================================================== */
+
+/**
+ * Email the client their pay link and move the request to 'sent'.
+ *
+ * Ordering matters and is deliberate:
+ *   1. claim the row (draft|scheduled -> sending) with a conditional UPDATE, so
+ *      two cron runs or a double-click cannot both send;
+ *   2. send the email;
+ *   3. only then mark 'sent' and set send_email_sent.
+ *
+ * A failure between 1 and 3 leaves the row in 'sending' with its resume_status
+ * recorded, which the reaper recovers — it never leaves a client holding a link
+ * for a request the database thinks was never sent, and never silently drops one.
+ */
+export async function sendPaymentRequest(env, { requestId, member = null, actor = 'team' }) {
+  const claimId = randomId();
+
+  // Claim. Only a row that is genuinely sendable transitions.
+  const claim = await env.DB.prepare(
+    `UPDATE payment_requests
+        SET status = 'sending',
+            claim_id = ?1,
+            claimed_at = datetime('now'),
+            resume_status = status,
+            send_attempts = send_attempts + 1,
+            updated_at = datetime('now')
+      WHERE id = ?2
+        AND status IN ('draft', 'scheduled')
+        AND send_attempts < max_send_attempts`,
+  ).bind(claimId, requestId).run();
+
+  if (!claim.meta.changes) {
+    const cur = await env.DB.prepare('SELECT status, send_attempts, max_send_attempts FROM payment_requests WHERE id = ?')
+      .bind(requestId).first();
+    if (!cur) throw new Error('Payment request not found.');
+    if (cur.send_attempts >= cur.max_send_attempts) throw new Error('Too many failed send attempts — check the details and create a new request.');
+    throw new Error(`This request is ${cur.status} and cannot be sent again.`);
+  }
+
+  const row = await env.DB.prepare(`
+    SELECT r.*, m.name AS member_name, m.email AS member_email, m.reply_to_email
+      FROM payment_requests r
+      JOIN team_members m ON m.id = r.team_member_id
+     WHERE r.id = ?`).bind(requestId).first();
+
+  const base = env.BASE_URL || 'https://www.ukbrewerytours.com';
+  const payUrl = `${base}/pay/${row.public_token}`;
+
+  const fail = async (message) => {
+    await env.DB.prepare(
+      `UPDATE payment_requests
+          SET status = CASE WHEN send_attempts >= max_send_attempts THEN 'failed'
+                            ELSE COALESCE(resume_status, 'draft') END,
+              claim_id = NULL, claimed_at = NULL, resume_status = NULL,
+              last_send_error = ?1, updated_at = datetime('now')
+        WHERE id = ?2 AND claim_id = ?3`,
+    ).bind(String(message).slice(0, 300), requestId, claimId).run();
+    throw new Error(message);
+  };
+
+  if (!(await mayEmail(env, row.client_email))) {
+    await fail('That client address is suppressed and cannot be emailed.');
+  }
+  if (!env.RESEND_API_KEY) {
+    await fail('Email is not configured.');
+  }
+
+  const from = env.FROM_EMAIL || 'UK Brewery Tours <info@ukbrewerytours.com>';
+  const replyTo = row.reply_to_email || row.member_email || 'info@ukbrewerytours.com';
+
+  let messageId = null;
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from,
+        to: [row.client_email],
+        reply_to: replyTo,
+        subject: `${row.member_display_name || 'UK Brewery Tours'} — payment for ${row.tour_name}`,
+        html: paymentRequestHtml({ row, payUrl }),
+      }),
+    });
+    const j = await res.json();
+    if (!res.ok) throw new Error(j?.message || `Resend ${res.status}`);
+    messageId = j?.id || null;
+  } catch (err) {
+    await fail(`Could not send the email: ${err.message}`);
+  }
+
+  // Only now is it genuinely sent.
+  await env.DB.prepare(
+    `UPDATE payment_requests
+        SET status = 'sent', sent_at = datetime('now'),
+            send_email_sent = 1, send_message_id = ?1,
+            claim_id = NULL, claimed_at = NULL, resume_status = NULL,
+            last_send_error = NULL, updated_at = datetime('now')
+      WHERE id = ?2 AND claim_id = ?3`,
+  ).bind(messageId, requestId, claimId).run();
+
+  await recordEvent(env, {
+    requestId, teamMemberId: row.team_member_id, type: 'sent', actor,
+    detail: `Payment request emailed to ${row.client_email}`,
+  });
+
+  return { ok: true, payUrl, messageId };
+}
+
+/** The client's email: what they are paying for, and one button to pay it. */
+export function paymentRequestHtml({ row, payUrl }) {
+  const when = [row.tour_date, row.tour_time].filter(Boolean).join(' at ');
+  return payShell(`<tr><td style="padding:30px 28px;">
+    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${INK_SOFT};">Payment request</div>
+    <h1 style="margin:6px 0 16px;font-size:24px;line-height:1.3;">${esc(row.tour_name)}</h1>
+
+    <p style="margin:0 0 20px;font-size:15px;line-height:1.7;">
+      Hi ${esc(row.client_name)}, here's the payment link for your booking with
+      ${esc(row.member_display_name || 'UK Brewery Tours')}.
+    </p>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #e7ddcd;border-bottom:1px solid #e7ddcd;margin-bottom:22px;">
+      ${when ? `<tr><td style="padding:8px 14px 8px 0;font-size:14px;color:${INK_SOFT};">When</td>
+        <td style="padding:8px 0;font-size:14px;font-weight:600;">${esc(when)}</td></tr>` : ''}
+      <tr><td style="padding:8px 14px 8px 0;font-size:14px;color:${INK_SOFT};">Amount</td>
+        <td style="padding:8px 0;font-size:19px;font-weight:700;">${money(row.amount_pence)}</td></tr>
+    </table>
+
+    ${row.tour_details ? `<div style="font-size:14px;line-height:1.7;margin-bottom:22px;">${esc(row.tour_details).replace(/\n/g, '<br>')}</div>` : ''}
+
+    <div style="text-align:center;margin:26px 0;">
+      <a href="${payUrl}" style="display:inline-block;background:${AMBER};color:#2b1a05;text-decoration:none;font-weight:600;padding:15px 34px;border-radius:999px;font-size:16px;">
+        View and pay ${money(row.amount_pence)}
+      </a>
+      <div style="font-size:13px;color:${INK_SOFT};margin-top:12px;">Secure payment by Stripe. The full details and terms are on that page.</div>
+    </div>
+
+    <p style="margin:22px 0 0;font-size:13px;color:${INK_SOFT};line-height:1.7;">
+      Questions? Just reply to this email and it goes straight to your guide.
+    </p>
+  </td></tr>`);
+}
