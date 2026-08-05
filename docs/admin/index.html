@@ -4,17 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
-<title>Vouchers — UK Brewery Tours Admin</title>
+<title>Admin — UK Brewery Tours</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍺%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="/assets/css/admin.css">
 </head>
 <body>
 <header class="admin-header">
-  <div class="admin-brand">🍺 UK Brewery Tours <span>Voucher admin</span></div>
+  <div class="admin-brand">🍺 UK Brewery Tours <span>Admin</span></div>
   <div class="admin-user"><span id="who"></span><button class="btn btn-ghost" id="logout">Sign out</button></div>
 </header>
 
-<main class="admin-main">
+<nav class="admin-tabs">
+  <button class="admin-tab is-active" data-tab="vouchers">Gift vouchers</button>
+  <button class="admin-tab" data-tab="connect">Team payments</button>
+</nav>
+
+<main class="admin-main" data-panel="vouchers">
   <section class="stats" id="stats"></section>
 
   <section class="panel">
@@ -42,6 +47,55 @@
     <div class="pager"><button class="btn btn-ghost" id="prev" disabled>← Previous</button><span id="pageLabel"></span><button class="btn btn-ghost" id="next" disabled>Next →</button></div>
   </section>
 </main>
+
+<main class="admin-main" data-panel="connect" hidden>
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Team members</h2>
+      <button class="btn btn-primary btn-sm" id="addMember">Add team member</button>
+    </div>
+    <div class="table-wrap">
+      <table class="voucher-table">
+        <thead>
+          <tr><th>Name</th><th>Stripe account</th><th>Fee</th><th>Requests</th><th>Paid</th><th>Status</th><th></th></tr>
+        </thead>
+        <tbody id="teamRows"><tr><td colspan="7" class="muted pad">Loading…</td></tr></tbody>
+      </table>
+    </div>
+    <p class="muted pad" style="padding-top:0">
+      Team members raise payment requests on their own Stripe account. Refunds stay with you —
+      there is no refund control in the team area.
+    </p>
+  </section>
+
+  <section class="panel" style="margin-top:22px">
+    <div class="panel-head">
+      <h2>Stripe connected accounts</h2>
+      <div class="filters">
+        <input type="search" id="acctQ" placeholder="Search name, email or acct_…">
+        <label class="inline-check"><input type="checkbox" id="acctReady" checked> Ready for payments only</label>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="voucher-table">
+        <thead>
+          <tr><th>Account</th><th>Type</th><th>Status</th><th>Assigned to</th><th>ID</th></tr>
+        </thead>
+        <tbody id="acctRows"><tr><td colspan="5" class="muted pad">Loading…</td></tr></tbody>
+      </table>
+    </div>
+    <p class="muted pad" style="padding-top:0" id="acctSummary"></p>
+  </section>
+</main>
+
+<!-- Add team member -->
+<div class="modal" id="memberModal" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-panel" role="dialog" aria-modal="true">
+    <button class="modal-close" data-close aria-label="Close">&times;</button>
+    <div id="memberBody"></div>
+  </div>
+</div>
 
 <!-- Voucher detail + redeem -->
 <div class="modal" id="modal" hidden>
@@ -285,6 +339,147 @@ document.getElementById('logout').addEventListener('click', async () => {
 api('/api/admin/me')
   .then(u => { document.getElementById('who').textContent = u.email; load(); })
   .catch(() => {});
+
+/* ---------------- Team payments (Stripe Connect) ---------------- */
+
+const pct = bps => (bps / 100).toFixed(bps % 100 === 0 ? 0 : 2) + '%';
+let defaultFeeBps = 2000;
+let connectLoaded = false;
+
+document.querySelectorAll('.admin-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.admin-tab').forEach(t => t.classList.toggle('is-active', t === tab));
+    document.querySelectorAll('[data-panel]').forEach(p => { p.hidden = p.dataset.panel !== tab.dataset.tab; });
+    if (tab.dataset.tab === 'connect' && !connectLoaded) { connectLoaded = true; loadTeam(); loadAccounts(); }
+  });
+});
+
+async function loadTeam() {
+  const el = document.getElementById('teamRows');
+  try {
+    const d = await api('/api/admin/team');
+    defaultFeeBps = d.default_fee_bps;
+    el.innerHTML = d.members.length ? d.members.map(m => `
+      <tr>
+        <td><strong>${esc(m.name)}</strong><br><span class="muted">${esc(m.email)}</span></td>
+        <td><code class="small">${esc(m.stripe_account_id || '—')}</code></td>
+        <td>${m.fee_bps === null ? `<span class="muted">${pct(defaultFeeBps)} (default)</span>` : pct(m.fee_bps)}</td>
+        <td>${m.request_count}</td>
+        <td>${money(m.paid_pence)}</td>
+        <td><span class="pill pill-${m.active ? 'active' : 'pending'}">${m.active ? 'Active' : 'Disabled'}</span></td>
+        <td></td>
+      </tr>`).join('')
+      : `<tr><td colspan="7" class="muted pad">No team members yet. Add one to start taking payments on their Stripe account.</td></tr>`;
+  } catch (err) {
+    el.innerHTML = `<tr><td colspan="7" class="pad error">${esc(err.message)}</td></tr>`;
+  }
+}
+
+async function loadAccounts() {
+  const el = document.getElementById('acctRows');
+  const q = document.getElementById('acctQ').value.trim();
+  const ready = document.getElementById('acctReady').checked ? '1' : '0';
+  el.innerHTML = '<tr><td colspan="5" class="muted pad">Loading from Stripe…</td></tr>';
+  try {
+    const d = await api(`/api/admin/connect-accounts?q=${encodeURIComponent(q)}&ready=${ready}`);
+    el.innerHTML = d.accounts.length ? d.accounts.map(a => `
+      <tr>
+        <td><strong>${esc(a.label)}</strong>${a.email && a.email !== a.label ? `<br><span class="muted">${esc(a.email)}</span>` : ''}</td>
+        <td class="muted">${esc(a.type)}</td>
+        <td>${a.usable
+          ? '<span class="pill pill-active">Ready</span>'
+          : `<span class="pill pill-pending">${a.charges_enabled ? 'No platform fee' : 'Cannot charge'}</span>`}</td>
+        <td>${a.assigned_to ? esc(a.assigned_to.name) : '<span class="muted">—</span>'}</td>
+        <td><code class="small">${esc(a.id)}</code></td>
+      </tr>`).join('')
+      : '<tr><td colspan="5" class="muted pad">No matching accounts.</td></tr>';
+    document.getElementById('acctSummary').textContent =
+      `${d.usable} of ${d.total} connected accounts can take payments · ${d.assigned} assigned to a team member`;
+  } catch (err) {
+    el.innerHTML = `<tr><td colspan="5" class="pad error">${esc(err.message)}</td></tr>`;
+  }
+}
+
+let acctTimer;
+document.getElementById('acctQ').addEventListener('input', () => {
+  clearTimeout(acctTimer); acctTimer = setTimeout(loadAccounts, 300);
+});
+document.getElementById('acctReady').addEventListener('change', loadAccounts);
+
+const memberModal = document.getElementById('memberModal');
+const memberBody = document.getElementById('memberBody');
+
+document.getElementById('addMember').addEventListener('click', async () => {
+  memberModal.hidden = false;
+  memberBody.innerHTML = '<p class="muted pad">Loading accounts…</p>';
+  try {
+    const d = await api('/api/admin/connect-accounts?ready=1');
+    const free = d.accounts.filter(a => !a.assigned_to);
+    if (!free.length) {
+      memberBody.innerHTML = '<p class="pad">Every payment-ready Stripe account is already assigned to a team member.</p>';
+      return;
+    }
+    memberBody.innerHTML = `
+      <h2 style="margin-bottom:6px">Add team member</h2>
+      <p class="muted" style="margin-bottom:20px">They will be able to raise payment requests on the chosen Stripe account. They cannot issue refunds.</p>
+      <form id="memberForm">
+        <div class="redeem-row">
+          <div class="field"><label for="m-name">Name</label><input id="m-name" type="text" required></div>
+          <div class="field"><label for="m-email">Email (their login)</label><input id="m-email" type="email" required></div>
+        </div>
+        <div class="field" style="margin-top:12px">
+          <label for="m-acct">Stripe connected account</label>
+          <select id="m-acct" required>
+            ${free.map(a => `<option value="${esc(a.id)}">${esc(a.label)} — ${esc(a.id)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field" style="margin-top:12px">
+          <label for="m-fee">Platform fee %</label>
+          <input id="m-fee" type="number" step="0.01" min="0" max="100" placeholder="${(defaultFeeBps / 100)}">
+          <p class="muted" style="font-size:.8rem;margin-top:6px">Leave blank to use the ${pct(defaultFeeBps)} default. Included in the price — a £100 tour means the client pays £100 and they receive ${(100 - defaultFeeBps / 100).toFixed(0)}%.</p>
+        </div>
+        <p class="error" id="memberError" hidden></p>
+        <div class="redeem-actions"><button class="btn btn-primary" type="submit">Create login</button></div>
+      </form>`;
+
+    document.getElementById('memberForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errEl = document.getElementById('memberError');
+      errEl.hidden = true;
+      const btn = e.target.querySelector('button');
+      btn.disabled = true; btn.textContent = 'Creating…';
+      try {
+        const res = await api('/api/admin/team', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: document.getElementById('m-name').value,
+            email: document.getElementById('m-email').value,
+            stripe_account_id: document.getElementById('m-acct').value,
+            fee_percent: document.getElementById('m-fee').value,
+          }),
+        });
+        memberBody.innerHTML = `
+          <h2 style="margin-bottom:14px">Login created</h2>
+          <div class="balance-box"><div class="hl full-width">
+            <span>Password — shown once</span>
+            <strong style="font-family:ui-monospace,Consolas,monospace;font-size:1.15rem">${esc(res.password)}</strong>
+          </div></div>
+          <p class="muted" style="margin-top:16px">${esc(res.notice)}</p>
+          <p class="muted" style="margin-top:10px">Give it to <strong>${esc(res.member.name)}</strong> directly — it is deliberately not emailed.</p>
+          <div class="redeem-actions"><button class="btn btn-primary" data-close type="button">Done</button></div>`;
+        loadTeam(); loadAccounts();
+      } catch (err) {
+        errEl.textContent = err.message; errEl.hidden = false;
+        btn.disabled = false; btn.textContent = 'Create login';
+      }
+    });
+  } catch (err) {
+    memberBody.innerHTML = `<p class="pad error">${esc(err.message)}</p>`;
+  }
+});
+
+memberModal.addEventListener('click', (e) => { if (e.target.closest('[data-close]')) memberModal.hidden = true; });
 </script>
 </body>
 </html>

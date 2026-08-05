@@ -90,8 +90,8 @@ export async function onRequestPost({ request, env }) {
   let member = null;
   try {
     member = await env.DB.prepare(
-      `SELECT id, email, name, password_hash, password_salt, iterations, password_algo,
-              active, token_version, must_change_password, failed_attempts
+      `SELECT id, email, name, password_hash, password_salt, iterations, algo,
+              active, session_epoch, must_change_password, failed_attempts
          FROM team_members
         WHERE email = ?`,
     ).bind(email).first();
@@ -136,7 +136,7 @@ export async function onRequestPost({ request, env }) {
   await clearLoginAttempts(env, keys);
 
   // A password that verified under the legacy unpeppered scheme is re-hashed in
-  // place. token_version is deliberately NOT bumped: the password has not
+  // place. session_epoch is deliberately NOT bumped: the password has not
   // changed, so the member's other sessions stand.
   if (needsUpgrade) {
     try {

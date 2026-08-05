@@ -231,18 +231,25 @@ Each step is deployable on its own; nothing touches the existing voucher flow.
 
 ---
 
+## Refunds: admin only
+
+Decided 2026-08-05. Team members can raise and cancel their own payment
+requests, but **cannot refund**. Refunds live at `/api/admin/pay-refund` behind
+the admin gate; there is deliberately no refund route under `/api/team/`.
+
+A refund on a direct charge also reverses the platform fee, and it moves money
+out of the member's own balance — so it stays a decision the platform makes,
+with the member's request going through you.
+
 ## Still open
 
-1. **Refunds on connected accounts** — team members able to refund their own
-   payments, or admin only? (Refunding a direct charge reverses the platform fee
-   too unless told otherwise.) Assuming **admin only** for now, as the safer default.
-2. **Terms** — one default set for everyone, or per team member? Building one
+1. **Terms** — one default set for everyone, or per team member? Building one
    editable default, snapshotted onto each request.
-3. **Deposits / part payments** — repeat requests to the same client: independent
+2. **Deposits / part payments** — repeat requests to the same client: independent
    requests, or linked as "deposit + balance" on one booking? Building them
    independent, with the client's details remembered for quick re-use.
 
-None of these block the first three build steps.
+Neither blocks the current build steps.
 
 ## Testing without emailing Alehunters
 

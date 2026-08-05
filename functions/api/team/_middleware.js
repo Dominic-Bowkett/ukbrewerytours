@@ -14,8 +14,8 @@
 //      same value, and even if someone copied the cookie under the other name.
 //
 //   2. REVOCATION. The member row is re-read on every request and its
-//      token_version compared with the one baked into the token. Admin bumps
-//      token_version in the same UPDATE that deactivates a member or changes
+//      session_epoch compared with the one baked into the token. Admin bumps
+//      session_epoch in the same UPDATE that deactivates a member or changes
 //      their password, so "sign out everywhere" takes effect on the next
 //      request rather than up to eight hours later.
 //
@@ -98,8 +98,8 @@ export async function onRequest(ctx) {
     member = await env.DB.prepare(
       `SELECT id, email, name, company_name, reply_to_email,
               stripe_account_id, stripe_account_label, stripe_charges_enabled,
-              stripe_platform_payments_active, stripe_account_state, stripe_account_checked_at,
-              fee_bps, active, token_version, must_change_password, last_login_at
+              stripe_platform_payments, stripe_account_state, stripe_account_checked_at,
+              fee_bps, active, session_epoch, must_change_password, last_login_at
          FROM team_members
         WHERE id = ?`,
     ).bind(session.teamMemberId).first();
@@ -115,7 +115,7 @@ export async function onRequest(ctx) {
 
   // Server-side revocation. Any token minted before the bump stops verifying on
   // its very next request, with no session table to keep.
-  if ((member.token_version | 0) !== session.tokenVersion) {
+  if ((member.session_epoch | 0) !== session.tokenVersion) {
     return deny(request, 'Please sign in again.', 'session_revoked');
   }
 

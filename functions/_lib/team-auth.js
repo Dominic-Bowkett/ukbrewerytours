@@ -45,7 +45,7 @@
 // Nothing authorisation-relevant. Only {aud, tmid, tv, sid, iat, exp}. The
 // member's active flag, Stripe account, charge-readiness and fee are re-read
 // from D1 on every request by functions/api/team/_middleware.js, so a token
-// minted before a change can never widen access. `tv` is the token_version and
+// minted before a change can never widen access. `tv` is the session_epoch and
 // is what makes a stateless token revocable: admin bumps it, and the very next
 // request from every outstanding session for that member fails.
 
@@ -142,7 +142,7 @@ export function teamAuthConfigError(env) {
 /**
  * Mint a team session token.
  *
- * @param {{id:number, token_version:number}} member  a freshly read team_members row
+ * @param {{id:number, session_epoch:number}} member  a freshly read team_members row
  */
 export async function createTeamSession(member, env) {
   const problem = teamAuthConfigError(env);
@@ -153,7 +153,7 @@ export async function createTeamSession(member, env) {
   const payload = b64url(JSON.stringify({
     aud: TEAM_AUD,                     // checked on every request; covered by the signature
     tmid: member.id,
-    tv: normaliseTokenVersion(member.token_version),
+    tv: normaliseTokenVersion(member.session_epoch),
     sid: randomHex(8),                 // session id, for log correlation only
     iat: now,
     exp: now + SESSION_HOURS * 3600 * 1000,
@@ -285,7 +285,7 @@ export const DUMMY_MEMBER = Object.freeze({
   password_hash: '0'.repeat(64),
   password_salt: 'ubt-team-timing-equaliser',
   iterations: TEAM_ITERATIONS,
-  password_algo: ALGO_PEPPERED,
+  algo: ALGO_PEPPERED,
 });
 
 /**
@@ -321,7 +321,7 @@ export async function verifyTeamPassword(password, member, env) {
   const matchesPeppered = safeEqual(pepperedHash, stored) ? 1 : 0;
   const matchesLegacy = safeEqual(legacyHash, stored) ? 1 : 0;
 
-  const algo = typeof row.password_algo === 'string' ? row.password_algo : '';
+  const algo = typeof row.algo === 'string' ? row.algo : '';
   const isPeppered = safeEqual(algo, ALGO_PEPPERED) ? 1 : 0;
   const isLegacy = safeEqual(algo, ALGO_LEGACY) ? 1 : 0;
   const present = member ? 1 : 0;
@@ -334,16 +334,16 @@ export async function verifyTeamPassword(password, member, env) {
 /**
  * Re-hash a correct legacy password under the peppered scheme. Guarded on the
  * stored algo so two concurrent logins cannot fight, and deliberately does NOT
- * bump token_version: the password has not changed, so live sessions stand.
+ * bump session_epoch: the password has not changed, so live sessions stand.
  */
 export async function upgradeTeamPasswordHash(env, { memberId, password }) {
   const salt = randomHex(16);
   const hash = await hashTeamPassword(password, salt, env, { peppered: true, iterations: TEAM_ITERATIONS });
   const res = await env.DB.prepare(
     `UPDATE team_members
-        SET password_hash = ?, password_salt = ?, iterations = ?, password_algo = ?,
+        SET password_hash = ?, password_salt = ?, iterations = ?, algo = ?,
             updated_at = datetime('now')
-      WHERE id = ? AND password_algo = ?`,
+      WHERE id = ? AND algo = ?`,
   ).bind(hash, salt, TEAM_ITERATIONS, ALGO_PEPPERED, memberId, ALGO_LEGACY).run();
   return res.meta.changes === 1;
 }
@@ -369,7 +369,7 @@ export function isChargeReady(member) {
     && typeof member.stripe_account_id === 'string'
     && member.stripe_account_id.startsWith('acct_')
     && member.stripe_charges_enabled === 1
-    && member.stripe_platform_payments_active === 1
+    && member.stripe_platform_payments === 1
     && member.stripe_account_state === 'active';
 }
 

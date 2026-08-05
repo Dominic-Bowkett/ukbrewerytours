@@ -72,6 +72,26 @@ code { font-family: "SF Mono", Consolas, "Courier New", monospace; }
 .admin-user .btn-ghost { color: #cbbca9; }
 .admin-user .btn-ghost:hover { background: rgba(255, 255, 255, .1); color: #fff; }
 .admin-main { max-width: 1180px; margin: 0 auto; padding: 26px 20px 60px; }
+.admin-main[hidden] { display: none; }
+
+/* section tabs */
+.admin-tabs {
+  display: flex; gap: 4px; padding: 0 20px;
+  max-width: 1180px; margin: 0 auto;
+  border-bottom: 1px solid var(--line);
+}
+.admin-tab {
+  border: 0; background: none; cursor: pointer;
+  font: inherit; font-weight: 600; font-size: .95rem;
+  padding: 14px 18px; color: var(--ink-soft);
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+}
+.admin-tab:hover { color: var(--ink); }
+.admin-tab.is-active { color: var(--ink); border-bottom-color: var(--amber); }
+
+.inline-check { display: inline-flex; align-items: center; gap: 7px; font-size: .87rem; color: var(--ink-soft); white-space: nowrap; }
+code.small { font-size: .78rem; }
+.balance-box .full-width { grid-column: 1 / -1; }
 
 /* ---------- stats ---------- */
 .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 24px; }
