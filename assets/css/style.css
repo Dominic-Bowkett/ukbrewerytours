@@ -118,33 +118,6 @@ h3 { font-size: 1.25rem; line-height: 1.3; }
 .tour-disclaimer { font-size: .8rem; line-height: 1.5; color: var(--ink-soft); margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--line); }
 .tour-disclaimer a { color: var(--amber-deep); }
 
-/* gift voucher popup modal */
-.giftup-modal { position: fixed; inset: 0; z-index: 200; display: flex; align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto; }
-.giftup-modal[hidden] { display: none; }
-.giftup-modal__backdrop { position: fixed; inset: 0; background: rgba(24, 16, 11, .72); backdrop-filter: blur(2px); }
-.giftup-modal__panel {
-  position: relative;
-  width: 100%;
-  max-width: 640px;
-  background: var(--paper);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-lift);
-  padding: 32px;
-  margin: auto;
-}
-.giftup-modal__head { margin-bottom: 22px; }
-.giftup-modal__head h2 { margin-top: 4px; }
-.giftup-modal__head p { color: var(--ink-soft); margin-top: 8px; font-size: .95rem; }
-.giftup-modal__close {
-  position: absolute; top: 12px; right: 14px;
-  width: 38px; height: 38px;
-  border: 0; border-radius: 999px;
-  background: var(--cream); color: var(--ink);
-  font-size: 1.6rem; line-height: 1; cursor: pointer;
-}
-.giftup-modal__close:hover { background: var(--line); }
-@media (max-width: 560px) { .giftup-modal__panel { padding: 24px 18px; } .giftup-modal { padding: 16px; } }
-
 /* ---------- in-house gift voucher modal + form ---------- */
 .voucher-modal { position: fixed; inset: 0; z-index: 200; display: flex; align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto; }
 .voucher-modal[hidden] { display: none; }
@@ -716,6 +689,9 @@ p > .btn { margin-bottom: 10px; }
 .includes-list { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin: 20px 0 0; }
 .includes-list li { display: flex; gap: 11px; align-items: flex-start; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 14px 16px; font-size: .95rem; line-height: 1.5; }
 .includes-list li::before { content: "✓"; color: var(--amber-deep); font-weight: 700; flex: none; width: 1em; text-align: center; }
+/* wrap item text in a span so it forms one flex child — a bare text node gets
+   squeezed into a narrow column and breaks the label onto its own line */
+.includes-list li > span { min-width: 0; }
 
 .brewery-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
 
@@ -1126,10 +1102,14 @@ details .a { padding: 0 0 20px; color: var(--ink-soft); font-size: .97rem; }
 .illus-band.photo img { aspect-ratio: 16 / 9; object-fit: cover; }
 
 /* illustration header inside a "how it works" step card */
+/* Illustration bleeds to the card edges. `width:100%` resolves against the
+   content box, so it must be widened by the horizontal padding it is pulled
+   out over — `max-width:none` stops the global img rule capping it. */
 .step { overflow: hidden; }
 .step-illus {
   display: block;
   width: calc(100% + 56px);
+  max-width: none;
   margin: -30px -28px 24px;
   aspect-ratio: 4 / 3;
   object-fit: cover;

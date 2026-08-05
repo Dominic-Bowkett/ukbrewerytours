@@ -408,11 +408,9 @@ function postCard(p) {
 
 const layout = read('templates/layout.html');
 
-// In-house voucher form. Injected only where it's used — while the flow is
-// being trialled that's the internal demo page; flip `voucherEverywhere` to
-// true to replace GiftUp site-wide.
+// In-house voucher form, live site-wide (replaced the GiftUp widget).
 const voucherModalTpl = read('templates/voucher-modal.html');
-const voucherEverywhere = false;
+const voucherEverywhere = true;
 
 function writePage(outPath, { title, description, content, nav, ogImage, jsonld, robots, voucher, voucherPrint }) {
   const canonical = site.base_url + ('/' + outPath).replace(/\/index\.html$/, '/');
@@ -664,6 +662,7 @@ for (const t of activeTours) {
 
   let content = fill(productTpl, {
     name: esc(t.name), city: esc(t.city), price: t.price || '',
+    tour_slug: t.old_slug,
     hero_image: hero, thumbs, facts,
     whatsapp_url: WHATSAPP,
     cta_buttons: ctaButtons,
@@ -851,7 +850,7 @@ for (const t of allExperiences) {
       <div class="price-line">${priceLine}</div>
       <a class="btn btn-primary" href="${bookUrl}" target="_blank" rel="${src.rel}">${src.cta}</a>
       ${groupBtn(t.title)}
-      <a class="btn btn-outline" href="/gift-vouchers/" data-giftup-open>🎁 Buy a gift voucher</a>
+      <a class="btn btn-outline" href="/gift-vouchers/" data-voucher-open data-tour-name="${esc(t.title)}" data-tour-price="${t.price_gbp || ''}" data-tour-slug="">🎁 Buy a gift voucher</a>
       <p class="note">${ratingStr ? esc(ratingStr) + ' · ' : ''}${guide ? `<a href="/tours/${guide.slug}/">More ${esc(t.city)} tours</a>` : `<a href="/tours/">All tours</a>`}</p>
       ${TOUR_DISCLAIMER}
       <p class="disclosure" style="margin-top:12px">${direct ? 'Run and booked directly with the brewery on their own website — we don’t take a booking or earn commission on it. Group enquiries are handled directly by us.' : `Booked via ${src.name}, our partner. We may earn a commission at no extra cost to you. Group enquiries are handled directly by us.`}</p>

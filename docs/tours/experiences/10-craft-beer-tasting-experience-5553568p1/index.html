@@ -26,7 +26,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/style.css?v=39a6afdb">
+  <link rel="stylesheet" href="/assets/css/style.css?v=3abcdd84">
   
 </head>
 <body>
@@ -82,7 +82,7 @@
       <div class="price-line"><span class="pp" style="font-weight:600;font-size:1.05rem">See live prices</span></div>
       <a class="btn btn-primary" href="https://www.viator.com/tours/London/10-Craft-Beer-Tasting-Experience/d737-5553568P1?pid=P00012546&uid=U00090442&mcid=58086&currency=GBP" target="_blank" rel="sponsored noopener">Book on Viator ↗</a>
       <a class="btn btn-whatsapp" href="https://wa.me/447418310015?text=Hi!%20I'd%20like%20to%20enquire%20about%20a%20group%20booking%20for%20the%20London%20Nano%20Brewery%20Craft%20Beer%20Tasting%20Experience."><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.6-1.2 1.2-1.7 1.2-.4.1-1 .1-1.6-.1a13 13 0 0 1-5.8-5.1c-.6-1-.9-2-.9-2.7 0-.8.4-1.4.7-1.7.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.3.3c-.1.2-.2.3 0 .6.2.3.9 1.4 1.9 2.3 1.3 1.2 2.4 1.5 2.7 1.7.3.1.5.1.7-.1l1-1.2c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.4 0 .1 0 .7-.2 1.2Z"/></svg> Group booking enquiry</a>
-      <a class="btn btn-outline" href="/gift-vouchers/" data-giftup-open>🎁 Buy a gift voucher</a>
+      <a class="btn btn-outline" href="/gift-vouchers/" data-voucher-open data-tour-name="London Nano Brewery Craft Beer Tasting Experience" data-tour-price="" data-tour-slug="">🎁 Buy a gift voucher</a>
       <p class="note"><a href="/tours/london/">More London tours</a></p>
       <p class="tour-disclaimer">Tours, itineraries and pricing may be subject to change. Please confirm with the organiser, or <a href="/contact/">get in touch</a> and we’ll happily check for you.</p>
       <p class="disclosure" style="margin-top:12px">Booked via Viator, our partner. We may earn a commission at no extra cost to you. Group enquiries are handled directly by us.</p>
@@ -171,30 +171,111 @@
     </div>
   </footer>
 
-  <!-- Gift voucher popup modal (opened by any [data-giftup-open] button, on every page) -->
-  <div class="giftup-modal" data-giftup-modal hidden>
-    <div class="giftup-modal__backdrop" data-giftup-close></div>
-    <div class="giftup-modal__panel" role="dialog" aria-modal="true" aria-labelledby="giftup-title">
-      <button class="giftup-modal__close" type="button" data-giftup-close aria-label="Close">&times;</button>
-      <div class="giftup-modal__head">
-        <span class="kicker">Gift vouchers</span>
-        <h2 id="giftup-title">Buy a gift voucher</h2>
-        <p>Monetary UK Brewery Tours vouchers — instant email delivery, and they never expire.</p>
-      </div>
-      <div class="gift-up-target" data-site-id="6ed23cad-32b5-4c18-8d00-49f291f4b0fb" data-platform="Other" data-product-id="2600a62f-f863-4e4c-8b67-07c82b627130" data-language="en-GB"></div>
+<!-- In-house gift voucher form. Opened by any [data-voucher-open] control.
+     Openers may carry data-tour-name / data-tour-price / data-tour-slug to prefill. -->
+<div class="voucher-modal" data-voucher-modal hidden>
+  <div class="voucher-modal__backdrop" data-voucher-close></div>
+  <div class="voucher-modal__panel" role="dialog" aria-modal="true" aria-labelledby="voucher-title">
+    <button class="voucher-modal__close" type="button" data-voucher-close aria-label="Close">&times;</button>
+
+    <div class="voucher-modal__head">
+      <span class="kicker">Gift vouchers</span>
+      <h2 id="voucher-title">Buy a gift voucher</h2>
+      <p data-voucher-blurb>Monetary vouchers for any UK Brewery Tours experience — delivered by email, and they never expire.</p>
     </div>
+
+    <form class="voucher-form" data-voucher-form novalidate>
+      <!-- amount + quantity -->
+      <div class="vf-row">
+        <div class="vf-field">
+          <label for="vf-amount">Voucher amount</label>
+          <div class="vf-amount">
+            <span class="vf-currency">£</span>
+            <input id="vf-amount" type="number" inputmode="decimal" min="10" step="1" value="50" required>
+          </div>
+          <p class="vf-hint" data-voucher-amount-hint>Minimum £10</p>
+        </div>
+
+        <div class="vf-field">
+          <label id="vf-qty-label">Number of vouchers</label>
+          <div class="vf-stepper" role="group" aria-labelledby="vf-qty-label">
+            <button type="button" data-qty-down aria-label="One fewer voucher">−</button>
+            <input id="vf-qty" type="number" min="1" max="20" value="1" readonly aria-live="polite">
+            <button type="button" data-qty-up aria-label="One more voucher">+</button>
+          </div>
+          <p class="vf-hint">Each gets its own code</p>
+        </div>
+      </div>
+
+      <div class="vf-total">
+        <span>Total</span>
+        <strong data-voucher-total>£50.00</strong>
+      </div>
+
+      <!-- delivery choice -->
+      <div class="vf-field">
+        <span class="vf-label">Who is it for?</span>
+        <div class="vf-toggle" role="radiogroup" aria-label="Who is it for?">
+          <label class="vf-toggle__opt">
+            <input type="radio" name="vf-deliver" value="other" checked>
+            <span>Someone else</span>
+          </label>
+          <label class="vf-toggle__opt">
+            <input type="radio" name="vf-deliver" value="self">
+            <span>Myself</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- recipient (hidden when buying for yourself) -->
+      <div data-voucher-recipient>
+        <div class="vf-row">
+          <div class="vf-field">
+            <label for="vf-rname">Recipient's name</label>
+            <input id="vf-rname" type="text" autocomplete="off" placeholder="Alex Smith">
+          </div>
+          <div class="vf-field">
+            <label for="vf-remail">Recipient's email</label>
+            <input id="vf-remail" type="email" autocomplete="off" placeholder="alex@example.com">
+          </div>
+        </div>
+        <div class="vf-field">
+          <label for="vf-message">Message <span class="vf-optional">(optional)</span></label>
+          <textarea id="vf-message" rows="3" maxlength="1000"></textarea>
+        </div>
+      </div>
+
+      <!-- purchaser -->
+      <div class="vf-row">
+        <div class="vf-field">
+          <label for="vf-pname">Your name</label>
+          <input id="vf-pname" type="text" autocomplete="name" placeholder="Jamie Doe" required>
+        </div>
+        <div class="vf-field">
+          <label for="vf-pemail">Your email</label>
+          <input id="vf-pemail" type="email" autocomplete="email" placeholder="you@example.com" required>
+          <p class="vf-hint">Receipt goes here</p>
+        </div>
+      </div>
+
+      <div class="vf-delivery-note">
+        <strong>📧 Delivered instantly by email</strong>
+        The email contains the voucher code and is all that's needed to book — there's
+        nothing to post. It can also be printed or saved as a PDF from a link inside it.
+      </div>
+
+      <p class="vf-error" data-voucher-error hidden></p>
+
+      <button class="btn btn-primary btn-block btn-lg" type="submit" data-voucher-submit>
+        Continue to payment
+      </button>
+      <p class="vf-secure">🔒 Secure payment by Stripe · Vouchers never expire</p>
+    </form>
   </div>
-  <script type="text/javascript">
-    (function (g, i, f, t, u, p, s) {
-      g[u] = g[u] || function () { (g[u].q = g[u].q || []).push(arguments) };
-      p = i.createElement(f); p.async = 1; p.src = t;
-      s = i.getElementsByTagName(f)[0]; s.parentNode.insertBefore(p, s);
-    })(window, document, "script", "https://cdn.giftup.app/dist/gift-up.js", "giftup");
-  </script>
+</div>
 
 
-
-  <script src="/assets/js/main.js?v=39a6afdb" defer></script>
-
+  <script src="/assets/js/main.js?v=3abcdd84" defer></script>
+  <script src="/assets/js/voucher.js?v=3abcdd84" defer></script>
 </body>
 </html>

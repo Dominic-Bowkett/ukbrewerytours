@@ -6,7 +6,7 @@
 // and `orders.email_sent` guards the emails, so a retry never double-sends.
 
 import { verifyWebhook } from '../_lib/stripe.js';
-import { sendEmail, voucherEmailHtml, receiptEmailHtml } from '../_lib/email.js';
+import { sendEmail, voucherEmailHtml, receiptEmailHtml, saleNotificationHtml } from '../_lib/email.js';
 import { orderToken } from '../_lib/auth.js';
 
 export async function onRequestPost({ request, env }) {
@@ -73,6 +73,19 @@ export async function onRequestPost({ request, env }) {
     }
 
     await env.DB.prepare('UPDATE orders SET email_sent=1 WHERE id=?').bind(order.id).run();
+
+    // Internal heads-up. Deliberately after email_sent is set and swallowed on
+    // failure — a missed notification must never re-trigger the customer emails.
+    try {
+      await sendEmail(env, {
+        to: env.NOTIFY_EMAIL || 'info@ukbrewerytours.com',
+        subject: `New voucher sale — ${(order.total_pence / 100).toFixed(2)} GBP (${order.purchaser_name || order.purchaser_email})`,
+        html: saleNotificationHtml({ order, vouchers }),
+        replyTo: order.purchaser_email,
+      });
+    } catch (err) {
+      console.error('sale notification failed (customer emails were sent)', order.id, err);
+    }
   } catch (err) {
     // Payment is recorded; only delivery failed. 500 makes Stripe retry, and
     // email_sent=0 means the retry re-attempts just the email.

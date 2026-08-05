@@ -124,6 +124,45 @@ export function voucherEmailHtml({ order, vouchers, printUrl }) {
   </td></tr>`);
 }
 
+/** Internal heads-up to info@ when a voucher sells. */
+export function saleNotificationHtml({ order, vouchers }) {
+  const row = (label, value) =>
+    `<tr>
+      <td style="padding:7px 14px 7px 0;font-size:14px;color:${INK_SOFT};white-space:nowrap;">${label}</td>
+      <td style="padding:7px 0;font-size:14px;font-weight:600;">${value}</td>
+    </tr>`;
+
+  const delivery = order.send_to_self === 1
+    ? `Bought for themselves`
+    : `Gift for ${esc(order.recipient_name || '—')} &lt;${esc(order.recipient_email)}&gt;`;
+
+  return shell(`<tr><td style="padding:30px 28px;">
+    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${INK_SOFT};">New sale</div>
+    <h1 style="margin:6px 0 4px;font-size:26px;">${formatMoney(order.total_pence)}</h1>
+    <p style="margin:0 0 22px;font-size:14px;color:${INK_SOFT};">
+      ${order.quantity} gift voucher${order.quantity > 1 ? 's' : ''} at ${formatMoney(order.amount_pence)} each
+      ${order.is_demo ? ' · <strong style="color:#8a5a10;">DEMO PURCHASE</strong>' : ''}
+    </p>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #e7ddcd;border-bottom:1px solid #e7ddcd;margin-bottom:20px;">
+      ${row('Buyer', `${esc(order.purchaser_name || '—')}<br><span style="font-weight:400;color:${INK_SOFT};">${esc(order.purchaser_email)}</span>`)}
+      ${row('Delivery', delivery)}
+      ${order.tour_name ? row('From tour page', esc(order.tour_name)) : ''}
+      ${order.message ? row('Their message', `<span style="font-weight:400;font-style:italic;">${esc(order.message)}</span>`) : ''}
+      ${row('Order ref', `<span style="font-family:'Courier New',monospace;font-size:12px;">${esc(order.id)}</span>`)}
+    </table>
+
+    <div style="font-size:13px;color:${INK_SOFT};line-height:1.9;">
+      <strong style="color:${STOUT};">Code${vouchers.length > 1 ? 's' : ''} issued:</strong><br>
+      ${vouchers.map(v => `<span style="font-family:'Courier New',monospace;font-size:14px;color:${STOUT};letter-spacing:1px;">${esc(v.code)}</span> — ${formatMoney(v.amount_pence)}`).join('<br>')}
+    </div>
+
+    <p style="margin:24px 0 0;">
+      <a href="https://www.ukbrewerytours.com/admin/" style="display:inline-block;background:${AMBER};color:#2b1a05;text-decoration:none;font-weight:600;padding:11px 22px;border-radius:999px;font-size:14px;">Open voucher admin</a>
+    </p>
+  </td></tr>`);
+}
+
 export function receiptEmailHtml({ order, vouchers }) {
   const row = (label, value) =>
     `<tr>

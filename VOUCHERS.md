@@ -101,25 +101,28 @@ Prints a new password **once** and the `wrangler d1 execute …` command to appl
 it. Pass a second argument to choose your own. Add another admin by using a
 different email.
 
-## 4. Going live
+## Where the voucher form appears
 
-While testing, the flow only exists on `/demo/gift-voucher/`. To switch the
-whole site over from GiftUp:
+GiftUp has been fully removed. The in-house form is live everywhere: the modal
+is injected into every page by `templates/layout.html` (`voucherEverywhere` in
+`build.js`), and any control with `data-voucher-open` opens it.
 
-1. In `build.js`, set `voucherEverywhere = true`.
-2. Change every `data-giftup-open` to `data-voucher-open`:
-   - `pages/home.html`, `pages/gift-vouchers.html`, `pages/contact.html`
-   - `templates/product.html` (also add the tour data attributes below)
-   - `build.js` (the experience-page button)
-3. On tour pages, carry the price so the amount prefills:
-   ```html
-   <a class="btn btn-outline" href="/gift-vouchers/" data-voucher-open
-      data-tour-name="{{name}}" data-tour-price="{{price}}" data-tour-slug="{{tour_slug}}">
-   ```
-   `tour_slug` needs adding to the `fill()` call for the product template.
-4. Remove the GiftUp modal + CDN script from `templates/layout.html` (the block
-   commented "Gift voucher popup modal").
-5. `node build.js`, commit, push.
+Tour and experience pages carry `data-tour-name`, `data-tour-price` and
+`data-tour-slug` on their button, so the amount prefills with that tour's
+per-person price and the gift message is pre-written recommending it. Generic
+buttons (home, gift vouchers, contact) open the same form with a blank amount.
+
+Tours with no price simply leave the amount empty for the buyer to fill in.
+
+## Sale notifications
+
+Every completed sale emails `info@ukbrewerytours.com` with the amount, buyer,
+delivery details, the tour page it came from, the codes issued and a link
+straight into the admin. Set `NOTIFY_EMAIL` to send elsewhere.
+
+It is sent after the customer's emails and failures are swallowed, so a problem
+with the internal notification can never affect the customer or trigger a
+resend.
 
 ---
 
