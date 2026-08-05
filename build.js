@@ -450,10 +450,23 @@ fs.writeFileSync(path.join(OUT, 'CNAME'), 'www.ukbrewerytours.com\n');
 /* voucher admin — standalone internal UI, copied verbatim (no site layout) */
 fs.cpSync(path.join(ROOT, 'admin'), path.join(OUT, 'admin'), { recursive: true });
 
-// Cloudflare Pages: only send /api/* through Functions so static pages skip the
-// worker entirely and stay fast.
+// Cloudflare Pages: only these prefixes go through Functions, so the ~200 static
+// pages skip the worker entirely and stay fast.
+//
+//   /api/*   the JSON API (vouchers, admin, team, pay, Stripe webhooks)
+//   /pay/*   functions/pay/[[token]].js — the client-facing payment request page.
+//            A dynamic path CANNOT be a static file, so without this line
+//            /pay/<token> is served by the static asset handler and 404s: the
+//            emailed payment link is dead and the handler never runs.
+//   /team/*  functions/team/_middleware.js gates the team shell (redirect to
+//            login, no-store, noindex). Without this line that middleware is
+//            dead code and the dashboard markup is served to strangers.
+//
+// /assets/* is deliberately NOT in the include list, so CSS/JS (including
+// /assets/js/pay.js) is served straight from the edge cache and never pays for a
+// Function invocation — and can never be intercepted by the team gate.
 fs.writeFileSync(path.join(OUT, '_routes.json'),
-  JSON.stringify({ version: 1, include: ['/api/*'], exclude: [] }, null, 2) + '\n');
+  JSON.stringify({ version: 1, include: ['/api/*', '/pay/*', '/team/*'], exclude: [] }, null, 2) + '\n');
 
 /* ----- computed blocks shared by pages ----- */
 
