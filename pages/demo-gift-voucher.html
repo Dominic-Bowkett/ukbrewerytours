@@ -1,0 +1,55 @@
+<!-- Tags purchases from this page as `is_demo` in the database. -->
+<script>document.body.dataset.voucherDemo = '1';</script>
+
+<section class="section">
+  <div class="container narrow">
+    <div class="kicker">Internal demo — not linked publicly</div>
+    <h1>Gift voucher test page</h1>
+    <p class="lede mt-2">
+      This page exercises the in-house voucher flow end to end: Stripe Checkout → voucher code
+      generation → email delivery → admin redemption. The live GiftUp widget is untouched
+      elsewhere on the site until this is signed off.
+    </p>
+
+    <div class="demo-warning mt-3">
+      <strong>⚠️ Live keys — real charges.</strong>
+      Payments here are real and emails send for real. Test with your own email address and
+      an amount you're happy to spend (£10 minimum), then refund yourself in the Stripe dashboard.
+    </div>
+
+    <h2 class="mt-4">1. Generic voucher</h2>
+    <p>No tour context — the buyer picks any amount. This is what opens from the header, footer and gift voucher page.</p>
+    <p class="mt-2"><button class="btn btn-primary" data-voucher-open>🎁 Buy a gift voucher</button></p>
+
+    <h2 class="mt-4">2. Prefilled from a tour page</h2>
+    <p>
+      These carry the tour's per-person price and name, so the amount is prefilled and the
+      message pre-written recommending that tour. The buyer can still edit both.
+    </p>
+    <p class="mt-2">
+      <button class="btn btn-outline" data-voucher-open
+        data-tour-name="Bristol Craft Beer Experience"
+        data-tour-price="69"
+        data-tour-slug="bristol-craft-beer-experience">🎁 Bristol Craft Beer Experience — £69</button>
+    </p>
+    <p>
+      <button class="btn btn-outline" data-voucher-open
+        data-tour-name="Manchester Brewery Tour"
+        data-tour-price="59"
+        data-tour-slug="manchester-brewery-tour">🎁 Manchester Brewery Tour — £59</button>
+    </p>
+
+    <h2 class="mt-4">What to check</h2>
+    <ul class="check-list">
+      <li>Amount prefills from the tour, and can be edited.</li>
+      <li>The +/− stepper moves the total; each voucher gets its own code.</li>
+      <li>"Someone else" vs "Myself" shows/hides the recipient fields.</li>
+      <li>The message is pre-written for the tour, and stays put once you edit it.</li>
+      <li>Amounts under £10 are rejected.</li>
+      <li>After paying: voucher email to the recipient, receipt to the buyer.</li>
+      <li>The code appears in <a href="/admin/">the admin</a> — try a partial then full redemption.</li>
+    </ul>
+
+    <p class="mt-4"><a class="btn btn-outline" href="/admin/">Open voucher admin →</a></p>
+  </div>
+</section>

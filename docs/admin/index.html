@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Vouchers — UK Brewery Tours Admin</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍺%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body>
+<header class="admin-header">
+  <div class="admin-brand">🍺 UK Brewery Tours <span>Voucher admin</span></div>
+  <div class="admin-user"><span id="who"></span><button class="btn btn-ghost" id="logout">Sign out</button></div>
+</header>
+
+<main class="admin-main">
+  <section class="stats" id="stats"></section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Vouchers</h2>
+      <div class="filters">
+        <input type="search" id="q" placeholder="Search code, name or email…">
+        <select id="status">
+          <option value="">All issued</option>
+          <option value="active">Unused</option>
+          <option value="partially_redeemed">Part-redeemed</option>
+          <option value="redeemed">Fully redeemed</option>
+          <option value="pending">Unpaid / abandoned</option>
+        </select>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="voucher-table">
+        <thead>
+          <tr><th>Code</th><th>Value</th><th>Balance</th><th>Status</th><th>Bought by</th><th>Sent to</th><th>Issued</th><th></th></tr>
+        </thead>
+        <tbody id="rows"><tr><td colspan="8" class="muted pad">Loading…</td></tr></tbody>
+      </table>
+    </div>
+    <div class="pager"><button class="btn btn-ghost" id="prev" disabled>← Previous</button><span id="pageLabel"></span><button class="btn btn-ghost" id="next" disabled>Next →</button></div>
+  </section>
+</main>
+
+<!-- Voucher detail + redeem -->
+<div class="modal" id="modal" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-panel" role="dialog" aria-modal="true">
+    <button class="modal-close" data-close aria-label="Close">&times;</button>
+    <div id="detail"></div>
+  </div>
+</div>
+
+<script>
+const money = p => '£' + (p / 100).toFixed(2);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const dt = s => s ? new Date(s.replace(' ', 'T') + 'Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+
+const LABEL = {
+  active: 'Unused', partially_redeemed: 'Part-redeemed',
+  redeemed: 'Redeemed', pending: 'Unpaid', void: 'Void',
+};
+
+let page = 1, hasMore = false;
+
+const rowsEl = document.getElementById('rows');
+const qEl = document.getElementById('q');
+const statusEl = document.getElementById('status');
+const modal = document.getElementById('modal');
+const detail = document.getElementById('detail');
+
+async function api(path, opts) {
+  const res = await fetch(path, opts);
+  if (res.status === 401) { location.href = '/admin/login.html'; throw new Error('signed out'); }
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Something went wrong.');
+  return data;
+}
+
+async function load() {
+  const params = new URLSearchParams({ page, q: qEl.value.trim(), status: statusEl.value });
+  rowsEl.innerHTML = '<tr><td colspan="8" class="muted pad">Loading…</td></tr>';
+  try {
+    const data = await api('/api/admin/vouchers?' + params);
+    hasMore = data.hasMore;
+
+    document.getElementById('stats').innerHTML = `
+      <div class="stat"><span>Vouchers issued</span><strong>${data.stats.total}</strong></div>
+      <div class="stat"><span>Total value sold</span><strong>${money(data.stats.issued_pence)}</strong></div>
+      <div class="stat"><span>Outstanding balance</span><strong>${money(data.stats.outstanding_pence)}</strong></div>`;
+
+    rowsEl.innerHTML = data.vouchers.length ? data.vouchers.map(v => `
+      <tr data-code="${esc(v.code)}">
+        <td><code>${esc(v.code)}</code>${v.is_demo ? ' <span class="tag">demo</span>' : ''}</td>
+        <td>${money(v.amount_pence)}</td>
+        <td><strong>${money(v.balance_pence)}</strong></td>
+        <td><span class="pill pill-${v.status}">${LABEL[v.status] || v.status}</span></td>
+        <td>${esc(v.purchaser_name || '—')}<br><span class="muted">${esc(v.purchaser_email || '')}</span></td>
+        <td>${v.send_to_self ? '<span class="muted">Themselves</span>' : esc(v.recipient_name || '—') + '<br><span class="muted">' + esc(v.recipient_email || '') + '</span>'}</td>
+        <td class="muted">${dt(v.paid_at || v.created_at)}</td>
+        <td><button class="btn btn-sm" data-view="${esc(v.code)}">View</button></td>
+      </tr>`).join('') : '<tr><td colspan="8" class="muted pad">No vouchers found.</td></tr>';
+
+    document.getElementById('pageLabel').textContent = 'Page ' + page;
+    document.getElementById('prev').disabled = page <= 1;
+    document.getElementById('next').disabled = !hasMore;
+  } catch (err) {
+    rowsEl.innerHTML = `<tr><td colspan="8" class="pad error">${esc(err.message)}</td></tr>`;
+  }
+}
+
+async function openVoucher(code) {
+  modal.hidden = false;
+  detail.innerHTML = '<p class="muted pad">Loading…</p>';
+  try {
+    const { voucher: v, redemptions } = await api('/api/admin/voucher/' + encodeURIComponent(code));
+    const spent = v.amount_pence - v.balance_pence;
+    const redeemable = v.balance_pence > 0 && v.status !== 'pending' && v.status !== 'void';
+
+    detail.innerHTML = `
+      <div class="detail-head">
+        <code class="big-code">${esc(v.code)}</code>
+        <span class="pill pill-${v.status}">${LABEL[v.status] || v.status}</span>
+      </div>
+      <div class="balance-box">
+        <div><span>Original</span><strong>${money(v.amount_pence)}</strong></div>
+        <div><span>Redeemed</span><strong>${money(spent)}</strong></div>
+        <div class="hl"><span>Balance</span><strong>${money(v.balance_pence)}</strong></div>
+      </div>
+
+      ${redeemable ? `
+        <form class="redeem-form" id="redeemForm">
+          <h3>Redeem</h3>
+          <div class="redeem-row">
+            <div class="field"><label for="amt">Amount (£)</label>
+              <input id="amt" type="number" step="0.01" min="0.01" max="${(v.balance_pence / 100).toFixed(2)}" placeholder="0.00"></div>
+            <div class="field"><label for="note">Note (optional)</label>
+              <input id="note" type="text" placeholder="e.g. Bristol tour, 12 Aug"></div>
+          </div>
+          <p class="error" id="redeemError" hidden></p>
+          <div class="redeem-actions">
+            <button class="btn btn-primary" type="submit">Redeem amount</button>
+            <button class="btn btn-outline" type="button" id="redeemFull">Redeem full ${money(v.balance_pence)}</button>
+          </div>
+        </form>` : `<p class="muted done-note">${v.status === 'pending' ? 'Not paid for — nothing to redeem.' : 'This voucher is fully redeemed.'}</p>`}
+
+      <div class="meta-grid">
+        <div><span>Bought by</span>${esc(v.purchaser_name || '—')}<br><span class="muted">${esc(v.purchaser_email)}</span></div>
+        <div><span>Delivered to</span>${v.send_to_self ? 'Themselves' : esc(v.recipient_name || '—') + '<br><span class="muted">' + esc(v.recipient_email || '') + '</span>'}</div>
+        <div><span>Issued</span>${dt(v.paid_at || v.created_at)}</div>
+        <div><span>Tour</span>${esc(v.tour_name || '—')}</div>
+        ${v.message ? `<div class="full"><span>Message</span><em>${esc(v.message)}</em></div>` : ''}
+      </div>
+
+      <h3 class="hist-title">Redemption history</h3>
+      ${redemptions.length ? `<table class="hist"><tbody>${redemptions.map(r => `
+        <tr><td>${dt(r.created_at)}</td><td><strong>−${money(r.amount_pence)}</strong></td>
+        <td class="muted">balance ${money(r.balance_after_pence)}</td>
+        <td class="muted">${esc(r.note || '')}</td><td class="muted">${esc(r.redeemed_by || '')}</td></tr>`).join('')}
+      </tbody></table>` : '<p class="muted">Not yet redeemed.</p>'}`;
+
+    const form = document.getElementById('redeemForm');
+    if (form) {
+      const doRedeem = async (payload) => {
+        const errEl = document.getElementById('redeemError');
+        errEl.hidden = true;
+        try {
+          await api('/api/admin/redeem', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: v.code, note: document.getElementById('note').value, ...payload }),
+          });
+          await openVoucher(v.code);
+          load();
+        } catch (err) {
+          errEl.textContent = err.message;
+          errEl.hidden = false;
+        }
+      };
+      form.addEventListener('submit', e => { e.preventDefault(); doRedeem({ amount: document.getElementById('amt').value }); });
+      document.getElementById('redeemFull').addEventListener('click', () => {
+        if (confirm(`Redeem the full remaining ${money(v.balance_pence)}?`)) doRedeem({ full: true });
+      });
+    }
+  } catch (err) {
+    detail.innerHTML = `<p class="error pad">${esc(err.message)}</p>`;
+  }
+}
+
+document.addEventListener('click', (e) => {
+  const view = e.target.closest('[data-view]');
+  if (view) return openVoucher(view.dataset.view);
+  if (e.target.closest('[data-close]')) modal.hidden = true;
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.hidden = true; });
+
+let t;
+qEl.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => { page = 1; load(); }, 300); });
+statusEl.addEventListener('change', () => { page = 1; load(); });
+document.getElementById('prev').addEventListener('click', () => { if (page > 1) { page--; load(); } });
+document.getElementById('next').addEventListener('click', () => { if (hasMore) { page++; load(); } });
+document.getElementById('logout').addEventListener('click', async () => {
+  await fetch('/api/admin/logout', { method: 'POST' });
+  location.href = '/admin/login.html';
+});
+
+api('/api/admin/me')
+  .then(u => { document.getElementById('who').textContent = u.email; load(); })
+  .catch(() => {});
+</script>
+</body>
+</html>

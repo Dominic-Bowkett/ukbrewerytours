@@ -145,6 +145,112 @@ h3 { font-size: 1.25rem; line-height: 1.3; }
 .giftup-modal__close:hover { background: var(--line); }
 @media (max-width: 560px) { .giftup-modal__panel { padding: 24px 18px; } .giftup-modal { padding: 16px; } }
 
+/* ---------- in-house gift voucher modal + form ---------- */
+.voucher-modal { position: fixed; inset: 0; z-index: 200; display: flex; align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto; }
+.voucher-modal[hidden] { display: none; }
+.voucher-modal__backdrop { position: fixed; inset: 0; background: rgba(24, 16, 11, .72); backdrop-filter: blur(2px); }
+.voucher-modal__panel {
+  position: relative;
+  width: 100%;
+  max-width: 620px;
+  background: var(--paper);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lift);
+  padding: 32px;
+  margin: auto;
+}
+.voucher-modal__head { margin-bottom: 24px; }
+.voucher-modal__head h2 { margin-top: 4px; }
+.voucher-modal__head p { color: var(--ink-soft); margin-top: 8px; font-size: .95rem; }
+.voucher-modal__close {
+  position: absolute; top: 12px; right: 14px;
+  width: 38px; height: 38px;
+  border: 0; border-radius: 999px;
+  background: var(--cream); color: var(--ink);
+  font-size: 1.6rem; line-height: 1; cursor: pointer;
+}
+.voucher-modal__close:hover { background: var(--line); }
+
+.voucher-form { display: flex; flex-direction: column; gap: 18px; }
+.vf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.vf-field { display: flex; flex-direction: column; min-width: 0; }
+.voucher-form label, .vf-label {
+  font-size: .82rem; font-weight: 600; margin-bottom: 7px; color: var(--ink);
+}
+.vf-optional { font-weight: 400; color: var(--ink-soft); }
+.voucher-form input[type="text"],
+.voucher-form input[type="email"],
+.voucher-form input[type="number"],
+.voucher-form textarea {
+  width: 100%; padding: 12px 14px;
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  font-family: var(--font-body); font-size: 1rem; color: var(--ink);
+  background: #fff;
+}
+.voucher-form textarea { resize: vertical; line-height: 1.6; }
+.voucher-form input:focus, .voucher-form textarea:focus {
+  outline: 2px solid var(--amber); outline-offset: -1px; border-color: var(--amber);
+}
+.vf-hint { font-size: .78rem; color: var(--ink-soft); margin-top: 6px; line-height: 1.45; }
+
+/* amount field with a leading currency mark */
+.vf-amount { position: relative; display: flex; align-items: center; }
+.vf-amount .vf-currency {
+  position: absolute; left: 14px;
+  font-weight: 600; color: var(--ink-soft); pointer-events: none;
+  line-height: 1;
+}
+/* specificity must beat `.voucher-form input[type="number"]` above */
+.voucher-form .vf-amount input[type="number"] { padding-left: 34px; font-weight: 600; }
+/* strip spinners — the stepper handles quantity, amount is typed */
+.voucher-form input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+.voucher-form input[type="number"]::-webkit-outer-spin-button,
+.voucher-form input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+.vf-stepper { display: flex; align-items: stretch; border: 1px solid var(--line); border-radius: var(--radius-sm); overflow: hidden; background: #fff; }
+.vf-stepper button {
+  width: 46px; flex: none; border: 0; background: var(--cream);
+  font-size: 1.3rem; line-height: 1; cursor: pointer; color: var(--ink);
+}
+.vf-stepper button:hover { background: var(--line); }
+.vf-stepper input {
+  border: 0 !important; text-align: center; font-weight: 600;
+  border-radius: 0 !important; pointer-events: none;
+}
+.vf-stepper input:focus { outline: none !important; }
+
+.vf-total {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 14px 18px; background: var(--amber-soft); border-radius: var(--radius-sm);
+}
+.vf-total span { font-size: .85rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--amber-deep); }
+.vf-total strong { font-family: var(--font-display); font-size: 1.6rem; }
+
+.vf-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.vf-toggle__opt { position: relative; margin: 0; }
+.vf-toggle__opt input { position: absolute; opacity: 0; pointer-events: none; }
+.vf-toggle__opt span {
+  display: block; text-align: center; padding: 12px 10px;
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  font-size: .95rem; font-weight: 600; cursor: pointer; background: #fff;
+  transition: background .15s, border-color .15s;
+}
+.vf-toggle__opt span:hover { background: var(--cream); }
+.vf-toggle__opt input:checked + span { background: var(--amber-soft); border-color: var(--amber); color: var(--amber-deep); }
+.vf-toggle__opt input:focus-visible + span { outline: 2px solid var(--amber); outline-offset: 2px; }
+
+.vf-error {
+  background: #fbeceb; color: #96271f; border-radius: var(--radius-sm);
+  padding: 11px 14px; font-size: .9rem;
+}
+.vf-secure { text-align: center; font-size: .8rem; color: var(--ink-soft); }
+
+@media (max-width: 560px) {
+  .voucher-modal { padding: 16px; }
+  .voucher-modal__panel { padding: 24px 18px; }
+  .vf-row { grid-template-columns: 1fr; }
+}
+
 .btn svg { width: 18px; height: 18px; flex: none; }
 /* paired CTA buttons inside a paragraph get vertical spacing so they don't touch when they wrap/stack on mobile */
 p > .btn { margin-bottom: 10px; }
@@ -861,6 +967,19 @@ details .a { padding: 0 0 20px; color: var(--ink-soft); font-size: .97rem; }
 .mt-0 { margin-top: 0; } .mt-2 { margin-top: 16px; } .mt-3 { margin-top: 28px; } .mt-4 { margin-top: 44px; }
 .center { text-align: center; }
 .center .section-head, .center .lede { margin-left: auto; margin-right: auto; }
+.container.narrow { max-width: 760px; }
+
+/* voucher thank-you + internal demo page */
+.check-list { margin: 16px 0 0; padding-left: 22px; }
+.check-list li { margin-bottom: 8px; line-height: 1.6; }
+.thanks-mark { font-size: 3.4rem; line-height: 1; margin-bottom: 12px; }
+.thanks-box { background: var(--cream); border-radius: var(--radius); padding: 26px 28px; text-align: left; }
+.thanks-box h2 { font-size: 1.15rem; }
+.center .thanks-box { display: inline-block; max-width: 560px; }
+.demo-warning {
+  background: #fbeceb; border-left: 4px solid #c0392b; border-radius: var(--radius-sm);
+  padding: 16px 20px; font-size: .95rem; line-height: 1.6;
+}
 
 .skip-link {
   position: absolute; left: -9999px; top: 0;

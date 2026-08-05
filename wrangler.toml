@@ -5,3 +5,11 @@
 # the same "Build output directory = docs" under Settings › Builds & deployments.
 name = "ukbrewerytours"
 pages_build_output_dir = "docs"
+compatibility_date = "2025-01-01"
+
+# D1 database for the in-house gift voucher system (functions/ read/write this).
+# Created 2026-08-04 in region WEUR. See VOUCHERS.md for setup and operations.
+[[d1_databases]]
+binding = "DB"
+database_name = "ukbrewerytours-vouchers"
+database_id = "638775d1-9738-4480-a247-248bac910c1e"

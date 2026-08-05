@@ -1,0 +1,207 @@
+# In-house gift vouchers — setup & operations
+
+Replaces GiftUp with our own Stripe Checkout flow, so there are no per-voucher
+platform fees. Vouchers are emailed as branded HTML with a unique code, never
+expire, and are redeemed (fully or partially) from `/admin/`.
+
+Runs entirely on the **Cloudflare free tier** — no npm packages ship to
+production (Stripe and Resend are plain `fetch` calls; hashing and signature
+checks use Web Crypto), so nothing comes close to the 10 ms CPU limit.
+
+**Nothing on the public site has changed yet.** The GiftUp widget is still live
+everywhere. The new flow is only on the hidden demo page until you sign it off —
+see [Going live](#7-going-live).
+
+---
+
+## What was added
+
+| Path | Purpose |
+|---|---|
+| `functions/api/create-checkout.js` | Validates the form, reserves codes, opens Stripe Checkout |
+| `functions/api/stripe-webhook.js` | Confirms payment, activates codes, sends the emails |
+| `functions/api/admin/*` | Login, session gate, voucher list/detail/redeem |
+| `functions/_lib/*` | Shared helpers: codes, auth, Stripe, email templates |
+| `migrations/0001_initial.sql` | D1 schema (`orders`, `vouchers`, `redemptions`, `admin_users`) |
+| `admin/` | Admin dashboard + login page (copied to `docs/admin/` at build) |
+| `templates/voucher-modal.html` | The buy-a-voucher form |
+| `assets/js/voucher.js` | Form behaviour: prefill, stepper, totals, checkout |
+| `pages/demo-gift-voucher.html` | Hidden test page (`/demo/gift-voucher/`) |
+| `pages/voucher-thank-you.html` | Post-payment landing page |
+| `scripts/create-admin.mjs` | Generates admin logins |
+
+---
+
+## Setup status
+
+| Step | Status |
+|---|---|
+| D1 database created (`638775d1-…`, region WEUR) + bound in `wrangler.toml` | ✅ done |
+| Tables created in production | ✅ done |
+| Admin login for `info@ukbrewerytours.com` | ✅ done |
+| `ADMIN_SESSION_SECRET`, `FROM_EMAIL` set | ✅ done |
+| `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `RESEND_API_KEY` | ⬜ **you** — steps 1–3 below |
+| Stripe webhook endpoint registered | ⬜ **you** — step 2 |
+| Resend domain verified | ⬜ **you** — step 3 |
+
+Cloudflare account: `info@dominicbowkett.com` (`e2bdf844902d43c877a78ddd56a4e5ad`),
+Pages project `ukbrewerytours`.
+
+---
+
+## 1. Add the Stripe secret key
+
+Stripe → **Developers → API keys** → copy the **Secret key** (`sk_live_…`).
+Never paste it into a chat window or commit it. Set it with:
+
+```bash
+npx wrangler pages secret put STRIPE_SECRET_KEY --project-name=ukbrewerytours
+```
+
+It prompts for the value without echoing it. (Or use the dashboard:
+**Workers & Pages → ukbrewerytours → Settings → Variables and Secrets**,
+type **Secret**, environment **Production**.)
+
+## 2. Register the Stripe webhook
+
+Stripe → **Developers → Webhooks → Add endpoint**
+
+- **URL:** `https://www.ukbrewerytours.com/api/stripe-webhook`
+- **Event:** `checkout.session.completed` (that one only)
+
+Copy the **Signing secret** it shows (`whsec_…`), then:
+
+```bash
+npx wrangler pages secret put STRIPE_WEBHOOK_SECRET --project-name=ukbrewerytours
+```
+
+> Without this, payments succeed but no voucher email is ever sent.
+
+## 3. Resend: verify the domain, then add the key
+
+Resend → **Domains → Add domain** → `ukbrewerytours.com`, then add the DNS
+records it gives you in Cloudflare DNS. Until verified, Resend refuses to send
+from `info@ukbrewerytours.com`.
+
+Then Resend → **API Keys** → create one (`re_…`) and:
+
+```bash
+npx wrangler pages secret put RESEND_API_KEY --project-name=ukbrewerytours
+```
+
+## Re-issuing an admin password
+
+```bash
+node scripts/create-admin.mjs info@ukbrewerytours.com
+```
+
+Prints a new password **once** and the `wrangler d1 execute …` command to apply
+it. Pass a second argument to choose your own. Add another admin by using a
+different email.
+
+## 4. Going live
+
+While testing, the flow only exists on `/demo/gift-voucher/`. To switch the
+whole site over from GiftUp:
+
+1. In `build.js`, set `voucherEverywhere = true`.
+2. Change every `data-giftup-open` to `data-voucher-open`:
+   - `pages/home.html`, `pages/gift-vouchers.html`, `pages/contact.html`
+   - `templates/product.html` (also add the tour data attributes below)
+   - `build.js` (the experience-page button)
+3. On tour pages, carry the price so the amount prefills:
+   ```html
+   <a class="btn btn-outline" href="/gift-vouchers/" data-voucher-open
+      data-tour-name="{{name}}" data-tour-price="{{price}}" data-tour-slug="{{tour_slug}}">
+   ```
+   `tour_slug` needs adding to the `fill()` call for the product template.
+4. Remove the GiftUp modal + CDN script from `templates/layout.html` (the block
+   commented "Gift voucher popup modal").
+5. `node build.js`, commit, push.
+
+---
+
+## Running it locally
+
+```bash
+npm run dev
+```
+
+Serves on `http://localhost:8788` with a local database — no real charges.
+Local secrets live in `.dev.vars` (gitignored). To exercise a real payment
+locally, use Stripe test keys and forward webhooks:
+
+```bash
+stripe listen --forward-to localhost:8788/api/stripe-webhook
+```
+
+---
+
+## Day-to-day: redeeming a voucher
+
+1. Go to **https://www.ukbrewerytours.com/admin/** and sign in.
+2. Search the code (or the customer's name/email).
+3. **View** → either:
+   - enter an amount and **Redeem amount** — partial, balance stays on the code; or
+   - **Redeem full £X** — clears the remaining balance.
+4. Add a note (e.g. "Bristol tour, 12 Aug") so the history is readable later.
+
+Every redemption is logged with the amount, resulting balance, your email and
+the note. A voucher can be part-redeemed any number of times until it hits £0.
+
+**Voucher codes** look like `UBT-K7M2-P9WR`. They're case-insensitive and the
+dashes are optional when searching. The alphabet excludes `I`, `O`, `0` and `1`
+so codes are unambiguous over the phone.
+
+---
+
+## How the money flow works
+
+1. Customer submits the form → `create-checkout` validates it (min **£10**,
+   max £1000/voucher, max 20 vouchers), writes a `pending` order plus one
+   `pending` voucher row per code, and returns a Stripe Checkout URL.
+2. Customer pays on Stripe's hosted page.
+3. Stripe calls `stripe-webhook`. The signature is verified (HMAC-SHA256 over
+   the raw body, 5-minute replay window) before anything is trusted.
+4. The order flips to `paid`, codes become `active`, then the voucher email
+   goes to the recipient and a receipt to the buyer.
+
+**Unpaid orders never produce a live code** — abandoned checkouts just leave
+`pending` rows, which are hidden from the admin list by default.
+
+**If email delivery fails**, the payment is still recorded and `email_sent`
+stays `0`; the endpoint returns 500 so Stripe retries and only the email is
+re-attempted. Nothing is ever double-sent, because a successful send flips
+`email_sent` to `1` and later retries short-circuit.
+
+---
+
+## Troubleshooting
+
+| Symptom | Cause / fix |
+|---|---|
+| Paid but no email | Check the Resend domain is verified, and that the webhook secret matches. Stripe → Webhooks shows failed deliveries and lets you resend. |
+| "Payments are not configured yet." | `STRIPE_SECRET_KEY` is missing from the environment. |
+| Admin login 503 | `ADMIN_SESSION_SECRET` is missing. |
+| Signed out constantly | `ADMIN_SESSION_SECRET` changed, or sessions expired (12 h). |
+| Voucher missing from admin | It's `pending` (never paid). Filter by "Unpaid / abandoned" to confirm. |
+| Forgotten admin password | Re-run `scripts/create-admin.mjs` for the same email. |
+
+To inspect the database directly:
+
+```bash
+npx wrangler d1 execute ukbrewerytours-vouchers --remote \
+  --command "SELECT code, status, balance_pence FROM vouchers ORDER BY id DESC LIMIT 20"
+```
+
+---
+
+## Refunds
+
+Refund the payment in the Stripe dashboard, then void the code so it can't be
+used:
+
+```bash
+npx wrangler d1 execute ukbrewerytours-vouchers --remote \
+  --command "UPDATE vouchers SET status='void', balance_pence=0 WHERE code='UBT-XXXX-XXXX'"
+```

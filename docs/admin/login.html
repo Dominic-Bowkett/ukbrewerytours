@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Sign in — Voucher Admin</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍺%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body class="login-body">
+  <form class="login-card" id="form">
+    <div class="login-brand">🍺 UK Brewery Tours</div>
+    <h1>Voucher admin</h1>
+    <label for="email">Email</label>
+    <input id="email" type="email" autocomplete="username" required autofocus>
+    <label for="password">Password</label>
+    <input id="password" type="password" autocomplete="current-password" required>
+    <p class="error" id="error" hidden></p>
+    <button class="btn btn-primary btn-block" type="submit" id="submit">Sign in</button>
+  </form>
+
+<script>
+const form = document.getElementById('form');
+const errorEl = document.getElementById('error');
+const submit = document.getElementById('submit');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  errorEl.hidden = true;
+  submit.disabled = true;
+  submit.textContent = 'Signing in…';
+  try {
+    const res = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Sign-in failed.');
+    location.href = '/admin/';
+  } catch (err) {
+    errorEl.textContent = err.message;
+    errorEl.hidden = false;
+    submit.disabled = false;
+    submit.textContent = 'Sign in';
+  }
+});
+</script>
+</body>
+</html>

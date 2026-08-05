@@ -1,0 +1,20 @@
+{
+  "name": "ukbrewerytours",
+  "private": true,
+  "description": "Static site + Cloudflare Pages Functions for the in-house gift voucher system.",
+  "scripts": {
+    "build": "node build.js",
+    "dev": "node build.js && wrangler pages dev docs --local",
+    "db:migrate:local": "wrangler d1 migrations apply ukbrewerytours-vouchers --local",
+    "db:migrate": "wrangler d1 migrations apply ukbrewerytours-vouchers --remote",
+    "admin:create": "node scripts/create-admin.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "^3.99.0"
+  },
+  "allowScripts": {
+    "esbuild@0.17.19": true,
+    "workerd@1.20250718.0": true,
+    "sharp@0.33.5": true
+  }
+}

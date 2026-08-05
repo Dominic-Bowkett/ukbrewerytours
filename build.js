@@ -408,7 +408,13 @@ function postCard(p) {
 
 const layout = read('templates/layout.html');
 
-function writePage(outPath, { title, description, content, nav, ogImage, jsonld, robots }) {
+// In-house voucher form. Injected only where it's used — while the flow is
+// being trialled that's the internal demo page; flip `voucherEverywhere` to
+// true to replace GiftUp site-wide.
+const voucherModalTpl = read('templates/voucher-modal.html');
+const voucherEverywhere = false;
+
+function writePage(outPath, { title, description, content, nav, ogImage, jsonld, robots, voucher }) {
   const canonical = site.base_url + ('/' + outPath).replace(/\/index\.html$/, '/');
   const navKeys = ['tours', 'breweries', 'vouchers', 'groups', 'blog', 'about'];
   const navMap = {};
@@ -416,9 +422,12 @@ function writePage(outPath, { title, description, content, nav, ogImage, jsonld,
   let og = ogImage || '/assets/img/hms-hops.jpg';
   if (og.startsWith('/')) og = site.base_url + og;
   const blocks = Array.isArray(jsonld) ? jsonld : (jsonld ? [jsonld] : []);
+  const useVoucher = voucher || voucherEverywhere;
   const html = fill(layout, {
     title, description: esc(description), canonical, og_image: og, asset_ver: assetVer,
     content, whatsapp_url: WHATSAPP, year: YEAR,
+    voucher_modal: useVoucher ? voucherModalTpl : '',
+    voucher_script: useVoucher ? `  <script src="/assets/js/voucher.js?v=${assetVer}" defer></script>` : '',
     robots: robots ? `<meta name="robots" content="${robots}">` : '',
     structured_data: blocks.map(b => `<script type="application/ld+json">${JSON.stringify(b)}</script>`).join('\n  '),
     ...navMap,
@@ -435,6 +444,14 @@ fs.mkdirSync(OUT, { recursive: true });
 fs.cpSync(path.join(ROOT, 'assets'), path.join(OUT, 'assets'), { recursive: true });
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
 fs.writeFileSync(path.join(OUT, 'CNAME'), 'www.ukbrewerytours.com\n');
+
+/* voucher admin — standalone internal UI, copied verbatim (no site layout) */
+fs.cpSync(path.join(ROOT, 'admin'), path.join(OUT, 'admin'), { recursive: true });
+
+// Cloudflare Pages: only send /api/* through Functions so static pages skip the
+// worker entirely and stay fast.
+fs.writeFileSync(path.join(OUT, '_routes.json'),
+  JSON.stringify({ version: 1, include: ['/api/*'], exclude: [] }, null, 2) + '\n');
 
 /* ----- computed blocks shared by pages ----- */
 
@@ -523,6 +540,10 @@ const staticPages = [
   { src: 'gift-vouchers.html', out: 'gift-vouchers/index.html', nav: 'vouchers', title: 'Brewery Tour Gift Vouchers — Never Expire | UK Brewery Tours', description: 'Monetary gift vouchers for brewery tours anywhere in the UK. Instant email delivery, never expire, refundable up to 12 months. The perfect gift for beer lovers.' },
   { src: 'group-tours.html', out: 'group-tours/index.html', nav: 'groups', title: 'Private Group Brewery Tours from £29pp | UK Brewery Tours', description: 'Private brewery tours and beer tastings for corporate teams, stags, hens and groups — available in most UK cities from £29 per person.' },
   { src: 'returns-policy.html', out: 'returns-policy/index.html', nav: '', title: 'Returns Policy | UK Brewery Tours', description: 'Gift voucher returns and refunds policy for UK Brewery Tours.' },
+  // Post-Stripe landing page. Unlisted (reached only by redirect from checkout).
+  { src: 'voucher-thank-you.html', out: 'gift-vouchers/thank-you/index.html', nav: 'vouchers', title: 'Thank you — your gift voucher is on its way | UK Brewery Tours', description: 'Your gift voucher purchase is complete.', robots: 'noindex,nofollow' },
+  // Hidden internal test page for the in-house voucher flow. Not linked, not indexed.
+  { src: 'demo-gift-voucher.html', out: 'demo/gift-voucher/index.html', nav: '', title: 'Voucher demo (internal)', description: 'Internal demo of the in-house gift voucher flow.', robots: 'noindex,nofollow', voucher: true },
 ];
 
 for (const p of staticPages) {
