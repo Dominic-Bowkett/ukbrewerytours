@@ -583,6 +583,15 @@ p > .btn { margin-bottom: 10px; }
 .page-hero { padding: 72px 0 56px; border-bottom: 1px solid var(--line); }
 .page-hero .lede { margin-top: 16px; }
 
+/* primary action in a page hero, kept above the fold */
+.hero-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; margin-top: 28px; }
+.hero-cta__note { font-size: .9rem; color: var(--ink-soft); }
+@media (max-width: 560px) {
+  .hero-cta { gap: 12px; }
+  .hero-cta .btn { width: 100%; justify-content: center; }
+  .hero-cta__note { width: 100%; text-align: center; }
+}
+
 /* city anchor nav */
 .city-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
 .city-nav a {
