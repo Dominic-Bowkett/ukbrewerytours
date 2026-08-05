@@ -35,11 +35,13 @@
     </div>
 
     <div class="form-card mt-4">
-      <h2 style="margin-bottom:8px">Send us a message</h2>
-      <p style="color:var(--ink-soft);margin-bottom:26px">We'll get back to you by email — typically within a few hours.</p>
-      <form action="https://formsubmit.co/{{email}}" method="POST" class="form-grid">
-        <input type="hidden" name="_subject" value="Website enquiry — ukbrewerytours.com">
-        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+      <div data-contact-intro>
+        <h2 style="margin-bottom:8px">Send us a message</h2>
+        <p style="color:var(--ink-soft);margin-bottom:26px">We'll get back to you by email — typically within a few hours.</p>
+      </div>
+      <form class="form-grid" data-contact-form novalidate>
+        <!-- honeypot: hidden from people, filled in by bots -->
+        <input type="text" name="company" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
         <div>
           <label for="f-name">Name</label>
           <input id="f-name" name="name" type="text" required autocomplete="name">
@@ -53,9 +55,16 @@
           <textarea id="f-message" name="message" rows="6" required placeholder="Tell us which tour or city you're interested in, group size and any dates…"></textarea>
         </div>
         <div class="full">
-          <button class="btn btn-primary" type="submit">Send message</button>
+          <p class="form-status" data-contact-error hidden></p>
+          <button class="btn btn-primary" type="submit" data-contact-submit>Send message</button>
         </div>
       </form>
+      <div class="form-sent" data-contact-success hidden>
+        <div class="form-sent__mark">✓</div>
+        <h3>Message sent</h3>
+        <p>Thanks — we've emailed you a confirmation and will reply shortly, usually within a few hours.</p>
+        <p class="mt-2"><a class="btn btn-outline" href="{{whatsapp_url}}">{{wa_icon}} Or message us on WhatsApp</a></p>
+      </div>
     </div>
   </div>
 </section>

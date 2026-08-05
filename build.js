@@ -412,7 +412,7 @@ const layout = read('templates/layout.html');
 const voucherModalTpl = read('templates/voucher-modal.html');
 const voucherEverywhere = true;
 
-function writePage(outPath, { title, description, content, nav, ogImage, jsonld, robots, voucher, voucherPrint }) {
+function writePage(outPath, { title, description, content, nav, ogImage, jsonld, robots, voucher, voucherPrint, contactForm }) {
   const canonical = site.base_url + ('/' + outPath).replace(/\/index\.html$/, '/');
   const navKeys = ['tours', 'breweries', 'vouchers', 'groups', 'blog', 'about'];
   const navMap = {};
@@ -428,6 +428,7 @@ function writePage(outPath, { title, description, content, nav, ogImage, jsonld,
     voucher_script: [
       useVoucher ? `  <script src="/assets/js/voucher.js?v=${assetVer}" defer></script>` : '',
       voucherPrint ? `  <script src="/assets/js/voucher-print.js?v=${assetVer}" defer></script>` : '',
+      contactForm ? `  <script src="/assets/js/contact.js?v=${assetVer}" defer></script>` : '',
     ].filter(Boolean).join('\n'),
     robots: robots ? `<meta name="robots" content="${robots}">` : '',
     structured_data: blocks.map(b => `<script type="application/ld+json">${JSON.stringify(b)}</script>`).join('\n  '),
@@ -535,7 +536,7 @@ const pageTokens = {
 const staticPages = [
   { src: 'home.html', out: 'index.html', nav: '', title: 'UK Brewery Tours | Award-Winning Brewery Tours & Beer Tastings Since 2014', description: 'Award-winning brewery tours and craft beer tasting experiences across the UK — London, Bristol, Manchester, Leeds and more. Small groups, expert guides, gift vouchers that never expire.', jsonld: { '@context': 'https://schema.org', '@type': 'Organization', name: 'UK Brewery Tours', url: site.base_url, email: site.email, foundingDate: '2014', description: 'Award-winning brewery tours and beer tasting events across the UK.' } },
   { src: 'about.html', out: 'about/index.html', nav: 'about', title: 'About Us | UK Brewery Tours', description: 'Founded on London\'s Bermondsey Beer Mile in 2014, UK Brewery Tours runs award-winning brewery tours and beer tastings in cities across the UK.' },
-  { src: 'contact.html', out: 'contact/index.html', nav: '', title: 'Contact Us | UK Brewery Tours', description: 'Get in touch with UK Brewery Tours — WhatsApp, email or contact form. Questions about tours, group bookings and gift vouchers answered within hours.' },
+  { src: 'contact.html', out: 'contact/index.html', nav: '', title: 'Contact Us | UK Brewery Tours', description: 'Get in touch with UK Brewery Tours — WhatsApp, email or contact form. Questions about tours, group bookings and gift vouchers answered within hours.', contactForm: true },
   { src: 'tours.html', out: 'tours/index.html', nav: 'tours', title: 'Brewery Tours & Beer Tastings Across the UK | UK Brewery Tours', description: `Browse ${activeTours.length} brewery tours and beer tasting experiences in ${citiesWithTours.length} UK cities — London, Bristol, Manchester, Liverpool, Leeds and more.` },
   { src: 'blog.html', out: 'blog/index.html', nav: 'blog', title: 'Beer Blog | UK Brewery Tours', description: 'Craft beer guides, brewery profiles and beer knowledge from the UK Brewery Tours team — from the Bermondsey Beer Mile to the best beer gardens in London.' },
   { src: 'gift-vouchers.html', out: 'gift-vouchers/index.html', nav: 'vouchers', title: 'Brewery Tour Gift Vouchers — Never Expire | UK Brewery Tours', description: 'Monetary gift vouchers for brewery tours anywhere in the UK. Instant email delivery, never expire, refundable up to 12 months. The perfect gift for beer lovers.' },

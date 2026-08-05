@@ -124,6 +124,59 @@ export function voucherEmailHtml({ order, vouchers, printUrl }) {
   </td></tr>`);
 }
 
+/** Website enquiry forwarded to info@. Reply-to is set to the sender. */
+export function enquiryEmailHtml({ name, email, message, page }) {
+  const body = esc(message).replace(/\n/g, '<br>');
+  return shell(`<tr><td style="padding:30px 28px;">
+    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${INK_SOFT};">Website enquiry</div>
+    <h1 style="margin:6px 0 20px;font-size:22px;">${esc(name)}</h1>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #e7ddcd;border-bottom:1px solid #e7ddcd;margin-bottom:22px;">
+      <tr>
+        <td style="padding:7px 14px 7px 0;font-size:14px;color:${INK_SOFT};">Email</td>
+        <td style="padding:7px 0;font-size:14px;font-weight:600;"><a href="mailto:${esc(email)}" style="color:#b3701d;">${esc(email)}</a></td>
+      </tr>
+      ${page ? `<tr>
+        <td style="padding:7px 14px 7px 0;font-size:14px;color:${INK_SOFT};">Sent from</td>
+        <td style="padding:7px 0;font-size:14px;">${esc(page)}</td>
+      </tr>` : ''}
+    </table>
+
+    <div style="font-size:15px;line-height:1.7;">${body}</div>
+
+    <p style="margin:26px 0 0;font-size:13px;color:${INK_SOFT};">
+      Hit reply to answer ${esc(name)} directly.
+    </p>
+  </td></tr>`);
+}
+
+/** Confirmation back to the person who sent the enquiry. */
+export function enquiryAutoReplyHtml({ name, message }) {
+  return shell(`<tr><td style="padding:30px 28px;">
+    <h1 style="margin:0 0 14px;font-size:22px;">Thanks for getting in touch</h1>
+    <p style="margin:0 0 16px;font-size:15px;line-height:1.7;">
+      Hi ${esc(name)}, we've got your message and will reply by email — usually within a few hours.
+    </p>
+    <p style="margin:0 0 20px;font-size:15px;line-height:1.7;">
+      If it's urgent, message us on WhatsApp and we'll pick it up faster.
+    </p>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 22px;">
+      <tr><td style="border-left:3px solid ${AMBER};padding:4px 0 4px 14px;font-size:14px;line-height:1.7;color:${INK_SOFT};">
+        ${esc(message).replace(/\n/g, '<br>')}
+      </td></tr>
+    </table>
+
+    <div style="background:${CREAM};border-radius:10px;padding:16px 18px;font-size:14px;line-height:1.7;">
+      While you wait, have a look at
+      <a href="https://www.ukbrewerytours.com/tours/" style="color:#b3701d;">our tours across the UK</a>
+      or our <a href="https://www.ukbrewerytours.com/gift-vouchers/" style="color:#b3701d;">gift vouchers</a>.
+    </div>
+
+    <p style="margin:24px 0 0;font-size:14px;line-height:1.7;">Cheers,<br>The UK Brewery Tours team</p>
+  </td></tr>`);
+}
+
 /** Internal heads-up to info@ when a voucher sells. */
 export function saleNotificationHtml({ order, vouchers }) {
   const row = (label, value) =>

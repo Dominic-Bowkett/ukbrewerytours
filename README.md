@@ -62,6 +62,9 @@ Until DNS is switched, the old WordPress site stays live — nothing breaks.
 
 ## Contact form
 
-The form on `/contact/` posts to [formsubmit.co](https://formsubmit.co) →
-`info@ukbrewerytours.com`. The **first** submission triggers a confirmation email
-to that inbox — click it once to activate the form.
+The form on `/contact/` posts to `/api/contact`, which sends via Resend to
+`info@ukbrewerytours.com` with reply-to set to the sender, and emails the sender
+a confirmation. Enquiries are also stored in D1 so nothing is lost if an email
+bounces. Protected by a honeypot field and a per-IP rate limit (5/hour).
+
+See `VOUCHERS.md` for the shared email/Stripe setup.
