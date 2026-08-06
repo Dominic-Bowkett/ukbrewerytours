@@ -49,7 +49,9 @@ export async function onRequestGet({ env, data }) {
     chargeReady: isChargeReady(m),
     accountState: m.stripe_account_state,
     chargesEnabled: m.stripe_charges_enabled === 1,
-    platformPaymentsActive: m.stripe_platform_payments_active === 1,
+    // TEXT 'active', not a 0/1 flag — the column is the capability's state as
+    // Stripe reports it, and there is no _active twin of it to read.
+    platformPaymentsActive: m.stripe_platform_payments === 'active',
     accountCheckedAt: m.stripe_account_checked_at || null,
 
     // bps is the storage vocabulary everywhere (12.5% is not an integer
