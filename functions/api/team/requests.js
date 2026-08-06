@@ -22,7 +22,7 @@ function sqlStamp(d) {
 }
 
 export async function onRequestGet({ env, data }) {
-  const memberId = data.member.id;
+  const memberId = data.teamMemberId;
   const { results } = await env.DB.prepare(`
     SELECT id, public_token, client_name, client_email, tour_name, tour_date,
            amount_pence, fee_pence, currency, status, send_at, sent_at, paid_at,
@@ -44,7 +44,7 @@ export async function onRequestGet({ env, data }) {
 }
 
 export async function onRequestPost({ request, env, data }) {
-  const member = data.member;
+  const member = data.team;
 
   let body;
   try {

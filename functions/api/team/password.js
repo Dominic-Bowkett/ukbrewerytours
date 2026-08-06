@@ -40,7 +40,7 @@ export async function onRequestPost({ request, env, data }) {
 
   const member = await env.DB.prepare(
     'SELECT id, email, password_hash, password_salt, iterations, algo, session_epoch FROM team_members WHERE id = ?',
-  ).bind(data.member.id).first();
+  ).bind(data.teamMemberId).first();
   if (!member) return Response.json({ error: 'Not signed in.' }, { status: 401 });
 
   // Prove they hold the current password: a stolen session alone must not be
