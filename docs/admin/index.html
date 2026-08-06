@@ -49,6 +49,35 @@
 </main>
 
 <main class="admin-main" data-panel="connect" hidden>
+  <section class="stats" id="payStats"></section>
+
+  <section class="panel" style="margin-bottom:22px">
+    <div class="panel-head">
+      <h2>All payments</h2>
+      <div class="filters">
+        <input type="search" id="payQ" placeholder="Search client, tour or team member…">
+        <select id="payMember"><option value="">All team members</option></select>
+        <select id="payStatus">
+          <option value="">All sent</option>
+          <option value="paid">Paid</option>
+          <option value="sent">Awaiting payment</option>
+          <option value="refunded">Refunded</option>
+          <option value="cancelled">Cancelled</option>
+          <option value="expired">Expired</option>
+        </select>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="voucher-table">
+        <thead>
+          <tr><th>Client</th><th>For</th><th>Team member</th><th>Amount</th><th>Your fee</th><th>Status</th><th>Date</th><th></th></tr>
+        </thead>
+        <tbody id="payRows"><tr><td colspan="8" class="muted pad">Loading…</td></tr></tbody>
+      </table>
+    </div>
+    <div class="pager"><button class="btn btn-ghost" id="payPrev" disabled>← Previous</button><span id="payPageLabel"></span><button class="btn btn-ghost" id="payNext" disabled>Next →</button></div>
+  </section>
+
   <section class="panel">
     <div class="panel-head">
       <h2>Team members</h2>
@@ -87,6 +116,15 @@
     <p class="muted pad" style="padding-top:0" id="acctSummary"></p>
   </section>
 </main>
+
+<!-- Payment detail + refund -->
+<div class="modal" id="payModal" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-panel" role="dialog" aria-modal="true">
+    <button class="modal-close" data-close aria-label="Close">&times;</button>
+    <div id="payBody"></div>
+  </div>
+</div>
 
 <!-- Add team member -->
 <div class="modal" id="memberModal" hidden>
@@ -322,6 +360,8 @@ async function openVoucher(code) {
 document.addEventListener('click', (e) => {
   const view = e.target.closest('[data-view]');
   if (view) return openVoucher(view.dataset.view);
+  const payView = e.target.closest('[data-pay]');
+  if (payView) return openPayment(payView.dataset.pay);
   if (e.target.closest('[data-close]')) modal.hidden = true;
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.hidden = true; });
@@ -350,9 +390,181 @@ document.querySelectorAll('.admin-tab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.admin-tab').forEach(t => t.classList.toggle('is-active', t === tab));
     document.querySelectorAll('[data-panel]').forEach(p => { p.hidden = p.dataset.panel !== tab.dataset.tab; });
-    if (tab.dataset.tab === 'connect' && !connectLoaded) { connectLoaded = true; loadTeam(); loadAccounts(); }
+    if (tab.dataset.tab === 'connect' && !connectLoaded) {
+      connectLoaded = true; loadPayments(); loadTeam(); loadAccounts();
+    }
   });
 });
+
+/* ---- all payments across the team ---- */
+
+const PAY_STATUS = {
+  scheduled: 'Scheduled', sending: 'Sending…', sent: 'Awaiting payment',
+  processing: 'Processing', paid: 'Paid', refunded: 'Refunded',
+  cancelled: 'Cancelled', expired: 'Expired', failed: 'Failed',
+};
+const PAY_PILL = { paid: 'active', sent: 'partially_redeemed', processing: 'partially_redeemed', refunded: 'refunded' };
+let payPage = 1, payHasMore = false;
+
+async function loadPayments() {
+  const el = document.getElementById('payRows');
+  const params = new URLSearchParams({
+    page: payPage,
+    q: document.getElementById('payQ').value.trim(),
+    status: document.getElementById('payStatus').value,
+    member: document.getElementById('payMember').value,
+  });
+  try {
+    const d = await api('/api/admin/payment-requests?' + params);
+
+    document.getElementById('payStats').innerHTML = `
+      <div class="stat"><span>Taken by the team</span><strong>${money(d.totals.paid_pence)}</strong></div>
+      <div class="stat"><span>Your platform fee</span><strong>${money(d.totals.fee_pence - d.totals.fee_refunded_pence)}</strong></div>
+      <div class="stat"><span>Awaiting payment</span><strong>${money(d.totals.outstanding_pence)}</strong></div>
+      ${d.totals.refunded_pence ? `<div class="stat"><span>Refunded</span><strong>${money(d.totals.refunded_pence)}</strong></div>` : ''}`;
+
+    // Populate the member filter once, preserving any current choice.
+    const sel = document.getElementById('payMember');
+    if (sel.options.length <= 1 && d.members.length) {
+      const cur = sel.value;
+      sel.innerHTML = '<option value="">All team members</option>'
+        + d.members.map(m => `<option value="${esc(m.id)}">${esc(m.name)}</option>`).join('');
+      sel.value = cur;
+    }
+
+    el.innerHTML = d.requests.length ? d.requests.map(r => {
+      const feeTaken = r.status === 'paid' ? (r.fee_collected_pence ?? r.fee_pence) : r.fee_pence;
+      return `
+      <tr>
+        <td><strong>${esc(r.client_name)}</strong><br><span class="muted">${esc(r.client_email)}</span></td>
+        <td>${esc(r.tour_name)}${r.payment_kind !== 'full' ? ` <span class="tag">${esc(r.payment_kind)}</span>` : ''}</td>
+        <td>${esc(r.member_name)}</td>
+        <td><strong>${money(r.amount_pence)}</strong>${r.refunded_pence ? `<br><span class="muted refund-amt">−${money(r.refunded_pence)}</span>` : ''}</td>
+        <td class="muted">${money(feeTaken)}</td>
+        <td><span class="pill pill-${PAY_PILL[r.status] || 'pending'}">${PAY_STATUS[r.status] || r.status}</span>
+            ${r.unexpected_payment ? '<br><span class="tag">check</span>' : ''}</td>
+        <td class="muted">${dt(r.paid_at || r.sent_at || r.created_at)}</td>
+        <td><button class="btn btn-sm" data-pay="${esc(r.id)}">View</button></td>
+      </tr>`;
+    }).join('') : '<tr><td colspan="8" class="muted pad">No payments yet.</td></tr>';
+
+    payHasMore = d.hasMore;
+    document.getElementById('payPageLabel').textContent = 'Page ' + payPage;
+    document.getElementById('payPrev').disabled = payPage <= 1;
+    document.getElementById('payNext').disabled = !payHasMore;
+    window.__payRows = d.requests;
+  } catch (err) {
+    el.innerHTML = `<tr><td colspan="8" class="pad error">${esc(err.message)}</td></tr>`;
+  }
+}
+
+let payTimer;
+document.getElementById('payQ').addEventListener('input', () => {
+  clearTimeout(payTimer); payTimer = setTimeout(() => { payPage = 1; loadPayments(); }, 300);
+});
+document.getElementById('payStatus').addEventListener('change', () => { payPage = 1; loadPayments(); });
+document.getElementById('payMember').addEventListener('change', () => { payPage = 1; loadPayments(); });
+document.getElementById('payPrev').addEventListener('click', () => { if (payPage > 1) { payPage--; loadPayments(); } });
+document.getElementById('payNext').addEventListener('click', () => { if (payHasMore) { payPage++; loadPayments(); } });
+
+const payModal = document.getElementById('payModal');
+const payBody = document.getElementById('payBody');
+
+function openPayment(id) {
+  const r = (window.__payRows || []).find(x => x.id === id);
+  if (!r) return;
+  payModal.hidden = false;
+
+  const paid = r.status === 'paid';
+  const feeTaken = paid ? (r.fee_collected_pence ?? r.fee_pence) : r.fee_pence;
+  const refundable = paid ? (r.amount_paid_pence ?? r.amount_pence) - (r.refunded_pence || 0) : 0;
+
+  payBody.innerHTML = `
+    <div class="detail-head">
+      <span class="pill pill-${PAY_PILL[r.status] || 'pending'}">${PAY_STATUS[r.status] || r.status}</span>
+      ${r.unexpected_payment ? '<span class="tag">paid outside the normal flow — check before refunding</span>' : ''}
+    </div>
+    <h2 style="margin:6px 0 4px">${esc(r.tour_name)}</h2>
+    <p class="muted" style="margin-bottom:20px">${esc(r.client_name)} · ${esc(r.client_email)}</p>
+
+    <div class="balance-box${r.refunded_pence ? ' four' : ''}">
+      <div><span>Client paid</span><strong>${money(r.amount_paid_pence ?? r.amount_pence)}</strong></div>
+      <div class="hl"><span>Your fee</span><strong>${money(feeTaken)}</strong></div>
+      <div><span>${esc(r.member_name)} keeps</span><strong>${money((r.amount_paid_pence ?? r.amount_pence) - feeTaken)}</strong></div>
+      ${r.refunded_pence ? `<div><span>Refunded</span><strong class="refund-amt">${money(r.refunded_pence)}</strong></div>` : ''}
+    </div>
+
+    ${refundable > 0 ? `
+      <form class="redeem-form refund-form" id="payRefundForm">
+        <h3>Refund <span class="sub">— money back to the client's card</span></h3>
+        <div class="redeem-row">
+          <div class="field"><label for="pr-amt">Amount (£)</label>
+            <input id="pr-amt" type="number" step="0.01" min="0.01" max="${(refundable / 100).toFixed(2)}" placeholder="0.00"></div>
+          <div class="field"><label for="pr-reason">Reason</label>
+            <select id="pr-reason">
+              <option value="requested_by_customer">Requested by customer</option>
+              <option value="duplicate">Duplicate</option>
+              <option value="fraudulent">Fraudulent</option>
+            </select></div>
+        </div>
+        <div class="field" style="margin-top:12px"><label for="pr-note">Note (optional)</label>
+          <input id="pr-note" type="text" placeholder="e.g. Tour cancelled by the brewery"></div>
+        <p class="error" id="payRefundError" hidden></p>
+        <div class="redeem-actions">
+          <button class="btn btn-danger" type="submit">Refund amount</button>
+          <button class="btn btn-outline" type="button" id="payRefundFull">Refund full ${money(refundable)}</button>
+        </div>
+        <p class="muted refund-hint">Refunds come out of ${esc(r.member_name)}'s balance, and your ${(r.fee_bps / 100)}% fee is reversed with it. Team members cannot do this themselves.</p>
+      </form>` : (paid ? '<p class="muted done-note">Fully refunded.</p>' : '<p class="muted done-note">Nothing to refund — this has not been paid.</p>')}
+
+    <div class="meta-grid">
+      <div><span>Team member</span>${esc(r.member_name)}<br><span class="muted">${esc(r.member_email)}</span></div>
+      <div><span>Charged on</span><code class="small">${esc(r.stripe_account_id || '—')}</code></div>
+      <div><span>Sent</span>${dt(r.sent_at)}</div>
+      <div><span>Paid</span>${dt(r.paid_at)}</div>
+      ${r.tour_date ? `<div><span>Tour date</span>${esc(r.tour_date)}</div>` : ''}
+      <div><span>Type</span>${esc(r.payment_kind)}</div>
+    </div>`;
+
+  const form = document.getElementById('payRefundForm');
+  if (!form) return;
+  const doRefund = async (payload) => {
+    const errEl = document.getElementById('payRefundError');
+    const btns = form.querySelectorAll('button');
+    errEl.hidden = true;
+    btns.forEach(b => { b.disabled = true; });
+    try {
+      const res = await api('/api/admin/pay-refund', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: r.id,
+          reason: document.getElementById('pr-reason').value,
+          note: document.getElementById('pr-note').value,
+          ...payload,
+        }),
+      });
+      alert(`Refunded ${money(res.refunded_pence)} to the client.\n\nIt takes 5–10 days to reach their statement.`);
+      payModal.hidden = true;
+      loadPayments();
+    } catch (err) {
+      errEl.textContent = err.message;
+      errEl.hidden = false;
+      btns.forEach(b => { b.disabled = false; });
+    }
+  };
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const amt = document.getElementById('pr-amt').value;
+    if (!amt) { const el = document.getElementById('payRefundError'); el.textContent = 'Enter an amount to refund.'; el.hidden = false; return; }
+    if (confirm(`Refund £${Number(amt).toFixed(2)} to ${r.client_name}?\n\nThis moves real money and cannot be undone.`)) doRefund({ amount: amt });
+  });
+  document.getElementById('payRefundFull').addEventListener('click', () => {
+    if (confirm(`Refund the full ${money(refundable)} to ${r.client_name}?\n\nThis moves real money and cannot be undone.`)) doRefund({ full: true });
+  });
+}
+
+payModal.addEventListener('click', (e) => { if (e.target.closest('[data-close]')) payModal.hidden = true; });
 
 async function loadTeam() {
   const el = document.getElementById('teamRows');
