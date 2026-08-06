@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Team payments — UK Brewery Tours</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍺%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body>
+<header class="admin-header">
+  <div class="admin-brand">🍺 UK Brewery Tours <span>Team payments</span></div>
+  <div class="admin-user"><span id="who"></span><button class="btn btn-ghost" id="logout">Sign out</button></div>
+</header>
+
+<main class="admin-main">
+  <section class="stats" id="stats"></section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Payment requests</h2>
+      <button class="btn btn-primary btn-sm" id="newRequest">New payment request</button>
+    </div>
+    <div class="table-wrap">
+      <table class="voucher-table">
+        <thead>
+          <tr><th>Client</th><th>For</th><th>Amount</th><th>Type</th><th>Status</th><th>Sent</th><th></th></tr>
+        </thead>
+        <tbody id="rows"><tr><td colspan="7" class="muted pad">Loading…</td></tr></tbody>
+      </table>
+    </div>
+    <p class="muted pad" style="padding-top:0">
+      Payments go to your own Stripe account. Refunds are handled by the office — get in touch if one is needed.
+    </p>
+  </section>
+</main>
+
+<div class="modal" id="reqModal" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-panel" role="dialog" aria-modal="true">
+    <button class="modal-close" data-close aria-label="Close">&times;</button>
+    <div id="reqBody"></div>
+  </div>
+</div>
+
+<script>
+const money = p => '£' + ((p || 0) / 100).toFixed(2);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const dt = s => s ? new Date(s.replace(' ', 'T') + 'Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '—';
+
+const STATUS = {
+  draft: 'Draft', scheduled: 'Scheduled', sending: 'Sending…', sent: 'Awaiting payment',
+  processing: 'Processing', paid: 'Paid', refunded: 'Refunded', cancelled: 'Cancelled',
+  expired: 'Expired', failed: 'Failed',
+};
+const KIND = { full: 'Full', deposit: 'Deposit', balance: 'Balance', extra: 'Extra' };
+
+async function api(path, opts) {
+  const res = await fetch(path, opts);
+  if (res.status === 401) { location.href = '/team/login.html'; throw new Error('signed out'); }
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || 'Something went wrong.');
+  return data;
+}
+
+let myRequests = [];
+
+async function load() {
+  const el = document.getElementById('rows');
+  try {
+    const d = await api('/api/team/requests');
+    myRequests = d.requests;
+    document.getElementById('stats').innerHTML = `
+      <div class="stat"><span>Awaiting payment</span><strong>${money(d.totals.outstanding_pence)}</strong></div>
+      <div class="stat"><span>Paid to you</span><strong>${money(d.totals.paid_pence - d.totals.fee_pence)}</strong></div>
+      <div class="stat"><span>Requests</span><strong>${d.totals.total}</strong></div>`;
+
+    el.innerHTML = d.requests.length ? d.requests.map(r => `
+      <tr>
+        <td><strong>${esc(r.client_name)}</strong><br><span class="muted">${esc(r.client_email)}</span></td>
+        <td>${esc(r.tour_name)}${r.tour_date ? `<br><span class="muted">${esc(r.tour_date)}</span>` : ''}</td>
+        <td><strong>${money(r.amount_pence)}</strong></td>
+        <td class="muted">${KIND[r.payment_kind] || 'Full'}</td>
+        <td><span class="pill pill-${r.status === 'paid' ? 'active' : r.status === 'sent' ? 'partially_redeemed' : 'pending'}">${STATUS[r.status] || r.status}</span></td>
+        <td class="muted">${dt(r.sent_at || r.send_at)}</td>
+        <td>${r.status === 'paid' ? `<button class="btn btn-sm" data-again="${esc(r.id)}">Request more</button>` : ''}</td>
+      </tr>`).join('')
+      : '<tr><td colspan="7" class="muted pad">No payment requests yet. Create one to send a client a payment link.</td></tr>';
+  } catch (err) {
+    el.innerHTML = `<tr><td colspan="7" class="pad error">${esc(err.message)}</td></tr>`;
+  }
+}
+
+function form(parent = null) {
+  const p = parent ? myRequests.find(r => r.id === parent) : null;
+  return `
+    <h2 style="margin-bottom:6px">${p ? 'Additional payment' : 'New payment request'}</h2>
+    <p class="muted" style="margin-bottom:20px">
+      ${p ? `Following on from ${esc(p.client_name)}'s ${esc(p.tour_name)}.`
+          : 'The client gets an email with a link to a page showing the details and a Pay button.'}
+    </p>
+    <form id="reqForm">
+      <div class="redeem-row">
+        <div class="field"><label for="c-name">Client name</label>
+          <input id="c-name" type="text" required value="${p ? esc(p.client_name) : ''}"></div>
+        <div class="field"><label for="c-email">Client email</label>
+          <input id="c-email" type="email" required value="${p ? esc(p.client_email) : ''}"></div>
+      </div>
+
+      <div class="field" style="margin-top:12px"><label for="c-tour">What is the payment for?</label>
+        <input id="c-tour" type="text" required placeholder="e.g. Private brewery tour, 12 people"
+               value="${p ? esc(p.tour_name) : ''}"></div>
+
+      <div class="redeem-row" style="margin-top:12px">
+        <div class="field"><label for="c-date">Tour date <span class="muted">(optional)</span></label>
+          <input id="c-date" type="date" value="${p && p.tour_date ? esc(p.tour_date) : ''}"></div>
+        <div class="field"><label for="c-amount">Amount (£)</label>
+          <input id="c-amount" type="number" step="0.01" min="0.30" required placeholder="0.00"></div>
+      </div>
+
+      <div class="field" style="margin-top:12px"><label for="c-kind">Payment type</label>
+        <select id="c-kind">
+          ${p ? '<option value="balance">Balance</option><option value="extra">Extra payment</option>'
+              : '<option value="full">Full payment</option><option value="deposit">Deposit</option>'}
+        </select>
+      </div>
+
+      <div class="field" style="margin-top:12px"><label for="c-details">Details for the client <span class="muted">(optional)</span></label>
+        <textarea id="c-details" rows="3" placeholder="What's included, meeting point, anything they should know…"></textarea></div>
+
+      <div class="field" style="margin-top:12px"><label for="c-when">When to send</label>
+        <select id="c-when">
+          <option value="now">Send now</option>
+          <option value="at">Send at a date and time</option>
+          <option value="before">Send a number of days before the tour</option>
+        </select>
+      </div>
+      <div class="field" style="margin-top:12px" id="whenAt" hidden>
+        <label for="c-sendat">Send on</label><input id="c-sendat" type="datetime-local">
+      </div>
+      <div class="field" style="margin-top:12px" id="whenBefore" hidden>
+        <label for="c-days">Days before the tour</label><input id="c-days" type="number" min="0" max="365" value="14">
+        <p class="muted" style="font-size:.8rem;margin-top:6px">Needs a tour date above.</p>
+      </div>
+
+      <p class="error" id="reqError" hidden></p>
+      <div class="redeem-actions">
+        <button class="btn btn-primary" type="submit">Create and send</button>
+      </div>
+    </form>`;
+}
+
+const reqModal = document.getElementById('reqModal');
+const reqBody = document.getElementById('reqBody');
+
+function openForm(parent = null) {
+  reqModal.hidden = false;
+  reqBody.innerHTML = form(parent);
+
+  const when = document.getElementById('c-when');
+  const submitBtn = reqBody.querySelector('button[type="submit"]');
+  when.addEventListener('change', () => {
+    document.getElementById('whenAt').hidden = when.value !== 'at';
+    document.getElementById('whenBefore').hidden = when.value !== 'before';
+    submitBtn.textContent = when.value === 'now' ? 'Create and send' : 'Schedule';
+  });
+
+  document.getElementById('reqForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const errEl = document.getElementById('reqError');
+    errEl.hidden = true;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Working…';
+    try {
+      const res = await api('/api/team/requests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          client_name: document.getElementById('c-name').value,
+          client_email: document.getElementById('c-email').value,
+          tour_name: document.getElementById('c-tour').value,
+          tour_date: document.getElementById('c-date').value,
+          tour_details: document.getElementById('c-details').value,
+          amount: document.getElementById('c-amount').value,
+          payment_kind: document.getElementById('c-kind').value,
+          parent_request_id: parent,
+          send_mode: when.value,
+          send_at: document.getElementById('c-sendat')?.value || null,
+          send_rule_days: document.getElementById('c-days')?.value || null,
+        }),
+      });
+      reqBody.innerHTML = `
+        <h2 style="margin-bottom:12px">${res.scheduled ? 'Scheduled' : 'Sent'}</h2>
+        <p>${res.scheduled
+          ? 'The client will get their payment link automatically.'
+          : 'The client has been emailed their payment link.'}</p>
+        ${res.warning ? `<p class="error" style="margin-top:12px">${esc(res.warning)}</p>` : ''}
+        <div class="redeem-actions"><button class="btn btn-primary" data-close type="button">Done</button></div>`;
+      load();
+    } catch (err) {
+      errEl.textContent = err.message;
+      errEl.hidden = false;
+      submitBtn.disabled = false;
+      submitBtn.textContent = when.value === 'now' ? 'Create and send' : 'Schedule';
+    }
+  });
+}
+
+document.getElementById('newRequest').addEventListener('click', () => openForm());
+document.addEventListener('click', (e) => {
+  const again = e.target.closest('[data-again]');
+  if (again) return openForm(again.dataset.again);
+  if (e.target.closest('[data-close]')) reqModal.hidden = true;
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') reqModal.hidden = true; });
+
+document.getElementById('logout').addEventListener('click', async () => {
+  await fetch('/api/team/logout', { method: 'POST' });
+  location.href = '/team/login.html';
+});
+
+api('/api/team/me')
+  .then(u => { document.getElementById('who').textContent = u.name || u.email; load(); })
+  .catch(() => {});
+</script>
+</body>
+</html>

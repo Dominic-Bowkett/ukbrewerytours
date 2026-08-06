@@ -450,6 +450,11 @@ fs.writeFileSync(path.join(OUT, 'CNAME'), 'www.ukbrewerytours.com\n');
 /* voucher admin — standalone internal UI, copied verbatim (no site layout) */
 fs.cpSync(path.join(ROOT, 'admin'), path.join(OUT, 'admin'), { recursive: true });
 
+/* team payments — standalone internal UI, same treatment as admin */
+if (fs.existsSync(path.join(ROOT, 'team'))) {
+  fs.cpSync(path.join(ROOT, 'team'), path.join(OUT, 'team'), { recursive: true });
+}
+
 // Cloudflare Pages: only these prefixes go through Functions, so the ~200 static
 // pages skip the worker entirely and stay fast.
 //
