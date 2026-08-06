@@ -116,7 +116,9 @@ export async function onRequestPost({ request, env, data }) {
   // 'now' | 'at' (send_at) | 'before' (N days before tour_date)
   const mode = ['now', 'at', 'before'].includes(body.send_mode) ? body.send_mode : 'now';
   let sendAt = null;
-  let sendRule = null;
+  // NOT NULL in the schema, with 'now' as the default — passing null here fails
+  // the constraint and 500s every immediate send.
+  let sendRule = 'now';
   let sendRuleDays = null;
 
   if (mode === 'at') {
