@@ -1,0 +1,73 @@
+// GET   /api/admin/settings — platform defaults (fee, terms, expiry)
+// PATCH /api/admin/settings — change them
+//
+// Terms set here are the general ones, snapshotted onto each request at send
+// time. A team member can be given their own terms instead (team_members.
+// terms_override, edited via /api/admin/team/[id]); the resolution is
+// member override -> platform default, in _lib/fees.js.
+//
+// Changing anything here affects only requests sent AFTER the change: every
+// request freezes its own terms, fee and account when it goes out, so a client
+// holding a link always sees what was actually agreed with them.
+
+const MAX_TERMS = 20000;
+
+export async function onRequestGet({ env }) {
+  const s = await env.DB.prepare('SELECT * FROM platform_settings WHERE id = 1').first();
+  return Response.json({
+    default_fee_bps: s?.default_fee_bps ?? 2000,
+    default_terms: s?.default_terms ?? null,
+    default_expiry_days: s?.default_expiry_days ?? 30,
+    updated_at: s?.updated_at ?? null,
+  }, { headers: { 'Cache-Control': 'private, no-store' } });
+}
+
+export async function onRequestPatch({ request, env }) {
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return Response.json({ error: 'Invalid request.' }, { status: 400 });
+  }
+
+  const sets = [];
+  const binds = [];
+
+  if (body.default_fee_percent !== undefined) {
+    const pct = Number(body.default_fee_percent);
+    if (!Number.isFinite(pct) || pct < 0 || pct > 100) {
+      return Response.json({ error: 'Fee must be between 0 and 100 percent.' }, { status: 400 });
+    }
+    sets.push('default_fee_bps = ?');
+    binds.push(Math.round(pct * 100));
+  }
+
+  if (body.default_terms !== undefined) {
+    const terms = String(body.default_terms ?? '').trim().slice(0, MAX_TERMS);
+    sets.push('default_terms = ?');
+    binds.push(terms || null);
+  }
+
+  if (body.default_expiry_days !== undefined) {
+    const days = Math.round(Number(body.default_expiry_days));
+    if (!Number.isInteger(days) || days < 1 || days > 365) {
+      return Response.json({ error: 'Link expiry must be between 1 and 365 days.' }, { status: 400 });
+    }
+    sets.push('default_expiry_days = ?');
+    binds.push(days);
+  }
+
+  if (!sets.length) return Response.json({ error: 'Nothing to change.' }, { status: 400 });
+
+  sets.push("updated_at = datetime('now')");
+  await env.DB.prepare(`UPDATE platform_settings SET ${sets.join(', ')} WHERE id = 1`).bind(...binds).run();
+
+  const s = await env.DB.prepare('SELECT * FROM platform_settings WHERE id = 1').first();
+  return Response.json({
+    ok: true,
+    default_fee_bps: s.default_fee_bps,
+    default_terms: s.default_terms,
+    default_expiry_days: s.default_expiry_days,
+    note: 'Applies to requests sent from now on. Requests already sent keep the terms they were sent with.',
+  });
+}

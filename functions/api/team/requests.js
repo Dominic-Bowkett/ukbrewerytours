@@ -80,6 +80,38 @@ export async function onRequestPost({ request, env, data }) {
     return Response.json({ error: 'For payments over £20,000 please contact the office.' }, { status: 400 });
   }
 
+  // --- deposit / balance / extra ---
+  // Usually a booking is a deposit then a balance, but sometimes there are
+  // extra payments on top. `parent_request_id` links a follow-up to the
+  // original so the client's email can say "Balance for …" rather than
+  // reading like a brand-new booking.
+  const KINDS = ['full', 'deposit', 'balance', 'extra'];
+  const paymentKind = KINDS.includes(body.payment_kind) ? body.payment_kind : 'full';
+
+  let parentId = null;
+  if (body.parent_request_id) {
+    // Scoped by team_member_id: a member cannot chain onto another's booking.
+    const parent = await env.DB.prepare(
+      'SELECT id, client_email, tour_name, booking_total_pence FROM payment_requests WHERE id = ? AND team_member_id = ?',
+    ).bind(clean(body.parent_request_id, 40), member.id).first();
+    if (!parent) return Response.json({ error: 'That original booking was not found.' }, { status: 404 });
+    parentId = parent.id;
+  }
+  if (paymentKind === 'balance' && !parentId) {
+    return Response.json({ error: 'A balance payment must be linked to its deposit.' }, { status: 400 });
+  }
+
+  let bookingTotalPence = null;
+  if (body.booking_total !== undefined && body.booking_total !== null && body.booking_total !== '') {
+    bookingTotalPence = Math.round(Number(body.booking_total) * 100);
+    if (!Number.isFinite(bookingTotalPence) || bookingTotalPence < amountPence) {
+      return Response.json({ error: 'The booking total cannot be less than this payment.' }, { status: 400 });
+    }
+    if (bookingTotalPence > MAX_PENCE) {
+      return Response.json({ error: 'That booking total is too large.' }, { status: 400 });
+    }
+  }
+
   // --- when should it go out? ---
   // 'now' | 'at' (send_at) | 'before' (N days before tour_date)
   const mode = ['now', 'at', 'before'].includes(body.send_mode) ? body.send_mode : 'now';
@@ -135,13 +167,15 @@ export async function onRequestPost({ request, env, data }) {
        tour_name, tour_date, tour_time, tour_details, reference,
        currency, amount_pence, fee_bps, fee_pence, fee_source, fee_frozen_at,
        terms_snapshot, stripe_account_id, member_display_name,
-       status, send_rule, send_rule_days, send_at, expires_at, created_by)
-    VALUES (?,?,?,?,?,?,?,?,?,?,'gbp',?,?,?,?,datetime('now'),?,?,?,?,?,?,?,?,?)`)
+       status, send_rule, send_rule_days, send_at, expires_at, created_by,
+       payment_kind, parent_request_id, booking_total_pence)
+    VALUES (?,?,?,?,?,?,?,?,?,?,'gbp',?,?,?,?,datetime('now'),?,?,?,?,?,?,?,?,?,?,?,?)`)
     .bind(id, publicToken, member.id, clientName, clientEmail,
           tourName, tourDate || null, tourTime || null, tourDetails || null, reference || null,
           amountPence, frozen.fee_bps, frozen.fee_pence, frozen.fee_source,
           frozen.terms_snapshot, frozen.stripe_account_id, frozen.member_display_name,
-          status, sendRule, sendRuleDays, sendAt, sqlStamp(expires), `team:${member.email}`)
+          status, sendRule, sendRuleDays, sendAt, sqlStamp(expires), `team:${member.email}`,
+          paymentKind, parentId, bookingTotalPence)
     .run();
 
   // Remember the client so a repeat request is two clicks, not retyping.

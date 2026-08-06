@@ -847,22 +847,49 @@ export async function sendPaymentRequest(env, { requestId, member = null, actor 
   return { ok: true, payUrl, messageId };
 }
 
+/** Deposit / balance / extra shape the wording, so a follow-up does not read
+ *  like a brand-new booking to a client who has already paid something. */
+export const KIND_LABEL = {
+  full: 'Payment request',
+  deposit: 'Deposit request',
+  balance: 'Balance due',
+  extra: 'Additional payment',
+};
+
+function kindIntro(row) {
+  const who = esc(row.member_display_name || 'UK Brewery Tours');
+  switch (row.payment_kind) {
+    case 'deposit':
+      return `here's the deposit link to secure your booking with ${who}.`;
+    case 'balance':
+      return `here's the link to settle the remaining balance on your booking with ${who}.`;
+    case 'extra':
+      return `here's a link for an additional payment on your booking with ${who}.`;
+    default:
+      return `here's the payment link for your booking with ${who}.`;
+  }
+}
+
 /** The client's email: what they are paying for, and one button to pay it. */
 export function paymentRequestHtml({ row, payUrl }) {
   const when = [row.tour_date, row.tour_time].filter(Boolean).join(' at ');
+  const amountLabel = row.payment_kind === 'balance' ? 'Balance now due'
+    : row.payment_kind === 'deposit' ? 'Deposit'
+    : 'Amount';
   return payShell(`<tr><td style="padding:30px 28px;">
-    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${INK_SOFT};">Payment request</div>
+    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${INK_SOFT};">${esc(KIND_LABEL[row.payment_kind] || KIND_LABEL.full)}</div>
     <h1 style="margin:6px 0 16px;font-size:24px;line-height:1.3;">${esc(row.tour_name)}</h1>
 
     <p style="margin:0 0 20px;font-size:15px;line-height:1.7;">
-      Hi ${esc(row.client_name)}, here's the payment link for your booking with
-      ${esc(row.member_display_name || 'UK Brewery Tours')}.
+      Hi ${esc(row.client_name)}, ${kindIntro(row)}
     </p>
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #e7ddcd;border-bottom:1px solid #e7ddcd;margin-bottom:22px;">
       ${when ? `<tr><td style="padding:8px 14px 8px 0;font-size:14px;color:${INK_SOFT};">When</td>
         <td style="padding:8px 0;font-size:14px;font-weight:600;">${esc(when)}</td></tr>` : ''}
-      <tr><td style="padding:8px 14px 8px 0;font-size:14px;color:${INK_SOFT};">Amount</td>
+      ${row.booking_total_pence ? `<tr><td style="padding:8px 14px 8px 0;font-size:14px;color:${INK_SOFT};">Booking total</td>
+        <td style="padding:8px 0;font-size:14px;">${money(row.booking_total_pence)}</td></tr>` : ''}
+      <tr><td style="padding:8px 14px 8px 0;font-size:14px;color:${INK_SOFT};">${amountLabel}</td>
         <td style="padding:8px 0;font-size:19px;font-weight:700;">${money(row.amount_pence)}</td></tr>
     </table>
 
