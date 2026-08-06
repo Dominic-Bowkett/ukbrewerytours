@@ -96,9 +96,13 @@ export async function onRequest(ctx) {
   let member;
   try {
     member = await env.DB.prepare(
+      // Every column isChargeReady() reads must be selected here: a missing one
+      // arrives as undefined, fails the check, and locks the member out of the
+      // whole team area with a 403 that looks like a Stripe problem.
       `SELECT id, email, name, company_name, reply_to_email,
               stripe_account_id, stripe_account_label, stripe_charges_enabled,
-              stripe_platform_payments, stripe_account_state, stripe_account_checked_at,
+              stripe_card_payments, stripe_platform_payments, stripe_account_state,
+              stripe_account_checked_at, deauthorized_at,
               fee_bps, active, session_epoch, must_change_password, last_login_at
          FROM team_members
         WHERE id = ?`,
