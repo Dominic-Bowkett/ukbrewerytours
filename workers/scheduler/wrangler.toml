@@ -1,0 +1,29 @@
+# Cron worker for scheduled payment requests.
+#
+# Separate from the Pages project because Pages Functions cannot receive a
+# scheduled event — but bound to the SAME D1 database, so there is one set of
+# payment rows, not two.
+name = "ukbrewerytours-scheduler"
+main = "index.js"
+compatibility_date = "2025-01-01"
+
+# Every five minutes. A payment request that goes out within five minutes of the
+# time the member chose is indistinguishable from one sent on the second, and
+# this keeps the sweep well inside the free tier.
+[triggers]
+crons = ["*/5 * * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "ukbrewerytours-vouchers"
+database_id = "638775d1-9738-4480-a247-248bac910c1e"
+
+[vars]
+BASE_URL = "https://www.ukbrewerytours.com"
+FROM_EMAIL = "UK Brewery Tours <info@ukbrewerytours.com>"
+NOTIFY_EMAIL = "info@ukbrewerytours.com"
+
+# Secrets, set with `npx wrangler secret put <NAME>` from this directory:
+#   RESEND_API_KEY     — sends the client email and the ops alerts
+#   STRIPE_SECRET_KEY  — re-checks a connected account whose cached state is stale
+#   SCHEDULER_KEY      — guards the manual /run endpoint
