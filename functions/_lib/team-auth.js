@@ -372,14 +372,23 @@ export async function upgradeTeamPasswordHash(env, { memberId, password }) {
  * Lives here rather than in the middleware so /api/team/me and the gate answer
  * from one definition and can never disagree about whether a member may trade.
  */
+/**
+ * Can this member actually take a direct charge with a platform fee?
+ *
+ * The capability columns are TEXT ('active' | 'pending' | 'inactive'), matching
+ * what Stripe returns — an earlier version compared them to the integer 1, so
+ * every member read as not-charge-ready and the team area refused to work.
+ */
 export function isChargeReady(member) {
   return Boolean(member)
     && member.active === 1
     && typeof member.stripe_account_id === 'string'
     && member.stripe_account_id.startsWith('acct_')
     && member.stripe_charges_enabled === 1
-    && member.stripe_platform_payments === 1
-    && member.stripe_account_state === 'active';
+    && member.stripe_card_payments === 'active'
+    && member.stripe_platform_payments === 'active'
+    && member.stripe_account_state === 'active'
+    && !member.deauthorized_at;
 }
 
 /* ------------------------------------------------------------ login throttle */

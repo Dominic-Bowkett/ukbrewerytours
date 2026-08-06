@@ -113,13 +113,23 @@ export async function onRequestPost({ request, env }) {
   const id = crypto.randomUUID();
 
   try {
+    // Record the capability state we just read from Stripe. Without these the
+    // member reads as not-charge-ready and the team area refuses to work — the
+    // gate re-checks them, so they must reflect reality from the start.
     await env.DB.prepare(`
       INSERT INTO team_members (id, email, name, password_hash, password_salt, iterations, algo,
                                 stripe_account_id, stripe_account_label, fee_bps,
-                                active, stripe_charges_enabled, must_change_password)
-      VALUES (?,?,?,?,?,?,?,?,?,?,1,1,1)`)
+                                active, must_change_password,
+                                stripe_charges_enabled, stripe_payouts_enabled,
+                                stripe_card_payments, stripe_platform_payments,
+                                stripe_account_state, stripe_account_checked_at)
+      VALUES (?,?,?,?,?,?,?,?,?,?,1,1,?,?,?,?,'active',datetime('now'))`)
       .bind(id, email, name, hash, salt, TEAM_ITERATIONS, ALGO_PEPPERED,
-            accountId, account.email || account.business_profile?.name || null, feeBps).run();
+            accountId, account.email || account.business_profile?.name || null, feeBps,
+            account.charges_enabled ? 1 : 0,
+            account.payouts_enabled ? 1 : 0,
+            caps.card_payments || null,
+            caps.platform_payments || caps.transfers || null).run();
   } catch (err) {
     if (String(err.message || '').includes('UNIQUE')) {
       return Response.json({ error: 'A team member with that email already exists.' }, { status: 409 });
