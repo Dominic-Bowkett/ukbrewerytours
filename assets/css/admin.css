@@ -170,11 +170,8 @@ code.small { font-size: .78rem; }
 .redeem-form { margin-top: 24px; padding-top: 22px; border-top: 1px solid var(--line); }
 .redeem-form h3 { font-size: 1rem; margin-bottom: 14px; }
 .redeem-form h3 .sub { font-weight: 400; color: var(--ink-soft); font-size: .85rem; }
-.redeem-form select {
-  width: 100%; padding: 10px 12px; border: 1px solid var(--line);
-  border-radius: 9px; font: inherit; background: #fff;
-}
-.redeem-form select:focus { outline: 2px solid var(--amber); outline-offset: -1px; }
+/* selects here are styled by the shared `.field select` rule below — a separate
+   copy would win on source order and drop the custom arrow. */
 
 /* refunds move real money — visually distinct from redemption */
 .refund-form { border-top-color: #e8cfcd; }
@@ -186,8 +183,36 @@ code.small { font-size: .78rem; }
 .balance-box.four { grid-template-columns: repeat(4, 1fr); }
 .redeem-row { display: grid; grid-template-columns: 150px 1fr; gap: 12px; }
 .field label { display: block; font-size: .78rem; font-weight: 600; margin-bottom: 5px; color: var(--ink-soft); }
-.field input { width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 9px; font: inherit; background: #fff; }
-.field input:focus { outline: 2px solid var(--amber); outline-offset: -1px; }
+/* select and textarea must be listed explicitly — styling `input` alone left the
+   payment-request form's dropdowns and notes box as raw browser defaults. */
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  font: inherit;
+  color: var(--ink);
+  background: #fff;
+}
+.field textarea { resize: vertical; line-height: 1.6; min-height: 84px; }
+/* native arrow suppressed, then redrawn, so the control matches the inputs */
+.field select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 38px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%236b5c4f' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 11px;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus { outline: 2px solid var(--amber); outline-offset: -1px; border-color: var(--amber); }
+.field input::placeholder,
+.field textarea::placeholder { color: #a9998a; }
 .redeem-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
 .done-note { margin-top: 20px; }
 
