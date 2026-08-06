@@ -142,12 +142,20 @@ export function teamAuthConfigError(env) {
 /**
  * Mint a team session token.
  *
- * @param {{id:number, session_epoch:number}} member  a freshly read team_members row
+ * team_members.id is a TEXT uuid, deliberately: admin_users.id is INTEGER
+ * AUTOINCREMENT, so integer team ids would start at 1 and a token carrying
+ * tmid=1 would name a real admin. An earlier version of this function required
+ * an integer and rejected every genuine login.
+ *
+ * @param {{id:string, session_epoch:number}} member  a freshly read team_members row
  */
 export async function createTeamSession(member, env) {
   const problem = teamAuthConfigError(env);
   if (problem) throw new Error(`team session: ${problem}`);
-  if (!Number.isInteger(member?.id) || member.id <= 0) throw new Error('team session: bad member id');
+  const id = member?.id;
+  if (typeof id !== 'string' || id.length < 8 || id.length > 64) {
+    throw new Error('team session: bad member id');
+  }
 
   const now = Date.now();
   const payload = b64url(JSON.stringify({
@@ -188,7 +196,8 @@ export async function verifyTeamSession(token, env) {
     // The audience claim. A token that does not positively assert it is a team
     // token is not one, whatever else it says.
     if (d.aud !== TEAM_AUD) return null;
-    if (!Number.isInteger(d.tmid) || d.tmid <= 0) return null;
+    // TEXT uuid, matching team_members.id — see createTeamSession().
+    if (typeof d.tmid !== 'string' || d.tmid.length < 8 || d.tmid.length > 64) return null;
     if (!Number.isInteger(d.tv) || d.tv < 1) return null;
     if (!Number.isInteger(d.exp) || Date.now() > d.exp) return null;
     return {
@@ -513,7 +522,8 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 // into a TEXT-affinity primary key silently matches nothing, which reads exactly
 // like "not yours" and is how an ownership check gets deleted under pressure.
 export const isRequestId = v => typeof v === 'string' && UUID_RE.test(v);
-export const isClientId = v => Number.isInteger(v) && v > 0;
+// clients.id is a TEXT uuid, like every other 0004 primary key.
+export const isClientId = v => typeof v === 'string' && v.length >= 8 && v.length <= 64;
 
 /** Identical for "does not exist" and "belongs to someone else", so ids cannot be probed. */
 export function notFound() {
@@ -531,7 +541,7 @@ const REQUEST_COLUMNS = `id, public_token, team_member_id, client_id, parent_req
 
 /** Read one payment request that must belong to this member. */
 export async function ownedPaymentRequest(env, { id, teamMemberId }) {
-  if (!Number.isInteger(teamMemberId)) throw new Error('ownedPaymentRequest: no session member id');
+  if (typeof teamMemberId !== 'string' || !teamMemberId) throw new Error('ownedPaymentRequest: no session member id');
   if (!isRequestId(id)) return null;
   return env.DB.prepare(
     `SELECT ${REQUEST_COLUMNS} FROM payment_requests WHERE id = ? AND team_member_id = ?`,
@@ -540,7 +550,7 @@ export async function ownedPaymentRequest(env, { id, teamMemberId }) {
 
 /** Read one address-book client that must belong to this member. */
 export async function ownedClient(env, { id, teamMemberId }) {
-  if (!Number.isInteger(teamMemberId)) throw new Error('ownedClient: no session member id');
+  if (typeof teamMemberId !== 'string' || !teamMemberId) throw new Error('ownedClient: no session member id');
   if (!isClientId(id)) return null;
   return env.DB.prepare(
     `SELECT id, team_member_id, name, email, company, phone, notes,
@@ -580,7 +590,7 @@ export { DRAFT_WRITABLE };
  * and the only lawful edit is cancel-and-reissue.
  */
 export async function updateOwnedDraftRequest(env, { id, teamMemberId, values }) {
-  if (!Number.isInteger(teamMemberId)) throw new Error('updateOwnedDraftRequest: no session member id');
+  if (typeof teamMemberId !== 'string' || !teamMemberId) throw new Error('updateOwnedDraftRequest: no session member id');
   if (!isRequestId(id)) return false;
   if (!values || typeof values !== 'object') throw new Error('updateOwnedDraftRequest: no values');
 
@@ -613,7 +623,7 @@ export async function updateOwnedDraftRequest(env, { id, teamMemberId, values })
  * belongs to the Connect layer, not here.
  */
 export async function cancelOwnedRequest(env, { id, teamMemberId, reason = null }) {
-  if (!Number.isInteger(teamMemberId)) throw new Error('cancelOwnedRequest: no session member id');
+  if (typeof teamMemberId !== 'string' || !teamMemberId) throw new Error('cancelOwnedRequest: no session member id');
   if (!isRequestId(id)) return false;
   const res = await env.DB.prepare(
     `UPDATE payment_requests
