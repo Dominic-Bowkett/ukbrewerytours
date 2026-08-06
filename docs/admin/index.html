@@ -488,9 +488,9 @@ function openPayment(id) {
     <p class="muted" style="margin-bottom:20px">${esc(r.client_name)} · ${esc(r.client_email)}</p>
 
     <div class="balance-box${r.refunded_pence ? ' four' : ''}">
-      <div><span>Client paid</span><strong>${money(r.amount_paid_pence ?? r.amount_pence)}</strong></div>
+      <div><span>${paid ? 'Client paid' : 'Client pays'}</span><strong>${money(r.amount_paid_pence ?? r.amount_pence)}</strong></div>
       <div class="hl"><span>Your fee</span><strong>${money(feeTaken)}</strong></div>
-      <div><span>${esc(r.member_name)} keeps</span><strong>${money((r.amount_paid_pence ?? r.amount_pence) - feeTaken)}</strong></div>
+      <div><span>${esc(r.member_name)} ${paid ? 'keeps' : 'will keep'}</span><strong>${money((r.amount_paid_pence ?? r.amount_pence) - feeTaken)}</strong></div>
       ${r.refunded_pence ? `<div><span>Refunded</span><strong class="refund-amt">${money(r.refunded_pence)}</strong></div>` : ''}
     </div>
 
