@@ -73,13 +73,18 @@ export async function onRequestGet({ params, env }) {
     return res;
   }
 
+  const accent = HEX.test(widget.accent_color) ? widget.accent_color : '#e09330';
+  const accentInk = inkOn(accent);
+
+  if (widget.kind === 'contact') {
+    return new Response(contactPageHtml(widget, accent, accentInk), { headers });
+  }
+
   let presets = [];
   try { presets = JSON.parse(widget.preset_amounts || '[]'); } catch { presets = []; }
   presets = presets.filter(p => Number.isInteger(p) && p >= 1000 && p <= 100000);
   const allowCustom = widget.allow_custom === 1 || presets.length === 0;
 
-  const accent = HEX.test(widget.accent_color) ? widget.accent_color : '#e09330';
-  const accentInk = inkOn(accent);
   const heading = widget.heading || 'Buy a gift voucher';
   const blurb = widget.blurb
     || 'Delivered instantly by email — redeemable against any UK Brewery Tours experience, and it never expires.';
@@ -198,7 +203,7 @@ export async function onRequestGet({ params, env }) {
           <input id="remail" type="email" autocomplete="off" placeholder="alex@example.com"></div>
       </div>
       <div class="field" style="margin-top:14px"><label for="msg">Gift message (optional)</label>
-        <textarea id="msg" rows="2" maxlength="1000"></textarea></div>
+        <textarea id="msg" rows="${widget.gift_message ? 3 : 2}" maxlength="1000">${esc(widget.gift_message || '')}</textarea></div>
     </div>
 
     <div class="row">
@@ -336,4 +341,152 @@ export async function onRequestGet({ params, env }) {
 </html>`;
 
   return new Response(html, { headers });
+}
+
+// The contact-form flavour of the widget. Same shell and messaging plumbing as
+// the voucher form, but it posts to /api/contact and succeeds in place — no
+// navigation, the host page never leaves.
+function contactPageHtml(widget, accent, accentInk) {
+  const heading = widget.heading || 'Get in touch';
+  const blurb = widget.blurb
+    || "Send us a message and we'll reply by email — usually within a few hours.";
+
+  return `<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>${esc(heading)} — UK Brewery Tours</title>
+<style>
+  :root { --accent: ${accent}; --accent-ink: ${accentInk}; --ink: #241505; --ink-soft: #6b5c4f;
+          --line: #e5ddd0; --cream: #faf6ee; --red: #a13c37; --green: #33502a; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { background: transparent; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; color: var(--ink); }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 24px; }
+  .head { margin-bottom: 18px; }
+  .head h1 { font-size: 1.3rem; line-height: 1.25; }
+  .head p { color: var(--ink-soft); font-size: .92rem; line-height: 1.55; margin-top: 6px; }
+  form { display: flex; flex-direction: column; gap: 14px; }
+  label { font-size: .8rem; font-weight: 600; letter-spacing: .03em; text-transform: uppercase;
+          color: var(--ink-soft); margin-bottom: 6px; display: block; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 480px) { .row { grid-template-columns: 1fr; } }
+  .field { min-width: 0; }
+  input[type="text"], input[type="email"], textarea {
+    width: 100%; border: 1.5px solid var(--line); border-radius: 9px; padding: 10px 12px;
+    font: inherit; font-size: .95rem; color: var(--ink); background: #fff;
+  }
+  input:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  textarea { resize: vertical; line-height: 1.5; }
+  .hp { position: absolute; left: -9999px; top: -9999px; height: 1px; width: 1px; overflow: hidden; }
+  .err { color: var(--red); font-size: .9rem; }
+  .submit { border: 0; border-radius: 999px; background: var(--accent); color: var(--accent-ink);
+            font: inherit; font-weight: 700; font-size: 1rem; padding: 14px 20px; cursor: pointer; }
+  .submit:disabled { opacity: .55; cursor: default; }
+  .fine { text-align: center; font-size: .78rem; color: var(--ink-soft); line-height: 1.6; }
+  .done { text-align: center; padding: 26px 6px; }
+  .done .tick { font-size: 2rem; }
+  .done h2 { font-size: 1.15rem; margin: 10px 0 8px; color: var(--green); }
+  .done p { color: var(--ink-soft); font-size: .92rem; line-height: 1.6; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="head">
+    <h1>${esc(heading)}</h1>
+    <p>${esc(blurb)}</p>
+  </div>
+
+  <form id="f" novalidate>
+    <div class="row">
+      <div class="field"><label for="name">Your name</label>
+        <input id="name" type="text" autocomplete="name" placeholder="Jamie Doe"></div>
+      <div class="field"><label for="email">Your email</label>
+        <input id="email" type="email" autocomplete="email" placeholder="you@example.com"></div>
+    </div>
+
+    <div class="field"><label for="msg">Your message</label>
+      <textarea id="msg" rows="5" maxlength="5000" placeholder="Tell us what you're after — dates, group size, anything else."></textarea></div>
+
+    <!-- honeypot: real people never see or fill this -->
+    <div class="hp" aria-hidden="true">
+      <label for="company">Company</label>
+      <input id="company" type="text" tabindex="-1" autocomplete="off">
+    </div>
+
+    <p class="err" id="err" hidden></p>
+    <button class="submit" id="go" type="submit">Send message</button>
+    <p class="fine">Messages go to
+      <a href="https://www.ukbrewerytours.com/contact/" target="_blank" rel="noopener">UK Brewery Tours</a>
+      &middot; replies come from info@ukbrewerytours.com</p>
+  </form>
+
+  <div class="done" id="done" hidden>
+    <div class="tick">&#127866;</div>
+    <h2>Message sent — cheers!</h2>
+    <p>We've emailed you a confirmation and will reply personally, usually within a few hours.</p>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var WIDGET_ID = ${JSON.stringify(widget.id)};
+  var HOST_URL = new URLSearchParams(location.search).get('host') || '';
+  var framed = window.parent !== window;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var errEl = $('err'), go = $('go');
+
+  function report() {
+    if (framed) parent.postMessage({ ubtVoucher: 1, type: 'size', height: document.documentElement.scrollHeight }, '*');
+  }
+  if (window.ResizeObserver) new ResizeObserver(report).observe(document.body);
+  window.addEventListener('load', report);
+  report();
+
+  $('f').addEventListener('submit', function (e) {
+    e.preventDefault();
+    errEl.hidden = true;
+
+    function fail(msg, focus) { errEl.textContent = msg; errEl.hidden = false; if (focus) focus.focus(); report(); }
+
+    if (!$('name').value.trim()) return fail('Please enter your name.', $('name'));
+    if (!$('email').value.trim()) return fail('Please enter your email address.', $('email'));
+    if ($('msg').value.trim().length < 10) return fail('Please tell us a little more.', $('msg'));
+
+    go.disabled = true;
+    go.textContent = 'Sending…';
+
+    fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: $('name').value,
+        email: $('email').value,
+        message: $('msg').value,
+        company: $('company').value,
+        widgetId: WIDGET_ID,
+        hostUrl: HOST_URL,
+      }),
+    }).then(function (res) {
+      return res.json().then(function (data) {
+        if (!res.ok) throw new Error(data.error || 'Something went wrong. Please try again.');
+        $('f').hidden = true;
+        $('done').hidden = false;
+        report();
+      });
+    }).catch(function (err) {
+      fail(err.message);
+      go.disabled = false;
+      go.textContent = 'Send message';
+    });
+  });
+})();
+</script>
+</body>
+</html>`;
 }

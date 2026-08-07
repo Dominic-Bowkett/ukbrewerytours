@@ -450,8 +450,10 @@ fs.writeFileSync(path.join(OUT, 'CNAME'), 'www.ukbrewerytours.com\n');
 /* voucher admin — standalone internal UI, copied verbatim (no site layout) */
 fs.cpSync(path.join(ROOT, 'admin'), path.join(OUT, 'admin'), { recursive: true });
 
-/* embeddable voucher widget loader — other sites include /embed/voucher.js */
+/* embeddable widget loader — other sites include /embed/widget.js (or the
+   original voucher-only name /embed/voucher.js; identical files, both live) */
 fs.cpSync(path.join(ROOT, 'embed'), path.join(OUT, 'embed'), { recursive: true });
+fs.copyFileSync(path.join(ROOT, 'embed', 'voucher.js'), path.join(OUT, 'embed', 'widget.js'));
 
 /* team payments — standalone internal UI, same treatment as admin */
 if (fs.existsSync(path.join(ROOT, 'team'))) {

@@ -19,7 +19,7 @@ export async function onRequestGet({ params, env }) {
 
 export async function onRequestPut({ params, request, env }) {
   const id = String(params.id || '');
-  const existing = await env.DB.prepare('SELECT id FROM widgets WHERE id = ?').bind(id).first();
+  const existing = await env.DB.prepare('SELECT id, kind FROM widgets WHERE id = ?').bind(id).first();
   if (!existing) return Response.json({ error: 'Widget not found.' }, { status: 404 });
 
   let body;
@@ -29,16 +29,17 @@ export async function onRequestPut({ params, request, env }) {
     return Response.json({ error: 'Invalid request.' }, { status: 400 });
   }
 
-  const parsed = parseWidgetInput(body);
+  const parsed = parseWidgetInput(body, existing.kind);
   if (parsed.error) return Response.json({ error: parsed.error }, { status: 400 });
   const f = parsed.fields;
 
   await env.DB.prepare(`
     UPDATE widgets SET name=?, heading=?, blurb=?, accent_color=?, preset_amounts=?,
-                       allow_custom=?, allowed_origins=?, status=?, updated_at=datetime('now')
+                       allow_custom=?, allowed_origins=?, status=?, gift_message=?,
+                       updated_at=datetime('now')
     WHERE id=?`,
   ).bind(f.name, f.heading, f.blurb, f.accent_color, f.preset_amounts,
-    f.allow_custom, f.allowed_origins, f.status, id).run();
+    f.allow_custom, f.allowed_origins, f.status, f.gift_message, id).run();
 
   return Response.json({ widget: await load(env, id) });
 }

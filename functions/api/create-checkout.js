@@ -59,7 +59,7 @@ export async function onRequestPost({ request, env }) {
   let widgetOrigin = null; // its origin, stored for attribution
   if (widgetId) {
     widget = await env.DB.prepare('SELECT * FROM widgets WHERE id = ?').bind(widgetId).first();
-    if (!widget || widget.status !== 'active') {
+    if (!widget || widget.kind !== 'voucher' || widget.status !== 'active') {
       return Response.json({ error: 'Gift voucher sales are temporarily unavailable.' }, { status: 403 });
     }
     // Fixed-amounts widget: the browser UI only offers the presets, but the

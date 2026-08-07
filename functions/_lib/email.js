@@ -125,10 +125,10 @@ export function voucherEmailHtml({ order, vouchers, printUrl }) {
 }
 
 /** Website enquiry forwarded to info@. Reply-to is set to the sender. */
-export function enquiryEmailHtml({ name, email, message, page }) {
+export function enquiryEmailHtml({ name, email, message, page, widget, widgetOrigin }) {
   const body = esc(message).replace(/\n/g, '<br>');
   return shell(`<tr><td style="padding:30px 28px;">
-    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${INK_SOFT};">Website enquiry</div>
+    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${INK_SOFT};">${widget ? 'Widget enquiry' : 'Website enquiry'}</div>
     <h1 style="margin:6px 0 20px;font-size:22px;">${esc(name)}</h1>
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #e7ddcd;border-bottom:1px solid #e7ddcd;margin-bottom:22px;">
@@ -136,6 +136,10 @@ export function enquiryEmailHtml({ name, email, message, page }) {
         <td style="padding:7px 14px 7px 0;font-size:14px;color:${INK_SOFT};">Email</td>
         <td style="padding:7px 0;font-size:14px;font-weight:600;"><a href="mailto:${esc(email)}" style="color:#b3701d;">${esc(email)}</a></td>
       </tr>
+      ${widget ? `<tr>
+        <td style="padding:7px 14px 7px 0;font-size:14px;color:${INK_SOFT};">Via widget</td>
+        <td style="padding:7px 0;font-size:14px;font-weight:600;">${esc(widget.name)}${widgetOrigin ? `<br><span style="font-weight:400;color:${INK_SOFT};">${esc(widgetOrigin)}</span>` : ''}</td>
+      </tr>` : ''}
       ${page ? `<tr>
         <td style="padding:7px 14px 7px 0;font-size:14px;color:${INK_SOFT};">Sent from</td>
         <td style="padding:7px 0;font-size:14px;">${esc(page)}</td>

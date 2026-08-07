@@ -114,16 +114,29 @@ buttons (home, gift vouchers, contact) open the same form with a blank amount.
 
 Tours with no price simply leave the amount empty for the buyer to fill in.
 
-## Embeddable widgets — sell vouchers on OTHER websites
+## Embeddable widgets — sell vouchers and take enquiries on OTHER websites
 
-**Admin → Voucher widgets** creates a self-contained voucher shop you can paste
-into any site (Bristol Brewery Tours, London Brewery Tours, a partner's blog).
+**Admin → Voucher widgets** creates widgets you can paste into any site
+(Bristol Brewery Tours, London Brewery Tours, a partner's blog). Two kinds:
+
+- **Gift vouchers** — a self-contained voucher shop; sales go through the
+  normal Stripe flow below. Supports an admin-set **suggested gift message**,
+  prefilled into the message box for the buyer to edit.
+- **Contact form** — name/email/message; submissions email
+  `info@ukbrewerytours.com` (reply-to the sender) through the same
+  `/api/contact` endpoint as the site's own form: honeypot, per-IP rate limit,
+  logged to `enquiries` with `widget_id`/`widget_origin`, auto-reply to the
+  sender. The subject line names the widget ("Enquiry via Bristol …").
+
 Each widget has its own embed code:
 
 ```html
-<div data-ubt-voucher="wgt_XXXXXXXXXX"></div>
-<script async src="https://www.ukbrewerytours.com/embed/voucher.js"></script>
+<div data-ubt-widget="wgt_XXXXXXXXXX"></div>
+<script async src="https://www.ukbrewerytours.com/embed/widget.js"></script>
 ```
+
+(`data-ubt-voucher` + `/embed/voucher.js` are the original voucher-only names —
+both still work; the two loader files are identical copies.)
 
 How it works: the loader script injects an iframe of `/embed/widget/<id>`
 (rendered by `functions/embed/widget/[id].js` from the `widgets` D1 table).

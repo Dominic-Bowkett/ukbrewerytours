@@ -21,17 +21,20 @@ export async function onRequestPost({ request, env }) {
     return Response.json({ error: 'Invalid request.' }, { status: 400 });
   }
 
-  const parsed = parseWidgetInput(body);
+  // Kind is fixed at creation: 'voucher' sells gift vouchers, 'contact'
+  // collects messages for info@. Updates never change it.
+  const kind = body.kind === 'contact' ? 'contact' : 'voucher';
+  const parsed = parseWidgetInput(body, kind);
   if (parsed.error) return Response.json({ error: parsed.error }, { status: 400 });
   const f = parsed.fields;
 
   const id = generateWidgetId();
   await env.DB.prepare(`
-    INSERT INTO widgets (id, name, heading, blurb, accent_color, preset_amounts,
-                         allow_custom, allowed_origins, status)
-    VALUES (?,?,?,?,?,?,?,?,?)`,
-  ).bind(id, f.name, f.heading, f.blurb, f.accent_color, f.preset_amounts,
-    f.allow_custom, f.allowed_origins, f.status).run();
+    INSERT INTO widgets (id, kind, name, heading, blurb, accent_color, preset_amounts,
+                         allow_custom, allowed_origins, status, gift_message)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
+  ).bind(id, kind, f.name, f.heading, f.blurb, f.accent_color, f.preset_amounts,
+    f.allow_custom, f.allowed_origins, f.status, f.gift_message).run();
 
   const widget = await env.DB.prepare(`
     SELECT w.*, ${WIDGET_STATS_SQL} FROM widgets w WHERE w.id = ?`).bind(id).first();

@@ -27,7 +27,25 @@ export async function onRequestPost({ request, env }) {
   const name = clean(body.name, 100);
   const email = clean(body.email, 200);
   const message = clean(body.message, 5000);
-  const page = clean(body.page, 200);
+  let page = clean(body.page, 200);
+
+  // Embedded contact widgets (the form iframed on other websites).
+  const widgetId = clean(body.widgetId, 40);
+  let widget = null;
+  let widgetOrigin = null;
+  if (widgetId) {
+    widget = await env.DB.prepare('SELECT * FROM widgets WHERE id = ?').bind(widgetId).first();
+    if (!widget || widget.kind !== 'contact' || widget.status !== 'active') {
+      return Response.json({ error: 'This contact form is temporarily unavailable. Please email info@ukbrewerytours.com.' }, { status: 403 });
+    }
+    try {
+      const u = new URL(String(body.hostUrl || ''));
+      if (u.protocol === 'https:' || u.protocol === 'http:') {
+        page = u.href.slice(0, 200);
+        widgetOrigin = u.origin;
+      }
+    } catch { /* no usable host page — attribution just stays blank */ }
+  }
 
   if (!name) return Response.json({ error: 'Please enter your name.' }, { status: 400 });
   if (!isEmail(email)) return Response.json({ error: 'Please enter a valid email address.' }, { status: 400 });
@@ -55,8 +73,8 @@ export async function onRequestPost({ request, env }) {
   try {
     await sendEmail(env, {
       to: env.NOTIFY_EMAIL || 'info@ukbrewerytours.com',
-      subject: `Website enquiry — ${name}`,
-      html: enquiryEmailHtml({ name, email, message, page }),
+      subject: widget ? `Enquiry via ${widget.name} — ${name}` : `Website enquiry — ${name}`,
+      html: enquiryEmailHtml({ name, email, message, page, widget, widgetOrigin }),
       replyTo: email,
     });
   } catch (err) {
@@ -67,8 +85,8 @@ export async function onRequestPost({ request, env }) {
   // Log after the important email has gone out.
   try {
     await env.DB.prepare(
-      'INSERT INTO enquiries (name, email, message, page, ip) VALUES (?,?,?,?,?)',
-    ).bind(name, email, message, page || null, ip).run();
+      'INSERT INTO enquiries (name, email, message, page, ip, widget_id, widget_origin) VALUES (?,?,?,?,?,?,?)',
+    ).bind(name, email, message, page || null, ip, widget ? widget.id : null, widgetOrigin).run();
   } catch (err) {
     console.error('enquiry log failed', err);
   }
