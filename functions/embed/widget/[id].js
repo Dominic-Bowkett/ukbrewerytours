@@ -402,13 +402,16 @@ function contactPageHtml(widget, accent, accentInk) {
 
   <form id="f" novalidate>
     <div class="row">
-      <div class="field"><label for="name">Your name</label>
+      <div class="field"><label for="name">Name</label>
         <input id="name" type="text" autocomplete="name" placeholder="Jamie Doe"></div>
-      <div class="field"><label for="email">Your email</label>
+      <div class="field"><label for="email">Email</label>
         <input id="email" type="email" autocomplete="email" placeholder="you@example.com"></div>
     </div>
 
-    <div class="field"><label for="msg">Your message</label>
+    <div class="field"><label for="phone">Phone <span style="text-transform:none;letter-spacing:0;font-weight:400">(optional)</span></label>
+      <input id="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="07123 456789"></div>
+
+    <div class="field"><label for="msg">Message</label>
       <textarea id="msg" rows="5" maxlength="5000" placeholder="Tell us what you're after — dates, group size, anything else."></textarea></div>
 
     <!-- honeypot: real people never see or fill this -->
@@ -467,6 +470,7 @@ function contactPageHtml(widget, accent, accentInk) {
       body: JSON.stringify({
         name: $('name').value,
         email: $('email').value,
+        phone: $('phone').value,
         message: $('msg').value,
         company: $('company').value,
         widgetId: WIDGET_ID,

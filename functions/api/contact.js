@@ -26,6 +26,8 @@ export async function onRequestPost({ request, env }) {
 
   const name = clean(body.name, 100);
   const email = clean(body.email, 200);
+  // Optional — the embedded widget offers a Tel field; keep only sane characters.
+  const phone = clean(body.phone, 40).replace(/[^\d+()\-.\s]/g, '').trim();
   const message = clean(body.message, 5000);
   let page = clean(body.page, 200);
 
@@ -74,7 +76,7 @@ export async function onRequestPost({ request, env }) {
     await sendEmail(env, {
       to: env.NOTIFY_EMAIL || 'info@ukbrewerytours.com',
       subject: widget ? `Enquiry via ${widget.name} — ${name}` : `Website enquiry — ${name}`,
-      html: enquiryEmailHtml({ name, email, message, page, widget, widgetOrigin }),
+      html: enquiryEmailHtml({ name, email, phone, message, page, widget, widgetOrigin }),
       replyTo: email,
     });
   } catch (err) {
@@ -85,8 +87,8 @@ export async function onRequestPost({ request, env }) {
   // Log after the important email has gone out.
   try {
     await env.DB.prepare(
-      'INSERT INTO enquiries (name, email, message, page, ip, widget_id, widget_origin) VALUES (?,?,?,?,?,?,?)',
-    ).bind(name, email, message, page || null, ip, widget ? widget.id : null, widgetOrigin).run();
+      'INSERT INTO enquiries (name, email, phone, message, page, ip, widget_id, widget_origin) VALUES (?,?,?,?,?,?,?,?)',
+    ).bind(name, email, phone || null, message, page || null, ip, widget ? widget.id : null, widgetOrigin).run();
   } catch (err) {
     console.error('enquiry log failed', err);
   }
