@@ -450,6 +450,9 @@ fs.writeFileSync(path.join(OUT, 'CNAME'), 'www.ukbrewerytours.com\n');
 /* voucher admin — standalone internal UI, copied verbatim (no site layout) */
 fs.cpSync(path.join(ROOT, 'admin'), path.join(OUT, 'admin'), { recursive: true });
 
+/* embeddable voucher widget loader — other sites include /embed/voucher.js */
+fs.cpSync(path.join(ROOT, 'embed'), path.join(OUT, 'embed'), { recursive: true });
+
 /* team payments — standalone internal UI, same treatment as admin */
 if (fs.existsSync(path.join(ROOT, 'team'))) {
   fs.cpSync(path.join(ROOT, 'team'), path.join(OUT, 'team'), { recursive: true });
@@ -467,11 +470,15 @@ if (fs.existsSync(path.join(ROOT, 'team'))) {
 //            login, no-store, noindex). Without this line that middleware is
 //            dead code and the dashboard markup is served to strangers.
 //
+//   /embed/widget/*  the embeddable voucher purchase form (an iframe on other
+//            sites), rendered per-widget from D1. The loader /embed/voucher.js
+//            is NOT matched by this prefix, so it stays a static edge-cached file.
+//
 // /assets/* is deliberately NOT in the include list, so CSS/JS (including
 // /assets/js/pay.js) is served straight from the edge cache and never pays for a
 // Function invocation — and can never be intercepted by the team gate.
 fs.writeFileSync(path.join(OUT, '_routes.json'),
-  JSON.stringify({ version: 1, include: ['/api/*', '/pay/*', '/team/*'], exclude: [] }, null, 2) + '\n');
+  JSON.stringify({ version: 1, include: ['/api/*', '/pay/*', '/team/*', '/embed/widget/*'], exclude: [] }, null, 2) + '\n');
 
 /* ----- computed blocks shared by pages ----- */
 

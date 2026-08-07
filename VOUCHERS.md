@@ -114,6 +114,38 @@ buttons (home, gift vouchers, contact) open the same form with a blank amount.
 
 Tours with no price simply leave the amount empty for the buyer to fill in.
 
+## Embeddable widgets — sell vouchers on OTHER websites
+
+**Admin → Voucher widgets** creates a self-contained voucher shop you can paste
+into any site (Bristol Brewery Tours, London Brewery Tours, a partner's blog).
+Each widget has its own embed code:
+
+```html
+<div data-ubt-voucher="wgt_XXXXXXXXXX"></div>
+<script async src="https://www.ukbrewerytours.com/embed/voucher.js"></script>
+```
+
+How it works: the loader script injects an iframe of `/embed/widget/<id>`
+(rendered by `functions/embed/widget/[id].js` from the `widgets` D1 table).
+Because the iframe is ours, its call to `/api/create-checkout` is same-origin —
+the host site needs no CORS and never touches the payment. Stripe won't run
+inside an iframe, so the checkout URL is posted up to the loader, which
+navigates the host page; cancelling returns the customer to the page they were
+on. The iframe reports its height so it never scrolls internally.
+
+Per widget you control: the internal name (which site it's for), customer-facing
+heading and intro line, accent colour, preset amounts, whether a custom amount
+is allowed (presets are enforced server-side when not), and an optional list of
+sites allowed to embed it (`frame-ancestors` CSP — blank = anywhere). Pausing a
+widget swaps it for a polite "temporarily unavailable" card and blocks checkout;
+deleting kills the embed for good (past sales are unaffected).
+
+Sales are ordinary UK Brewery Tours vouchers: same codes, same emails, same
+redemption screen. The order records `widget_id` + `widget_origin`, the sale
+notification email says which widget/site it came from, and the admin voucher
+detail shows "Sold via widget". Widget sales totals are on the Voucher widgets
+tab.
+
 ## Sale notifications
 
 Every completed sale emails `info@ukbrewerytours.com` with the amount, buyer,

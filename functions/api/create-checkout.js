@@ -52,6 +52,32 @@ export async function onRequestPost({ request, env }) {
   const tourName = clean(body.tourName, 200);
   const isDemo = body.demo === true || body.demo === 'true';
 
+  // --- embedded widget purchases (the form iframed on other websites) ---
+  const widgetId = clean(body.widgetId, 40);
+  let widget = null;
+  let hostUrl = '';        // page on the host site the buyer was on — cancel returns there
+  let widgetOrigin = null; // its origin, stored for attribution
+  if (widgetId) {
+    widget = await env.DB.prepare('SELECT * FROM widgets WHERE id = ?').bind(widgetId).first();
+    if (!widget || widget.status !== 'active') {
+      return Response.json({ error: 'Gift voucher sales are temporarily unavailable.' }, { status: 403 });
+    }
+    // Fixed-amounts widget: the browser UI only offers the presets, but the
+    // amount must be enforced here or the widget config is decorative.
+    if (widget.allow_custom !== 1) {
+      let presets = [];
+      try { presets = JSON.parse(widget.preset_amounts || '[]'); } catch { presets = []; }
+      if (presets.length && !presets.includes(amountPence)) return bad('Please choose one of the listed amounts.');
+    }
+    try {
+      const u = new URL(String(body.hostUrl || ''));
+      if (u.protocol === 'https:' || u.protocol === 'http:') {
+        hostUrl = u.href.slice(0, 500);
+        widgetOrigin = u.origin;
+      }
+    } catch { /* no usable host page — fall back to our own cancel page */ }
+  }
+
   const orderId = crypto.randomUUID();
   const totalPence = amountPence * quantity;
 
@@ -66,7 +92,9 @@ export async function onRequestPost({ request, env }) {
       purchaserEmail,
       tourName,
       successUrl: `${origin}/gift-vouchers/thank-you/?order=${orderId}`,
-      cancelUrl: `${origin}${isDemo ? '/demo/gift-voucher/' : '/gift-vouchers/'}?cancelled=1`,
+      cancelUrl: widget
+        ? (hostUrl || `${origin}/gift-vouchers/`)
+        : `${origin}${isDemo ? '/demo/gift-voucher/' : '/gift-vouchers/'}?cancelled=1`,
     });
   } catch (err) {
     console.error('stripe checkout failed', err);
@@ -78,8 +106,8 @@ export async function onRequestPost({ request, env }) {
     env.DB.prepare(
       `INSERT INTO orders (id, stripe_session_id, status, quantity, amount_pence, total_pence,
         purchaser_name, purchaser_email, recipient_name, recipient_email, send_to_self,
-        message, tour_slug, tour_name, is_demo)
-       VALUES (?,?,'pending',?,?,?,?,?,?,?,?,?,?,?,?)`,
+        message, tour_slug, tour_name, is_demo, widget_id, widget_origin)
+       VALUES (?,?,'pending',?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
     ).bind(
       orderId, session.id, quantity, amountPence, totalPence,
       purchaserName, purchaserEmail,
@@ -88,6 +116,8 @@ export async function onRequestPost({ request, env }) {
       sendToSelf ? 1 : 0,
       message || null, tourSlug || null, tourName || null,
       isDemo ? 1 : 0,
+      widget ? widget.id : null,
+      widgetOrigin,
     ),
   ];
 

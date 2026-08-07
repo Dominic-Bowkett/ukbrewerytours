@@ -8,8 +8,10 @@ export async function onRequestGet({ params, env }) {
   const voucher = await env.DB.prepare(`
     SELECT v.*, o.purchaser_name, o.purchaser_email, o.recipient_name, o.recipient_email,
            o.send_to_self, o.message, o.tour_name, o.tour_slug, o.total_pence,
-           o.quantity, o.is_demo, o.created_at AS order_created_at
+           o.quantity, o.is_demo, o.created_at AS order_created_at,
+           o.widget_id, o.widget_origin, w.name AS widget_name
     FROM vouchers v JOIN orders o ON o.id = v.order_id
+    LEFT JOIN widgets w ON w.id = o.widget_id
     WHERE v.code = ?`).bind(code).first();
 
   if (!voucher) return Response.json({ error: 'Voucher not found.' }, { status: 404 });

@@ -77,10 +77,13 @@ export async function onRequestPost({ request, env }) {
     // Internal heads-up. Deliberately after email_sent is set and swallowed on
     // failure — a missed notification must never re-trigger the customer emails.
     try {
+      const widget = order.widget_id
+        ? await env.DB.prepare('SELECT name FROM widgets WHERE id = ?').bind(order.widget_id).first()
+        : null;
       await sendEmail(env, {
         to: env.NOTIFY_EMAIL || 'info@ukbrewerytours.com',
         subject: `New voucher sale — ${(order.total_pence / 100).toFixed(2)} GBP (${order.purchaser_name || order.purchaser_email})`,
-        html: saleNotificationHtml({ order, vouchers }),
+        html: saleNotificationHtml({ order, vouchers, widget }),
         replyTo: order.purchaser_email,
       });
     } catch (err) {

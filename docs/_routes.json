@@ -3,7 +3,8 @@
   "include": [
     "/api/*",
     "/pay/*",
-    "/team/*"
+    "/team/*",
+    "/embed/widget/*"
   ],
   "exclude": []
 }

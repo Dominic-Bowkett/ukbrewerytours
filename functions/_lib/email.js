@@ -178,7 +178,7 @@ export function enquiryAutoReplyHtml({ name, message }) {
 }
 
 /** Internal heads-up to info@ when a voucher sells. */
-export function saleNotificationHtml({ order, vouchers }) {
+export function saleNotificationHtml({ order, vouchers, widget }) {
   const row = (label, value) =>
     `<tr>
       <td style="padding:7px 14px 7px 0;font-size:14px;color:${INK_SOFT};white-space:nowrap;">${label}</td>
@@ -201,6 +201,7 @@ export function saleNotificationHtml({ order, vouchers }) {
       ${row('Buyer', `${esc(order.purchaser_name || '—')}<br><span style="font-weight:400;color:${INK_SOFT};">${esc(order.purchaser_email)}</span>`)}
       ${row('Delivery', delivery)}
       ${order.tour_name ? row('From tour page', esc(order.tour_name)) : ''}
+      ${order.widget_id ? row('Sold via widget', `${esc(widget?.name || order.widget_id)}${order.widget_origin ? `<br><span style="font-weight:400;color:${INK_SOFT};">${esc(order.widget_origin)}</span>` : ''}`) : ''}
       ${order.message ? row('Their message', `<span style="font-weight:400;font-style:italic;">${esc(order.message)}</span>`) : ''}
       ${row('Order ref', `<span style="font-family:'Courier New',monospace;font-size:12px;">${esc(order.id)}</span>`)}
     </table>

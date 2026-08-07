@@ -16,6 +16,7 @@
 
 <nav class="admin-tabs">
   <button class="admin-tab is-active" data-tab="vouchers">Gift vouchers</button>
+  <button class="admin-tab" data-tab="widgets">Voucher widgets</button>
   <button class="admin-tab" data-tab="connect">Team payments</button>
 </nav>
 
@@ -45,6 +46,30 @@
       </table>
     </div>
     <div class="pager"><button class="btn btn-ghost" id="prev" disabled>← Previous</button><span id="pageLabel"></span><button class="btn btn-ghost" id="next" disabled>Next →</button></div>
+  </section>
+</main>
+
+<main class="admin-main" data-panel="widgets" hidden>
+  <section class="stats" id="wStats"></section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Embeddable voucher widgets</h2>
+      <button class="btn btn-primary btn-sm" id="addWidget">New widget</button>
+    </div>
+    <div class="table-wrap">
+      <table class="voucher-table">
+        <thead>
+          <tr><th>Name</th><th>Status</th><th>Sales</th><th>Revenue</th><th>Created</th><th></th></tr>
+        </thead>
+        <tbody id="wRows"><tr><td colspan="6" class="muted pad">Loading…</td></tr></tbody>
+      </table>
+    </div>
+    <p class="muted pad" style="padding-top:0">
+      Create a widget, copy its embed code, and paste it into any website — Bristol Brewery Tours,
+      London Brewery Tours, a partner's blog. Vouchers bought there are ordinary UK Brewery Tours
+      vouchers: they arrive in the Gift vouchers tab, tagged with the site they were sold on.
+    </p>
   </section>
 </main>
 
@@ -132,6 +157,15 @@
   <div class="modal-panel" role="dialog" aria-modal="true">
     <button class="modal-close" data-close aria-label="Close">&times;</button>
     <div id="memberBody"></div>
+  </div>
+</div>
+
+<!-- Widget create / edit + embed code -->
+<div class="modal" id="widgetModal" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-panel" role="dialog" aria-modal="true">
+    <button class="modal-close" data-close aria-label="Close">&times;</button>
+    <div id="widgetBody"></div>
   </div>
 </div>
 
@@ -273,6 +307,7 @@ async function openVoucher(code) {
         <div><span>Delivered to</span>${v.send_to_self ? 'Themselves' : esc(v.recipient_name || '—') + '<br><span class="muted">' + esc(v.recipient_email || '') + '</span>'}</div>
         <div><span>Issued</span>${dt(v.paid_at || v.created_at)}</div>
         <div><span>Tour</span>${esc(v.tour_name || '—')}</div>
+        ${v.widget_id ? `<div><span>Sold via widget</span>${esc(v.widget_name || v.widget_id)}${v.widget_origin ? `<br><span class="muted">${esc(v.widget_origin)}</span>` : ''}</div>` : ''}
         ${v.message ? `<div class="full"><span>Message</span><em>${esc(v.message)}</em></div>` : ''}
       </div>
 
@@ -392,6 +427,9 @@ document.querySelectorAll('.admin-tab').forEach(tab => {
     document.querySelectorAll('[data-panel]').forEach(p => { p.hidden = p.dataset.panel !== tab.dataset.tab; });
     if (tab.dataset.tab === 'connect' && !connectLoaded) {
       connectLoaded = true; loadPayments(); loadTeam(); loadAccounts();
+    }
+    if (tab.dataset.tab === 'widgets' && !widgetsLoaded) {
+      widgetsLoaded = true; loadWidgets();
     }
   });
 });
@@ -692,6 +730,192 @@ document.getElementById('addMember').addEventListener('click', async () => {
 });
 
 memberModal.addEventListener('click', (e) => { if (e.target.closest('[data-close]')) memberModal.hidden = true; });
+
+/* ---------------- Embeddable voucher widgets ---------------- */
+
+let widgetsLoaded = false;
+const widgetModal = document.getElementById('widgetModal');
+const widgetBody = document.getElementById('widgetBody');
+
+const embedSnippet = id =>
+  `<div data-ubt-voucher="${id}"></div>\n<script async src="${location.origin}/embed/voucher.js"><\/script>`;
+
+async function loadWidgets() {
+  const el = document.getElementById('wRows');
+  try {
+    const d = await api('/api/admin/widgets');
+    window.__widgets = d.widgets;
+
+    const sales = d.widgets.reduce((s, w) => s + w.sales, 0);
+    const revenue = d.widgets.reduce((s, w) => s + w.revenue_pence, 0);
+    document.getElementById('wStats').innerHTML = `
+      <div class="stat"><span>Widgets</span><strong>${d.widgets.length}</strong></div>
+      <div class="stat"><span>Vouchers sold via widgets</span><strong>${sales}</strong></div>
+      <div class="stat"><span>Widget revenue</span><strong>${money(revenue)}</strong></div>`;
+
+    el.innerHTML = d.widgets.length ? d.widgets.map(w => `
+      <tr>
+        <td><strong>${esc(w.name)}</strong><br><code class="small">${esc(w.id)}</code></td>
+        <td><span class="pill pill-${w.status === 'active' ? 'active' : 'pending'}">${w.status === 'active' ? 'Live' : 'Paused'}</span></td>
+        <td>${w.sales}</td>
+        <td><strong>${money(w.revenue_pence)}</strong></td>
+        <td class="muted">${dt(w.created_at)}</td>
+        <td><button class="btn btn-sm" data-widget="${esc(w.id)}">Manage</button></td>
+      </tr>`).join('')
+      : '<tr><td colspan="6" class="muted pad">No widgets yet. Create one, then paste its embed code into any website.</td></tr>';
+  } catch (err) {
+    el.innerHTML = `<tr><td colspan="6" class="pad error">${esc(err.message)}</td></tr>`;
+  }
+}
+
+function widgetFormHtml(w) {
+  const presets = w ? JSON.parse(w.preset_amounts || '[]').map(p => p / 100).join(', ') : '25, 50, 100';
+  const origins = w ? JSON.parse(w.allowed_origins || '[]').join(', ') : '';
+  const accent = (w && w.accent_color) || '#e09330';
+  return `
+    <form id="widgetForm">
+      <div class="field"><label for="w-name">Name <span class="muted">(internal — which site is this for?)</span></label>
+        <input id="w-name" type="text" required placeholder="e.g. Bristol Brewery Tours website" value="${esc(w?.name || '')}"></div>
+
+      <div class="redeem-row" style="margin-top:12px">
+        <div class="field"><label for="w-heading">Heading shown to customers</label>
+          <input id="w-heading" type="text" placeholder="Buy a gift voucher" value="${esc(w?.heading || '')}"></div>
+        <div class="field"><label for="w-accent">Accent colour</label>
+          <div class="color-row"><input id="w-accent" type="color" value="${esc(accent)}"><code class="small" id="w-accentHex">${esc(accent)}</code></div></div>
+      </div>
+
+      <div class="field" style="margin-top:12px"><label for="w-blurb">Intro line <span class="muted">(blank = default)</span></label>
+        <input id="w-blurb" type="text" maxlength="300"
+          placeholder="Delivered instantly by email — redeemable against any UK Brewery Tours experience."
+          value="${esc(w?.blurb || '')}"></div>
+
+      <div class="redeem-row" style="margin-top:12px">
+        <div class="field"><label for="w-presets">Preset amounts (£, comma-separated)</label>
+          <input id="w-presets" type="text" placeholder="25, 50, 100" value="${esc(presets)}"></div>
+        <div class="field" style="justify-content:flex-end">
+          <label class="inline-check" style="margin-top:22px"><input type="checkbox" id="w-custom" ${!w || w.allow_custom === 1 ? 'checked' : ''}>
+            Customers can type their own amount</label></div>
+      </div>
+
+      <div class="field" style="margin-top:12px"><label for="w-origins">Only allow embedding on these sites <span class="muted">(optional, comma-separated)</span></label>
+        <input id="w-origins" type="text" placeholder="https://bristolbrewerytours.co.uk, https://londonbrewerytours.co.uk" value="${esc(origins)}">
+        <p class="muted" style="font-size:.8rem;margin-top:6px">Blank = any site can embed it. Filling this in locks the widget to the listed sites.</p></div>
+
+      ${w ? `
+      <div class="field" style="margin-top:12px"><label for="w-status">Status</label>
+        <select id="w-status">
+          <option value="active" ${w.status === 'active' ? 'selected' : ''}>Live — customers can buy</option>
+          <option value="paused" ${w.status === 'paused' ? 'selected' : ''}>Paused — shows "temporarily unavailable"</option>
+        </select></div>` : ''}
+
+      <p class="error" id="widgetError" hidden></p>
+      <div class="redeem-actions">
+        <button class="btn btn-primary" type="submit">${w ? 'Save changes' : 'Create widget'}</button>
+        ${w ? '<button class="btn btn-danger" type="button" id="deleteWidget">Delete</button>' : ''}
+      </div>
+    </form>`;
+}
+
+function openWidget(id) {
+  const w = id ? (window.__widgets || []).find(x => x.id === id) : null;
+  widgetModal.hidden = false;
+
+  widgetBody.innerHTML = `
+    <h2 style="margin-bottom:4px">${w ? esc(w.name) : 'New voucher widget'}</h2>
+    <p class="muted" style="margin-bottom:18px">${w
+      ? 'Edit how the widget looks and behaves — changes go live on the host site immediately.'
+      : 'A gift voucher shop you can drop into any website. Sales are paid to UK Brewery Tours and appear under Gift vouchers.'}</p>
+    ${w ? `
+      <div class="balance-box">
+        <div><span>Vouchers sold</span><strong>${w.sales}</strong></div>
+        <div class="hl"><span>Revenue</span><strong>${money(w.revenue_pence)}</strong></div>
+      </div>
+      <h3 class="hist-title">Embed code</h3>
+      <p class="muted" style="margin-bottom:8px">Paste this into the page where vouchers should be sold:</p>
+      <pre class="embed-code" id="embedCode"></pre>
+      <div class="embed-actions">
+        <button class="btn btn-primary btn-sm" type="button" id="copyEmbed">Copy code</button>
+        <a class="btn btn-outline btn-sm" href="/embed/widget/${encodeURIComponent(w.id)}" target="_blank" rel="noopener">Preview the widget</a>
+      </div>
+      <h3 class="hist-title">Settings</h3>` : ''}
+    ${widgetFormHtml(w)}`;
+
+  if (w) {
+    document.getElementById('embedCode').textContent = embedSnippet(w.id);
+    document.getElementById('copyEmbed').addEventListener('click', async (e) => {
+      const btn = e.target;
+      try {
+        await navigator.clipboard.writeText(embedSnippet(w.id));
+        btn.textContent = 'Copied ✓';
+      } catch {
+        // Clipboard API refused (http, permissions) — select the code for manual copy.
+        const range = document.createRange();
+        range.selectNodeContents(document.getElementById('embedCode'));
+        const sel = getSelection();
+        sel.removeAllRanges(); sel.addRange(range);
+        btn.textContent = 'Press Ctrl+C';
+      }
+      setTimeout(() => { btn.textContent = 'Copy code'; }, 2500);
+    });
+
+    document.getElementById('deleteWidget').addEventListener('click', async () => {
+      if (!confirm(`Delete "${w.name}"?\n\nAny site still embedding it will show "no longer available" to customers. Vouchers already sold are unaffected.`)) return;
+      try {
+        await api('/api/admin/widget/' + encodeURIComponent(w.id), { method: 'DELETE' });
+        widgetModal.hidden = true;
+        loadWidgets();
+      } catch (err) {
+        const errEl = document.getElementById('widgetError');
+        errEl.textContent = err.message; errEl.hidden = false;
+      }
+    });
+  }
+
+  const accentInput = document.getElementById('w-accent');
+  accentInput.addEventListener('input', () => {
+    document.getElementById('w-accentHex').textContent = accentInput.value;
+  });
+
+  document.getElementById('widgetForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const errEl = document.getElementById('widgetError');
+    errEl.hidden = true;
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.disabled = true;
+
+    try {
+      const payload = {
+        name: document.getElementById('w-name').value,
+        heading: document.getElementById('w-heading').value,
+        blurb: document.getElementById('w-blurb').value,
+        accent_color: accentInput.value,
+        presets: document.getElementById('w-presets').value,
+        allow_custom: document.getElementById('w-custom').checked,
+        allowed_origins: document.getElementById('w-origins').value,
+        status: w ? document.getElementById('w-status').value : 'active',
+      };
+      const res = w
+        ? await api('/api/admin/widget/' + encodeURIComponent(w.id), {
+            method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+        : await api('/api/admin/widgets', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      await loadWidgets();
+      // Re-open in edit mode: after a create this is what surfaces the embed code.
+      openWidget(res.widget.id);
+    } catch (err) {
+      errEl.textContent = err.message;
+      errEl.hidden = false;
+      btn.disabled = false;
+    }
+  });
+}
+
+document.getElementById('addWidget').addEventListener('click', () => openWidget(null));
+document.addEventListener('click', (e) => {
+  const manage = e.target.closest('[data-widget]');
+  if (manage) openWidget(manage.dataset.widget);
+});
+widgetModal.addEventListener('click', (e) => { if (e.target.closest('[data-close]')) widgetModal.hidden = true; });
 </script>
 </body>
 </html>
