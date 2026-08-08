@@ -906,11 +906,17 @@ function openWidget(id) {
     document.getElementById('w-accentHex').textContent = accentInput.value;
   });
 
-  // Creating: the kind dropdown hides the voucher-only fields for contact forms.
+  // Creating: the kind dropdown hides the voucher-only fields and swaps the
+  // example text — a contact form must not suggest "Buy a gift voucher".
   const kindSel = document.getElementById('w-kind');
   if (kindSel) {
     kindSel.addEventListener('change', () => {
-      document.getElementById('voucherFields').hidden = kindSel.value === 'contact';
+      const contact = kindSel.value === 'contact';
+      document.getElementById('voucherFields').hidden = contact;
+      document.getElementById('w-heading').placeholder = contact ? 'Get in touch' : 'Buy a gift voucher';
+      document.getElementById('w-blurb').placeholder = contact
+        ? "Send us a message and we'll reply by email — usually within a few hours."
+        : 'Delivered instantly by email — redeemable against any UK Brewery Tours experience.';
     });
   }
 
