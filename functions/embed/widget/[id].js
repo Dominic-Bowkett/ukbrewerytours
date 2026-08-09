@@ -374,7 +374,7 @@ function contactPageHtml(widget, accent, accentInk) {
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   @media (max-width: 480px) { .row { grid-template-columns: 1fr; } }
   .field { min-width: 0; }
-  input[type="text"], input[type="email"], textarea {
+  input[type="text"], input[type="email"], input[type="tel"], textarea {
     width: 100%; border: 1.5px solid var(--line); border-radius: 9px; padding: 10px 12px;
     font: inherit; font-size: .95rem; color: var(--ink); background: #fff;
   }
