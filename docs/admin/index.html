@@ -75,6 +75,18 @@
 </main>
 
 <main class="admin-main" data-panel="connect" hidden>
+  <!-- Only ever visible when something is actually wrong. live_mode sat at its
+       migration default of 0 on live Stripe keys for days, and the only sign
+       was an ops email — nothing on any screen said the Connect webhook was
+       discarding events. -->
+  <div class="alert-bar" id="liveModeAlert" hidden>
+    <div>
+      <strong>Connect payments are not being recorded.</strong>
+      <span id="liveModeAlertText"></span>
+    </div>
+    <button class="btn btn-primary" id="fixLiveMode" type="button">Turn live mode on</button>
+  </div>
+
   <section class="stats" id="payStats"></section>
 
   <section class="panel" style="margin-bottom:22px">
@@ -427,7 +439,7 @@ document.querySelectorAll('.admin-tab').forEach(tab => {
     document.querySelectorAll('.admin-tab').forEach(t => t.classList.toggle('is-active', t === tab));
     document.querySelectorAll('[data-panel]').forEach(p => { p.hidden = p.dataset.panel !== tab.dataset.tab; });
     if (tab.dataset.tab === 'connect' && !connectLoaded) {
-      connectLoaded = true; loadPayments(); loadTeam(); loadAccounts();
+      connectLoaded = true; loadPayments(); loadTeam(); loadAccounts(); checkLiveMode();
     }
     if (tab.dataset.tab === 'widgets' && !widgetsLoaded) {
       widgetsLoaded = true; loadWidgets();
@@ -444,6 +456,42 @@ const PAY_STATUS = {
 };
 const PAY_PILL = { paid: 'active', sent: 'partially_redeemed', processing: 'partially_redeemed', refunded: 'refunded' };
 let payPage = 1, payHasMore = false;
+
+// The Connect webhook fails closed on a livemode mismatch: it acknowledges the
+// event and drops it. That is the right call — processing a test event as real
+// money would be worse — but it means a mismatch is invisible until someone
+// asks why a paid request still says "awaiting payment". This surfaces it.
+async function checkLiveMode() {
+  const bar = document.getElementById('liveModeAlert');
+  try {
+    const s = await (await fetch('/api/admin/settings')).json();
+    if (!s.live_mode_mismatch) { bar.hidden = true; return; }
+    document.getElementById('liveModeAlertText').textContent = s.live_mode_mismatch;
+    // Only offer the one-click fix in the direction that is nearly always
+    // right: keys are live, the flag is not. Turning live mode OFF on a live
+    // platform is a decision, not a fix, so it stays a deliberate act.
+    document.getElementById('fixLiveMode').hidden = s.stripe_key_mode !== 'live';
+    bar.hidden = false;
+  } catch { bar.hidden = true; }
+}
+
+document.getElementById('fixLiveMode')?.addEventListener('click', async (e) => {
+  const btn = e.currentTarget;
+  btn.disabled = true; btn.textContent = 'Turning on…';
+  try {
+    const r = await fetch('/api/admin/settings', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ live_mode: true }),
+    });
+    if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || 'Could not save');
+    await checkLiveMode();
+    btn.textContent = 'Live mode on';
+  } catch (err) {
+    btn.disabled = false; btn.textContent = 'Turn live mode on';
+    alert(err.message);
+  }
+});
 
 async function loadPayments() {
   const el = document.getElementById('payRows');

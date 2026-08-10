@@ -237,3 +237,17 @@ code.small { font-size: .78rem; }
 .embed-actions { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
 .color-row { display: flex; align-items: center; gap: 10px; }
 .color-row input[type="color"] { width: 46px; height: 36px; padding: 2px; border: 1px solid var(--line); border-radius: 8px; background: #fff; cursor: pointer; }
+
+/* Shown only when something is actively broken — a mismatch between the Stripe
+   key mode and platform_settings.live_mode means the Connect webhook is
+   discarding real events. Red rather than amber: this is money not being
+   recorded, not a warning to note for later. */
+.alert-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 18px; flex-wrap: wrap;
+  margin-bottom: 22px; padding: 16px 20px;
+  background: #fdf0ee; border: 1px solid #e6b7ae; border-left: 4px solid #b4432c;
+  border-radius: var(--radius); color: #6d2718; line-height: 1.6;
+}
+.alert-bar strong { display: block; color: #8c2f1b; }
+.alert-bar .btn { flex-shrink: 0; }

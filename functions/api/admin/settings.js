@@ -14,10 +14,30 @@ const MAX_TERMS = 20000;
 
 export async function onRequestGet({ env }) {
   const s = await env.DB.prepare('SELECT * FROM platform_settings WHERE id = 1').first();
+
+  // The Connect webhook refuses any event whose livemode disagrees with this
+  // flag, and it defaults to 0 — so a platform on live keys with live_mode
+  // still 0 silently discards every real Connect event, payments included.
+  // The key prefix is the honest cross-check: it is not authoritative (a
+  // restricted rk_live_ key breaks a naive startsWith, which is why the flag
+  // exists at all) but it is exactly right for telling an admin the two
+  // disagree.
+  const key = env.STRIPE_SECRET_KEY || '';
+  const keyLooksLive = /^(sk|rk)_live_/.test(key);
+  const liveMode = s?.live_mode === 1;
+
   return Response.json({
     default_fee_bps: s?.default_fee_bps ?? 2000,
     default_terms: s?.default_terms ?? null,
     default_expiry_days: s?.default_expiry_days ?? 30,
+    live_mode: liveMode,
+    send_enabled: s?.send_enabled !== 0,
+    stripe_key_mode: key ? (keyLooksLive ? 'live' : 'test') : 'missing',
+    // Non-null only when something is actually wrong, so the UI can render it
+    // as an alert rather than as a status line nobody reads.
+    live_mode_mismatch: key && keyLooksLive !== liveMode
+      ? `Stripe is using ${keyLooksLive ? 'LIVE' : 'TEST'} keys but live mode is ${liveMode ? 'on' : 'off'} — Connect webhook events are being discarded.`
+      : null,
     updated_at: s?.updated_at ?? null,
   }, { headers: { 'Cache-Control': 'private, no-store' } });
 }
@@ -57,6 +77,27 @@ export async function onRequestPatch({ request, env }) {
     binds.push(days);
   }
 
+  // Live mode. Editable here because it was not editable anywhere — it sat at
+  // the migration default of 0 while the platform ran on sk_live_ keys, and the
+  // only symptom was an ops email saying an event had been discarded.
+  if (body.live_mode !== undefined) {
+    if (typeof body.live_mode !== 'boolean') {
+      return Response.json({ error: 'live_mode must be true or false.' }, { status: 400 });
+    }
+    sets.push('live_mode = ?');
+    binds.push(body.live_mode ? 1 : 0);
+  }
+
+  // The customer-facing kill switch. Turning it off stops the scheduler sending
+  // payment requests; it does not stop our own reminders.
+  if (body.send_enabled !== undefined) {
+    if (typeof body.send_enabled !== 'boolean') {
+      return Response.json({ error: 'send_enabled must be true or false.' }, { status: 400 });
+    }
+    sets.push('send_enabled = ?');
+    binds.push(body.send_enabled ? 1 : 0);
+  }
+
   if (!sets.length) return Response.json({ error: 'Nothing to change.' }, { status: 400 });
 
   sets.push("updated_at = datetime('now')");
@@ -68,6 +109,8 @@ export async function onRequestPatch({ request, env }) {
     default_fee_bps: s.default_fee_bps,
     default_terms: s.default_terms,
     default_expiry_days: s.default_expiry_days,
+    live_mode: s.live_mode === 1,
+    send_enabled: s.send_enabled !== 0,
     note: 'Applies to requests sent from now on. Requests already sent keep the terms they were sent with.',
   });
 }
