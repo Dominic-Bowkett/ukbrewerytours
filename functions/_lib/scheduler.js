@@ -28,6 +28,7 @@
 
 import { isChargeReady } from './team-auth.js';
 import { retrieveAccount } from './stripe.js';
+import { sendEmail } from './email.js';
 import {
   mayEmail, recordEvent, alertOps, paymentRequestHtml, randomId,
 } from './connect.js';
@@ -336,6 +337,120 @@ async function expireStale(env) {
   return res.meta.changes || 0;
 }
 
+/* --------------------------------------------------------------- reminders */
+
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/**
+ * Reminder body → HTML. Blank lines separate paragraphs; lines starting '- '
+ * become bullets. Not a markdown parser, on purpose — this renders notes we
+ * wrote ourselves, and a second parser is a second thing to get wrong.
+ */
+function reminderHtml({ subject, intro, body }) {
+  const blocks = String(body).split(/\n\s*\n/).map((block) => {
+    const lines = block.split('\n').map(l => l.trim()).filter(Boolean);
+    if (lines.every(l => l.startsWith('- '))) {
+      return `<ul style="margin:0 0 16px;padding-left:20px;">${
+        lines.map(l => `<li style="margin:0 0 6px;">${esc(l.slice(2))}</li>`).join('')}</ul>`;
+    }
+    return `<p style="margin:0 0 16px;font-size:15px;line-height:1.7;">${esc(lines.join(' '))}</p>`;
+  }).join('');
+
+  return `<!doctype html><html><body style="margin:0;padding:0;background:#f6f1e7;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f6f1e7;padding:24px 12px;">
+ <tr><td align="center">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#fffdf8;border-radius:14px;overflow:hidden;font-family:'Segoe UI',Helvetica,Arial,sans-serif;color:#2b1d12;">
+   <tr><td style="background:#2b1d12;padding:22px 28px;">
+     <span style="color:#fffdf8;font-size:19px;font-weight:700;">🍺 UK Brewery Tours</span>
+   </td></tr>
+   <tr><td style="padding:30px 28px;">
+     <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8a7660;">Reminder</div>
+     <h1 style="margin:6px 0 14px;font-size:22px;line-height:1.3;">${esc(subject)}</h1>
+     ${intro ? `<p style="margin:0 0 20px;font-size:14px;color:#8a7660;line-height:1.6;">${esc(intro)}</p>` : ''}
+     ${blocks}
+   </td></tr>
+  </table>
+ </td></tr>
+</table>
+</body></html>`;
+}
+
+/**
+ * Send any reminders that have come due.
+ *
+ * Same claim-then-send shape as the payment sweep above, for the same reason:
+ * two overlapping ticks must not both send, and a worker that dies between the
+ * claim and the send must not leave the row stuck. A failure backs off and
+ * retries; an exhausted row goes to 'failed' where it is at least visible.
+ */
+async function sendDueReminders(env) {
+  const claimId = randomId();
+  const out = { claimed: 0, sent: 0, failed: 0, reaped: 0 };
+
+  // Reap first, so a stalled claim is eligible again on this same tick.
+  const reaped = await env.DB.prepare(
+    `UPDATE reminders
+        SET status = CASE WHEN attempts >= max_attempts THEN 'failed' ELSE 'pending' END,
+            claim_id = NULL, claimed_at = NULL,
+            last_error = 'released after stalled send', updated_at = datetime('now')
+      WHERE status = 'sending' AND claimed_at IS NOT NULL
+        AND claimed_at <= datetime('now', '-${STALL_MINUTES} minutes')`,
+  ).run();
+  out.reaped = reaped.meta.changes || 0;
+
+  await env.DB.prepare(
+    `UPDATE reminders
+        SET status = 'sending', claim_id = ?1, claimed_at = datetime('now'),
+            attempts = attempts + 1, updated_at = datetime('now')
+      WHERE status = 'pending'
+        AND send_at <= datetime('now')
+        AND attempts < max_attempts
+        AND id IN (SELECT id FROM reminders
+                    WHERE status = 'pending' AND send_at <= datetime('now')
+                    ORDER BY send_at LIMIT 10)`,
+  ).bind(claimId).run();
+
+  const { results } = await env.DB.prepare(
+    "SELECT * FROM reminders WHERE claim_id = ?1 AND status = 'sending' ORDER BY send_at",
+  ).bind(claimId).all();
+  out.claimed = (results || []).length;
+
+  for (const r of results || []) {
+    try {
+      if (!(await mayEmail(env, r.to_email))) throw new Error('address is suppressed');
+      const sent = await sendEmail(env, {
+        to: r.to_email,
+        subject: r.subject,
+        html: reminderHtml({ subject: r.subject, intro: r.intro, body: r.body }),
+      });
+      // Status and sent_at move together, so there is no window in which the
+      // mail is out but the row still looks due.
+      await env.DB.prepare(
+        `UPDATE reminders
+            SET status = 'sent', sent_at = datetime('now'), message_id = ?3,
+                claim_id = NULL, claimed_at = NULL, last_error = NULL,
+                updated_at = datetime('now')
+          WHERE id = ?1 AND claim_id = ?2 AND status = 'sending'`,
+      ).bind(r.id, claimId, sent?.id || null).run();
+      out.sent++;
+    } catch (err) {
+      await env.DB.prepare(
+        `UPDATE reminders
+            SET status = CASE WHEN attempts >= max_attempts THEN 'failed' ELSE 'pending' END,
+                send_at = CASE WHEN attempts >= max_attempts THEN send_at
+                               ELSE datetime('now', '+' || (15 * attempts) || ' minutes') END,
+                claim_id = NULL, claimed_at = NULL, last_error = ?3,
+                updated_at = datetime('now')
+          WHERE id = ?1 AND claim_id = ?2 AND status = 'sending'`,
+      ).bind(r.id, claimId, String(err.message).slice(0, 300)).run();
+      out.failed++;
+      console.error('reminder send failed', r.id, err.message);
+    }
+  }
+
+  return out;
+}
+
 /**
  * The monitors from the schema. A non-empty result is an alert whatever the
  * cause: these are exactly the states that are silent on every screen.
@@ -393,6 +508,11 @@ export async function runScheduler(env) {
     }
 
     summary.expired = await expireStale(env);
+
+    // Reminders are ours, not a client's — the kill switch is about not
+    // emailing customers, so it deliberately does not gate these.
+    summary.reminders = await sendDueReminders(env);
+
     summary.monitors = await checkMonitors(env);
   } catch (err) {
     // A tick that throws is a tick that does not happen again until someone

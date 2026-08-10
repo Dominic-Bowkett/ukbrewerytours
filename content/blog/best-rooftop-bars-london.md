@@ -3,6 +3,7 @@ title: "Best Rooftop Bars in London for 2026"
 slug: best-rooftop-bars-london
 description: "The best rooftop bars in London, sorted by area — which are free, which need booking, which open all year, and which ones actually pour a decent beer."
 date: "2026-08-10"
+hero_image: "/assets/img/rooftop-bars-london.jpg"
 ---
 
 London has more rooftop bars than any city in Europe, and a fair number of them are not worth the lift ride. The view is the product, so the drinks are often an afterthought: a £16 cocktail, three lagers on tap, and a queue.

@@ -3,6 +3,7 @@ title: "London Bridge Rooftop Bars: Every Terrace Near the Shard"
 slug: london-bridge-rooftop-bars
 description: "A guide to rooftop bars around London Bridge — the Colechurch House rooftop, the Shard's own bars, Southwark's terraces, and where to drink after."
 date: "2026-08-10"
+hero_image: "/assets/img/london-bridge-rooftop-bars.jpg"
 ---
 
 London Bridge has the densest cluster of rooftop bars in the city, for the obvious reason: it has the Shard, and everything around the Shard gets to look at it. Standing on a roof in Mayfair you see other roofs. Standing on a roof in SE1 you see the Shard, Tower Bridge, the river and the whole City skyline at once.

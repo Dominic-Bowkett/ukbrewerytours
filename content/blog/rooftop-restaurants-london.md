@@ -3,6 +3,7 @@ title: "Rooftop Restaurants in London: Where to Eat With a View"
 slug: rooftop-restaurants-london
 description: "The best rooftop restaurants in London — proper kitchens rather than bar snacks, sorted by area, with notes on booking, cost and which ones open year-round."
 date: "2026-08-10"
+hero_image: "/assets/img/rooftop-restaurants-london.jpg"
 ---
 
 A rooftop bar wants you standing with a drink. A rooftop restaurant wants you sitting down for two hours, which is a much harder thing to get right eight floors above the ground — the kitchen is smaller, the logistics are worse, and the view has to carry a whole meal rather than one cocktail.
