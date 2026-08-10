@@ -56,3 +56,7 @@ One crucial technique in crafting a Baby Guinness is the use of the back of a sp
 For the best results in both presentation and taste, it is vital to use well-**chilled liqueurs**. Refrigerate your Baileys and coffee liqueur prior to preparation. **Chilled liqueurs** help in creating crisp layers and contribute to a smoother texture when drinking. This tip not only enhances the **drink presentation** but also ensures that the **cocktail crafting** process is seamless, providing a professional touch to your home bar experiences.
 
 In summary, the secret to **perfect layering** in a Baby Guinness lies in the precise use of a spoon and the correct serving temperature of your ingredients. These **bar drink tips** will elevate the aesthetic and sensory appeal of your **Baileys layering**, making each shot a memorable treat for your guests.
+
+## Where to Order One Instead
+
+If you'd rather someone else did the pouring, a Baby Guinness is a standard on most London cocktail lists — including the terraces in our guide to the [best rooftop bars in London](/blog/best-rooftop-bars-london/). For the real thing rather than the shot, our [London brewery tours](/tours/london/) run through the stout and porter brewers in the Bermondsey railway arches.

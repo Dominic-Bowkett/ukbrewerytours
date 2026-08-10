@@ -146,3 +146,7 @@ Comparing Guinness to other beers helps in making smart choices. BrewDog Punk IP
 But it's not all about calories. Guinness also has a good balance of nutrients. Every 100ml has 34 calories, 0.3g of fat, 1.3g of protein, and 2.4g of carbs. This mix helps you enjoy beer without ruining your diet.
 
 Drinking in moderation is important. Men and women should keep it under 14 units of alcohol weekly to stay healthy. Spread out your drinking and choose beers like Guinness to blend fun with health.
+
+## Where to Drink It
+
+If you're in London and want somewhere worth the calories, we keep two guides up to date: the [best beer gardens in London](/blog/beer-gardens-london/) for ground level, and the [best rooftop bars in London](/blog/best-rooftop-bars-london/) for when you'd rather look down on the city. Our [London brewery tours](/tours/london/) take you round the Bermondsey and Hackney Wick arches, where the stout is usually made about ten feet from where you're standing.
