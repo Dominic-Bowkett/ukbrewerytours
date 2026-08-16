@@ -242,6 +242,19 @@ export async function onRequestGet({ params, env }) {
   window.addEventListener('load', report);
   report();
 
+  // Conversion tracking: one 'open' per render, and only when genuinely
+  // embedded — direct opens (admin preview, curiosity) don't count.
+  if (framed) {
+    try {
+      fetch('/api/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ event: 'open', widgetId: WIDGET_ID, page: HOST_URL }),
+        keepalive: true,
+      }).catch(function () {});
+    } catch (e) { /* never break the form over analytics */ }
+  }
+
   // --- amount chips ---
   var chips = [].slice.call(document.querySelectorAll('.chip'));
   chips.forEach(function (chip) {

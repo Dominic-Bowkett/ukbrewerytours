@@ -72,6 +72,33 @@
       widgets email enquiries to info@ukbrewerytours.com with reply-to set to the sender.
     </p>
   </section>
+
+  <section class="panel" style="margin-top:22px">
+    <div class="panel-head">
+      <h2>Voucher conversion</h2>
+      <div class="filters">
+        <select id="convDays">
+          <option value="30">Last 30 days</option>
+          <option value="90">Last 90 days</option>
+          <option value="0">All time</option>
+        </select>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="voucher-table">
+        <thead>
+          <tr><th>Source</th><th>Opens</th><th>Started checkout</th><th>Purchased</th><th>Conversion</th><th>Revenue</th></tr>
+        </thead>
+        <tbody id="convRows"><tr><td colspan="6" class="muted pad">Loading…</td></tr></tbody>
+      </table>
+    </div>
+    <p class="muted pad" style="padding-top:0">
+      An <strong>open</strong> is the voucher pop-up being opened on ukbrewerytours.com (once per page
+      view), or an embedded voucher widget being shown on a host site. Conversion = purchases ÷ opens.
+      Demo purchases are excluded. Opens have been tracked since 8&nbsp;Aug&nbsp;2026, so "all time"
+      understates opens for older sales.
+    </p>
+  </section>
 </main>
 
 <main class="admin-main" data-panel="connect" hidden>
@@ -442,7 +469,7 @@ document.querySelectorAll('.admin-tab').forEach(tab => {
       connectLoaded = true; loadPayments(); loadTeam(); loadAccounts(); checkLiveMode();
     }
     if (tab.dataset.tab === 'widgets' && !widgetsLoaded) {
-      widgetsLoaded = true; loadWidgets();
+      widgetsLoaded = true; loadWidgets(); loadConversion();
     }
   });
 });
@@ -1003,6 +1030,37 @@ function openWidget(id) {
     }
   });
 }
+
+async function loadConversion() {
+  const el = document.getElementById('convRows');
+  const days = document.getElementById('convDays').value;
+  el.innerHTML = '<tr><td colspan="6" class="muted pad">Loading…</td></tr>';
+  try {
+    const d = await api('/api/admin/conversion?days=' + days);
+    const pct = (paid, opens) => opens ? ((paid / opens) * 100).toFixed(1) + '%' : '—';
+    const active = d.rows.filter(r => r.opens || r.checkouts || r.key === 'site');
+    el.innerHTML = active.map(r => `
+      <tr>
+        <td><strong>${esc(r.name)}</strong>${r.paused ? ' <span class="tag">paused</span>' : ''}</td>
+        <td>${r.opens}</td>
+        <td>${r.checkouts}</td>
+        <td><strong>${r.paid}</strong></td>
+        <td><strong>${pct(r.paid, r.opens)}</strong>${r.checkouts ? `<br><span class="muted">${pct(r.paid, r.checkouts)} of checkouts</span>` : ''}</td>
+        <td>${money(r.revenue_pence)}</td>
+      </tr>`).join('') + (active.length > 1 ? `
+      <tr style="border-top:2px solid var(--line)">
+        <td><strong>Everything</strong></td>
+        <td><strong>${d.totals.opens}</strong></td>
+        <td><strong>${d.totals.checkouts}</strong></td>
+        <td><strong>${d.totals.paid}</strong></td>
+        <td><strong>${pct(d.totals.paid, d.totals.opens)}</strong></td>
+        <td><strong>${money(d.totals.revenue_pence)}</strong></td>
+      </tr>` : '');
+  } catch (err) {
+    el.innerHTML = `<tr><td colspan="6" class="pad error">${esc(err.message)}</td></tr>`;
+  }
+}
+document.getElementById('convDays').addEventListener('change', loadConversion);
 
 document.getElementById('addWidget').addEventListener('click', () => openWidget(null));
 document.addEventListener('click', (e) => {

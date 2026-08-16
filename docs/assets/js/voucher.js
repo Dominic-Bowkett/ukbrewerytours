@@ -41,7 +41,25 @@
     messageEl.value = defaultMessage();
   }
 
+  // Conversion tracking: one anonymous 'open' per page view (repeat opens on
+  // the same page are the same person dithering, not new interest). The demo
+  // page is excluded so internal testing never skews the numbers.
+  let openTracked = false;
+  function trackOpen() {
+    if (openTracked || document.body.dataset.voucherDemo === '1') return;
+    openTracked = true;
+    try {
+      fetch('/api/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ event: 'open', page: location.pathname }),
+        keepalive: true,
+      }).catch(() => {});
+    } catch (e) { /* analytics must never break the form */ }
+  }
+
   function openModal(opener) {
+    trackOpen();
     tour = {
       name: opener?.dataset.tourName || '',
       price: opener?.dataset.tourPrice || '',
