@@ -8,7 +8,7 @@
 export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
   let days = parseInt(url.searchParams.get('days') || '30', 10);
-  if (![0, 30, 90].includes(days)) days = 30;
+  if (![0, 7, 30, 90].includes(days)) days = 30;
 
   // Bound in as a modifier string — only from the fixed set above.
   const since = days ? `-${days} days` : null;
