@@ -462,16 +462,23 @@ const pct = bps => (bps / 100).toFixed(bps % 100 === 0 ? 0 : 2) + '%';
 let defaultFeeBps = 2000;
 let connectLoaded = false;
 
+function showTab(name) {
+  const tab = document.querySelector(`.admin-tab[data-tab="${CSS.escape(name)}"]`);
+  if (!tab) return;
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.toggle('is-active', t === tab));
+  document.querySelectorAll('[data-panel]').forEach(p => { p.hidden = p.dataset.panel !== name; });
+  if (name === 'connect' && !connectLoaded) {
+    connectLoaded = true; loadPayments(); loadTeam(); loadAccounts(); checkLiveMode();
+  }
+  if (name === 'widgets' && !widgetsLoaded) {
+    widgetsLoaded = true; loadWidgets(); loadConversion();
+  }
+}
 document.querySelectorAll('.admin-tab').forEach(tab => {
   tab.addEventListener('click', () => {
-    document.querySelectorAll('.admin-tab').forEach(t => t.classList.toggle('is-active', t === tab));
-    document.querySelectorAll('[data-panel]').forEach(p => { p.hidden = p.dataset.panel !== tab.dataset.tab; });
-    if (tab.dataset.tab === 'connect' && !connectLoaded) {
-      connectLoaded = true; loadPayments(); loadTeam(); loadAccounts(); checkLiveMode();
-    }
-    if (tab.dataset.tab === 'widgets' && !widgetsLoaded) {
-      widgetsLoaded = true; loadWidgets(); loadConversion();
-    }
+    // Keep the tab in the URL so a refresh (or a shared link) lands back here.
+    history.replaceState(null, '', '#' + tab.dataset.tab);
+    showTab(tab.dataset.tab);
   });
 });
 
@@ -1089,6 +1096,11 @@ document.addEventListener('click', (e) => {
   if (manage) openWidget(manage.dataset.widget);
 });
 widgetModal.addEventListener('click', (e) => { if (e.target.closest('[data-close]')) widgetModal.hidden = true; });
+
+// Restore the tab named in the URL hash — runs last so every panel's lazy
+// loader and state (widgetsLoaded etc.) is already defined.
+if (location.hash.length > 1) showTab(location.hash.slice(1));
+window.addEventListener('hashchange', () => { if (location.hash.length > 1) showTab(location.hash.slice(1)); });
 </script>
 </body>
 </html>
