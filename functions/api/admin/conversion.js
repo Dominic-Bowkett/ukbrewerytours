@@ -5,6 +5,12 @@
 // orders (every order row is a started Stripe checkout; 'paid' = purchased).
 // Demo purchases are excluded throughout. days=0 means all time.
 
+// Funnel counts start here. Orders before this date predate open-tracking,
+// so including them would show purchases with no matching opens and nonsense
+// conversion rates. Earlier orders/vouchers still exist everywhere else in
+// the admin — this epoch only scopes the conversion dashboard.
+const TRACKING_EPOCH = '2026-08-16';
+
 export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
   let days = parseInt(url.searchParams.get('days') || '30', 10);
@@ -12,7 +18,8 @@ export async function onRequestGet({ request, env }) {
 
   // Bound in as a modifier string — only from the fixed set above.
   const since = days ? `-${days} days` : null;
-  const sinceWhere = col => (since ? `AND ${col} > datetime('now', ?)` : '');
+  const sinceWhere = col => `AND ${col} >= '${TRACKING_EPOCH}'`
+    + (since ? ` AND ${col} > datetime('now', ?)` : '');
   const bind = stmt => (since ? stmt.bind(since) : stmt);
 
   const { results: opens } = await bind(env.DB.prepare(`
