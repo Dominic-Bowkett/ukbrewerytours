@@ -162,6 +162,7 @@
           message: sendToSelf ? '' : messageEl.value,
           tourName: tour.name,
           tourSlug: tour.slug,
+          page: location.href,
           demo: document.body.dataset.voucherDemo === '1',
         }),
       });

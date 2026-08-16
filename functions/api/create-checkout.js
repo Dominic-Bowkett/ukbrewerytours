@@ -52,6 +52,17 @@ export async function onRequestPost({ request, env }) {
   const tourName = clean(body.tourName, 200);
   const isDemo = body.demo === true || body.demo === 'true';
 
+  // Full URL of the page checkout started from — attribution only. Widget
+  // purchases overwrite this with the validated hostUrl below.
+  const parsePage = raw => {
+    try {
+      const u = new URL(String(raw || ''));
+      if (u.protocol === 'https:' || u.protocol === 'http:') return u.href.slice(0, 500);
+    } catch { /* not a URL — leave unattributed */ }
+    return '';
+  };
+  let page = parsePage(body.page);
+
   // --- embedded widget purchases (the form iframed on other websites) ---
   const widgetId = clean(body.widgetId, 40);
   let widget = null;
@@ -74,6 +85,7 @@ export async function onRequestPost({ request, env }) {
       if (u.protocol === 'https:' || u.protocol === 'http:') {
         hostUrl = u.href.slice(0, 500);
         widgetOrigin = u.origin;
+        page = hostUrl;
       }
     } catch { /* no usable host page — fall back to our own cancel page */ }
   }
@@ -106,8 +118,8 @@ export async function onRequestPost({ request, env }) {
     env.DB.prepare(
       `INSERT INTO orders (id, stripe_session_id, status, quantity, amount_pence, total_pence,
         purchaser_name, purchaser_email, recipient_name, recipient_email, send_to_self,
-        message, tour_slug, tour_name, is_demo, widget_id, widget_origin)
-       VALUES (?,?,'pending',?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+        message, tour_slug, tour_name, is_demo, widget_id, widget_origin, page)
+       VALUES (?,?,'pending',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
     ).bind(
       orderId, session.id, quantity, amountPence, totalPence,
       purchaserName, purchaserEmail,
@@ -118,6 +130,7 @@ export async function onRequestPost({ request, env }) {
       isDemo ? 1 : 0,
       widget ? widget.id : null,
       widgetOrigin,
+      page || null,
     ),
   ];
 

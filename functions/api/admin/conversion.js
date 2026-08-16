@@ -47,6 +47,17 @@ export async function onRequestGet({ request, env }) {
     WHERE is_demo = 0 ${sinceWhere('created_at')}
     GROUP BY widget_id`)).all();
 
+  // Where checkouts started and purchases landed — per source and page.
+  const { results: orderPages } = await bind(env.DB.prepare(`
+    SELECT widget_id, COALESCE(page, '(unknown)') AS page,
+           COUNT(*) AS checkouts,
+           SUM(status = 'paid') AS paid
+    FROM orders
+    WHERE is_demo = 0 ${sinceWhere('created_at')}
+    GROUP BY widget_id, page
+    ORDER BY paid DESC, checkouts DESC
+    LIMIT 500`)).all();
+
   const { results: widgets } = await env.DB.prepare(
     "SELECT id, name, status FROM widgets WHERE kind = 'voucher'").all();
 
@@ -59,9 +70,17 @@ export async function onRequestGet({ request, env }) {
   row('site');
   for (const w of widgets) row(w.id);
   for (const o of opens) Object.assign(row(o.widget_id || 'site'), { opens: o.opens });
-  for (const p of pageRows) {
-    const r = row(p.widget_id || 'site');
-    (r.pages = r.pages || []).push({ page: p.page, opens: p.opens });
+  // Merge opens and orders into one per-page breakdown for each source.
+  const pageOf = (r, page) => {
+    r.pageMap = r.pageMap || new Map();
+    if (!r.pageMap.has(page)) r.pageMap.set(page, { page, opens: 0, checkouts: 0, paid: 0 });
+    return r.pageMap.get(page);
+  };
+  for (const p of pageRows) pageOf(row(p.widget_id || 'site'), p.page).opens = p.opens;
+  for (const o of orderPages) {
+    const e = pageOf(row(o.widget_id || 'site'), o.page);
+    e.checkouts = o.checkouts;
+    e.paid = o.paid || 0;
   }
   for (const o of orders) {
     const r = row(o.widget_id || 'site');
@@ -73,7 +92,10 @@ export async function onRequestGet({ request, env }) {
   const names = new Map(widgets.map(w => [w.id, w]));
   const rows = [...byKey.values()].map(r => ({
     ...r,
-    pages: (r.pages || []).slice(0, 15),
+    pageMap: undefined,
+    pages: [...(r.pageMap?.values() || [])]
+      .sort((a, b) => (b.paid - a.paid) || (b.opens - a.opens))
+      .slice(0, 15),
     name: r.key === 'site'
       ? 'ukbrewerytours.com — voucher pop-up'
       : (names.get(r.key)?.name || `${r.key} (deleted widget)`),

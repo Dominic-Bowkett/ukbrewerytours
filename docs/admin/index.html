@@ -1063,9 +1063,12 @@ async function loadConversion() {
         <td>${money(r.revenue_pence)}</td>
       </tr>
       ${r.pages.length ? `<tr data-pages-row="${i}" hidden><td colspan="6" style="background:var(--cream);padding:10px 22px 14px">
-        <span class="muted" style="font-size:.78rem;text-transform:uppercase;letter-spacing:.06em">Opened on</span>
+        <span class="muted" style="font-size:.78rem;text-transform:uppercase;letter-spacing:.06em">By page</span>
         <table class="hist" style="margin-top:6px"><tbody>${r.pages.map(p => `
-          <tr><td style="width:70%">${pageLink(p)}</td><td><strong>${p.opens}</strong> <span class="muted">open${p.opens === 1 ? '' : 's'}</span></td></tr>`).join('')}
+          <tr><td style="width:60%">${pageLink(p)}</td>
+          <td><strong>${p.opens}</strong> <span class="muted">open${p.opens === 1 ? '' : 's'}</span></td>
+          <td>${p.checkouts ? `<strong>${p.checkouts}</strong> <span class="muted">checkout${p.checkouts === 1 ? '' : 's'}</span>` : '<span class="muted">—</span>'}</td>
+          <td>${p.paid ? `<strong>${p.paid}</strong> <span class="muted">sold</span>` : '<span class="muted">—</span>'}</td></tr>`).join('')}
         </tbody></table>
       </td></tr>` : ''}`).join('') + (active.length > 1 ? `
       <tr style="border-top:2px solid var(--line)">
