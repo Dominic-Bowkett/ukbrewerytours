@@ -1040,15 +1040,27 @@ async function loadConversion() {
     const d = await api('/api/admin/conversion?days=' + days);
     const pct = (paid, opens) => opens ? ((paid / opens) * 100).toFixed(1) + '%' : '—';
     const active = d.rows.filter(r => r.opens || r.checkouts || r.key === 'site');
-    el.innerHTML = active.map(r => `
+    const pageLink = p => {
+      if (p.page.startsWith('/')) return `<a href="${esc(p.page)}" target="_blank" rel="noopener">${esc(p.page)}</a>`;
+      if (/^https?:\/\//.test(p.page)) return `<a href="${esc(p.page)}" target="_blank" rel="noopener">${esc(p.page.replace(/^https?:\/\//, ''))}</a>`;
+      return esc(p.page);
+    };
+    el.innerHTML = active.map((r, i) => `
       <tr>
-        <td><strong>${esc(r.name)}</strong>${r.paused ? ' <span class="tag">paused</span>' : ''}</td>
+        <td><strong>${esc(r.name)}</strong>${r.paused ? ' <span class="tag">paused</span>' : ''}
+          ${r.pages.length ? `<br><button class="btn btn-ghost btn-sm" data-pages="${i}" style="padding:2px 8px;margin-top:2px">Pages ▾</button>` : ''}</td>
         <td>${r.opens}</td>
         <td>${r.checkouts}</td>
         <td><strong>${r.paid}</strong></td>
         <td><strong>${pct(r.paid, r.opens)}</strong>${r.checkouts ? `<br><span class="muted">${pct(r.paid, r.checkouts)} of checkouts</span>` : ''}</td>
         <td>${money(r.revenue_pence)}</td>
-      </tr>`).join('') + (active.length > 1 ? `
+      </tr>
+      ${r.pages.length ? `<tr data-pages-row="${i}" hidden><td colspan="6" style="background:var(--cream);padding:10px 22px 14px">
+        <span class="muted" style="font-size:.78rem;text-transform:uppercase;letter-spacing:.06em">Opened on</span>
+        <table class="hist" style="margin-top:6px"><tbody>${r.pages.map(p => `
+          <tr><td style="width:70%">${pageLink(p)}</td><td><strong>${p.opens}</strong> <span class="muted">open${p.opens === 1 ? '' : 's'}</span></td></tr>`).join('')}
+        </tbody></table>
+      </td></tr>` : ''}`).join('') + (active.length > 1 ? `
       <tr style="border-top:2px solid var(--line)">
         <td><strong>Everything</strong></td>
         <td><strong>${d.totals.opens}</strong></td>
@@ -1062,6 +1074,14 @@ async function loadConversion() {
   }
 }
 document.getElementById('convDays').addEventListener('change', loadConversion);
+// Delegated once: survives every re-render of the table.
+document.getElementById('convRows').addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-pages]');
+  if (!btn) return;
+  const detail = document.querySelector(`[data-pages-row="${btn.dataset.pages}"]`);
+  detail.hidden = !detail.hidden;
+  btn.textContent = detail.hidden ? 'Pages ▾' : 'Pages ▴';
+});
 
 document.getElementById('addWidget').addEventListener('click', () => openWidget(null));
 document.addEventListener('click', (e) => {

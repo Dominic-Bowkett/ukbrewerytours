@@ -21,6 +21,16 @@ export async function onRequestGet({ request, env }) {
     WHERE event = 'open' ${sinceWhere('created_at')}
     GROUP BY widget_id`)).all();
 
+  // Where those opens happened — per source, busiest pages first. Capped well
+  // above anything the UI shows so one noisy source can't crowd out the rest.
+  const { results: pageRows } = await bind(env.DB.prepare(`
+    SELECT widget_id, COALESCE(page, '(unknown)') AS page, COUNT(*) AS opens
+    FROM widget_events
+    WHERE event = 'open' ${sinceWhere('created_at')}
+    GROUP BY widget_id, page
+    ORDER BY opens DESC
+    LIMIT 500`)).all();
+
   const { results: orders } = await bind(env.DB.prepare(`
     SELECT widget_id,
            COUNT(*) AS checkouts,
@@ -42,6 +52,10 @@ export async function onRequestGet({ request, env }) {
   row('site');
   for (const w of widgets) row(w.id);
   for (const o of opens) Object.assign(row(o.widget_id || 'site'), { opens: o.opens });
+  for (const p of pageRows) {
+    const r = row(p.widget_id || 'site');
+    (r.pages = r.pages || []).push({ page: p.page, opens: p.opens });
+  }
   for (const o of orders) {
     const r = row(o.widget_id || 'site');
     r.checkouts = o.checkouts;
@@ -52,6 +66,7 @@ export async function onRequestGet({ request, env }) {
   const names = new Map(widgets.map(w => [w.id, w]));
   const rows = [...byKey.values()].map(r => ({
     ...r,
+    pages: (r.pages || []).slice(0, 15),
     name: r.key === 'site'
       ? 'ukbrewerytours.com — voucher pop-up'
       : (names.get(r.key)?.name || `${r.key} (deleted widget)`),
