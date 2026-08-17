@@ -14,6 +14,11 @@
   <div class="admin-user"><span id="who"></span><button class="btn btn-ghost" id="logout">Sign out</button></div>
 </header>
 
+<div id="impBanner" hidden style="background:#e0932f;color:#201611;padding:10px 18px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+  <span style="font-weight:600">👁 Admin view — you are seeing this portal as <span id="impWho"></span>. Anything you set up here is real and acts as them.</span>
+  <button class="btn btn-ghost btn-sm" id="impExit" style="border:1.5px solid #201611;color:#201611">← Back to admin</button>
+</div>
+
 <main class="admin-main">
   <section class="stats" id="stats"></section>
 
@@ -220,8 +225,20 @@ document.getElementById('logout').addEventListener('click', async () => {
   location.href = '/team/login.html';
 });
 
+document.getElementById('impExit').addEventListener('click', async () => {
+  await fetch('/api/team/logout', { method: 'POST' });
+  location.href = '/admin/#connect';
+});
+
 api('/api/team/me')
-  .then(u => { document.getElementById('who').textContent = u.name || u.email; load(); })
+  .then(u => {
+    document.getElementById('who').textContent = u.name || u.email;
+    if (u.impersonated) {
+      document.getElementById('impWho').textContent = u.name || u.email;
+      document.getElementById('impBanner').hidden = false;
+    }
+    load();
+  })
   .catch(() => {});
 </script>
 </body>

@@ -14,6 +14,7 @@ import { isChargeReady } from '../../_lib/team-auth.js';
 
 export async function onRequestGet({ env, data }) {
   const m = data.team;
+  const impersonated = data.teamImpersonated === true;
 
   // Display only. The fee that is actually charged is resolved and FROZEN
   // server-side at send time by _lib/fees.js — never from anything sent here,
@@ -62,6 +63,9 @@ export async function onRequestGet({ env, data }) {
 
     mustChangePassword: m.must_change_password === 1,
     lastLoginAt: m.last_login_at || null,
+    // True only for admin "view as" sessions (signed imp claim) — the portal
+    // shows its banner off this.
+    impersonated,
   }, {
     headers: {
       'Cache-Control': 'no-store',

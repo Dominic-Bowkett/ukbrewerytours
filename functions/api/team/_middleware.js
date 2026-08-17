@@ -145,6 +145,9 @@ export async function onRequest(ctx) {
   ctx.data.teamMemberId = member.id;   // the ONLY value handlers may scope queries on
   ctx.data.teamSessionId = session.sid;
   ctx.data.teamChargeReady = isChargeReady(member);
+  // Signed claim from an admin-minted "view as" session — display/audit only,
+  // it changes nothing about what the session may do.
+  ctx.data.teamImpersonated = session.impersonated === true;
   // Admin handlers key off data.user. It stays empty here so that a team request
   // reaching one by any routing accident is unauthenticated rather than admin.
   ctx.data.user = undefined;

@@ -148,8 +148,12 @@ export function teamAuthConfigError(env) {
  * an integer and rejected every genuine login.
  *
  * @param {{id:string, session_epoch:number}} member  a freshly read team_members row
+ * @param {{impersonated?: boolean}} [opts]  impersonated: minted by an admin
+ *   from /api/admin/team/impersonate, never by the member's own login. The
+ *   claim rides inside the signed payload so it can be surfaced (banner in the
+ *   portal, audit in logs) but never stripped or forged by the holder.
  */
-export async function createTeamSession(member, env) {
+export async function createTeamSession(member, env, { impersonated = false } = {}) {
   const problem = teamAuthConfigError(env);
   if (problem) throw new Error(`team session: ${problem}`);
   const id = member?.id;
@@ -165,6 +169,7 @@ export async function createTeamSession(member, env) {
     sid: randomHex(8),                 // session id, for log correlation only
     iat: now,
     exp: now + SESSION_HOURS * 3600 * 1000,
+    ...(impersonated ? { imp: 1 } : {}),
   }));
   const sig = await hmacHex(env.TEAM_SESSION_SECRET, SESSION_DOMAIN + payload);
   return `${TOKEN_PREFIX}.${payload}.${sig}`;
@@ -205,6 +210,7 @@ export async function verifyTeamSession(token, env) {
       tokenVersion: d.tv,
       sid: typeof d.sid === 'string' ? d.sid : null,
       exp: d.exp,
+      impersonated: d.imp === 1,
     };
   } catch {
     return null;

@@ -759,7 +759,7 @@ async function loadTeam() {
         <td>${m.request_count}</td>
         <td>${money(m.paid_pence)}</td>
         <td><span class="pill pill-${m.active ? 'active' : 'pending'}">${m.active ? 'Active' : 'Disabled'}</span></td>
-        <td></td>
+        <td>${m.active ? `<button class="btn btn-ghost btn-sm" data-impersonate="${esc(m.id)}" data-impname="${esc(m.name)}">View as</button>` : ''}</td>
       </tr>`).join('')
       : `<tr><td colspan="7" class="muted pad">No team members yet. Add one to start taking payments on their Stripe account.</td></tr>`;
   } catch (err) {
@@ -1155,6 +1155,26 @@ document.getElementById('addWidget').addEventListener('click', () => openWidget(
 document.addEventListener('click', (e) => {
   const manage = e.target.closest('[data-widget]');
   if (manage) openWidget(manage.dataset.widget);
+});
+
+// "View as" a team member: mints an impersonated team session (server-side,
+// admin-gated) then opens their portal. The portal shows a banner and a way back.
+document.addEventListener('click', async (e) => {
+  const btn = e.target.closest('[data-impersonate]');
+  if (!btn) return;
+  if (!confirm(`Open the team portal as ${btn.dataset.impname}?\n\nYou'll see exactly what they see, and anything you set up there — including payment requests — is real and acts as them.`)) return;
+  btn.disabled = true;
+  try {
+    await api('/api/admin/team/impersonate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: btn.dataset.impersonate }),
+    });
+    location.href = '/team/';
+  } catch (err) {
+    alert(err.message);
+    btn.disabled = false;
+  }
 });
 widgetModal.addEventListener('click', (e) => { if (e.target.closest('[data-close]')) widgetModal.hidden = true; });
 
