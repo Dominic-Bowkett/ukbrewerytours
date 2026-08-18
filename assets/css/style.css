@@ -740,8 +740,12 @@ p > .btn { margin-bottom: 10px; }
   background: linear-gradient(180deg, rgba(32,22,17,.5) 0%, rgba(32,22,17,.45) 40%, rgba(32,22,17,.86) 100%);
 }
 .city-hero .container, .exp-hero .container { position: relative; }
-.city-hero .container { padding-top: 60px; padding-bottom: 64px; max-width: 900px; }
-.exp-hero .container { padding-top: 54px; padding-bottom: 54px; max-width: 900px; }
+/* Hero containers keep the site container width so the headline starts on the
+   same left edge as the page content below it — a narrower centred container
+   here reads as an indent against every other tour page. Line length is held
+   by the max-width on h1/.lede, not by narrowing the container. */
+.city-hero .container { padding-top: 60px; padding-bottom: 64px; }
+.exp-hero .container { padding-top: 54px; padding-bottom: 54px; }
 .city-hero h1, .exp-hero h1 { color: #fffcf5; max-width: 18ch; }
 .city-hero .lede { color: rgba(247,241,229,.9); margin: 16px 0 0; max-width: 54ch; }
 .city-hero .kicker, .exp-hero .kicker { color: var(--amber); }
