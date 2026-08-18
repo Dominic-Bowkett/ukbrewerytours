@@ -275,6 +275,17 @@ const expImage = e => {
   if (e.image && s.imgs.has(e.image + '.jpg')) return `/assets/img/${s.dir}/${e.image}.jpg`;  // shared themed image (e.g. viator city+type)
   return s.imgs.has(e.slug + '.jpg') ? `/assets/img/${s.dir}/${e.slug}.jpg` : '/assets/img/hero-static.jpg';
 };
+// Extra photos for an experience: assets/img/<dir>/<slug>-1.jpg, -2.jpg ...
+// Sourced from the partner listing and downloaded by scripts/download-dmn-gallery.ps1.
+const expGallery = e => {
+  const s = SOURCES[e.source];
+  const alts = e.gallery_alt || [];
+  const out = [];
+  for (let i = 1; s.imgs.has(`${e.slug}-${i}.jpg`); i++) {
+    out.push({ src: `/assets/img/${s.dir}/${e.slug}-${i}.jpg`, alt: alts[i - 1] || `${e.title} — photo ${i}` });
+  }
+  return out;
+};
 
 // Our own tours' external booking URLs (canonical) — used to drop partner duplicates of our tours.
 const ownBookingUrls = new Set(activeTours.filter(t => t.booking_url).map(t => t.booking_url.split('?')[0].replace(/\/$/, '')));
@@ -838,6 +849,7 @@ for (const t of allExperiences) {
   const src = SOURCES[t.source];
   const direct = t.source === 'direct';
   const img = expImage(t);
+  const gallery = expGallery(t);
   const guide = guideFor(t.city);
   const ratingStr = t.rating ? `★ ${t.rating}${t.reviews ? ` · ${Number(t.reviews).toLocaleString('en-GB')} reviews` : ''}` : null;
   const chips = [t.duration && `<span class="exp-chip">${ICONS.clock}${esc(t.duration)}</span>`,
@@ -885,6 +897,13 @@ for (const t of allExperiences) {
     </aside>
   </div>
 </section>
+${gallery.length ? `<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="section-head"><span class="kicker">Photos</span><h2>What it looks like</h2></div>
+    <div class="exp-gallery">${gallery.map(g => `<figure><img src="${g.src}?v=${assetVer}" alt="${esc(g.alt)}" loading="lazy" decoding="async"></figure>`).join('')}</div>
+    <p class="note" style="margin-top:14px">Photos courtesy of ${esc(src.name)} and the operator.</p>
+  </div>
+</section>` : ''}
 ${related.length ? `<section class="section band-dark">
   <div class="container">
     <div class="section-head"><span class="kicker">More in ${esc(t.city)}</span><h2>You might also like</h2></div>

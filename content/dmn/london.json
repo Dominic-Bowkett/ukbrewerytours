@@ -17,6 +17,72 @@
       ],
       "category": "Beer tasting",
       "slug": "london-a-tasting-tour-of-londons-craft-breweries"
+    },
+    {
+      "title": "Historic London Pub Tour",
+      "url": "https://www.designmynight.com/london/whats-on/walks-tours/a-tasting-tour-of-the-heritage-pubs-of-the-city-of-london",
+      "city": "London",
+      "type": "beer",
+      "price_gbp": "44",
+      "duration": "Approximately 2.5 hours",
+      "summary": "A guided walk through four of the City of London's most historic pubs, drinking your way through 2,000 years of the capital's story — from the founding of Londinium to a medieval friary, a 16th-century tavern rebuilt after the Great Fire, and the pub that hid the Crown Jewels through two World Wars. Groups are capped at 10 and the tour is for over-18s.",
+      "description_md": "London has one of the world's great pub cultures, and some of these houses have been trading for more than 400 years. This tour takes in the hidden gems, the literary haunts, the pubs with a nefarious story behind them, and the ones pouring both traditional cask and new-wave craft beer.\n\nGroups of up to ten are guided personally around four classic pubs, starting at St Paul's and working through the City. You'll drink in the site of a former medieval Dominican friary, sit by an open fire in a 16th-century pub rebuilt after the Great Fire of London, visit the pub where the Crown Jewels were kept safe during two World Wars, and finish in the luxurious splendour of an old gin palace.\n\nMost of what you'll see isn't in the guidebooks.",
+      "image_url": "https://static.designmynight.com/uploads/2023/09/Blackfriar-interior-1-1200x615-optimised.png",
+      "gallery": [
+        "https://static.designmynight.com/uploads/2023/09/Bank-of-England-900x1200-optimised.jpeg",
+        "https://static.designmynight.com/uploads/2023/09/Ship-Tavern-900x1200-optimised.jpeg",
+        "https://static.designmynight.com/uploads/2023/09/Blackfriar-interior-900x1200-optimised.jpeg",
+        "https://static.designmynight.com/uploads/2020/01/Cockpit-900x1200-optimised.jpg",
+        "https://static.designmynight.com/uploads/2020/01/Cheese-900x1200-optimised.jpg",
+        "https://static.designmynight.com/uploads/2020/01/Temple-Bar-900x1200-optimised.jpg"
+      ],
+      "gallery_alt": [
+        "The Bank of England, on the City of London pub tour route",
+        "The Ship Tavern, one of the historic City pubs on the tour",
+        "Interior of The Black Friar, a Grade II* listed pub on the tour",
+        "The Cockpit, a City of London pub on the tour route",
+        "Ye Olde Cheshire Cheese, a 17th-century City tavern",
+        "Temple Bar, a landmark on the City of London pub walk"
+      ],
+      "highlights": [
+        "Four classic City of London pubs, guided in person",
+        "2,000 years of history, from Roman Londinium onwards",
+        "Drink on the site of a medieval Dominican friary",
+        "Sit by the fire in a 16th-century pub rebuilt after the Great Fire",
+        "See the pub where the Crown Jewels were hidden during two World Wars",
+        "Small groups of up to 10 people, over-18s only"
+      ],
+      "meeting_point": "St Paul's Underground station, Cheapside, London EC1",
+      "category": "Pub tour",
+      "slug": "london-a-tasting-tour-of-the-heritage-pubs-of-the-city-of-london"
+    },
+    {
+      "title": "The Official Coyote Ugly Bottomless Brunch — Camden",
+      "url": "https://www.designmynight.com/london/clubs/coyote-ugly-saloon-camden/the-official-coyote-ugly-nashville-hoedown-bottomless-brunch-camden",
+      "city": "London",
+      "type": "food",
+      "price_gbp": "35",
+      "duration": "90 minutes",
+      "summary": "Ninety minutes of bottomless pizza, prosecco and beer at the official Coyote Ugly Saloon in Camden, with a line-dancing lesson from the bar's Coyotes on Saturdays. Over-18s only.",
+      "description_md": "Saddle up, Camden. The official Coyote Ugly Saloon runs its Nashville Hoedown bottomless brunch on Camden High Street, and it is exactly as loud as it sounds.\n\nYour ticket covers 90 minutes of bottomless pizza, bubbles and pints, served while the bar's Coyotes work the counter. On Saturdays you also get a line-dancing lesson thrown in.\n\nSessions run through the afternoon and sell out on peak weekends, so book ahead if you want a particular slot. Over-18s only.",
+      "image_url": "https://static.designmynight.com/uploads/2024/06/view-optimised.png",
+      "gallery": [
+        "https://static.designmynight.com/uploads/2024/08/453482966_466366629517506_93680197739402303_n-optimised.jpg",
+        "https://static.designmynight.com/uploads/2024/08/447635166_431712382982931_3509937192710188279_n-optimised.jpg"
+      ],
+      "gallery_alt": [
+        "The Coyotes behind the bar at Coyote Ugly Saloon Camden",
+        "The bar at Coyote Ugly Saloon on Camden High Street"
+      ],
+      "highlights": [
+        "90 minutes of bottomless pizza, prosecco and pints",
+        "Line-dancing lesson with the Coyotes on Saturdays",
+        "The official Coyote Ugly Saloon on Camden High Street",
+        "Over-18s only"
+      ],
+      "meeting_point": "Coyote Ugly Saloon, Camden High Street, London NW1",
+      "category": "Bottomless brunch",
+      "slug": "london-the-official-coyote-ugly-nashville-hoedown-bottomless-brunch-camden"
     }
   ]
 }
