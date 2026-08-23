@@ -97,18 +97,24 @@ export async function onRequestPost({ request, env, data }) {
   // webhook retry does not send a second copy.
   await env.DB.prepare('UPDATE orders SET email_sent=1 WHERE id=?').bind(order.id).run();
 
-  await env.DB.prepare(
-    `INSERT INTO deliveries (order_id, sent_to, recipient_name, kind, address_updated, previous_email, note, sent_by)
-     VALUES (?,?,?,'resend',?,?,?,?)`,
-  ).bind(
-    order.id,
-    sendTo,
-    order.recipient_name || null,
-    addressChanged ? 1 : 0,
-    addressChanged ? (currentEmail || null) : null,
-    clean(body.note, 300) || null,
-    data?.user?.email || 'admin',
-  ).run();
+  // Swallowed like the webhook's own log write: the email has already gone, so
+  // reporting a failure here would only buy a duplicate resend.
+  try {
+    await env.DB.prepare(
+      `INSERT INTO deliveries (order_id, sent_to, recipient_name, kind, address_updated, previous_email, note, sent_by)
+       VALUES (?,?,?,'resend',?,?,?,?)`,
+    ).bind(
+      order.id,
+      sendTo,
+      order.recipient_name || null,
+      addressChanged ? 1 : 0,
+      addressChanged ? (currentEmail || null) : null,
+      clean(body.note, 300) || null,
+      data?.user?.email || 'admin',
+    ).run();
+  } catch (err) {
+    console.error('delivery log failed (the voucher email was sent)', order.id, err);
+  }
 
   return Response.json({
     ok: true,

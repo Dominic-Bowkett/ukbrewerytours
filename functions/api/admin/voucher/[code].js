@@ -26,9 +26,17 @@ export async function onRequestGet({ params, env }) {
     'SELECT amount_pence, stripe_refund_id, reason, note, refunded_by, created_at FROM refunds WHERE voucher_id=? ORDER BY id DESC',
   ).bind(voucher.id).all();
 
-  const { results: deliveries } = await env.DB.prepare(
-    'SELECT sent_to, recipient_name, kind, address_updated, previous_email, note, sent_by, created_at FROM deliveries WHERE order_id=? ORDER BY id DESC',
-  ).bind(voucher.order_id).all();
+  // Tolerated separately: code and D1 migrations deploy independently, so this
+  // table can be missing for a few minutes. History is worth losing; the redeem
+  // and refund screen this feeds is not.
+  let deliveries = [];
+  try {
+    ({ results: deliveries } = await env.DB.prepare(
+      'SELECT sent_to, recipient_name, kind, address_updated, previous_email, note, sent_by, created_at FROM deliveries WHERE order_id=? ORDER BY id DESC',
+    ).bind(voucher.order_id).all());
+  } catch (err) {
+    console.error('delivery history unavailable', voucher.order_id, err);
+  }
 
   return Response.json({ voucher, redemptions, refunds, deliveries });
 }
