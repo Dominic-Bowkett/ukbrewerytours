@@ -21,7 +21,7 @@ see [Going live](#7-going-live).
 | `functions/api/create-checkout.js` | Validates the form, reserves codes, opens Stripe Checkout |
 | `functions/api/stripe-webhook.js` | Confirms payment, activates codes, sends the emails |
 | `functions/api/my-vouchers.js` | Token-secured voucher data for the printable page |
-| `functions/api/admin/*` | Login, session gate, voucher list/detail/redeem/refund |
+| `functions/api/admin/*` | Login, session gate, voucher list/detail/redeem/refund/resend |
 | `functions/_lib/*` | Shared helpers: codes, auth, Stripe, email templates |
 | `migrations/0001_initial.sql` | D1 schema (`orders`, `vouchers`, `redemptions`, `admin_users`) |
 | `admin/` | Admin dashboard + login page (copied to `docs/admin/` at build) |
@@ -203,6 +203,45 @@ the note. A voucher can be part-redeemed any number of times until it hits £0.
 dashes are optional when searching. The alphabet excludes `I`, `O`, `0` and `1`
 so codes are unambiguous over the phone.
 
+## Resending a voucher — and correcting a mistyped address
+
+The single most common support request: the buyer typed the recipient's address
+wrong at checkout, so the voucher landed in nobody's inbox (or somebody else's).
+The payment is fine and the code is live — only the delivery went astray.
+
+1. **https://www.ukbrewerytours.com/admin/** → find the voucher → **View**.
+2. In **Resend voucher email**, correct the **Send to** address (and the
+   recipient's name if that was wrong too).
+3. Leave **Also correct the delivery address on this order** ticked so the order
+   record matches what actually happened. Untick it to send a one-off copy —
+   useful when the buyer wants it forwarded somewhere without changing the gift.
+4. Add a note (e.g. "buyer mistyped the address") and **Send voucher email**.
+
+It is the *same* email with the *same* code — nothing is charged, no new code is
+issued, and the old address gets no further copies. Where an order covers
+several vouchers, they all travel together in one email, so one resend covers
+the lot.
+
+Every send is logged in **Delivery history** on the same screen: where it went,
+whether the stored address was corrected, who did it, and the note. The
+automatic send at purchase is logged too, so the trail starts at the sale.
+
+Resending is blocked on unpaid orders — there is no live code to send. Vouchers
+bought for the buyer themselves have no separate delivery address, so for those
+the tick box is hidden and a resend goes to the address you type without
+altering the record.
+
+The delivery log lives in a new `deliveries` table, so apply the migration
+before this screen will work:
+
+```bash
+npm run db:migrate          # production; npm run db:migrate:local for the dev DB
+```
+
+> The wrong address may still hold a copy of a working code. If that matters —
+> a stranger's inbox rather than a typo that bounced — void the code and issue a
+> replacement rather than only resending.
+
 ## Refunding a voucher
 
 Same screen, the red **Refund** panel below Redeem. Enter an amount (or
@@ -263,7 +302,8 @@ re-attempted. Nothing is ever double-sent, because a successful send flips
 
 | Symptom | Cause / fix |
 |---|---|
-| Paid but no email | Check the Resend domain is verified, and that the webhook secret matches. Stripe → Webhooks shows failed deliveries and lets you resend. |
+| Paid but no email | Check the Resend domain is verified, and that the webhook secret matches. Stripe → Webhooks shows failed deliveries and lets you resend. Once the cause is fixed, **Resend voucher email** in the admin sends it without touching Stripe. |
+| Voucher went to the wrong address | The buyer mistyped it. Correct it and resend from the admin — see [Resending a voucher](#resending-a-voucher--and-correcting-a-mistyped-address). |
 | "Payments are not configured yet." | `STRIPE_SECRET_KEY` is missing from the environment. |
 | Admin login 503 | `ADMIN_SESSION_SECRET` is missing. |
 | Signed out constantly | `ADMIN_SESSION_SECRET` changed, or sessions expired (12 h). |

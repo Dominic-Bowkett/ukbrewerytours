@@ -74,6 +74,17 @@ export async function onRequestPost({ request, env }) {
 
     await env.DB.prepare('UPDATE orders SET email_sent=1 WHERE id=?').bind(order.id).run();
 
+    // Delivery log, so the admin's history starts with where the voucher first
+    // went. Swallowed on failure — a missing log line must never cost a resend.
+    try {
+      await env.DB.prepare(
+        `INSERT INTO deliveries (order_id, sent_to, recipient_name, kind)
+         VALUES (?,?,?,'initial')`,
+      ).bind(order.id, deliverTo, (order.send_to_self === 1 ? order.purchaser_name : order.recipient_name) || null).run();
+    } catch (err) {
+      console.error('delivery log failed (customer emails were sent)', order.id, err);
+    }
+
     // Internal heads-up. Deliberately after email_sent is set and swallowed on
     // failure — a missed notification must never re-trigger the customer emails.
     try {

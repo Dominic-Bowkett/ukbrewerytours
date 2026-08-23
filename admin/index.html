@@ -303,12 +303,14 @@ async function openVoucher(code) {
   modal.hidden = false;
   detail.innerHTML = '<p class="muted pad">Loading…</p>';
   try {
-    const { voucher: v, redemptions, refunds = [] } = await api('/api/admin/voucher/' + encodeURIComponent(code));
+    const { voucher: v, redemptions, refunds = [], deliveries = [] } = await api('/api/admin/voucher/' + encodeURIComponent(code));
     const refunded = v.refunded_pence || 0;
     const spent = v.amount_pence - v.balance_pence - refunded;
     const redeemable = v.balance_pence > 0 && v.status !== 'pending' && v.status !== 'void' && v.status !== 'refunded';
     const refundable = refunded < v.amount_pence && v.status !== 'pending' && v.status !== 'void';
     const maxRefund = v.amount_pence - refunded;
+    const resendable = v.order_status === 'paid';
+    const deliveredTo = v.send_to_self ? v.purchaser_email : (v.recipient_email || '');
 
     detail.innerHTML = `
       <div class="detail-head">
@@ -364,6 +366,27 @@ async function openVoucher(code) {
           <p class="muted refund-hint">Refunds go back to the original card via Stripe and take 5–10 days to appear. Refunded value is taken off the voucher balance.</p>
         </form>` : (refunded >= v.amount_pence ? '<p class="muted done-note">Fully refunded.</p>' : '')}
 
+      ${resendable ? `
+        <form class="redeem-form" id="resendForm">
+          <h3>Resend voucher email <span class="sub">— e.g. the address was mistyped at checkout</span></h3>
+          <div class="redeem-row resend-row">
+            <div class="field"><label for="sendTo">Send to</label>
+              <input id="sendTo" type="email" value="${esc(deliveredTo)}" placeholder="name@example.com"></div>
+            <div class="field"><label for="sendName">Recipient name</label>
+              <input id="sendName" type="text" value="${esc(v.send_to_self ? (v.purchaser_name || '') : (v.recipient_name || ''))}" placeholder="Who it's for"></div>
+          </div>
+          ${v.send_to_self ? '' : `<label class="inline-check resend-check">
+            <input type="checkbox" id="sendUpdate" checked> Also correct the delivery address on this order</label>`}
+          <div class="field" style="margin-top:12px"><label for="sendNote">Note (optional)</label>
+            <input id="sendNote" type="text" placeholder="e.g. Buyer mistyped the address"></div>
+          <p class="error" id="resendError" hidden></p>
+          <div class="redeem-actions">
+            <button class="btn btn-primary" type="submit">Send voucher email</button>
+          </div>
+          <p class="muted refund-hint">Sends the same email with the same code${v.quantity > 1 ? 's' : ''} — nothing is charged and no new code is issued.
+            ${v.quantity > 1 ? `This order has ${v.quantity} vouchers and they all travel in one email.` : ''}</p>
+        </form>` : ''}
+
       <div class="meta-grid">
         <div><span>Bought by</span>${esc(v.purchaser_name || '—')}<br><span class="muted">${esc(v.purchaser_email)}</span></div>
         <div><span>Delivered to</span>${v.send_to_self ? 'Themselves' : esc(v.recipient_name || '—') + '<br><span class="muted">' + esc(v.recipient_email || '') + '</span>'}</div>
@@ -386,6 +409,16 @@ async function openVoucher(code) {
           <tr><td>${dt(r.created_at)}</td><td><strong class="refund-amt">−${money(r.amount_pence)}</strong></td>
           <td class="muted">${esc((r.reason || '').replace(/_/g, ' '))}</td>
           <td class="muted">${esc(r.note || '')}</td><td class="muted">${esc(r.refunded_by || '')}</td></tr>`).join('')}
+        </tbody></table>` : ''}
+
+      ${deliveries.length ? `
+        <h3 class="hist-title">Delivery history</h3>
+        <table class="hist"><tbody>${deliveries.map(d => `
+          <tr><td>${dt(d.created_at)}</td>
+          <td><strong>${d.kind === 'initial' ? 'Sent' : 'Resent'}</strong></td>
+          <td>${esc(d.sent_to)}${d.address_updated ? `<br><span class="muted">address corrected from ${esc(d.previous_email || '—')}</span>` : ''}</td>
+          <td class="muted">${esc(d.note || '')}</td>
+          <td class="muted">${esc(d.sent_by || 'automatic')}</td></tr>`).join('')}
         </tbody></table>` : ''}`;
 
     const form = document.getElementById('redeemForm');
@@ -447,6 +480,44 @@ async function openVoucher(code) {
       });
       document.getElementById('refundFull').addEventListener('click', () => {
         if (confirm(`Refund the full ${money(maxRefund)} to the customer's card?\n\nThis moves real money and cannot be undone.`)) doRefund({ full: true });
+      });
+    }
+
+    const sForm = document.getElementById('resendForm');
+    if (sForm) {
+      sForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const errEl = document.getElementById('resendError');
+        const email = document.getElementById('sendTo').value.trim();
+        const updateEl = document.getElementById('sendUpdate');
+        errEl.hidden = true;
+        if (!email) { errEl.textContent = 'Enter an address to send to.'; errEl.hidden = false; return; }
+        const changing = email.toLowerCase() !== deliveredTo.toLowerCase();
+        if (!confirm(changing
+          ? `Send the voucher email to ${email}?` + (updateEl && updateEl.checked ? '\n\nThe delivery address on this order will be corrected to match.' : '')
+          : `Send the voucher email to ${email} again?`)) return;
+        const btns = sForm.querySelectorAll('button');
+        btns.forEach(b => { b.disabled = true; });
+        try {
+          const res = await api('/api/admin/resend', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              code: v.code,
+              email,
+              name: document.getElementById('sendName').value,
+              updateAddress: !!(updateEl && updateEl.checked),
+              note: document.getElementById('sendNote').value,
+            }),
+          });
+          alert(`Voucher email sent to ${res.sent_to}.` + (res.address_updated ? '\n\nThe delivery address on this order was corrected too.' : ''));
+          await openVoucher(v.code);
+          load();
+        } catch (err) {
+          errEl.textContent = err.message;
+          errEl.hidden = false;
+          btns.forEach(b => { b.disabled = false; });
+        }
       });
     }
   } catch (err) {

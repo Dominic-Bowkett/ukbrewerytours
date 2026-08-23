@@ -182,6 +182,10 @@ code.small { font-size: .78rem; }
 .pill-refunded { background: #f0e0df; color: #8f2a22; }
 .balance-box.four { grid-template-columns: repeat(4, 1fr); }
 .redeem-row { display: grid; grid-template-columns: 150px 1fr; gap: 12px; }
+/* resending a voucher email: two equal columns, unlike the amount+note rows.
+   Must sit above the 620px block below, which collapses both to one column. */
+.resend-row { grid-template-columns: 1fr 1fr; }
+.resend-check { margin-top: 12px; }
 .field label { display: block; font-size: .78rem; font-weight: 600; margin-bottom: 5px; color: var(--ink-soft); }
 /* select and textarea must be listed explicitly — styling `input` alone left the
    payment-request form's dropdowns and notes box as raw browser defaults. */
