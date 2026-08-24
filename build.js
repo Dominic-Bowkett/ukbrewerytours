@@ -133,9 +133,17 @@ function parsePost(file) {
   return { ...meta, body: m[2].trim(), file };
 }
 
-const posts = fs.readdirSync(path.join(ROOT, 'content', 'blog'))
-  .filter(f => f.endsWith('.md')).map(parsePost)
+// Date gate: a post dated in the future simply does not build — that is the
+// entire publishing mechanism (same pattern as bristolbrewerytours). The daily
+// scheduled task rebuilds and pushes only when the output changes.
+// Override for testing:  UBT_TODAY=YYYY-MM-DD node build.js
+const TODAY = process.env.UBT_TODAY || new Date().toISOString().slice(0, 10);
+const allPosts = fs.readdirSync(path.join(ROOT, 'content', 'blog'))
+  .filter(f => f.endsWith('.md')).map(parsePost);
+const queuedPosts = allPosts.filter(p => (p.date || '') > TODAY);
+const posts = allPosts.filter(p => (p.date || '') <= TODAY)
   .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+if (queuedPosts.length) console.log(`${queuedPosts.length} blog post(s) queued (dated after ${TODAY})`);
 
 function fill(tpl, map) {
   return tpl.replace(/\{\{(\w+)\}\}/g, (_, k) => (k in map ? map[k] : ''));
