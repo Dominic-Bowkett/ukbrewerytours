@@ -23,7 +23,12 @@ export async function onRequestGet({ env }) {
     // D1 hiccup — the pop-up simply doesn't show. Never break the page.
     console.error('recent-sales failed', err);
   }
+  // CORS: the feed is anonymised and public, and network sites (Bristol,
+  // London) read it cross-origin via /embed/salespop.js.
   return Response.json({ sales }, {
-    headers: { 'Cache-Control': 'public, max-age=300' },
+    headers: {
+      'Cache-Control': 'public, max-age=300',
+      'Access-Control-Allow-Origin': '*',
+    },
   });
 }

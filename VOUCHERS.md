@@ -126,6 +126,17 @@ the voucher modal, the × minimises it to a pill for 24 hours (localStorage
 `ubtSalesPopMin`), and the pill click brings it back. If there are no sales or
 the API fails, the pop-up simply never appears.
 
+Network sites embed the same pop-up via `embed/salespop.js` (self-contained:
+injects its own styles, fetches the API cross-origin — the endpoint sends
+`Access-Control-Allow-Origin: *`):
+
+    <script async src="https://www.ukbrewerytours.com/embed/salespop.js"
+            data-link="/gift-vouchers/#buy"></script>
+
+`data-link` is where clicking the toast goes (default `/gift-vouchers/` on the
+host site); optional `data-accent` recolours the gift-icon bubble. Live on
+bristolbrewerytours.com and londonbrewerytour.com.
+
 ## Embeddable widgets — sell vouchers and take enquiries on OTHER websites
 
 **Admin → Voucher widgets** creates widgets you can paste into any site
