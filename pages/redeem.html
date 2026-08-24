@@ -1,0 +1,117 @@
+<section class="page-hero">
+  <div class="container split" style="align-items:center">
+    <div>
+      <span class="kicker">Gift vouchers</span>
+      <h1>Redeem your gift voucher</h1>
+      <p class="lede">Got a voucher code? Brilliant — tell us which tour you'd like and when, and we'll book you on and confirm by email.</p>
+    </div>
+    <div class="frame illus-frame tall">
+      <img src="/assets/img/illus/how-book.jpg" alt="Booking a brewery tour with a gift voucher" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<section class="section band-mist">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">How it works</span>
+      <h2>Three steps to your tour</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <img class="step-illus" src="/assets/img/illus/how-pick.jpg" alt="Browsing brewery tours on a phone" loading="lazy">
+        <span class="num">1</span>
+        <h3>Pick a tour</h3>
+        <p>Browse our <a href="/tours/">tours and experiences</a> and check the available dates on each tour's page. Vouchers can be used on any of them.</p>
+      </div>
+      <div class="step">
+        <img class="step-illus" src="/assets/img/illus/how-book.jpg" alt="Sending a booking request by message" loading="lazy">
+        <span class="num">2</span>
+        <h3>Send your request</h3>
+        <p>Fill out the form below with your voucher code and preferred date and time. We book you on by hand, so this is a request rather than an instant confirmation.</p>
+      </div>
+      <div class="step">
+        <img class="step-illus" src="/assets/img/illus/how-drink.jpg" alt="A guide with a tasting flight at a brewery" loading="lazy">
+        <span class="num">3</span>
+        <h3>We confirm by email</h3>
+        <p>We'll reply with your booking confirmation — usually within 1 working day, though it can occasionally take a little longer.</p>
+      </div>
+    </div>
+
+    <div class="form-card mt-4">
+      <div data-redeem-intro>
+        <h2 style="margin-bottom:8px">Redemption request</h2>
+        <p style="color:var(--ink-soft);margin-bottom:26px">Include your voucher code and we'll take care of the rest. We usually reply within 1 working day.</p>
+      </div>
+      <form class="form-grid" data-redeem-form novalidate>
+        <!-- honeypot: hidden from people, filled in by bots -->
+        <input type="text" name="company" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div>
+          <label for="r-name">Name</label>
+          <input id="r-name" name="name" type="text" required autocomplete="name">
+        </div>
+        <div>
+          <label for="r-email">Email</label>
+          <input id="r-email" name="email" type="email" required autocomplete="email">
+        </div>
+        <div>
+          <label for="r-tel">Phone</label>
+          <input id="r-tel" name="tel" type="tel" autocomplete="tel" placeholder="Optional — handy on tour day">
+        </div>
+        <div>
+          <label for="r-code">Voucher code</label>
+          <input id="r-code" name="code" type="text" required placeholder="e.g. UBT-XXXX-XXXX" autocomplete="off" style="text-transform:uppercase">
+        </div>
+        <div>
+          <label for="r-tour">Tour name</label>
+          <input id="r-tour" name="tour" type="text" required placeholder="e.g. Bermondsey Beer Mile Tasting Tour">
+        </div>
+        <div>
+          <label for="r-when">Preferred date &amp; time</label>
+          <input id="r-when" name="when" type="text" required placeholder="e.g. Sat 14 Sep, 12pm — or &quot;any Saturday&quot;">
+        </div>
+        <div class="full">
+          <label for="r-message">Message</label>
+          <textarea id="r-message" name="message" rows="4" placeholder="Anything else we should know — group size, dietary needs, backup dates…"></textarea>
+        </div>
+        <div class="full">
+          <p class="form-status" data-redeem-error hidden></p>
+          <button class="btn btn-primary" type="submit" data-redeem-submit>Send redemption request</button>
+        </div>
+      </form>
+      <div class="form-sent" data-redeem-success hidden>
+        <div class="form-sent__mark">✓</div>
+        <h3>Request received</h3>
+        <p>Thanks — we've emailed you a confirmation and will book you on and reply usually within 1 working day, though it can occasionally take a little longer.</p>
+        <p class="mt-2"><a class="btn btn-outline" href="{{whatsapp_url}}">{{wa_icon}} Or message us on WhatsApp</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">Good to know</span>
+      <h2>Voucher questions, answered</h2>
+    </div>
+    <div class="faq-list">
+      <details>
+        <summary>What if the tour costs more than my voucher?</summary>
+        <p class="a">No problem — you can top up the difference. Just send your request as normal and we'll email you a secure payment link for the balance.</p>
+      </details>
+      <details>
+        <summary>What happens to leftover credit?</summary>
+        <p class="a">It stays on your voucher code. Remaining credit can be used on further tours in the future — our vouchers never expire.</p>
+      </details>
+      <details>
+        <summary>Not sure what to do?</summary>
+        <p class="a">Just <a href="mailto:{{email}}">email us</a> or <a href="{{whatsapp_url}}">message us on WhatsApp</a> and we'll sort everything for you — be sure to include your voucher code.</p>
+      </details>
+      <details>
+        <summary>Where do I see tour dates?</summary>
+        <p class="a">Each tour's page on this website shows its upcoming dates — start from the <a href="/tours/">tours page</a> and pick your city.</p>
+      </details>
+    </div>
+  </div>
+</section>

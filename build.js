@@ -431,7 +431,7 @@ const layout = read('templates/layout.html');
 const voucherModalTpl = read('templates/voucher-modal.html');
 const voucherEverywhere = true;
 
-function writePage(outPath, { title, description, content, nav, ogImage, jsonld, robots, voucher, voucherPrint, contactForm }) {
+function writePage(outPath, { title, description, content, nav, ogImage, jsonld, robots, voucher, voucherPrint, contactForm, redeemForm }) {
   const canonical = site.base_url + ('/' + outPath).replace(/\/index\.html$/, '/');
   const navKeys = ['tours', 'breweries', 'vouchers', 'groups', 'blog', 'about'];
   const navMap = {};
@@ -448,6 +448,7 @@ function writePage(outPath, { title, description, content, nav, ogImage, jsonld,
       useVoucher ? `  <script src="/assets/js/voucher.js?v=${assetVer}" defer></script>` : '',
       voucherPrint ? `  <script src="/assets/js/voucher-print.js?v=${assetVer}" defer></script>` : '',
       contactForm ? `  <script src="/assets/js/contact.js?v=${assetVer}" defer></script>` : '',
+      redeemForm ? `  <script src="/assets/js/redeem.js?v=${assetVer}" defer></script>` : '',
       `  <script src="/assets/js/salespop.js?v=${assetVer}" defer></script>`,
     ].filter(Boolean).join('\n'),
     robots: robots ? `<meta name="robots" content="${robots}">` : '',
@@ -589,6 +590,7 @@ const staticPages = [
   { src: 'gift-vouchers.html', out: 'gift-vouchers/index.html', nav: 'vouchers', title: 'Brewery Tour Gift Vouchers — Never Expire | UK Brewery Tours', description: 'Monetary gift vouchers for brewery tours anywhere in the UK. Instant email delivery, never expire, refundable up to 12 months. The perfect gift for beer lovers.' },
   { src: 'group-tours.html', out: 'group-tours/index.html', nav: 'groups', title: 'Private Group Brewery Tours from £29pp | UK Brewery Tours', description: 'Private brewery tours and beer tastings for corporate teams, stags, hens and groups — available in most UK cities from £29 per person.' },
   { src: 'returns-policy.html', out: 'returns-policy/index.html', nav: '', title: 'Returns Policy | UK Brewery Tours', description: 'Gift voucher returns and refunds policy for UK Brewery Tours.' },
+  { src: 'redeem.html', out: 'redeem/index.html', nav: 'vouchers', title: 'Redeem Your Gift Voucher | UK Brewery Tours', description: 'Redeem a UK Brewery Tours gift voucher — tell us your tour, date and voucher code and we\'ll book you on and confirm by email, usually within 1 working day.', redeemForm: true },
   // Post-Stripe landing page. Unlisted (reached only by redirect from checkout).
   { src: 'voucher-thank-you.html', out: 'gift-vouchers/thank-you/index.html', nav: 'vouchers', title: 'Thank you — your gift voucher is on its way | UK Brewery Tours', description: 'Your gift voucher purchase is complete.', robots: 'noindex,nofollow' },
   // Hidden internal test page for the in-house voucher flow. Not linked, not indexed.
@@ -974,7 +976,7 @@ const notFound = fill(layout, {
 fs.writeFileSync(path.join(OUT, '404.html'), notFound);
 
 const urls = [
-  '/', '/about/', '/contact/', '/tours/', '/breweries/', '/gift-vouchers/', '/group-tours/', '/blog/', '/returns-policy/',
+  '/', '/about/', '/contact/', '/tours/', '/breweries/', '/gift-vouchers/', '/group-tours/', '/blog/', '/returns-policy/', '/redeem/',
   ...cityGuides.map(g => `/tours/${g.slug}/`),
   ...activeTours.map(t => `/tours/${t.old_slug}/`),
   ...posts.map(p => `/blog/${p.slug}/`),

@@ -68,7 +68,9 @@ function voucherTicket(v) {
 const HOW_TO_REDEEM = `<div style="background:${CREAM};border-radius:10px;padding:16px 18px;margin:22px 0 0;font-size:14px;line-height:1.7;">
   <strong style="display:block;margin-bottom:6px;">How to redeem</strong>
   Browse tours at <a href="https://www.ukbrewerytours.com/tours/" style="color:#b3701d;">ukbrewerytours.com/tours</a>,
-  then email <a href="mailto:info@ukbrewerytours.com" style="color:#b3701d;">info@ukbrewerytours.com</a>
+  then send your voucher code and preferred date via
+  <a href="https://www.ukbrewerytours.com/redeem/" style="color:#b3701d;">ukbrewerytours.com/redeem</a> —
+  or email <a href="mailto:info@ukbrewerytours.com" style="color:#b3701d;">info@ukbrewerytours.com</a>
   or message us on WhatsApp with your voucher code to book a date.
   <div style="margin-top:8px;color:${INK_SOFT};">Vouchers never expire and can be used across multiple bookings until the balance runs out.</div>
 </div>`;

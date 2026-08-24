@@ -12,9 +12,8 @@
 /help-desk/ /contact/ 301
 /ticket/ /contact/ 301
 /brewery-tours-craft-beer-tasting/ /tours/ 301
-/redeem/ /gift-vouchers/ 301
-/redeem/red-letter-days-buy-a-gift-vouchers/ /gift-vouchers/ 301
-/redeem-external-voucher/ /gift-vouchers/ 301
+/redeem/red-letter-days-buy-a-gift-vouchers/ /redeem/ 301
+/redeem-external-voucher/ /redeem/ 301
 /events/ /tours/ 301
 /events/categories/ /tours/ 301
 /events/tags/ /tours/ 301

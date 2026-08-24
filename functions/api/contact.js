@@ -75,7 +75,9 @@ export async function onRequestPost({ request, env }) {
   try {
     await sendEmail(env, {
       to: env.NOTIFY_EMAIL || 'info@ukbrewerytours.com',
-      subject: widget ? `Enquiry via ${widget.name} — ${name}` : `Website enquiry — ${name}`,
+      subject: widget ? `Enquiry via ${widget.name} — ${name}`
+        : page.startsWith('/redeem') ? `Voucher redemption request — ${name}`
+        : `Website enquiry — ${name}`,
       html: enquiryEmailHtml({ name, email, phone, message, page, widget, widgetOrigin }),
       replyTo: email,
     });
