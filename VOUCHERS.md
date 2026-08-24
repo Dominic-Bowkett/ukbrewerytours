@@ -114,6 +114,18 @@ buttons (home, gift vouchers, contact) open the same form with a blank amount.
 
 Tours with no price simply leave the amount empty for the buyer to fill in.
 
+## Recent-sales pop-up (social proof)
+
+A small toast in the bottom-left corner rotates the latest 5 paid sales
+("A customer purchased a £30 gift voucher · 2 days ago"). Data comes from
+`GET /api/recent-sales` (`functions/api/recent-sales.js`), which returns only
+face value, quantity and minutes-ago — no names, emails or codes. Pending and
+demo orders are excluded. The front-end is `assets/js/salespop.js` (injected
+site-wide by `build.js`, skipped on the demo page): clicking the toast opens
+the voucher modal, the × minimises it to a pill for 24 hours (localStorage
+`ubtSalesPopMin`), and the pill click brings it back. If there are no sales or
+the API fails, the pop-up simply never appears.
+
 ## Embeddable widgets — sell vouchers and take enquiries on OTHER websites
 
 **Admin → Voucher widgets** creates widgets you can paste into any site

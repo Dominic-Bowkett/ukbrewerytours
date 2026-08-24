@@ -1298,3 +1298,110 @@ details .a { padding: 0 0 20px; color: var(--ink-soft); font-size: .97rem; }
   .pay-title { font-size: 1.4rem; }
   .pay-amount { font-size: 2.1rem; padding: 16px; }
 }
+
+/* ============================================================
+   Recent-sales social-proof pop-up (bottom left)
+   ============================================================ */
+
+.salespop {
+  position: fixed;
+  left: 14px;
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  z-index: 150; /* above sticky bars (100), below the voucher modal (200) */
+}
+
+.salespop-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: min(320px, calc(100vw - 28px));
+  padding: 12px 34px 12px 14px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lift);
+  font-family: var(--font-body);
+  text-align: left;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(14px);
+  pointer-events: none;
+  transition: opacity .35s ease, transform .35s ease;
+}
+.salespop.on .salespop-card {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.salespop-ico {
+  flex: none;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  font-size: 1.25rem;
+  background: var(--amber-soft);
+  border-radius: 50%;
+}
+
+.salespop-msg {
+  display: block;
+  font-size: .89rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink);
+}
+.salespop-when {
+  display: block;
+  margin-top: 2px;
+  font-size: .78rem;
+  font-weight: 400;
+  color: var(--ink-soft);
+}
+
+.salespop-hide {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--ink-soft);
+  background: none;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .35s ease;
+}
+.salespop.on .salespop-hide { opacity: 1; pointer-events: auto; }
+.salespop-hide:hover { color: var(--ink); background: var(--mist); }
+
+.salespop-pill {
+  display: none;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  font-size: 1.25rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform .2s ease;
+}
+.salespop-pill:hover { transform: scale(1.08); }
+
+.salespop.min .salespop-card,
+.salespop.min .salespop-hide { display: none; }
+.salespop.min .salespop-pill { display: grid; }
+
+@media (prefers-reduced-motion: reduce) {
+  .salespop-card { transition: opacity .35s ease; transform: none; }
+  .salespop-pill { transition: none; }
+}
