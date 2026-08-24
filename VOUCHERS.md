@@ -203,6 +203,18 @@ the note. A voucher can be part-redeemed any number of times until it hits £0.
 dashes are optional when searching. The alphabet excludes `I`, `O`, `0` and `1`
 so codes are unambiguous over the phone.
 
+## Wrong delivery email / resending the voucher email
+
+If a buyer typo'd the recipient's address (or the email just never arrived):
+
+1. Search the code (or the buyer's name/email) and **View** it.
+2. In the **Delivery** panel, correct the email address and click
+   **Save & resend email**.
+
+The address is saved on the order and the voucher email is sent again to it —
+one email covering every code on that order, identical to the original. Works
+on any paid order; unpaid orders have nothing to send.
+
 ## Refunding a voucher
 
 Same screen, the red **Refund** panel below Redeem. Enter an amount (or
