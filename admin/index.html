@@ -373,6 +373,20 @@ async function openVoucher(code) {
         ${v.message ? `<div class="full"><span>Message</span><em>${esc(v.message)}</em></div>` : ''}
       </div>
 
+      ${v.status !== 'pending' ? `
+        <form class="redeem-form" id="resendForm">
+          <h3>Delivery <span class="sub">— fix the email address and resend the voucher</span></h3>
+          <div class="redeem-row">
+            <div class="field"><label for="demail">Delivery email</label>
+              <input id="demail" type="email" value="${esc(v.send_to_self ? v.purchaser_email : (v.recipient_email || ''))}" required></div>
+          </div>
+          <p class="error" id="resendError" hidden></p>
+          <div class="redeem-actions">
+            <button class="btn btn-primary" type="submit">Save &amp; resend email</button>
+          </div>
+          <p class="muted refund-hint">Sends the voucher email again to this address (it covers every code on the order). Change the address first to fix a typo.</p>
+        </form>` : ''}
+
       <h3 class="hist-title">Redemption history</h3>
       ${redemptions.length ? `<table class="hist"><tbody>${redemptions.map(r => `
         <tr><td>${dt(r.created_at)}</td><td><strong>−${money(r.amount_pence)}</strong></td>
@@ -409,6 +423,33 @@ async function openVoucher(code) {
       form.addEventListener('submit', e => { e.preventDefault(); doRedeem({ amount: document.getElementById('amt').value }); });
       document.getElementById('redeemFull').addEventListener('click', () => {
         if (confirm(`Redeem the full remaining ${money(v.balance_pence)}?`)) doRedeem({ full: true });
+      });
+    }
+
+    const sForm = document.getElementById('resendForm');
+    if (sForm) {
+      sForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('demail').value.trim();
+        const errEl = document.getElementById('resendError');
+        errEl.hidden = true;
+        if (!confirm(`Send the voucher email to ${email}?`)) return;
+        const btn = sForm.querySelector('button');
+        btn.disabled = true;
+        try {
+          const res = await api('/api/admin/resend', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: v.code, email }),
+          });
+          alert(`Voucher email sent to ${res.sent_to}.`);
+          await openVoucher(v.code);
+          load();
+        } catch (err) {
+          errEl.textContent = err.message;
+          errEl.hidden = false;
+          btn.disabled = false;
+        }
       });
     }
 
