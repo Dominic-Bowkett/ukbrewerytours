@@ -7,9 +7,9 @@
 
   var KEY = 'ubtSalesPopMin';        // epoch ms when minimised
   var MIN_FOR = 24 * 60 * 60 * 1000; // stay minimised for a day
-  var FIRST_DELAY = 4000;            // page settle → first toast
-  var SHOW_FOR = 7000;               // toast on screen
-  var GAP = 6000;                    // quiet gap between toasts
+  var FIRST_DELAY = 1500;            // page settle → first toast
+  var SHOW_FOR = 5000;               // toast on screen
+  var GAP = 2500;                    // quiet gap between toasts
 
   function minimisedAt() {
     try { return parseInt(localStorage.getItem(KEY), 10) || 0; } catch (e) { return 0; }

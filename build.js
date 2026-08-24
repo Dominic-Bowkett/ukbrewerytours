@@ -13,7 +13,7 @@ const OUT = path.join(ROOT, 'docs');
 const read = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 
 // Content hash of CSS + JS — appended as ?v= to bust browser/CDN caches on every change.
-const assetVer = crypto.createHash('md5').update(read('assets/css/style.css') + read('assets/js/main.js')).digest('hex').slice(0, 8);
+const assetVer = crypto.createHash('md5').update(read('assets/css/style.css') + read('assets/js/main.js') + read('assets/js/salespop.js')).digest('hex').slice(0, 8);
 
 const site = JSON.parse(read('content/site.json'));
 const tours = JSON.parse(read('content/tours.json'));
