@@ -1,9 +1,12 @@
 // POST /api/admin/resend — correct the delivery email on an order and resend
-// the voucher email. Body: { code, email? }
+// the voucher email. Body: { code, email? } or { code, copy_to }
 //
 // The email covers the whole order (one email lists every code on it), same as
 // the original send. Only paid orders qualify — pending orders have no live
 // codes to deliver.
+//
+// copy_to sends the same email to an internal address instead, subject-prefixed
+// "Copy:", WITHOUT touching the order — for checking what the customer received.
 
 import { normaliseCode } from '../../_lib/codes.js';
 import { sendEmail, voucherEmailHtml } from '../../_lib/email.js';
@@ -30,9 +33,14 @@ export async function onRequestPost({ request, env }) {
     return Response.json({ error: 'This order has not been paid for — there is nothing to send.' }, { status: 409 });
   }
 
+  const copyTo = String(body.copy_to || '').trim();
+  if (copyTo && (!isEmail(copyTo) || /[\r\n]/.test(copyTo))) {
+    return Response.json({ error: 'That does not look like a valid email address.' }, { status: 400 });
+  }
+
   // Optional new delivery address. send_to_self orders deliver to the
   // purchaser, so that is the field a typo lives in.
-  const newEmail = String(body.email || '').trim();
+  const newEmail = copyTo ? '' : String(body.email || '').trim();
   if (newEmail) {
     if (!isEmail(newEmail) || /[\r\n]/.test(newEmail)) {
       return Response.json({ error: 'That does not look like a valid email address.' }, { status: 400 });
@@ -55,12 +63,14 @@ export async function onRequestPost({ request, env }) {
   const token = await orderToken(order.id, env.ADMIN_SESSION_SECRET);
   const printUrl = `${origin}/my-vouchers/?order=${order.id}&t=${token}`;
 
+  const subject = order.send_to_self === 1
+    ? `Your UK Brewery Tours gift voucher${vouchers.length > 1 ? 's' : ''}`
+    : `${order.purchaser_name || 'Someone'} has sent you a UK Brewery Tours gift voucher`;
+
   try {
     await sendEmail(env, {
-      to: deliverTo,
-      subject: order.send_to_self === 1
-        ? `Your UK Brewery Tours gift voucher${vouchers.length > 1 ? 's' : ''}`
-        : `${order.purchaser_name || 'Someone'} has sent you a UK Brewery Tours gift voucher`,
+      to: copyTo || deliverTo,
+      subject: copyTo ? `Copy: ${subject}` : subject,
       html: voucherEmailHtml({ order, vouchers, printUrl }),
       replyTo: 'info@ukbrewerytours.com',
     });
@@ -71,7 +81,9 @@ export async function onRequestPost({ request, env }) {
   }
 
   // If the original delivery failed this also settles the webhook retry loop.
-  await env.DB.prepare('UPDATE orders SET email_sent=1 WHERE id=?').bind(order.id).run();
+  if (!copyTo) {
+    await env.DB.prepare('UPDATE orders SET email_sent=1 WHERE id=?').bind(order.id).run();
+  }
 
-  return Response.json({ ok: true, sent_to: deliverTo, codes: vouchers.length });
+  return Response.json({ ok: true, sent_to: copyTo || deliverTo, codes: vouchers.length });
 }

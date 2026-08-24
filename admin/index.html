@@ -383,8 +383,9 @@ async function openVoucher(code) {
           <p class="error" id="resendError" hidden></p>
           <div class="redeem-actions">
             <button class="btn btn-primary" type="submit">Save &amp; resend email</button>
+            <button class="btn btn-outline" type="button" id="sendCopy">Send a copy&hellip;</button>
           </div>
-          <p class="muted refund-hint">Sends the voucher email again to this address (it covers every code on the order). Change the address first to fix a typo.</p>
+          <p class="muted refund-hint">Sends the voucher email again to this address (it covers every code on the order). Change the address first to fix a typo. "Send a copy" emails it to you instead, without changing the order.</p>
         </form>` : ''}
 
       <h3 class="hist-title">Redemption history</h3>
@@ -428,6 +429,23 @@ async function openVoucher(code) {
 
     const sForm = document.getElementById('resendForm');
     if (sForm) {
+      document.getElementById('sendCopy').addEventListener('click', async () => {
+        const copyTo = prompt('Send a copy of the voucher email to:', 'info@ukbrewerytours.com');
+        if (!copyTo) return;
+        const errEl = document.getElementById('resendError');
+        errEl.hidden = true;
+        try {
+          const res = await api('/api/admin/resend', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: v.code, copy_to: copyTo.trim() }),
+          });
+          alert(`Copy sent to ${res.sent_to}. The order was not changed.`);
+        } catch (err) {
+          errEl.textContent = err.message;
+          errEl.hidden = false;
+        }
+      });
       sForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = document.getElementById('demail').value.trim();
