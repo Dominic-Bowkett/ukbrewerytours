@@ -348,7 +348,11 @@ const BREW_STOP = new Set('brewery breweries brewing brew co company ltd the and
 const distinctTokens = s => new Set((s || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(w => w.length >= 4 && !BREW_STOP.has(w)));
 const partnerTokensByCity = {};                  // city -> array of token Sets from affiliate partners
 const allExperiences = [];
+// Experiences flagged `retired: true` in content keep their on-site page (so old links and
+// search results land somewhere useful) but are dropped from every listing, filter and count.
+const retiredExperiences = [];
 for (const e of [...allGyg, ...allDmn, ...allViator, ...allDirect]) {
+  if (e.retired) { seenSlugs.add(e.slug); retiredExperiences.push(e); continue; }
   const canon = (e.url || '').split('?')[0].replace(/\/$/, '');
   if (ownBookingUrls.has(canon)) continue;      // same booking URL as one of our tours — skip
   const en = norm(e.title);
@@ -925,6 +929,69 @@ ${related.length ? `<section class="section band-dark">
   writePage(`tours/experiences/${t.slug}/index.html`, {
     title: `${t.title} | UK Brewery Tours`,
     description: (t.summary || t.description_md || '').replace(/\s+/g, ' ').slice(0, 158),
+    content, nav: 'tours', ogImage: img,
+    robots: 'noindex,follow',
+  });
+}
+
+/* ----- retired experience pages (no booking, points people at the city's other tours) ----- */
+
+for (const t of retiredExperiences) {
+  const src = SOURCES[t.source];
+  const direct = t.source === 'direct';
+  const img = expImage(t);
+  const guide = guideFor(t.city);
+  const cityUrl = guide ? `/tours/${guide.slug}/` : '/tours/';
+  const cityLabel = guide ? `See our other ${esc(t.city)} tours` : 'See all our tours';
+  const chips = [t.duration && `<span class="exp-chip">${ICONS.clock}${esc(t.duration)}</span>`,
+    `<span class="exp-chip">${ICONS.pin}${esc(direct ? t.location : t.city)}</span>`].filter(Boolean).join('');
+  const desc = mdToHtml(t.description_md || t.summary || '');
+  const related = (expByCity[t.city] || []).slice(0, 3);
+  const note = t.retired_note ? `<p>${esc(t.retired_note)}</p>` : '';
+
+  const content = `<section class="exp-hero" style="background-image:url('${img}')">
+  <div class="exp-hero-scrim"></div>
+  <div class="container">
+    <nav class="breadcrumbs city-crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a><span class="sep">/</span><a href="/tours/">Tours</a><span class="sep">/</span>${guide ? `<a href="${cityUrl}">${esc(t.city)}</a><span class="sep">/</span>` : ''}Experience
+    </nav>
+    <span class="partner-flag-lg retired">No longer operating</span>
+    <h1>${esc(t.title)}</h1>
+    <div class="exp-chips">${chips}</div>
+  </div>
+</section>
+<section class="section" style="padding-top:44px">
+  <div class="container product-top">
+    <div class="prose">
+      <div class="retired-notice" role="status">
+        <h2>This tour is no longer operating</h2>
+        <p>${esc(t.title)} has stopped running and can't be booked. The good news is that ${esc(t.city)} has plenty of other brewery tours, tastings and pub walks you can book right now.</p>
+        ${note}
+        <a class="btn btn-primary" href="${cityUrl}">${cityLabel} →</a>
+      </div>
+      <h2>What this tour was</h2>
+      ${desc}
+    </div>
+    <aside class="booking-card">
+      <p class="retired-tag">Not available to book</p>
+      <p>This experience is no longer running${direct ? '' : ` on ${esc(src.name)}`}. Browse what's on in ${esc(t.city)} instead, or contact us for a group booking.</p>
+      <a class="btn btn-primary btn-block" href="${cityUrl}">${cityLabel}</a>
+      <a class="btn btn-outline btn-block" href="/tours/">All UK tours</a>
+      <p class="note"><a href="/contact/">Contact us</a> if you'd booked this tour and need help.</p>
+    </aside>
+  </div>
+</section>
+${related.length ? `<section class="section band-dark">
+  <div class="container">
+    <div class="section-head"><span class="kicker">Still running in ${esc(t.city)}</span><h2>Other ${esc(t.city)} tours you can book</h2></div>
+    <div class="card-grid">${related.map(partnerCard).join('\n')}</div>
+    <p class="mt-3"><a class="btn btn-outline-light" href="${cityUrl}">${cityLabel}</a></p>
+  </div>
+</section>` : ''}`;
+
+  writePage(`tours/experiences/${t.slug}/index.html`, {
+    title: `${t.title} (no longer operating) | UK Brewery Tours`,
+    description: `${t.title} is no longer operating. See the other brewery tours, tastings and pub walks you can book in ${t.city}.`.slice(0, 158),
     content, nav: 'tours', ogImage: img,
     robots: 'noindex,follow',
   });

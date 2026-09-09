@@ -33,6 +33,7 @@
       "reviews": "2",
       "summary": "A two-hour guided tour of Manchester city-centre pubs exploring the city's drinking history and pub culture, finishing with a short pub quiz.",
       "slug": "manchester-pub-tour",
+      "retired": true,
       "image_url": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=395,height=400,dpr=2/tour_img/d67e7e251077a59b281113c0fb4cf25ecc19bb4b8d848299cac9389bdeb59d65.jpg",
       "description_md": "This guided walking tour explores Manchester's pub culture and drinking history, visiting a selection of classic pubs around the city centre. Along the way, your guide shares the origins of common drinking phrases, the stories behind pub names, and tales of notable figures linked to the venues. The tour runs for around two hours and ends with a lighthearted pub quiz with prizes.",
       "highlights": [
