@@ -200,8 +200,15 @@ const UBT_RE = /\bUBT[\s-]?[A-Z0-9]{4}[\s-]?[A-Z0-9]{4}\b/gi;
 
 /** Pieces of the "voucher code" field — "9TPJC + DDRV4" is two codes. */
 export function explicitCodes(field) {
-  const pieces = String(field || '').split(/[,+&/;|\n]|\band\b/i).map(s => s.trim()).filter(Boolean);
-  return [...new Set(pieces.map(norm).filter(c => c.length >= 4 && c.length <= 40))];
+  return [...new Set(explicitPieces(field).map(p => p.norm))];
+}
+
+/** The same pieces, keeping what the customer typed for display. */
+export function explicitPieces(field) {
+  const seen = new Set();
+  return String(field || '').split(/[,+&/;|\n]|\band\b/i)
+    .map(s => ({ typed: s.trim().toUpperCase().slice(0, 60), norm: norm(s) }))
+    .filter(p => p.norm.length >= 4 && p.norm.length <= 40 && !seen.has(p.norm) && seen.add(p.norm));
 }
 
 /**
@@ -286,6 +293,8 @@ export async function voucherCheck(env, enquiry, texts) {
     hit.add(m.code_norm);
     if (m.kind === 'ukbt') hit.add(norm(m.code).replace(/^UBT/, ''));
   }
-  const unmatched = explicitCodes(enquiry.voucher_code).filter(c => !hit.has(c) && !hit.has(c.replace(/^UBT/, '')));
+  const unmatched = explicitPieces(enquiry.voucher_code)
+    .filter(p => !hit.has(p.norm) && !hit.has(p.norm.replace(/^UBT/, '')))
+    .map(p => p.typed);
   return { matches, unmatched };
 }
