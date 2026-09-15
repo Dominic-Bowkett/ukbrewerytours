@@ -279,7 +279,7 @@ export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = ''
     clearTimeout(pollTimer);
     if (!token) return;
     var hidden = document.visibilityState === 'hidden';
-    var delay = hidden ? 120000 : (open ? 12000 : 60000);
+    var delay = hidden ? 120000 : (open ? 6000 : 45000);
     pollTimer = setTimeout(function () { load().then(schedule); }, delay);
   }
   document.addEventListener('visibilitychange', function () {

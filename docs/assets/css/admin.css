@@ -294,6 +294,31 @@ code.small { font-size: .78rem; }
 .st-waiting { background: #dfe7f1; color: #2f4a6b; }
 .st-closed { background: #e8e2d8; color: #6b5c4f; }
 
+.inbox-search { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+.inbox-search .chip-btn { white-space: nowrap; padding: 8px 11px; }
+.inbox-search .chip-btn.on { background: #e3efdb; border-color: #b9d3a8; color: #33502a; }
+
+/* live updates */
+.th-live { color: #33502a; font-weight: 600; }
+.th-live::before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #4caf50; margin-right: 5px; vertical-align: 1px; animation: livePulse 2s ease-in-out infinite; }
+@keyframes livePulse { 50% { opacity: .35; } }
+.tl-new .tl-body, .tl-new.tl-note { animation: tlFlash 2.6s ease-out; }
+@keyframes tlFlash { from { box-shadow: 0 0 0 3px rgba(224, 147, 47, .6); } to { box-shadow: 0 0 0 3px rgba(224, 147, 47, 0); } }
+.th-newpill {
+  position: sticky; bottom: 12px; display: flex; width: max-content; margin: 8px auto 0; z-index: 2;
+  border: 0; border-radius: 999px; background: var(--stout); color: var(--paper); font: inherit; font-size: .82rem; font-weight: 600;
+  padding: 7px 14px; cursor: pointer; box-shadow: 0 6px 16px rgba(32, 22, 17, .25);
+}
+.th-newpill[hidden], .ib-toast[hidden] { display: none; }
+.ib-toast {
+  position: fixed; right: 18px; bottom: 18px; z-index: 300; max-width: min(360px, calc(100vw - 36px));
+  background: var(--stout); color: var(--paper); border-radius: 12px; padding: 12px 14px; font-size: .88rem;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .3); cursor: pointer; line-height: 1.45;
+}
+.ib-toast strong { display: block; color: var(--amber); }
+.ib-toast span { display: block; opacity: .85; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .th-live::before, .tl-new .tl-body, .tl-new.tl-note { animation: none; } }
+
 .thread-empty { margin: auto; text-align: center; color: var(--ink-soft); padding: 40px 20px; }
 .thread-empty strong { display: block; color: var(--ink); font-size: 1.05rem; margin-bottom: 4px; }
 

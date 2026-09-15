@@ -31,7 +31,10 @@
           <select id="ibType" aria-label="Enquiry type"><option value="">All types</option></select>
           <select id="ibSite" aria-label="Website"><option value="">All websites</option></select>
         </div>
-        <input type="search" id="ibQ" placeholder="Search name, email, code or message…" aria-label="Search conversations">
+        <div class="inbox-search">
+          <input type="search" id="ibQ" placeholder="Search name, email, code or message…" aria-label="Search conversations">
+          <button type="button" class="chip-btn" id="ibNotify" hidden title="Get a browser notification when a customer writes, while this tab is in the background">🔕 Alerts off</button>
+        </div>
       </div>
       <ul class="inbox-list" id="ibList"><li class="muted pad">Loading…</li></ul>
       <div class="pager" id="ibPager" hidden><button class="btn btn-ghost btn-sm" id="ibPrev">← Newer</button><span id="ibPage"></span><button class="btn btn-ghost btn-sm" id="ibNext">Older →</button></div>
@@ -1311,7 +1314,8 @@ widgetModal.addEventListener('click', (e) => { if (e.target.closest('[data-close
 document.addEventListener('DOMContentLoaded', () => showTab(location.hash.slice(1) || 'inbox'));
 window.addEventListener('hashchange', () => showTab(location.hash.slice(1) || 'inbox'));
 </script>
-<script src="/admin/inbox.js?v=1" defer></script>
+<div class="ib-toast" id="ibToast" role="status" aria-live="polite" hidden></div>
+<script src="/admin/inbox.js?v=2" defer></script>
 <script src="/admin/imported.js?v=1" defer></script>
 </body>
 </html>

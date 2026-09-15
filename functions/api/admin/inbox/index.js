@@ -48,7 +48,13 @@ export async function onRequestGet({ request, env }) {
      ORDER BY COALESCE(e.last_message_at, e.created_at) DESC, e.id DESC
      LIMIT ? OFFSET ?`;
 
-  const [list, byStatus, byType, sites, unread] = await env.DB.batch([
+  // ?since=<server time from the previous response> also returns conversations a
+  // customer has written to since then, for the admin's new-message alerts.
+  const since = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(url.searchParams.get('since') || '')
+    ? url.searchParams.get('since') : null;
+
+  const [nowRow, list, byStatus, byType, sites, unread, recent] = await env.DB.batch([
+    env.DB.prepare("SELECT datetime('now') AS now"),
     env.DB.prepare(listSql).bind(...baseArgs, ...statusArgs, ...typeArgs, PAGE_SIZE + 1, (page - 1) * PAGE_SIZE),
     env.DB.prepare(`SELECT e.status, COUNT(*) AS n, SUM(e.unread) AS unread FROM enquiries e ${where(base, typeClause)} GROUP BY e.status`)
       .bind(...baseArgs, ...typeArgs),
@@ -56,6 +62,13 @@ export async function onRequestGet({ request, env }) {
       .bind(...baseArgs, ...statusArgs),
     env.DB.prepare('SELECT site, COUNT(*) AS n FROM enquiries GROUP BY site ORDER BY n DESC'),
     env.DB.prepare("SELECT COUNT(*) AS n FROM enquiries WHERE unread = 1 AND status != 'closed'"),
+    // >= and a client-side dedupe: timestamps are whole seconds.
+    env.DB.prepare(
+      `SELECT e.id, e.name, e.last_inbound_at,
+              (SELECT substr(body, 1, 140) FROM enquiry_messages m WHERE m.enquiry_id = e.id AND m.direction = 'in' ORDER BY m.id DESC LIMIT 1) AS snippet
+         FROM enquiries e WHERE ? IS NOT NULL AND e.last_inbound_at >= ?
+        ORDER BY e.last_inbound_at DESC LIMIT 5`,
+    ).bind(since, since),
   ]);
 
   const rows = list.results || [];
@@ -75,6 +88,8 @@ export async function onRequestGet({ request, env }) {
     },
     sites: (sites.results || []).map(s => ({ site: s.site, label: siteLabel(s.site), n: s.n })),
     unread: unread.results?.[0]?.n || 0,
+    server_now: nowRow.results?.[0]?.now || null,
+    recent_inbound: recent.results || [],
     labels: { types: TYPES, statuses: STATUSES },
   }, { headers: { 'Cache-Control': 'no-store' } });
 }

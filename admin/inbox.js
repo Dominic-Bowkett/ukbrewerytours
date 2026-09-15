@@ -20,6 +20,15 @@
   let currentThread = null;
   let composerMode = 'reply';
 
+  // Live updates: the open conversation is checked every THREAD_POLL ms, the list
+  // (and new-message alerts) every LIST_POLL ms — both only while the tab is visible.
+  const THREAD_POLL = 4000;
+  const LIST_POLL = 15000;
+  let lastMsgId = 0;
+  let threadPolling = false;
+  let since = null;                 // server time of the previous list response
+  const alerted = new Set();        // "<id>@<last_inbound_at>" already announced
+
   const $ = id => document.getElementById(id);
   const inboxEl = $('inbox');
   const listEl = $('ibList');
@@ -48,9 +57,11 @@
 
   async function loadList({ quiet = false } = {}) {
     const params = new URLSearchParams({ status: state.status, type: state.type, site: state.site, q: state.q, page: state.page });
+    if (since) params.set('since', since);
     if (!quiet) listEl.innerHTML = '<li class="muted pad">Loading…</li>';
     try {
       const d = await api('/api/admin/inbox?' + params);
+      announce(d);
       state.labels = d.labels;
       state.list = d.enquiries;
       loadedOnce = true;
@@ -97,6 +108,67 @@
     b.hidden = !n;
     b.textContent = n > 99 ? '99+' : String(n);
     document.title = (n ? `(${n}) ` : '') + 'Admin — UK Brewery Tours';
+  }
+
+  /* ---------------- new-message alerts ---------------- */
+
+  const notifySupported = 'Notification' in window && window.isSecureContext;
+  const notifyWanted = () => { try { return localStorage.getItem('ib_notify') === '1'; } catch { return false; } };
+  const notifyOn = () => notifySupported && notifyWanted() && Notification.permission === 'granted';
+
+  function syncNotifyButton() {
+    const btn = $('ibNotify');
+    if (!notifySupported) { btn.hidden = true; return; }
+    btn.hidden = false;
+    const on = notifyOn();
+    btn.classList.toggle('on', on);
+    btn.textContent = on ? '🔔 Alerts on' : Notification.permission === 'denied' ? '🔕 Alerts blocked' : '🔕 Alerts off';
+  }
+  $('ibNotify').addEventListener('click', async () => {
+    if (Notification.permission === 'denied') {
+      alert('Notifications are blocked for this site in your browser settings. Allow them there, then turn alerts on.');
+      return;
+    }
+    if (notifyOn()) {
+      try { localStorage.setItem('ib_notify', '0'); } catch { /* ignore */ }
+    } else {
+      const perm = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
+      try { localStorage.setItem('ib_notify', perm === 'granted' ? '1' : '0'); } catch { /* ignore */ }
+    }
+    syncNotifyButton();
+  });
+  syncNotifyButton();
+
+  // Called with every list response. The first response only sets the baseline,
+  // so opening the admin never replays old messages.
+  function announce(d) {
+    const first = since === null;
+    since = d.server_now || since;
+    for (const r of d.recent_inbound || []) {
+      const key = `${r.id}@${r.last_inbound_at}`;
+      if (alerted.has(key)) continue;
+      alerted.add(key);
+      if (first) continue;
+      const panelVisible = !document.querySelector('[data-panel="inbox"]').hidden;
+      const watching = document.visibilityState === 'visible' && panelVisible && state.current === r.id;
+      if (watching) continue;   // the live thread shows it
+      if (document.visibilityState !== 'visible' && notifyOn()) {
+        const n = new Notification(`New message from ${r.name}`, { body: r.snippet || '', tag: 'ib-' + r.id });
+        n.onclick = () => { window.focus(); location.hash = 'inbox/' + r.id; n.close(); };
+      } else if (document.visibilityState === 'visible') {
+        toast(r);
+      }
+    }
+  }
+
+  let toastTimer;
+  function toast(r) {
+    const el = $('ibToast');
+    el.innerHTML = `<strong>New message from ${esc(r.name)}</strong><span>${esc(r.snippet || '')}</span>`;
+    el.hidden = false;
+    el.onclick = () => { el.hidden = true; location.hash = 'inbox/' + r.id; };
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { el.hidden = true; }, 8000);
   }
 
   $('ibStatus').addEventListener('click', e => {
@@ -180,6 +252,7 @@
 
       <div class="th-scroll">
         <div class="th-meta">
+          <span class="th-live" title="New messages appear here automatically">Live</span>
           <span>#${e.id}</span>
           <span>${esc(e.site_label)} · ${esc(e.channel_label)}${e.widget_name ? ` (${esc(e.widget_name)})` : ''}</span>
           <span>Received ${esc(when(e.created_at))}</span>
@@ -196,6 +269,7 @@
         ${voucherCard(d)}
 
         <div class="timeline">${d.messages.map(m => timelineItem(m, e)).join('')}</div>
+        <button type="button" class="th-newpill" id="thNewPill" hidden>↓ New message</button>
       </div>
 
       <div class="th-composer${composerMode === 'note' ? ' note-mode' : ''}" id="thComposer">
@@ -239,6 +313,15 @@
     if (keepScroll) sc.scrollTop = prevScroll;
     else if (window.innerWidth > 900) sc.scrollTop = sc.scrollHeight;
     else window.scrollTo({ top: 0 });
+
+    lastMsgId = d.messages.reduce((max, m) => Math.max(max, m.id), 0);
+    $('thNewPill').addEventListener('click', () => {
+      const firstNew = threadEl.querySelector('.timeline .tl-unseen');
+      const target = firstNew || threadEl.querySelector('.timeline > :last-child');
+      if (target) reveal(target, firstNew ? 'center' : 'end');
+      clearUnseen();
+    });
+    sc.addEventListener('scroll', () => { if (isNearBottom()) clearUnseen(); }, { passive: true });
 
     $('thBack').addEventListener('click', () => { location.hash = 'inbox'; });
     threadEl.querySelectorAll('[data-th-status]').forEach(b => b.addEventListener('click', () => patch(e.id, { status: b.dataset.thStatus })));
@@ -506,21 +589,128 @@
     }
   };
 
-  // Refresh every minute while the tab is visible. The open conversation is only
-  // re-rendered when it has something new and nobody is typing in it.
+  /* ---------------- live conversation ---------------- */
+
+  // Is the end of the timeline on screen? The thread scrolls inside its pane on
+  // desktop and with the page on phones, so compare against whichever applies.
+  function isNearBottom() {
+    const last = threadEl.querySelector('.timeline > :last-child');
+    if (!last) return true;
+    const sc = threadEl.querySelector('.th-scroll');
+    const internal = sc && getComputedStyle(sc).overflowY !== 'visible' && sc.scrollHeight > sc.clientHeight;
+    const bottom = internal ? sc.getBoundingClientRect().bottom : window.innerHeight;
+    return last.getBoundingClientRect().top < bottom - 20;
+  }
+
+  // Bring a timeline item into view by scrolling only the thread pane on desktop
+  // (scrollIntoView would also nudge the whole admin page).
+  function reveal(node, where = 'end') {
+    const sc = threadEl.querySelector('.th-scroll');
+    const internal = sc && getComputedStyle(sc).overflowY !== 'visible' && sc.scrollHeight > sc.clientHeight;
+    if (!internal) { node.scrollIntoView({ behavior: 'smooth', block: where === 'end' ? 'nearest' : 'center' }); return; }
+    const offset = node.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop;
+    const top = where === 'end' ? offset + node.offsetHeight - sc.clientHeight + 24 : offset - sc.clientHeight / 3;
+    sc.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+  }
+
+  function clearUnseen() {
+    threadEl.querySelectorAll('.tl-unseen').forEach(el => el.classList.remove('tl-unseen'));
+    const pill = $('thNewPill');
+    if (pill) pill.hidden = true;
+  }
+
+  // Append what's new without re-rendering: the reply box, its draft, the caret
+  // and the scroll position all stay exactly as they are.
+  async function pollThread() {
+    const id = state.current;
+    if (threadPolling || !id || !currentThread || currentThread.enquiry.id !== id) return;
+    if (document.visibilityState !== 'visible' || document.querySelector('[data-panel="inbox"]').hidden) return;
+    threadPolling = true;
+    try {
+      const d = await api(`/api/admin/inbox/${id}/updates?after=${lastMsgId}&seen=1`);
+      if (state.current !== id || currentThread.enquiry.id !== id) return;
+      const e = currentThread.enquiry;
+
+      if (d.messages.length) {
+        const wasAtBottom = isNearBottom();
+        const timeline = threadEl.querySelector('.timeline');
+        const holder = document.createElement('div');
+        let firstNode = null;
+        for (const m of d.messages) {
+          if (m.id <= lastMsgId) continue;
+          holder.innerHTML = timelineItem(m, e);
+          const node = holder.firstElementChild;
+          node.classList.add('tl-new');
+          if (m.direction === 'in') node.classList.add('tl-unseen');
+          timeline.appendChild(node);
+          firstNode = firstNode || node;
+          currentThread.messages.push(m);
+          lastMsgId = Math.max(lastMsgId, m.id);
+        }
+        const inbound = d.messages.some(m => m.direction === 'in');
+        if (firstNode && wasAtBottom) {
+          reveal(timeline.lastElementChild, 'end');
+          clearUnseen();
+        } else if (inbound) {
+          $('thNewPill').hidden = false;
+        }
+        loadList({ quiet: true });
+      }
+
+      if (d.status !== e.status) {
+        e.status = d.status;
+        threadEl.querySelectorAll('[data-th-status]').forEach(b => b.classList.toggle('on', b.dataset.thStatus === d.status));
+      }
+      if (d.type !== e.type && document.activeElement?.id !== 'thType') {
+        e.type = d.type;
+        $('thType').value = d.type;
+      }
+
+      // A new customer message can add a voucher code. Refresh the card unless
+      // someone is mid-way through using it.
+      const card = threadEl.querySelector('.vcheck');
+      if (d.vouchers && card && !card.contains(document.activeElement)
+          && JSON.stringify(d.vouchers) !== JSON.stringify(currentThread.vouchers)) {
+        currentThread.vouchers = d.vouchers;
+        const holder = document.createElement('div');
+        holder.innerHTML = voucherCard(currentThread);
+        card.replaceWith(holder.firstElementChild);
+        bindVoucherCard(currentThread);
+      }
+    } catch { /* offline or signed out — the next tick tries again */ }
+    finally { threadPolling = false; }
+  }
+
+  setInterval(pollThread, THREAD_POLL);
+  // On phones the thread scrolls with the page rather than inside its pane.
+  window.addEventListener('scroll', () => {
+    const pill = $('thNewPill');
+    if (pill && !pill.hidden && isNearBottom()) clearUnseen();
+  }, { passive: true });
+
+  // The list, badge and new-message alerts. While hidden, browsers throttle
+  // timers to about once a minute anyway, which is plenty for a notification.
+  let lastListPoll = 0;
   setInterval(async () => {
-    if (document.visibilityState !== 'visible') return;
+    const visible = document.visibilityState === 'visible';
+    if (!visible && Date.now() - lastListPoll < 55000) return;
+    lastListPoll = Date.now();
     const panel = document.querySelector('[data-panel="inbox"]');
-    if (panel.hidden) {
-      try { const d = await api('/api/admin/inbox?status=open&page=1'); setBadge(d.unread); } catch { /* ignore */ }
+    if (panel.hidden || !loadedOnce) {
+      try {
+        const params = new URLSearchParams({ status: 'open', page: 1 });
+        if (since) params.set('since', since);
+        const d = await api('/api/admin/inbox?' + params);
+        announce(d);
+        setBadge(d.unread);
+      } catch { /* ignore */ }
       return;
     }
-    const before = state.list.find(x => x.id === state.current);
-    await loadList({ quiet: true });
-    const after = state.list.find(x => x.id === state.current);
-    const typing = document.activeElement && document.activeElement.id === 'thText';
-    if (state.current && before && after && after.message_count !== before.message_count && !typing) {
-      openThread(state.current, { keepScroll: true });
-    }
-  }, 60000);
+    if (document.activeElement?.id === 'ibQ') return;   // don't reshuffle the list mid-search
+    loadList({ quiet: true });
+  }, LIST_POLL);
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') { pollThread(); lastListPoll = 0; }
+  });
 })();
