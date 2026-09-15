@@ -60,7 +60,7 @@
 
   var CSS =
     '.ubtsp{position:fixed;left:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:999999;}' +
-    '.ubtsp-card{display:flex;align-items:center;gap:12px;width:min(320px,calc(100vw - 28px));' +
+    '.ubtsp-card{display:flex;align-items:center;gap:12px;width:min(320px,calc(100vw - 112px));' +
       'padding:12px 34px 12px 14px;background:#fffdf7;border:1px solid #e6dac4;border-radius:14px;' +
       'box-shadow:0 2px 4px rgba(36,26,18,.08),0 24px 48px -20px rgba(36,26,18,.32);' +
       'text-align:left;text-decoration:none;cursor:pointer;opacity:0;transform:translateY(14px);' +

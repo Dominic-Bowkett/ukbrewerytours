@@ -1339,7 +1339,8 @@ details .a { padding: 0 0 20px; color: var(--ink-soft); font-size: .97rem; }
   display: flex;
   align-items: center;
   gap: 12px;
-  width: min(320px, calc(100vw - 28px));
+  /* leaves the bottom-right corner to the live chat bubble on phones */
+  width: min(320px, calc(100vw - 112px));
   padding: 12px 34px 12px 14px;
   background: var(--paper);
   border: 1px solid var(--line);
