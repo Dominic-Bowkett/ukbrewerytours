@@ -349,8 +349,9 @@ code.small { font-size: .78rem; }
 .vcheck-head h3 { font-size: .95rem; }
 .vcheck-head form { display: flex; gap: 6px; }
 .vcheck-head input { padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; font-size: .85rem; width: 170px; text-transform: uppercase; }
-.vc-card { background: #fff; border-radius: 10px; padding: 12px 14px; margin-top: 8px; border-left: 4px solid #33502a; }
-.vc-card.bad { border-left-color: #b3261e; }
+/* State is carried by the status pill; the card border only tints to match. */
+.vc-card { background: #fff; border-radius: 10px; padding: 12px 14px; margin-top: 8px; border: 1px solid #d6e3cc; }
+.vc-card.bad { border-color: #e6b7ae; background: #fffbfa; }
 .vc-top { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .vc-top code { font-size: 1.02rem; font-weight: 700; letter-spacing: .5px; }
 .vc-nums { margin: 6px 0 2px; font-size: .92rem; }
@@ -361,7 +362,7 @@ code.small { font-size: .78rem; }
 .vc-redeem input { padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; font-size: .85rem; }
 .vc-redeem input[type="number"] { width: 110px; }
 .vc-redeem input[type="text"] { flex: 1; min-width: 160px; }
-.vc-miss { background: #fff; border-radius: 10px; padding: 10px 14px; margin-top: 8px; font-size: .88rem; border-left: 4px solid #b3261e; }
+.vc-miss { background: #fffbfa; border-radius: 10px; padding: 10px 14px; margin-top: 8px; font-size: .88rem; border: 1px solid #e6b7ae; }
 .vc-none { font-size: .86rem; color: var(--ink-soft); }
 .vc-msg { font-size: .85rem; margin-top: 6px; }
 
