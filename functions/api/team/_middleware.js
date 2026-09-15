@@ -39,6 +39,11 @@ const PUBLIC = new Set(['/api/team/login', '/api/team/logout']);
 // completable.
 const ALLOWED_WHEN_BLOCKED = new Set(['/api/team/me', '/api/team/password']);
 
+// The shared inbox moves no money, so a member with no Stripe account (or one
+// that cannot currently charge) still answers their conversations. It has its
+// own gate instead: inbox_access = 1.
+const INBOX_PREFIX = '/api/team/inbox';
+
 const SECURITY_HEADERS = {
   'Cache-Control': 'no-store',
   'X-Content-Type-Options': 'nosniff',
@@ -103,7 +108,8 @@ export async function onRequest(ctx) {
               stripe_account_id, stripe_account_label, stripe_charges_enabled,
               stripe_card_payments, stripe_platform_payments, stripe_account_state,
               stripe_account_checked_at, deauthorized_at,
-              fee_bps, active, session_epoch, must_change_password, last_login_at
+              fee_bps, active, session_epoch, must_change_password, last_login_at,
+              inbox_access, inbox_from_email, inbox_from_name
          FROM team_members
         WHERE id = ?`,
     ).bind(session.teamMemberId).first();
@@ -133,7 +139,11 @@ export async function onRequest(ctx) {
   // whose account has been restricted or disconnected finds out before they have
   // written and scheduled a request, instead of a client discovering it at the
   // moment of payment.
-  if (!isChargeReady(member) && !ALLOWED_WHEN_BLOCKED.has(path)) {
+  if (path === INBOX_PREFIX || path.startsWith(INBOX_PREFIX + '/')) {
+    if (member.inbox_access !== 1) {
+      return json({ error: 'You do not have access to the shared inbox.', code: 'no_inbox_access' }, 403);
+    }
+  } else if (!isChargeReady(member) && !ALLOWED_WHEN_BLOCKED.has(path)) {
     console.warn('team gate: not charge-ready', member.id, member.stripe_account_state, member.stripe_charges_enabled);
     return json({
       error: 'Your Stripe account cannot currently accept payments. Please contact UK Brewery Tours.',

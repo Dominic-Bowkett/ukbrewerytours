@@ -32,6 +32,8 @@ export async function onRequestGet({ env }) {
   const { results } = await env.DB.prepare(`
     SELECT m.id, m.email, m.name, m.stripe_account_id, m.fee_bps, m.active,
            m.created_at, m.last_login_at, m.stripe_charges_enabled,
+           m.inbox_access, m.inbox_from_email, m.inbox_from_name,
+           (SELECT COUNT(*) FROM enquiries e WHERE e.assigned_to = m.id AND e.status != 'closed') AS open_conversations,
            (SELECT COUNT(*) FROM payment_requests r WHERE r.team_member_id = m.id) AS request_count,
            (SELECT COALESCE(SUM(amount_paid_pence), 0) FROM payment_requests r
              WHERE r.team_member_id = m.id AND r.status = 'paid') AS paid_pence
@@ -61,6 +63,46 @@ export async function onRequestPost({ request, env }) {
 
   if (!name) return Response.json({ error: 'Enter the team member’s name.' }, { status: 400 });
   if (!isEmail(email)) return Response.json({ error: 'Enter a valid email address.' }, { status: 400 });
+
+  // Inbox-only member: answers assigned conversations, takes no payments, so no
+  // Stripe account is involved. They see nothing but what the admin assigns them.
+  if (body.kind === 'inbox') {
+    const fromEmail = clean(body.inbox_from_email, 200).toLowerCase() || email;
+    const fromName = clean(body.inbox_from_name, 100) || name;
+    if (!isEmail(fromEmail)) return Response.json({ error: 'Enter a valid “replies come from” address.' }, { status: 400 });
+
+    const configProblem = teamAuthConfigError(env);
+    if (configProblem) return Response.json({ error: `Team auth is not configured: ${configProblem}` }, { status: 503 });
+
+    const password = generatePassword();
+    const saltBytes = new Uint8Array(16);
+    crypto.getRandomValues(saltBytes);
+    const salt = [...saltBytes].map(b => b.toString(16).padStart(2, '0')).join('');
+    const hash = await hashTeamPassword(password, salt, env);
+    const id = crypto.randomUUID();
+
+    try {
+      await env.DB.prepare(`
+        INSERT INTO team_members (id, email, name, password_hash, password_salt, iterations, algo,
+                                  active, must_change_password, inbox_access, inbox_from_email, inbox_from_name)
+        VALUES (?,?,?,?,?,?,?,1,?,1,?,?)`)
+        .bind(id, email, name, hash, salt, TEAM_ITERATIONS, ALGO_PEPPERED,
+              body.must_change_password === false ? 0 : 1, fromEmail, fromName).run();
+    } catch (err) {
+      if (String(err.message || '').includes('UNIQUE')) {
+        return Response.json({ error: 'A team member with that email already exists.' }, { status: 409 });
+      }
+      throw err;
+    }
+
+    return Response.json({
+      ok: true,
+      member: { id, email, name, inbox_access: 1, inbox_from_email: fromEmail, inbox_from_name: fromName },
+      password,
+      notice: 'Save this password now — it is not stored in plain text and cannot be shown again.',
+    });
+  }
+
   if (!/^acct_[A-Za-z0-9]+$/.test(accountId)) {
     return Response.json({ error: 'Choose a Stripe connected account.' }, { status: 400 });
   }

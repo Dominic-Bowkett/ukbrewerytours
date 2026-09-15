@@ -4,8 +4,9 @@
 //   DELETE  remove a conversation outright (spam).
 
 import {
-  TYPES, STATUSES, CHANNELS, FIELD_LABELS, siteLabel, brandFor, threadUrl, voucherCheck, logEvent,
+  TYPES, STATUSES, CHANNELS, FIELD_LABELS, siteLabel, brandFor, threadUrl, voucherCheck, logEvent, teamUrl,
 } from '../../../_lib/inbox.js';
+import { sendEmail, assignmentEmailHtml } from '../../../_lib/email.js';
 
 async function findEnquiry(env, id) {
   if (!/^\d+$/.test(String(id))) return null;
@@ -40,6 +41,12 @@ export async function onRequestGet({ params, env }) {
     widgetName = w?.name || null;
   }
 
+  let assigneeName = null;
+  if (enquiry.assigned_to) {
+    const m = await env.DB.prepare('SELECT name FROM team_members WHERE id = ?').bind(enquiry.assigned_to).first();
+    assigneeName = m?.name || null;
+  }
+
   const { ip, token, ...safe } = enquiry;
   return Response.json({
     enquiry: {
@@ -50,6 +57,7 @@ export async function onRequestGet({ params, env }) {
       brand: brandFor(enquiry.site),
       channel_label: CHANNELS[enquiry.channel] || enquiry.channel,
       widget_name: widgetName,
+      assignee_name: assigneeName,
       thread_url: threadUrl(token),
     },
     messages: messages || [],
@@ -87,9 +95,54 @@ export async function onRequestPatch({ params, request, env, data }) {
     args.push(body.unread ? 1 : 0);
   }
 
+  // Assignment. null hands it back to the admin; otherwise it must be an active
+  // member with inbox access, who then sees this conversation and nothing else.
+  let newOwner = null;
+  if (body.assigned_to !== undefined && (body.assigned_to || null) !== (enquiry.assigned_to || null)) {
+    if (body.assigned_to) {
+      newOwner = await env.DB.prepare(
+        'SELECT id, name, email, active, inbox_access FROM team_members WHERE id = ?',
+      ).bind(String(body.assigned_to)).first();
+      if (!newOwner || newOwner.active !== 1 || newOwner.inbox_access !== 1) {
+        return Response.json({ error: 'That team member cannot take conversations.' }, { status: 400 });
+      }
+      sets.push('assigned_to = ?', "assigned_at = datetime('now')", 'assigned_by = ?');
+      args.push(newOwner.id, who);
+      events.push(`Assigned to ${newOwner.name}`);
+    } else {
+      sets.push('assigned_to = NULL', 'assigned_at = NULL', 'assigned_by = ?');
+      args.push(who);
+      events.push('Unassigned — back to the admin inbox');
+    }
+    // Alert them next time the customer writes, even if we alerted recently.
+    sets.push('alerted_at = NULL');
+  }
+
   if (sets.length) {
     await env.DB.prepare(`UPDATE enquiries SET ${sets.join(', ')} WHERE id = ?`).bind(...args, enquiry.id).run();
     for (const e of events) await logEvent(env, enquiry.id, e, who);
+  }
+
+  if (newOwner && env.RESEND_API_KEY) {
+    try {
+      const last = await env.DB.prepare(
+        "SELECT body FROM enquiry_messages WHERE enquiry_id = ? AND direction = 'in' ORDER BY id DESC LIMIT 1",
+      ).bind(enquiry.id).first();
+      await sendEmail(env, {
+        to: newOwner.email,
+        subject: `Assigned to you: ${TYPES[body.type || enquiry.type] || 'Enquiry'} — ${enquiry.name}`,
+        html: assignmentEmailHtml({
+          enquiry,
+          typeLabel: TYPES[body.type || enquiry.type] || 'Enquiry',
+          siteName: siteLabel(enquiry.site),
+          link: teamUrl(enquiry.id),
+          body: last?.body || enquiry.message,
+          assignedBy: who,
+        }),
+      });
+    } catch (err) {
+      console.error('assignment email failed', err);
+    }
   }
 
   return Response.json({ ok: true });

@@ -30,6 +30,8 @@
         <div class="inbox-filters">
           <select id="ibType" aria-label="Enquiry type"><option value="">All types</option></select>
           <select id="ibSite" aria-label="Website"><option value="">All websites</option></select>
+          <select id="ibAssignee" aria-label="Assigned to"><option value="">Anyone</option><option value="none">Unassigned</option></select>
+          <button type="button" class="chip-btn" id="ibTeam" title="Who can be given conversations">Team access</button>
         </div>
         <div class="inbox-search">
           <input type="search" id="ibQ" placeholder="Search name, email, code or message…" aria-label="Search conversations">
@@ -278,6 +280,15 @@
   <div class="modal-panel" role="dialog" aria-modal="true">
     <button class="modal-close" data-close aria-label="Close">&times;</button>
     <div id="widgetBody"></div>
+  </div>
+</div>
+
+<!-- Who can be assigned conversations -->
+<div class="modal" id="teamInboxModal" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-panel" role="dialog" aria-modal="true">
+    <button class="modal-close" data-close aria-label="Close">&times;</button>
+    <div id="teamInboxBody"></div>
   </div>
 </div>
 

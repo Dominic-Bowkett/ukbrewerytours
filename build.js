@@ -487,6 +487,32 @@ fs.copyFileSync(path.join(ROOT, 'embed', 'voucher.js'), path.join(OUT, 'embed', 
 /* team payments — standalone internal UI, same treatment as admin */
 if (fs.existsSync(path.join(ROOT, 'team'))) {
   fs.cpSync(path.join(ROOT, 'team'), path.join(OUT, 'team'), { recursive: true });
+
+// Admin build stamp. Static assets get a 4-hour browser cache, and the admin is a
+// page people leave open for hours, so: every admin asset link is versioned by a
+// hash of the admin files, and /admin/version.json lets an open page notice a
+// newer deploy and offer a reload (admin/inbox.js).
+{
+  const stampFiles = [
+    'admin/index.html', 'admin/login.html', 'admin/inbox.js', 'admin/imported.js',
+    'team/index.html', 'team/inbox.js', 'assets/css/admin.css',
+  ].filter(f => fs.existsSync(path.join(ROOT, f)));
+  const adminVer = crypto.createHash('md5').update(stampFiles.map(read).join('')).digest('hex').slice(0, 10);
+  const stamp = (dir, pages) => {
+    for (const page of pages) {
+      const file = path.join(OUT, dir, page);
+      if (!fs.existsSync(file)) continue;
+      const html = fs.readFileSync(file, 'utf8')
+        .replace(/(\/(?:admin|team)\/(?:inbox|imported)\.js|\/assets\/css\/admin\.css)(\?v=[\w-]+)?"/g, `$1?v=${adminVer}"`)
+        .replace('<head>', `<head>\n<meta name="admin-build" content="${adminVer}">`);
+      fs.writeFileSync(file, html);
+    }
+    fs.writeFileSync(path.join(OUT, dir, 'version.json'), JSON.stringify({ build: adminVer }) + '\n');
+  };
+  stamp('admin', ['index.html', 'login.html']);
+  if (fs.existsSync(path.join(OUT, 'team'))) stamp('team', ['index.html', 'login.html', 'password.html']);
+}
+
 }
 
 // Cloudflare Pages: only these prefixes go through Functions, so the ~200 static

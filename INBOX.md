@@ -45,6 +45,33 @@ All of them post to `POST /api/contact` (first message) and `POST /api/thread`
 - **Delete (spam)** removes the conversation permanently — close real ones instead.
 - The list refreshes every minute; the Inbox tab badge = unread open conversations.
 
+## Assigning conversations to team members
+
+The admin sees everything. A team member sees **only** what is assigned to them.
+
+- **Give someone access:** Inbox → **Team access** → fill in name, login email and the
+  address their replies go out from → a password is shown **once**. They sign in at
+  `/team/`, are asked to set their own password, and land on **My messages**.
+  (An inbox-only member has no Stripe account, so the Payments tab never appears.)
+- **Assign:** open a conversation → the dropdown in the header (`Assign to …`). They get
+  an email with a link straight to it, and it shows in their portal. Every assignment,
+  reassignment and hand-back is logged on the timeline.
+- **Alerts follow the assignment:** once assigned, new customer messages alert the
+  assignee instead of `ALERT_EMAIL`. Unassigned conversations still alert the admin.
+- **Their replies** go out from their own `inbox_from_email` (e.g. london@ukbrewerytours.com)
+  with Reply-To the same; the admin's replies still go from info@. Everything is saved
+  on the one conversation, so the admin sees exactly what the customer was told.
+- **They can:** reply, add internal notes, change status, and see the voucher check
+  (read-only). **They cannot:** see anything unassigned or assigned to someone else,
+  assign, delete, redeem vouchers, or reach any admin route (`/api/admin/*` → 401).
+- **Take it back:** set the dropdown to "Not assigned". **Remove access:** Team access →
+  Remove access — their session is cut immediately (`session_epoch` bump) and any
+  conversations they held stay put for you to reassign.
+
+Scope is enforced server-side: every `/api/team/inbox*` query binds `assigned_to` to the
+session's member id (`functions/api/team/inbox/*`), and the team gate additionally
+requires `inbox_access = 1`. There is no parameter that widens it.
+
 ## Voucher check
 
 Each conversation is scanned for codes: the explicit voucher code field (split on
@@ -104,10 +131,25 @@ To bring email replies into conversations: route a subdomain (e.g.
 `functions/_lib/inbox.js` switches every Reply-To over. Do NOT enable Cloudflare
 Email Routing on the apex: its MX records are Google Workspace's.
 
+## Live updates
+
+The open conversation polls `GET /api/admin/inbox/:id/updates?after=<id>&seen=1` every 4s
+(20s while the tab is hidden — a covered window counts as hidden) and **appends** new
+messages: the reply draft, caret and scroll position are never touched. Scrolled up, a
+"New message" button appears instead of jumping. The list, counts and badge refresh every
+15s; `?since=<server_now>` returns `recent_inbound`, which drives the in-page toast and the
+optional browser notifications (bell button next to the search box). Drafts are kept per
+conversation in localStorage. `build.js` stamps `/admin/` and `/team/` with a hash of their
+files (`<meta name="admin-build">` + `version.json`), so a page left open across a deploy
+offers a **Reload** bar rather than quietly running old code.
+
 ## Files
 
 - `migrations/0011_inbox.sql` — inbox columns, `enquiry_messages`, `imported_vouchers`
   (+ redemptions), backfill (old enquiries arrive closed and read)
+- `migrations/0012_inbox_assignment.sql` — `enquiries.assigned_to/at/by`,
+  `team_members.inbox_access/inbox_from_email/inbox_from_name`
+- `functions/api/team/inbox/*` — the team member's scoped API; `team/inbox.js` its UI
 - `functions/_lib/inbox.js` — types/statuses, site detection, create/append, alerts, code matching
 - `functions/_lib/chat-ui.js` — chat UI (frame + `/messages/` page)
 - `functions/api/contact.js`, `functions/api/thread.js` — public endpoints

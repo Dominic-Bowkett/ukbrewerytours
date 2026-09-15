@@ -15,7 +15,7 @@
   const VSTATUS = { active: 'Unused', partially_redeemed: 'Part-used', redeemed: 'Fully used', pending: 'Unpaid', void: 'Void', refunded: 'Refunded' };
   const CHANNEL_SHORT = { form: 'form', widget: 'embedded form', chat: 'live chat', web: 'messages page', email: 'email' };
 
-  const state = { status: 'open', type: '', site: '', q: '', page: 1, current: null, labels: null, list: [] };
+  const state = { status: 'open', type: '', site: '', assignee: '', q: '', page: 1, current: null, labels: null, list: [], team: [] };
   let loadedOnce = false;
   let currentThread = null;
   let composerMode = 'reply';
@@ -56,7 +56,7 @@
   /* ---------------- list ---------------- */
 
   async function loadList({ quiet = false } = {}) {
-    const params = new URLSearchParams({ status: state.status, type: state.type, site: state.site, q: state.q, page: state.page });
+    const params = new URLSearchParams({ status: state.status, type: state.type, site: state.site, assignee: state.assignee, q: state.q, page: state.page });
     if (since) params.set('since', since);
     if (!quiet) listEl.innerHTML = '<li class="muted pad">Loading…</li>';
     try {
@@ -81,6 +81,12 @@
         .map(s => `<option value="${esc(s.site)}">${esc(s.label)}</option>`).join('');
       siteSel.value = state.site;
 
+      state.team = d.team || [];
+      const ownerSel = $('ibAssignee');
+      ownerSel.innerHTML = '<option value="">Anyone</option><option value="none">Unassigned</option>'
+        + state.team.map(t => `<option value="${esc(t.id)}">${esc(t.name)}${t.open_count ? ` (${t.open_count})` : ''}</option>`).join('');
+      ownerSel.value = state.assignee;
+
       listEl.innerHTML = d.enquiries.length ? d.enquiries.map(e => `
         <li class="ib-item${e.unread ? ' unread' : ''}${state.current === e.id ? ' active' : ''}" data-ib="${e.id}" tabindex="0">
           <div class="ib-row1"><span class="ib-name">${esc(e.name)}</span><time title="${esc(when(e.last_message_at))}">${ago(e.last_message_at || e.created_at)}</time></div>
@@ -88,10 +94,14 @@
             <span class="type-pill type-${esc(e.type)}">${esc(typeLabel(e.type))}</span>
             ${state.status === 'open' || state.status === 'all' ? `<span class="st-pill st-${esc(e.status)}">${esc(statusLabel(e.status))}</span>` : ''}
             <span class="ib-site">${esc(e.site_label)}${e.channel === 'chat' ? ' · chat' : ''}</span>
+            ${e.assignee_name ? `<span class="ib-owner">→ ${esc(e.assignee_name)}</span>` : ''}
           </div>
           <div class="ib-snippet">${e.last_direction === 'out' ? '<strong>You:</strong> ' : ''}${esc(e.snippet || '')}</div>
         </li>`).join('')
         : `<li class="muted pad">${state.q || state.type || state.site ? 'Nothing matches those filters.' : state.status === 'open' ? 'Inbox zero — nothing open. 🍺' : 'No conversations here.'}</li>`;
+
+      // The list just refreshed — make sure the open conversation is as current as it is.
+      if (state.current) setTimeout(pollThread, 0);
 
       $('ibPager').hidden = state.page <= 1 && !d.hasMore;
       $('ibPage').textContent = 'Page ' + state.page;
@@ -178,6 +188,7 @@
   });
   $('ibType').addEventListener('change', e => { state.type = e.target.value; state.page = 1; loadList(); });
   $('ibSite').addEventListener('change', e => { state.site = e.target.value; state.page = 1; loadList(); });
+  $('ibAssignee').addEventListener('change', e => { state.assignee = e.target.value; state.page = 1; loadList(); });
   let qTimer;
   $('ibQ').addEventListener('input', e => {
     clearTimeout(qTimer);
@@ -192,6 +203,100 @@
     if (e.key !== 'Enter') return;
     const li = e.target.closest('[data-ib]'); if (li) go(li.dataset.ib);
   });
+
+  /* ---------------- who can be given conversations ---------------- */
+
+  const teamModal = $('teamInboxModal');
+  const teamBody = $('teamInboxBody');
+  teamModal.addEventListener('click', e => { if (e.target.closest('[data-close]')) teamModal.hidden = true; });
+
+  async function openTeamManager() {
+    teamModal.hidden = false;
+    teamBody.innerHTML = '<p class="muted pad">Loading…</p>';
+    let members = [];
+    try {
+      members = (await api('/api/admin/team')).members || [];
+    } catch (err) {
+      teamBody.innerHTML = `<p class="pad error">${esc(err.message)}</p>`;
+      return;
+    }
+    const inboxers = members.filter(m => m.inbox_access === 1);
+
+    teamBody.innerHTML = `
+      <h2 style="margin-bottom:6px">Team access to messages</h2>
+      <p class="muted" style="margin-bottom:18px">
+        A teammate signs in at <strong>ukbrewerytours.com/team/</strong> and sees <strong>only</strong> the conversations you
+        assign to them — never yours, never each other's. Their replies go out from their own address. You keep seeing everything.
+      </p>
+      ${inboxers.length ? `<table class="hist"><tbody>${inboxers.map(m => `
+        <tr>
+          <td><strong>${esc(m.name)}</strong><br><span class="muted">${esc(m.email)}</span></td>
+          <td class="muted">replies from<br>${esc(m.inbox_from_email || m.email)}</td>
+          <td class="muted">${m.open_conversations || 0} open</td>
+          <td><span class="pill pill-${m.active ? 'active' : 'pending'}">${m.active ? 'Active' : 'Disabled'}</span></td>
+          <td><button class="btn btn-ghost btn-sm" data-revoke="${esc(m.id)}" data-name="${esc(m.name)}">Remove access</button></td>
+        </tr>`).join('')}</tbody></table>`
+        : '<p class="muted">No one has access to messages yet.</p>'}
+
+      <form class="redeem-form" id="teamAddForm">
+        <h3>Give someone access</h3>
+        <div class="redeem-row">
+          <div class="field"><label for="ti-name">Name <span class="muted">(shown on the assignment)</span></label>
+            <input id="ti-name" type="text" required placeholder="e.g. London team"></div>
+          <div class="field"><label for="ti-email">Their login email</label>
+            <input id="ti-email" type="email" required placeholder="london@ukbrewerytours.com"></div>
+        </div>
+        <div class="field" style="margin-top:12px"><label for="ti-from">Replies to customers come from</label>
+          <input id="ti-from" type="email" placeholder="Same as the login email">
+          <p class="muted" style="font-size:.8rem;margin-top:6px">Must be an address on a domain we send from (ukbrewerytours.com). For customers to be able to reply to it, it also needs a real mailbox or alias.</p></div>
+        <p class="error" id="teamAddError" hidden></p>
+        <div class="redeem-actions"><button class="btn btn-primary" type="submit">Create login</button></div>
+      </form>`;
+
+    teamBody.querySelectorAll('[data-revoke]').forEach(b => b.addEventListener('click', async () => {
+      if (!confirm(`Remove ${b.dataset.name}'s access to messages?\n\nThey are signed out immediately. Conversations assigned to them stay assigned until you reassign them.`)) return;
+      try {
+        await api('/api/admin/team/' + encodeURIComponent(b.dataset.revoke), {
+          method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ inbox_access: false }),
+        });
+        openTeamManager();
+        loadList({ quiet: true });
+      } catch (err) { alert(err.message); }
+    }));
+
+    $('teamAddForm').addEventListener('submit', async ev => {
+      ev.preventDefault();
+      const errEl = $('teamAddError');
+      errEl.hidden = true;
+      const btn = ev.target.querySelector('button');
+      btn.disabled = true; btn.textContent = 'Creating…';
+      try {
+        const res = await api('/api/admin/team', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            kind: 'inbox',
+            name: $('ti-name').value,
+            email: $('ti-email').value,
+            inbox_from_email: $('ti-from').value,
+            inbox_from_name: $('ti-name').value,
+          }),
+        });
+        teamBody.innerHTML = `
+          <h2 style="margin-bottom:14px">Login created for ${esc(res.member.name)}</h2>
+          <div class="balance-box"><div class="hl full-width">
+            <span>Password — shown once</span>
+            <strong style="font-family:ui-monospace,Consolas,monospace;font-size:1.15rem">${esc(res.password)}</strong>
+          </div></div>
+          <p class="muted" style="margin-top:16px">${esc(res.notice)} They sign in at ukbrewerytours.com/team/ with <strong>${esc(res.member.email)}</strong> and will be asked to set their own password.</p>
+          <div class="redeem-actions"><button class="btn btn-primary" data-close type="button">Done</button></div>`;
+        loadList({ quiet: true });
+      } catch (err) {
+        errEl.textContent = err.message; errEl.hidden = false;
+        btn.disabled = false; btn.textContent = 'Create login';
+      }
+    });
+  }
+  $('ibTeam').addEventListener('click', openTeamManager);
 
   /* ---------------- conversation ---------------- */
 
@@ -247,6 +352,10 @@
           <select id="thType" aria-label="Enquiry type">
             ${Object.entries(d.labels.types).map(([k, v]) => `<option value="${k}" ${e.type === k ? 'selected' : ''}>${esc(v)}</option>`).join('')}
           </select>
+          <select id="thAssign" aria-label="Assigned to" title="Hand this conversation to a team member. They see only what is assigned to them.">
+            <option value="">Not assigned — you handle it</option>
+            ${state.team.map(t => `<option value="${esc(t.id)}" ${e.assigned_to === t.id ? 'selected' : ''}>Assign to ${esc(t.name)}</option>`).join('')}
+          </select>
         </div>
       </div>
 
@@ -257,6 +366,7 @@
           <span>${esc(e.site_label)} · ${esc(e.channel_label)}${e.widget_name ? ` (${esc(e.widget_name)})` : ''}</span>
           <span>Received ${esc(when(e.created_at))}</span>
           ${e.page ? `<span>From ${/^https?:/.test(e.page) ? `<a href="${esc(e.page)}" target="_blank" rel="noopener">${esc(e.page.replace(/^https?:\/\/(www\.)?/, ''))}</a>` : esc(e.page)}</span>` : ''}
+          ${e.assignee_name ? `<span class="ib-owner">Assigned to ${esc(e.assignee_name)}</span>` : ''}
           <a href="${esc(e.thread_url)}" target="_blank" rel="noopener" title="The page the customer sees">Customer's view ↗</a>
           <button type="button" class="btn btn-ghost btn-sm" id="thDelete" style="padding:0 6px;font-size:.78rem">Delete (spam)</button>
         </div>
@@ -326,6 +436,15 @@
     $('thBack').addEventListener('click', () => { location.hash = 'inbox'; });
     threadEl.querySelectorAll('[data-th-status]').forEach(b => b.addEventListener('click', () => patch(e.id, { status: b.dataset.thStatus })));
     $('thType').addEventListener('change', ev => patch(e.id, { type: ev.target.value }));
+    $('thAssign').addEventListener('change', ev => {
+      const to = ev.target.value;
+      const who = state.team.find(t => t.id === to);
+      const question = who
+        ? `Assign this conversation to ${who.name}?\n\nThey'll get an email, it appears in their portal, and their replies go out from ${who.inbox_from_email || who.email}.`
+        : 'Take this conversation back? It will disappear from their portal.';
+      if (!confirm(question)) { ev.target.value = e.assigned_to || ''; return; }
+      patch(e.id, { assigned_to: to || null });
+    });
     $('thDelete').addEventListener('click', async () => {
       if (!confirm(`Delete this conversation with ${e.name}?\n\nUse this for spam only — it can't be undone. To file a real enquiry away, mark it Closed instead.`)) return;
       try {
@@ -621,10 +740,16 @@
 
   // Append what's new without re-rendering: the reply box, its draft, the caret
   // and the scroll position all stay exactly as they are.
+  // Runs in the background too: a window covered by another one reports itself as
+  // hidden, and Dom may be watching the chat on the website in front of the admin.
+  // Hidden tabs are checked every 20s at most (browsers throttle timers there anyway).
+  let lastThreadPoll = 0;
   async function pollThread() {
     const id = state.current;
     if (threadPolling || !id || !currentThread || currentThread.enquiry.id !== id) return;
-    if (document.visibilityState !== 'visible' || document.querySelector('[data-panel="inbox"]').hidden) return;
+    if (document.querySelector('[data-panel="inbox"]').hidden) return;
+    if (document.visibilityState !== 'visible' && Date.now() - lastThreadPoll < 20000) return;
+    lastThreadPoll = Date.now();
     threadPolling = true;
     try {
       const d = await api(`/api/admin/inbox/${id}/updates?after=${lastMsgId}&seen=1`);
@@ -711,6 +836,36 @@
   }, LIST_POLL);
 
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') { pollThread(); lastListPoll = 0; }
+    if (document.visibilityState === 'visible') { lastThreadPoll = 0; pollThread(); lastListPoll = 0; checkBuild(); }
   });
+
+  /* ---------------- newer admin deployed? ---------------- */
+
+  // build.js stamps the page with a hash of the admin files and publishes the same
+  // hash at /admin/version.json. An admin left open across a deploy keeps running
+  // the old code, so offer a reload instead of letting it quietly misbehave.
+  const pageBuild = document.querySelector('meta[name="admin-build"]')?.content || '';
+  let lastBuildCheck = 0;
+  async function checkBuild() {
+    if (!pageBuild || Date.now() - lastBuildCheck < 120000 || document.getElementById('updateBar')) return;
+    lastBuildCheck = Date.now();
+    try {
+      const r = await fetch('/admin/version.json?cb=' + Date.now(), { cache: 'no-store' });
+      if (!r.ok) return;
+      const { build } = await r.json();
+      if (!build || build === pageBuild) return;
+      const bar = document.createElement('div');
+      bar.id = 'updateBar';
+      bar.className = 'update-bar';
+      bar.innerHTML = '<span>A newer version of the admin is live.</span><button type="button" class="btn btn-primary btn-sm">Reload</button>';
+      bar.querySelector('button').addEventListener('click', () => {
+        const draft = document.getElementById('thText');
+        if (draft && state.current) setDraft(state.current, draft.value);
+        location.reload();
+      });
+      document.body.appendChild(bar);
+    } catch { /* offline — try again later */ }
+  }
+  setInterval(checkBuild, 5 * 60000);
+  checkBuild();
 })();

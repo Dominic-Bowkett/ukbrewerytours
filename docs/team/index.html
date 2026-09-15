@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
+<meta name="admin-build" content="e7163b644f">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
-<title>Team payments — UK Brewery Tours</title>
+<title>Team portal — UK Brewery Tours</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍺%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="/assets/css/admin.css">
+<link rel="stylesheet" href="/assets/css/admin.css?v=e7163b644f">
 </head>
 <body>
 <header class="admin-header">
-  <div class="admin-brand">🍺 UK Brewery Tours <span>Team payments</span></div>
+  <div class="admin-brand">🍺 UK Brewery Tours <span id="brandArea">Team</span></div>
   <div class="admin-user"><span id="who"></span><button class="btn btn-ghost" id="logout">Sign out</button></div>
 </header>
 
@@ -19,7 +20,31 @@
   <button class="btn btn-ghost btn-sm" id="impExit" style="border:1.5px solid #201611;color:#201611">← Back to admin</button>
 </div>
 
-<main class="admin-main">
+<nav class="admin-tabs" id="teamTabs" hidden>
+  <button class="admin-tab is-active" data-tab="inbox">My messages<span class="tab-badge" id="inboxBadge" hidden></span></button>
+  <button class="admin-tab" data-tab="payments">Payments</button>
+</nav>
+
+<main class="admin-main inbox-main" data-panel="inbox" hidden>
+  <div class="inbox" id="inbox">
+    <aside class="inbox-side" aria-label="Your conversations">
+      <div class="inbox-tools">
+        <div class="status-chips" id="ibStatus"></div>
+        <div class="inbox-search">
+          <input type="search" id="ibQ" placeholder="Search name, email or message…" aria-label="Search your conversations">
+          <button type="button" class="chip-btn" id="ibNotify" hidden title="Get a browser notification when a customer writes, while this tab is in the background">🔕 Alerts off</button>
+        </div>
+      </div>
+      <ul class="inbox-list" id="ibList"><li class="muted pad">Loading…</li></ul>
+      <div class="pager" id="ibPager" hidden><button class="btn btn-ghost btn-sm" id="ibPrev">← Newer</button><span id="ibPage"></span><button class="btn btn-ghost btn-sm" id="ibNext">Older →</button></div>
+    </aside>
+    <section class="inbox-thread" id="ibThread" aria-live="polite">
+      <div class="thread-empty"><strong>No conversation selected</strong>Pick one from the list to read and reply.</div>
+    </section>
+  </div>
+</main>
+
+<main class="admin-main" data-panel="payments">
   <section class="stats" id="stats"></section>
 
   <section class="panel">
@@ -65,6 +90,12 @@ async function api(path, opts) {
   const res = await fetch(path, opts);
   if (res.status === 401) { location.href = '/team/login.html'; throw new Error('signed out'); }
   const data = await res.json().catch(() => ({}));
+  // A first sign-in (or an admin-reset password) must be changed before anything
+  // else works — land on that page rather than showing an error on every panel.
+  if (res.status === 403 && data.code === 'password_change_required') {
+    location.href = '/team/password.html';
+    throw new Error(data.error || 'Set a new password first.');
+  }
   if (!res.ok) throw new Error(data.error || 'Something went wrong.');
   return data;
 }
@@ -230,16 +261,54 @@ document.getElementById('impExit').addEventListener('click', async () => {
   location.href = '/admin/#connect';
 });
 
+/* Which halves of the portal this member has. An inbox-only member (no Stripe
+   account) never sees the payments side, and vice versa. */
+let teamMe = null;
+
+function showTeamTab(route) {
+  const [name, sub] = String(route || '').split('/');
+  const tab = document.querySelector(`.admin-tab[data-tab="${CSS.escape(name)}"]`);
+  if (!tab || tab.hidden) return;
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.toggle('is-active', t === tab));
+  document.querySelectorAll('[data-panel]').forEach(p => { p.hidden = p.dataset.panel !== name; });
+  if (name === 'inbox') window.teamInboxRoute?.(sub);
+  if (name === 'payments' && !window.__paymentsLoaded) { window.__paymentsLoaded = true; load(); }
+}
+document.querySelectorAll('.admin-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    history.replaceState(null, '', '#' + tab.dataset.tab);
+    showTeamTab(tab.dataset.tab);
+  });
+});
+window.addEventListener('hashchange', () => showTeamTab(location.hash.slice(1) || defaultTab()));
+function defaultTab() { return teamMe?.inboxAccess ? 'inbox' : 'payments'; }
+
 api('/api/team/me')
   .then(u => {
+    teamMe = u;
+    window.teamMe = u;
     document.getElementById('who').textContent = u.name || u.email;
     if (u.impersonated) {
       document.getElementById('impWho').textContent = u.name || u.email;
       document.getElementById('impBanner').hidden = false;
     }
-    load();
+    const tabs = document.getElementById('teamTabs');
+    const inboxTab = document.querySelector('.admin-tab[data-tab="inbox"]');
+    const payTab = document.querySelector('.admin-tab[data-tab="payments"]');
+    inboxTab.hidden = !u.inboxAccess;
+    payTab.hidden = !u.chargeReady && !u.connected;
+    tabs.hidden = !(u.inboxAccess && !payTab.hidden);
+    document.getElementById('brandArea').textContent = u.inboxAccess && payTab.hidden ? 'Team messages' : 'Team';
+    // /api/team/me can answer before the deferred inbox.js has run, and the
+    // route call would then hit an undefined teamInboxRoute and show nothing.
+    // NB: readyState is already "interactive" before deferred scripts execute,
+    // so only "complete" means inbox.js has definitely defined its route.
+    const start = () => showTeamTab(location.hash.slice(1) || defaultTab());
+    if (document.readyState === 'complete') start();
+    else document.addEventListener('DOMContentLoaded', start, { once: true });
   })
   .catch(() => {});
 </script>
+<script src="/team/inbox.js?v=e7163b644f" defer></script>
 </body>
 </html>

@@ -17,6 +17,10 @@ export async function onRequestGet({ request, env }) {
   const base = [];
   const baseArgs = [];
   if (site) { base.push('e.site = ?'); baseArgs.push(site); }
+  // assignee=<member id> | none (unassigned) | mine is not a thing here: the admin sees all.
+  const assignee = url.searchParams.get('assignee') || '';
+  if (assignee === 'none') base.push('e.assigned_to IS NULL');
+  else if (assignee) { base.push('e.assigned_to = ?'); baseArgs.push(assignee); }
   if (q) {
     const like = `%${q.replace(/[%_]/g, m => '\\' + m)}%`;
     base.push(`(e.name LIKE ? ESCAPE '\\' OR e.email LIKE ? ESCAPE '\\' OR e.voucher_code LIKE ? ESCAPE '\\' OR e.phone LIKE ? ESCAPE '\\'
@@ -39,7 +43,8 @@ export async function onRequestGet({ request, env }) {
 
   const listSql = `
     SELECT e.id, e.name, e.email, e.phone, e.type, e.channel, e.site, e.status, e.unread, e.voucher_code,
-           e.created_at, e.last_message_at,
+           e.created_at, e.last_message_at, e.assigned_to,
+           (SELECT name FROM team_members t WHERE t.id = e.assigned_to) AS assignee_name,
            (SELECT substr(body, 1, 160) FROM enquiry_messages m WHERE m.enquiry_id = e.id AND m.direction IN ('in','out') ORDER BY m.id DESC LIMIT 1) AS snippet,
            (SELECT direction FROM enquiry_messages m WHERE m.enquiry_id = e.id AND m.direction IN ('in','out') ORDER BY m.id DESC LIMIT 1) AS last_direction,
            (SELECT COUNT(*) FROM enquiry_messages m WHERE m.enquiry_id = e.id AND m.direction IN ('in','out')) AS message_count
@@ -53,7 +58,7 @@ export async function onRequestGet({ request, env }) {
   const since = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(url.searchParams.get('since') || '')
     ? url.searchParams.get('since') : null;
 
-  const [nowRow, list, byStatus, byType, sites, unread, recent] = await env.DB.batch([
+  const [nowRow, list, byStatus, byType, sites, team, unread, recent] = await env.DB.batch([
     env.DB.prepare("SELECT datetime('now') AS now"),
     env.DB.prepare(listSql).bind(...baseArgs, ...statusArgs, ...typeArgs, PAGE_SIZE + 1, (page - 1) * PAGE_SIZE),
     env.DB.prepare(`SELECT e.status, COUNT(*) AS n, SUM(e.unread) AS unread FROM enquiries e ${where(base, typeClause)} GROUP BY e.status`)
@@ -61,6 +66,12 @@ export async function onRequestGet({ request, env }) {
     env.DB.prepare(`SELECT e.type, COUNT(*) AS n FROM enquiries e ${where(base, statusClause)} GROUP BY e.type`)
       .bind(...baseArgs, ...statusArgs),
     env.DB.prepare('SELECT site, COUNT(*) AS n FROM enquiries GROUP BY site ORDER BY n DESC'),
+    // Who conversations can be handed to, and how much each is holding.
+    env.DB.prepare(
+      `SELECT t.id, t.name, t.email, t.inbox_from_email,
+              (SELECT COUNT(*) FROM enquiries e WHERE e.assigned_to = t.id AND e.status != 'closed') AS open_count
+         FROM team_members t WHERE t.inbox_access = 1 AND t.active = 1 ORDER BY t.name`,
+    ),
     env.DB.prepare("SELECT COUNT(*) AS n FROM enquiries WHERE unread = 1 AND status != 'closed'"),
     // >= and a client-side dedupe: timestamps are whole seconds.
     env.DB.prepare(
@@ -87,6 +98,7 @@ export async function onRequestGet({ request, env }) {
       type: Object.fromEntries((byType.results || []).map(r => [r.type, r.n])),
     },
     sites: (sites.results || []).map(s => ({ site: s.site, label: siteLabel(s.site), n: s.n })),
+    team: team.results || [],
     unread: unread.results?.[0]?.n || 0,
     server_now: nowRow.results?.[0]?.now || null,
     recent_inbound: recent.results || [],

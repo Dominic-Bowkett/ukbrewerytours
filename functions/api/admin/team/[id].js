@@ -65,6 +65,25 @@ export async function onRequestPatch({ request, env, params }) {
     sets.push('reply_to_email = ?'); binds.push(e || null);
   }
 
+  // Shared-inbox access and the address this member's replies go out from.
+  // Turning access off leaves their conversations assigned; the admin can
+  // reassign them. Their live session is cut so the change bites immediately.
+  if (body.inbox_access !== undefined) {
+    const on = body.inbox_access ? 1 : 0;
+    sets.push('inbox_access = ?'); binds.push(on);
+    if (!on) sets.push('session_epoch = session_epoch + 1');
+  }
+  if (body.inbox_from_email !== undefined) {
+    const e = String(body.inbox_from_email ?? '').trim().toLowerCase().slice(0, 200);
+    if (e && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) {
+      return Response.json({ error: 'Enter a valid “replies come from” address.' }, { status: 400 });
+    }
+    sets.push('inbox_from_email = ?'); binds.push(e || null);
+  }
+  if (body.inbox_from_name !== undefined) {
+    sets.push('inbox_from_name = ?'); binds.push(String(body.inbox_from_name ?? '').trim().slice(0, 100) || null);
+  }
+
   if (!sets.length) return Response.json({ error: 'Nothing to change.' }, { status: 400 });
 
   sets.push("updated_at = datetime('now')");
@@ -72,7 +91,8 @@ export async function onRequestPatch({ request, env, params }) {
   await env.DB.prepare(`UPDATE team_members SET ${sets.join(', ')} WHERE id = ?`).bind(...binds).run();
 
   const updated = await env.DB.prepare(
-    'SELECT id, email, name, stripe_account_id, fee_bps, terms_override, active, reply_to_email FROM team_members WHERE id = ?',
+    `SELECT id, email, name, stripe_account_id, fee_bps, terms_override, active, reply_to_email,
+            inbox_access, inbox_from_email, inbox_from_name FROM team_members WHERE id = ?`,
   ).bind(id).first();
 
   return Response.json({ ok: true, member: updated });

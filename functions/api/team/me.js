@@ -45,6 +45,12 @@ export async function onRequestGet({ env, data }) {
     accountHint: m.stripe_account_id ? `…${m.stripe_account_id.slice(-6)}` : null,
     accountLabel: m.stripe_account_label || null,
 
+    // Shared inbox: whether this member answers conversations, and the address
+    // their replies go out from.
+    inboxAccess: m.inbox_access === 1,
+    inboxFrom: m.inbox_access === 1 ? (m.inbox_from_email || m.email) : null,
+    inboxFromName: m.inbox_from_name || m.name,
+
     // The gate's own verdict, so the UI and the API can never disagree about
     // whether this member may raise a payment request.
     chargeReady: isChargeReady(m),

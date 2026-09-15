@@ -56,6 +56,27 @@ export function newToken() {
 
 export const threadUrl = token => `${BASE_URL}/messages/${token}`;
 export const adminUrl = id => `${BASE_URL}/admin/#inbox/${id}`;
+export const teamUrl = id => `${BASE_URL}/team/#inbox/${id}`;
+
+/** The team member a conversation belongs to, if it is assigned to an active one. */
+export async function assignee(env, enquiry) {
+  if (!enquiry?.assigned_to) return null;
+  try {
+    const m = await env.DB.prepare(
+      'SELECT id, name, email, active, inbox_access, inbox_from_email, inbox_from_name FROM team_members WHERE id = ?',
+    ).bind(enquiry.assigned_to).first();
+    return m && m.active === 1 ? m : null;
+  } catch (err) {
+    console.error('assignee lookup failed', err);
+    return null;
+  }
+}
+
+/** How a member's replies are addressed. Falls back to their login email. */
+export const senderFor = member => ({
+  from: `${member.inbox_from_name || member.name || 'UK Brewery Tours'} <${member.inbox_from_email || member.email}>`,
+  replyTo: member.inbox_from_email || member.email,
+});
 
 /**
  * Where a customer's email reply should land. Until inbound email is routed
@@ -179,15 +200,18 @@ export async function alertAdmin(env, enquiry, { body, followUp = false, matches
   ).bind(enquiry.id).run();
   if (!claim.meta.changes) return false;
 
+  // An assigned conversation is that team member's job: the alert goes to them,
+  // with a link into their own portal. Unassigned ones go to the admin.
+  const owner = await assignee(env, enquiry);
   const typeLabel = TYPES[enquiry.type] || 'Enquiry';
   const prefix = followUp ? 'New reply' : `New ${typeLabel.toLowerCase()}`;
   await sendEmail(env, {
-    to: env.ALERT_EMAIL || 'dom@ukbrewerytours.com',
+    to: owner ? owner.email : (env.ALERT_EMAIL || 'dom@ukbrewerytours.com'),
     subject: `${prefix} — ${enquiry.name} (${siteLabel(enquiry.site)})`,
     html: inboxAlertHtml({
       enquiry, body, followUp, matches, unmatched,
       typeLabel, channelLabel: CHANNELS[enquiry.channel] || enquiry.channel,
-      siteName: siteLabel(enquiry.site), link: adminUrl(enquiry.id),
+      siteName: siteLabel(enquiry.site), link: owner ? teamUrl(enquiry.id) : adminUrl(enquiry.id),
     }),
   });
   return true;
