@@ -109,8 +109,11 @@ h3 { font-size: 1.25rem; line-height: 1.3; }
 .btn-outline-light { border-color: rgba(247, 241, 229, .55); color: var(--cream); background: transparent; }
 .btn-outline-light:hover { background: rgba(247, 241, 229, .12); }
 
-.btn-whatsapp { background: #25d366; color: #06331b; }
-.btn-whatsapp:hover { background: #20bd5b; }
+/* Live chat (replaced the WhatsApp buttons). Hop green, so it reads as "talk to us"
+   next to the amber buy buttons without competing with them. */
+.btn-chat { background: var(--green); color: var(--cream); }
+.btn-chat:hover { background: #3a4630; box-shadow: var(--shadow-lift); }
+.btn-chat svg { color: currentColor; }
 
 .btn-lg { padding: 18px 34px; font-size: 1.08rem; }
 .btn-block { display: flex; width: 100%; justify-content: center; }
@@ -998,6 +1001,7 @@ p > .btn { margin-bottom: 10px; }
 .contact-card svg { width: 30px; height: 30px; color: var(--amber-deep); }
 .contact-card h3 { margin-top: 6px; }
 .contact-card p { font-size: .93rem; color: var(--ink-soft); flex: 1; }
+.contact-card .btn svg { width: 18px; height: 18px; color: currentColor; }
 @media (max-width: 880px) { .contact-grid { grid-template-columns: 1fr; } }
 
 .form-card {
@@ -1025,6 +1029,7 @@ input, textarea, select {
   color: var(--ink);
 }
 input:focus, textarea:focus, select:focus { outline: 2px solid var(--amber); outline-offset: 1px; border-color: var(--amber); }
+.form-hint { font-size: .8rem; color: var(--ink-soft); margin-top: 6px; }
 
 /* FAQ */
 .faq-list { display: grid; gap: 12px; max-width: 780px; }

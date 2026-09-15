@@ -1,7 +1,8 @@
 // POST /api/admin/redeem — take value off a voucher (full or partial).
-// Body: { code, amount?, full?: true, note? }
+// Body: { code, amount?, full?: true, note?, enquiry_id? }
 
 import { normaliseCode, formatMoney } from '../../_lib/codes.js';
+import { logEvent } from '../../_lib/inbox.js';
 
 export async function onRequestPost({ request, env, data }) {
   let body;
@@ -43,9 +44,23 @@ export async function onRequestPost({ request, env, data }) {
     return Response.json({ error: 'Voucher was updated elsewhere — reload and try again.' }, { status: 409 });
   }
 
+  // Redeemed from an inbox conversation: link it, and put it on that timeline.
+  const enquiryId = /^\d+$/.test(String(body.enquiry_id || '')) ? Number(body.enquiry_id) : null;
+  const who = data?.user?.email || 'admin';
+  const note = String(body.note || '').trim().slice(0, 300) || null;
+
   await env.DB.prepare(
-    'INSERT INTO redemptions (voucher_id, amount_pence, balance_after_pence, redeemed_by, note) VALUES (?,?,?,?,?)',
-  ).bind(voucher.id, amountPence, balanceAfter, data?.user?.email || 'admin', String(body.note || '').trim().slice(0, 300) || null).run();
+    'INSERT INTO redemptions (voucher_id, amount_pence, balance_after_pence, redeemed_by, note, enquiry_id) VALUES (?,?,?,?,?,?)',
+  ).bind(voucher.id, amountPence, balanceAfter, who, note, enquiryId).run();
+
+  if (enquiryId) {
+    try {
+      await logEvent(env, enquiryId,
+        `Redeemed ${formatMoney(amountPence)} from ${code} — ${formatMoney(balanceAfter)} left${note ? ` (${note})` : ''}`, who);
+    } catch (err) {
+      console.error('redemption timeline entry failed', err);
+    }
+  }
 
   return Response.json({
     ok: true,

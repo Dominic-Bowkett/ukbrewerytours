@@ -13,15 +13,19 @@ const OUT = path.join(ROOT, 'docs');
 const read = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 
 // Content hash of CSS + JS — appended as ?v= to bust browser/CDN caches on every change.
-const assetVer = crypto.createHash('md5').update(read('assets/css/style.css') + read('assets/js/main.js') + read('assets/js/salespop.js')).digest('hex').slice(0, 8);
+const assetVer = crypto.createHash('md5').update(
+  ['assets/css/style.css', 'assets/js/main.js', 'assets/js/salespop.js', 'assets/js/contact.js', 'assets/js/redeem.js', 'embed/chat.js']
+    .map(read).join(''),
+).digest('hex').slice(0, 8);
 
 const site = JSON.parse(read('content/site.json'));
 const tours = JSON.parse(read('content/tours.json'));
 const activeTours = tours.filter(t => t.active);
-const WHATSAPP = `https://wa.me/${site.whatsapp}`;
-const WA_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.6-1.2 1.2-1.7 1.2-.4.1-1 .1-1.6-.1a13 13 0 0 1-5.8-5.1c-.6-1-.9-2-.9-2.7 0-.8.4-1.4.7-1.7.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.3.3c-.1.2-.2.3 0 .6.2.3.9 1.4 1.9 2.3 1.3 1.2 2.4 1.5 2.7 1.7.3.1.5.1.7-.1l1-1.2c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.4 0 .1 0 .7-.2 1.2Z"/></svg>';
-// Group-booking WhatsApp button — identical green button used on every tour & experience page.
-const groupBtn = (name) => `<a class="btn btn-whatsapp" href="${WHATSAPP}?text=${encodeURIComponent(`Hi! I'd like to enquire about a group booking for the ${name}.`)}">${WA_ICON} Group booking enquiry</a>`;
+// Speech-bubble icon for the live chat (which replaced WhatsApp in Sept 2026).
+const CHAT_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3C6.5 3 2 6.6 2 11.1c0 2.4 1.3 4.6 3.4 6.1-.2 1.3-.8 2.6-1.9 3.6-.2.2 0 .6.3.6 2.1-.1 3.8-.9 5-1.9 1 .3 2.1.4 3.2.4 5.5 0 10-3.6 10-8.1S17.5 3 12 3Z"/></svg>';
+// Group-booking button on every tour & experience page. Opens the live chat on
+// the Group booking topic with the tour prefilled; the href is the no-JS fallback.
+const groupBtn = (name) => `<a class="btn btn-chat" href="/group-tours/#enquire" data-chat-open data-chat-topic="group" data-chat-text="${esc(`Hi! I'd like to enquire about a group booking for the ${name}.`)}">${CHAT_ICON} Group booking enquiry</a>`;
 const TOUR_DISCLAIMER = '<p class="tour-disclaimer">Tours, itineraries and pricing may be subject to change. Please confirm with the organiser, or <a href="/contact/">get in touch</a> and we’ll happily check for you.</p>';
 const YEAR = '2026';
 
@@ -446,7 +450,7 @@ function writePage(outPath, { title, description, content, nav, ogImage, jsonld,
   const useVoucher = voucher || voucherEverywhere;
   const html = fill(layout, {
     title, description: esc(description), canonical, og_image: og, asset_ver: assetVer,
-    content, whatsapp_url: WHATSAPP, year: YEAR,
+    content, year: YEAR,
     voucher_modal: useVoucher ? voucherModalTpl : '',
     voucher_script: [
       useVoucher ? `  <script src="/assets/js/voucher.js?v=${assetVer}" defer></script>` : '',
@@ -500,12 +504,16 @@ if (fs.existsSync(path.join(ROOT, 'team'))) {
 //   /embed/widget/*  the embeddable voucher purchase form (an iframe on other
 //            sites), rendered per-widget from D1. The loader /embed/voucher.js
 //            is NOT matched by this prefix, so it stays a static edge-cached file.
+//   /embed/chat/*  the live chat iframe (/embed/chat/frame). Its loader
+//            /embed/chat.js is outside the prefix and stays static.
+//   /messages/*  functions/messages/[[token]].js — the customer's conversation
+//            page, linked from every inbox email. Without this line it 404s.
 //
 // /assets/* is deliberately NOT in the include list, so CSS/JS (including
 // /assets/js/pay.js) is served straight from the edge cache and never pays for a
 // Function invocation — and can never be intercepted by the team gate.
 fs.writeFileSync(path.join(OUT, '_routes.json'),
-  JSON.stringify({ version: 1, include: ['/api/*', '/pay/*', '/team/*', '/embed/widget/*'], exclude: [] }, null, 2) + '\n');
+  JSON.stringify({ version: 1, include: ['/api/*', '/pay/*', '/team/*', '/embed/widget/*', '/embed/chat/*', '/messages/*'], exclude: [] }, null, 2) + '\n');
 
 /* ----- computed blocks shared by pages ----- */
 
@@ -571,8 +579,7 @@ const pageTokens = {
   all_tours_grid: allToursGrid,
   disclosure: DISCLOSURE,
   blog_cards: blogCards,
-  wa_icon: WA_ICON,
-  whatsapp_url: WHATSAPP,
+  chat_icon: CHAT_ICON,
   email: site.email,
   google_rating: site.google_rating,
   google_reviews: site.google_reviews,
@@ -588,11 +595,11 @@ const pageTokens = {
 const staticPages = [
   { src: 'home.html', out: 'index.html', nav: '', title: 'UK Brewery Tours | Award-Winning Brewery Tours & Beer Tastings Since 2014', description: 'Award-winning brewery tours and craft beer tasting experiences across the UK — London, Bristol, Manchester, Leeds and more. Small groups, expert guides, gift vouchers that never expire.', jsonld: { '@context': 'https://schema.org', '@type': 'Organization', name: 'UK Brewery Tours', url: site.base_url, email: site.email, foundingDate: '2014', description: 'Award-winning brewery tours and beer tasting events across the UK.' } },
   { src: 'about.html', out: 'about/index.html', nav: 'about', title: 'About Us | UK Brewery Tours', description: 'Founded on London\'s Bermondsey Beer Mile in 2014, UK Brewery Tours runs award-winning brewery tours and beer tastings in cities across the UK.' },
-  { src: 'contact.html', out: 'contact/index.html', nav: '', title: 'Contact Us | UK Brewery Tours', description: 'Get in touch with UK Brewery Tours — WhatsApp, email or contact form. Questions about tours, group bookings and gift vouchers answered within hours.', contactForm: true },
+  { src: 'contact.html', out: 'contact/index.html', nav: '', title: 'Contact Us | UK Brewery Tours', description: 'Get in touch with UK Brewery Tours — live chat, email or contact form. Questions about tours, group bookings and gift vouchers answered within hours.', contactForm: true },
   { src: 'tours.html', out: 'tours/index.html', nav: 'tours', title: 'Brewery Tours & Beer Tastings Across the UK | UK Brewery Tours', description: `Browse ${activeTours.length} brewery tours and beer tasting experiences in ${citiesWithTours.length} UK cities — London, Bristol, Manchester, Liverpool, Leeds and more.` },
   { src: 'blog.html', out: 'blog/index.html', nav: 'blog', title: 'Beer Blog | UK Brewery Tours', description: 'Craft beer guides, brewery profiles and beer knowledge from the UK Brewery Tours team — from the Bermondsey Beer Mile to the best beer gardens in London.' },
   { src: 'gift-vouchers.html', out: 'gift-vouchers/index.html', nav: 'vouchers', title: 'Brewery Tour Gift Vouchers — Never Expire | UK Brewery Tours', description: 'Monetary gift vouchers for brewery tours anywhere in the UK. Instant email delivery, never expire, refundable up to 12 months. The perfect gift for beer lovers.' },
-  { src: 'group-tours.html', out: 'group-tours/index.html', nav: 'groups', title: 'Private Group Brewery Tours from £29pp | UK Brewery Tours', description: 'Private brewery tours and beer tastings for corporate teams, stags, hens and groups — available in most UK cities from £29 per person.' },
+  { src: 'group-tours.html', out: 'group-tours/index.html', nav: 'groups', title: 'Private Group Brewery Tours from £29pp | UK Brewery Tours', description: 'Private brewery tours and beer tastings for corporate teams, stags, hens and groups — available in most UK cities from £29 per person.', contactForm: true },
   { src: 'returns-policy.html', out: 'returns-policy/index.html', nav: '', title: 'Returns Policy | UK Brewery Tours', description: 'Gift voucher returns and refunds policy for UK Brewery Tours.' },
   { src: 'redeem.html', out: 'redeem/index.html', nav: 'vouchers', title: 'Redeem Your Gift Voucher | UK Brewery Tours', description: 'Redeem a UK Brewery Tours gift voucher — tell us your tour, date and voucher code and we\'ll book you on and confirm by email, usually within 1 working day.', redeemForm: true },
   // Post-Stripe landing page. Unlisted (reached only by redirect from checkout).
@@ -718,7 +725,6 @@ for (const t of activeTours) {
     name: esc(t.name), city: esc(t.city), price: t.price || '',
     tour_slug: t.old_slug,
     hero_image: hero, thumbs, facts,
-    whatsapp_url: WHATSAPP,
     cta_buttons: ctaButtons,
     tour_disclaimer: TOUR_DISCLAIMER,
     description_html: mdToHtml(t.description_md || t.summary || ''),
@@ -1024,7 +1030,7 @@ const notFound = fill(layout, {
   title: 'Page not found | UK Brewery Tours',
   description: 'Sorry, that page has moved or no longer exists.',
   canonical: site.base_url + '/404.html', og_image: site.base_url + '/assets/img/hms-hops.jpg',
-  whatsapp_url: WHATSAPP, year: YEAR, structured_data: '', asset_ver: assetVer,
+  year: YEAR, structured_data: '', asset_ver: assetVer,
   nav_tours: '', nav_vouchers: '', nav_groups: '', nav_blog: '', nav_about: '',
   content: `<section class="section center"><div class="container">
     <div class="kicker">404</div>

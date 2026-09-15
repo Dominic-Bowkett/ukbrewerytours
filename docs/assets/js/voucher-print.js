@@ -59,7 +59,7 @@
           <footer class="vsheet__foot">
             <div class="vsheet__how">
               <strong>How to redeem</strong>
-              Email <span class="nowrap">info@ukbrewerytours.com</span> or message us on WhatsApp quoting the code above,
+              Send the code above at <span class="nowrap">ukbrewerytours.com/redeem</span> or email <span class="nowrap">info@ukbrewerytours.com</span>,
               and we'll book you onto the date you want. Browse everything at ukbrewerytours.com/tours
             </div>
             <div class="vsheet__terms">

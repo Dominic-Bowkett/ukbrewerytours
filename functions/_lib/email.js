@@ -14,8 +14,16 @@ const esc = s => String(s ?? '')
   .replace(/"/g, '&quot;');
 
 export async function sendEmail(env, { to, subject, html, replyTo }) {
+  // Local dev only: `wrangler pages dev` on this machine cannot reach Resend
+  // (the fetch hangs), so EMAIL_DRY_RUN=1 in .dev.vars logs instead of sending.
+  if (env.EMAIL_DRY_RUN) {
+    console.log(`[email dry-run] to=${[].concat(to).join(',')} replyTo=${replyTo || '-'} subject=${subject}`);
+    return { id: 'dry-run-' + Date.now() };
+  }
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
+    // A stuck send must not hold a customer's request open indefinitely.
+    signal: AbortSignal.timeout(15000),
     headers: {
       Authorization: `Bearer ${env.RESEND_API_KEY}`,
       'Content-Type': 'application/json',
@@ -71,7 +79,7 @@ const HOW_TO_REDEEM = `<div style="background:${CREAM};border-radius:10px;paddin
   then send your voucher code and preferred date via
   <a href="https://www.ukbrewerytours.com/redeem/" style="color:#b3701d;">ukbrewerytours.com/redeem</a> —
   or email <a href="mailto:info@ukbrewerytours.com" style="color:#b3701d;">info@ukbrewerytours.com</a>
-  or message us on WhatsApp with your voucher code to book a date.
+  or use the live chat on our website with your voucher code to book a date.
   <div style="margin-top:8px;color:${INK_SOFT};">Vouchers never expire and can be used across multiple bookings until the balance runs out.</div>
 </div>`;
 
@@ -161,14 +169,12 @@ export function enquiryEmailHtml({ name, email, phone, message, page, widget, wi
 }
 
 /** Confirmation back to the person who sent the enquiry. */
-export function enquiryAutoReplyHtml({ name, message }) {
+export function enquiryAutoReplyHtml({ name, message, threadLink, brand = 'UK Brewery Tours', chat = false }) {
   return shell(`<tr><td style="padding:30px 28px;">
     <h1 style="margin:0 0 14px;font-size:22px;">Thanks for getting in touch</h1>
     <p style="margin:0 0 16px;font-size:15px;line-height:1.7;">
-      Hi ${esc(name)}, we've got your message and will reply by email — usually within a few hours.
-    </p>
-    <p style="margin:0 0 20px;font-size:15px;line-height:1.7;">
-      If it's urgent, message us on WhatsApp and we'll pick it up faster.
+      Hi ${esc(name)}, we've got your message${brand !== 'UK Brewery Tours' ? ` to ${esc(brand)}` : ''} and will reply
+      ${chat ? 'in the chat and by email' : 'by email'} — usually within a few hours.
     </p>
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 22px;">
@@ -177,6 +183,11 @@ export function enquiryAutoReplyHtml({ name, message }) {
       </td></tr>
     </table>
 
+    ${threadLink ? `<p style="margin:0 0 22px;">
+      <a href="${esc(threadLink)}" style="display:inline-block;background:${AMBER};color:#2b1a05;text-decoration:none;font-weight:600;padding:11px 22px;border-radius:999px;font-size:14px;">View your conversation</a>
+      <span style="display:block;font-size:13px;color:${INK_SOFT};margin-top:8px;line-height:1.6;">Add more details there any time, or just reply to this email.</span>
+    </p>` : ''}
+
     <div style="background:${CREAM};border-radius:10px;padding:16px 18px;font-size:14px;line-height:1.7;">
       While you wait, have a look at
       <a href="https://www.ukbrewerytours.com/tours/" style="color:#b3701d;">our tours across the UK</a>
@@ -184,6 +195,84 @@ export function enquiryAutoReplyHtml({ name, message }) {
     </div>
 
     <p style="margin:24px 0 0;font-size:14px;line-height:1.7;">Cheers,<br>The UK Brewery Tours team</p>
+  </td></tr>`);
+}
+
+const VOUCHER_STATUS = {
+  active: 'Unused', partially_redeemed: 'Part-redeemed', redeemed: 'Fully redeemed',
+  pending: 'Unpaid', void: 'Void', refunded: 'Refunded',
+};
+
+/** One line per voucher match (or miss) for the admin alert. */
+function voucherSummary(matches, unmatched = []) {
+  if (!matches.length && !unmatched.length) return '';
+  const lines = matches.map(m => {
+    const value = m.balance_pence != null
+      ? `<strong>${formatMoney(m.balance_pence)}</strong> left${m.amount_pence != null ? ` of ${formatMoney(m.amount_pence)}` : ''}`
+      : esc(m.description || 'no value recorded');
+    const usable = !['redeemed', 'void', 'pending', 'refunded'].includes(m.status) && (m.balance_pence == null || m.balance_pence > 0);
+    return `<div style="margin:0 0 6px;">${usable ? '✅' : '⚠️'} <span style="font-family:'Courier New',monospace;font-weight:700;">${esc(m.code)}</span>
+      — ${esc(m.source)} · ${VOUCHER_STATUS[m.status] || esc(m.status)} · ${value}${m.is_demo ? ' · demo' : ''}</div>`;
+  }).concat(unmatched.map(c =>
+    `<div style="margin:0 0 6px;">❌ <span style="font-family:'Courier New',monospace;font-weight:700;">${esc(c)}</span> — no matching code found</div>`));
+  return `<div style="background:${CREAM};border-radius:10px;padding:14px 16px;margin:0 0 22px;font-size:14px;line-height:1.6;">
+    <strong style="display:block;margin-bottom:8px;">Voucher check</strong>${lines.join('')}</div>`;
+}
+
+/** Alert to Dom: a new enquiry or a customer follow-up, with a link into the admin inbox. */
+export function inboxAlertHtml({ enquiry, body, followUp, matches = [], unmatched = [], typeLabel, channelLabel, siteName, link }) {
+  const row = (label, value) => `<tr>
+      <td style="padding:6px 14px 6px 0;font-size:14px;color:${INK_SOFT};white-space:nowrap;vertical-align:top;">${label}</td>
+      <td style="padding:6px 0;font-size:14px;font-weight:600;">${value}</td>
+    </tr>`;
+  let fields = {};
+  try { fields = JSON.parse(enquiry.fields || '{}') || {}; } catch { fields = {}; }
+  const labels = { tour: 'Tour', preferred_date: 'Preferred date', group_size: 'Group size', city: 'City', occasion: 'Occasion', budget: 'Budget' };
+
+  return shell(`<tr><td style="padding:30px 28px;">
+    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${INK_SOFT};">${followUp ? 'New reply in conversation' : esc(typeLabel)} · ${esc(siteName)}</div>
+    <h1 style="margin:6px 0 20px;font-size:22px;">${esc(enquiry.name)}</h1>
+
+    <p style="margin:0 0 22px;">
+      <a href="${esc(link)}" style="display:inline-block;background:${AMBER};color:#2b1a05;text-decoration:none;font-weight:600;padding:12px 24px;border-radius:999px;font-size:15px;">Open &amp; reply in admin</a>
+    </p>
+
+    ${voucherSummary(matches, unmatched)}
+
+    <div style="font-size:15px;line-height:1.7;border-left:3px solid ${AMBER};padding:2px 0 2px 14px;margin:0 0 22px;">${esc(body).replace(/\n/g, '<br>')}</div>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #e7ddcd;border-bottom:1px solid #e7ddcd;">
+      ${row('Email', esc(enquiry.email))}
+      ${enquiry.phone ? row('Phone', `<a href="tel:${esc(String(enquiry.phone).replace(/[^\d+]/g, ''))}" style="color:#b3701d;">${esc(enquiry.phone)}</a>`) : ''}
+      ${row('Type', esc(typeLabel))}
+      ${row('Via', `${esc(channelLabel)} · ${esc(siteName)}`)}
+      ${enquiry.voucher_code ? row('Voucher code', `<span style="font-family:'Courier New',monospace;">${esc(enquiry.voucher_code)}</span>`) : ''}
+      ${Object.entries(fields).map(([k, v]) => row(labels[k] || esc(k), esc(v))).join('')}
+      ${enquiry.page ? row('Page', `<span style="font-weight:400;">${esc(enquiry.page)}</span>`) : ''}
+    </table>
+
+    <p style="margin:22px 0 0;font-size:13px;color:${INK_SOFT};line-height:1.6;">
+      Replies you send from the admin go from info@ukbrewerytours.com and are saved with the conversation.
+    </p>
+  </td></tr>`);
+}
+
+/** An admin reply to a customer. Plain text in, paragraphs out, with the thread link. */
+export function inboxReplyHtml({ body, quoted, quotedName, threadLink, brand = 'UK Brewery Tours' }) {
+  const paras = esc(body).split(/\n{2,}/).map(p =>
+    `<p style="margin:0 0 14px;font-size:15px;line-height:1.7;">${p.replace(/\n/g, '<br>')}</p>`).join('');
+  return shell(`<tr><td style="padding:30px 28px 24px;">
+    ${paras}
+    ${quoted ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:22px 0 0;">
+      <tr><td style="border-left:3px solid #e7ddcd;padding:4px 0 4px 14px;font-size:13px;line-height:1.65;color:${INK_SOFT};">
+        <div style="font-size:12px;margin-bottom:4px;">${quotedName ? `${esc(quotedName)} wrote:` : 'You wrote:'}</div>
+        ${esc(quoted).slice(0, 1500).replace(/\n/g, '<br>')}
+      </td></tr>
+    </table>` : ''}
+    ${threadLink ? `<div style="background:${CREAM};border-radius:10px;padding:16px 18px;margin:24px 0 0;font-size:13px;line-height:1.65;color:${INK_SOFT};text-align:center;">
+      <a href="${esc(threadLink)}" style="display:inline-block;background:${AMBER};color:#2b1a05;text-decoration:none;font-weight:600;padding:11px 22px;border-radius:999px;font-size:14px;">Reply to this message</a>
+      <div style="margin-top:8px;">Opens your conversation with ${esc(brand)} — or just reply to this email.</div>
+    </div>` : ''}
   </td></tr>`);
 }
 

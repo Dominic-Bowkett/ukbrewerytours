@@ -15,13 +15,34 @@
 </header>
 
 <nav class="admin-tabs">
-  <button class="admin-tab is-active" data-tab="vouchers">Gift vouchers</button>
-  <button class="admin-tab" data-tab="widgets">Voucher widgets</button>
+  <button class="admin-tab is-active" data-tab="inbox">Inbox<span class="tab-badge" id="inboxBadge" hidden></span></button>
+  <button class="admin-tab" data-tab="vouchers">Gift vouchers</button>
+  <button class="admin-tab" data-tab="widgets">Widgets</button>
   <button class="admin-tab" data-tab="connect">Team payments</button>
   <button class="admin-tab" data-tab="analytics">Analytics</button>
 </nav>
 
-<main class="admin-main" data-panel="vouchers">
+<main class="admin-main inbox-main" data-panel="inbox">
+  <div class="inbox" id="inbox">
+    <aside class="inbox-side" aria-label="Conversations">
+      <div class="inbox-tools">
+        <div class="status-chips" id="ibStatus"></div>
+        <div class="inbox-filters">
+          <select id="ibType" aria-label="Enquiry type"><option value="">All types</option></select>
+          <select id="ibSite" aria-label="Website"><option value="">All websites</option></select>
+        </div>
+        <input type="search" id="ibQ" placeholder="Search name, email, code or message…" aria-label="Search conversations">
+      </div>
+      <ul class="inbox-list" id="ibList"><li class="muted pad">Loading…</li></ul>
+      <div class="pager" id="ibPager" hidden><button class="btn btn-ghost btn-sm" id="ibPrev">← Newer</button><span id="ibPage"></span><button class="btn btn-ghost btn-sm" id="ibNext">Older →</button></div>
+    </aside>
+    <section class="inbox-thread" id="ibThread" aria-live="polite">
+      <div class="thread-empty"><strong>No conversation selected</strong>Pick one from the list to read and reply.</div>
+    </section>
+  </div>
+</main>
+
+<main class="admin-main" data-panel="vouchers" hidden>
   <section class="stats" id="stats"></section>
 
   <section class="panel">
@@ -48,6 +69,31 @@
     </div>
     <div class="pager"><button class="btn btn-ghost" id="prev" disabled>← Previous</button><span id="pageLabel"></span><button class="btn btn-ghost" id="next" disabled>Next →</button></div>
   </section>
+
+  <section class="panel" style="margin-top:22px">
+    <div class="panel-head">
+      <h2>Codes from other systems</h2>
+      <div class="filters">
+        <input type="search" id="impQ" placeholder="Search code, name or email…">
+        <select id="impSource"><option value="">All sources</option></select>
+        <button class="btn btn-primary btn-sm" id="impImport" type="button">Import codes</button>
+      </div>
+    </div>
+    <div class="imp-summary" id="impSummary"></div>
+    <div class="table-wrap">
+      <table class="voucher-table">
+        <thead>
+          <tr><th>Code</th><th>Source</th><th>Value</th><th>Balance</th><th>Status</th><th>Holder</th><th>Expires</th><th></th></tr>
+        </thead>
+        <tbody id="impRows"><tr><td colspan="8" class="muted pad">Loading…</td></tr></tbody>
+      </table>
+    </div>
+    <div class="pager"><button class="btn btn-ghost" id="impPrev" disabled>← Previous</button><span id="impPageLabel"></span><button class="btn btn-ghost" id="impNext" disabled>Next →</button></div>
+    <p class="muted pad" style="padding-top:0">
+      Voucher codes sold through other systems. Import a CSV export and they're checked automatically
+      against every redemption request in the Inbox, alongside UK Brewery Tours codes.
+    </p>
+  </section>
 </main>
 
 <main class="admin-main" data-panel="widgets" hidden>
@@ -70,7 +116,8 @@
       Create a widget, copy its embed code, and paste it into any website — Bristol Brewery Tours,
       London Brewery Tours, a partner's blog. <strong>Gift voucher</strong> widgets sell ordinary
       UK Brewery Tours vouchers, tagged with the site they were sold on. <strong>Contact form</strong>
-      widgets email enquiries to info@ukbrewerytours.com with reply-to set to the sender.
+      widgets send enquiries to the Inbox tab, tagged with the site and page they came from. The live chat
+      bubble is separate — see INBOX.md in the repo for its one-line embed.
     </p>
   </section>
 
@@ -231,6 +278,15 @@
   </div>
 </div>
 
+<!-- Imported codes: import wizard, and one code's detail -->
+<div class="modal" id="impModal" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-panel" role="dialog" aria-modal="true">
+    <button class="modal-close" data-close aria-label="Close">&times;</button>
+    <div id="impBody"></div>
+  </div>
+</div>
+
 <!-- Voucher detail + redeem -->
 <div class="modal" id="modal" hidden>
   <div class="modal-backdrop" data-close></div>
@@ -261,7 +317,11 @@ const detail = document.getElementById('detail');
 
 async function api(path, opts) {
   const res = await fetch(path, opts);
-  if (res.status === 401) { location.href = '/admin/login.html'; throw new Error('signed out'); }
+  if (res.status === 401) {
+    // Keep the hash (e.g. #inbox/42 from an alert email) so sign-in lands back on it.
+    location.href = '/admin/login.html?next=' + encodeURIComponent(location.pathname + location.hash);
+    throw new Error('signed out');
+  }
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Something went wrong.');
   return data;
@@ -533,7 +593,7 @@ document.getElementById('logout').addEventListener('click', async () => {
 });
 
 api('/api/admin/me')
-  .then(u => { document.getElementById('who').textContent = u.email; load(); })
+  .then(u => { document.getElementById('who').textContent = u.email; })
   .catch(() => {});
 
 /* ---------------- Team payments (Stripe Connect) ---------------- */
@@ -576,11 +636,19 @@ async function loadAnalytics() {
 }
 document.getElementById('anDays').addEventListener('change', loadAnalytics);
 
-function showTab(name) {
+let vouchersLoaded = false;
+
+function showTab(route) {
+  // Routes are "tab" or "tab/sub" — #inbox/42 opens conversation 42.
+  const [name, sub] = String(route || 'inbox').split('/');
   const tab = document.querySelector(`.admin-tab[data-tab="${CSS.escape(name)}"]`);
   if (!tab) return;
   document.querySelectorAll('.admin-tab').forEach(t => t.classList.toggle('is-active', t === tab));
   document.querySelectorAll('[data-panel]').forEach(p => { p.hidden = p.dataset.panel !== name; });
+  if (name === 'inbox') inboxRoute(sub);
+  if (name === 'vouchers' && !vouchersLoaded) {
+    vouchersLoaded = true; load(); loadImported();
+  }
   if (name === 'connect' && !connectLoaded) {
     connectLoaded = true; loadPayments(); loadTeam(); loadAccounts(); checkLiveMode();
   }
@@ -988,7 +1056,7 @@ function widgetFormHtml(w) {
       <div class="field"><label for="w-kind">What should it do?</label>
         <select id="w-kind">
           <option value="voucher">Sell gift vouchers — paid to UK Brewery Tours via Stripe</option>
-          <option value="contact">Contact form — emails enquiries to info@ukbrewerytours.com</option>
+          <option value="contact">Contact form — sends enquiries to the Inbox tab</option>
         </select></div>`}
 
       <div class="field" style="margin-top:12px"><label for="w-name">Name <span class="muted">(internal — which site is this for?)</span></label>
@@ -1054,7 +1122,7 @@ function openWidget(id) {
       <div class="balance-box">
         ${w.kind === 'contact' ? `
           <div class="hl"><span>Messages received</span><strong>${w.enquiries || 0}</strong></div>
-          <div><span>Delivered to</span><strong style="font-size:.95rem">info@ukbrewerytours.com</strong></div>
+          <div><span>Delivered to</span><strong style="font-size:.95rem"><a href="#inbox" data-close>Inbox tab</a></strong></div>
         ` : `
           <div><span>Vouchers sold</span><strong>${w.sales}</strong></div>
           <div class="hl"><span>Revenue</span><strong>${money(w.revenue_pence)}</strong></div>
@@ -1237,10 +1305,13 @@ document.addEventListener('click', async (e) => {
 });
 widgetModal.addEventListener('click', (e) => { if (e.target.closest('[data-close]')) widgetModal.hidden = true; });
 
-// Restore the tab named in the URL hash — runs last so every panel's lazy
-// loader and state (widgetsLoaded etc.) is already defined.
-if (location.hash.length > 1) showTab(location.hash.slice(1));
-window.addEventListener('hashchange', () => { if (location.hash.length > 1) showTab(location.hash.slice(1)); });
+// Restore the tab named in the URL hash (Inbox when there is none). Waits for
+// DOMContentLoaded so the deferred inbox.js / imported.js have defined their
+// loaders first.
+document.addEventListener('DOMContentLoaded', () => showTab(location.hash.slice(1) || 'inbox'));
+window.addEventListener('hashchange', () => showTab(location.hash.slice(1) || 'inbox'));
 </script>
+<script src="/admin/inbox.js?v=1" defer></script>
+<script src="/admin/imported.js?v=1" defer></script>
 </body>
 </html>

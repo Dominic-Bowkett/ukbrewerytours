@@ -387,11 +387,13 @@ function contactPageHtml(widget, accent, accentInk) {
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   @media (max-width: 480px) { .row { grid-template-columns: 1fr; } }
   .field { min-width: 0; }
-  input[type="text"], input[type="email"], input[type="tel"], textarea {
+  input[type="text"], input[type="email"], input[type="tel"], textarea, select {
     width: 100%; border: 1.5px solid var(--line); border-radius: 9px; padding: 10px 12px;
     font: inherit; font-size: .95rem; color: var(--ink); background: #fff;
   }
-  input:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  select { appearance: none; -webkit-appearance: none; padding-right: 34px; cursor: pointer;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%236b5c4f' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 12px center / 11px; }
+  input:focus, textarea:focus, select:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
   textarea { resize: vertical; line-height: 1.5; }
   .hp { position: absolute; left: -9999px; top: -9999px; height: 1px; width: 1px; overflow: hidden; }
   .err { color: var(--red); font-size: .9rem; }
@@ -421,8 +423,21 @@ function contactPageHtml(widget, accent, accentInk) {
         <input id="email" type="email" autocomplete="email" placeholder="you@example.com"></div>
     </div>
 
-    <div class="field"><label for="phone">Phone <span style="text-transform:none;letter-spacing:0;font-weight:400">(optional)</span></label>
-      <input id="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="07123 456789"></div>
+    <div class="row">
+      <div class="field"><label for="phone">Phone <span style="text-transform:none;letter-spacing:0;font-weight:400">(optional)</span></label>
+        <input id="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="07123 456789"></div>
+      <div class="field"><label for="type">What's it about?</label>
+        <select id="type">
+          <option value="booking">Booking a tour</option>
+          <option value="group">A group or private booking</option>
+          <option value="redemption">Redeeming a gift voucher</option>
+          <option value="voucher">Buying a gift voucher</option>
+          <option value="general">Something else</option>
+        </select></div>
+    </div>
+
+    <div class="field" id="codeRow" hidden><label for="code">Voucher code</label>
+      <input id="code" type="text" autocomplete="off" maxlength="200" placeholder="From your voucher email" style="text-transform:uppercase"></div>
 
     <div class="field"><label for="msg">Message</label>
       <textarea id="msg" rows="5" maxlength="5000" placeholder="Tell us what you're after — dates, group size, anything else."></textarea></div>
@@ -464,6 +479,18 @@ function contactPageHtml(widget, accent, accentInk) {
   window.addEventListener('load', report);
   report();
 
+  // Guess the topic from the host page (a /private-tours form is a group
+  // booking); the customer can change it.
+  var path = '';
+  try { path = new URL(HOST_URL).pathname.toLowerCase(); } catch (e) { path = ''; }
+  $('type').value = /redeem/.test(path) ? 'redemption'
+    : /group|private|stag|hen|corporate|team/.test(path) ? 'group'
+    : /voucher|gift/.test(path) ? 'voucher'
+    : /tour|ticket|book|experience/.test(path) ? 'booking' : 'general';
+  function syncType() { $('codeRow').hidden = $('type').value !== 'redemption'; report(); }
+  $('type').addEventListener('change', syncType);
+  syncType();
+
   $('f').addEventListener('submit', function (e) {
     e.preventDefault();
     errEl.hidden = true;
@@ -472,11 +499,13 @@ function contactPageHtml(widget, accent, accentInk) {
 
     if (!$('name').value.trim()) return fail('Please enter your name.', $('name'));
     if (!$('email').value.trim()) return fail('Please enter your email address.', $('email'));
+    if ($('type').value === 'redemption' && !$('code').value.trim()) return fail('Please add your voucher code — it is in your voucher email.', $('code'));
     if ($('msg').value.trim().length < 10) return fail('Please tell us a little more.', $('msg'));
 
     go.disabled = true;
     go.textContent = 'Sending…';
 
+    var isRedeem = $('type').value === 'redemption';
     fetch('/api/contact', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -484,7 +513,9 @@ function contactPageHtml(widget, accent, accentInk) {
         name: $('name').value,
         email: $('email').value,
         phone: $('phone').value,
-        message: $('msg').value,
+        type: $('type').value,
+        voucher_code: isRedeem ? $('code').value.trim().toUpperCase() : '',
+        message: (isRedeem ? 'Voucher code: ' + $('code').value.trim().toUpperCase() + '\\n\\n' : '') + $('msg').value,
         company: $('company').value,
         widgetId: WIDGET_ID,
         hostUrl: HOST_URL,

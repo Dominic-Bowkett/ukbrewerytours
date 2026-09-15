@@ -1,6 +1,7 @@
-// Voucher redemption form → /api/contact. The structured fields are folded
-// into the message body so the enquiry pipeline (rate limit, log, auto-reply)
-// is reused unchanged; the endpoint upgrades the subject line for /redeem/.
+// Voucher redemption form → /api/contact → the admin inbox as a "Voucher
+// redemption" conversation. The code travels as its own field so the admin can
+// check it against the voucher database; tour and date are sent structured AND
+// folded into the message, so the thread reads on its own.
 (function () {
   const form = document.querySelector('[data-redeem-form]');
   if (!form) return;
@@ -52,6 +53,9 @@
           email: email.value,
           phone: tel.value,
           message: body,
+          type: 'redemption',
+          voucher_code: code.value.trim().toUpperCase(),
+          fields: { tour: tour.value.trim(), preferred_date: when.value.trim() },
           company: form.querySelector('[name="company"]').value, // honeypot
           page: location.pathname,
         }),
@@ -63,6 +67,8 @@
       if (intro) intro.hidden = true;
       form.hidden = true;
       success.hidden = false;
+      const thread = success.querySelector('[data-redeem-thread]');
+      if (thread && data.token) { thread.href = '/messages/' + data.token; thread.hidden = false; }
       success.scrollIntoView({ block: 'center', behavior: 'smooth' });
     } catch (err) {
       fail(err.message);

@@ -6,8 +6,8 @@
     <p class="lede">Stags, hens, big birthdays, clients and corporate teams — private brewery tours and beer tastings built around your group, from £29 per person. Running since 2014.</p>
     <div class="city-hero-stats">From £29pp · Most UK cities · Groups of 10+</div>
     <div class="hero-ctas">
-      <a class="btn btn-whatsapp" href="{{whatsapp_url}}?text=Hi!%20I'd%20like%20to%20enquire%20about%20a%20private%20group%20brewery%20tour.">{{wa_icon}} Enquire on WhatsApp</a>
-      <a class="btn btn-outline-light" href="mailto:{{email}}?subject=Group%20tour%20enquiry">Email us</a>
+      <a class="btn btn-primary" href="#enquire">Send a group enquiry</a>
+      <a class="btn btn-chat" href="#enquire" data-chat-open data-chat-topic="group" data-chat-text="Hi! I'd like to enquire about a private group brewery tour.">{{chat_icon}} Chat with us</a>
     </div>
   </div>
 </section>
@@ -35,7 +35,7 @@
         <li>Optional food, boat trips and add-ons</li>
         <li>Sorted for you end to end — just turn up</li>
       </ul>
-      <p class="mt-3"><a class="btn btn-whatsapp" href="{{whatsapp_url}}?text=Hi!%20I'm%20planning%20a%20stag%2Fhen%20brewery%20tour.">{{wa_icon}} Plan a stag or hen</a></p>
+      <p class="mt-3"><a class="btn btn-primary" href="#enquire" data-occasion="Stag or hen do">Plan a stag or hen</a></p>
     </div>
   </div>
 </section>
@@ -52,7 +52,7 @@
         <li>Invoicing and deposits to suit company booking</li>
         <li>Wine, food and other experiences on request</li>
       </ul>
-      <p class="mt-3"><a class="btn btn-whatsapp" href="{{whatsapp_url}}?text=Hi!%20I'd%20like%20to%20organise%20a%20corporate%20brewery%20tour%2Fteam-building%20event.">{{wa_icon}} Organise a team day</a></p>
+      <p class="mt-3"><a class="btn btn-primary" href="#enquire" data-occasion="Corporate or team building">Organise a team day</a></p>
     </div>
     <div class="frame illus-frame">
       <img src="/assets/img/illus/blindfold.jpg" alt="A corporate team at a blindfold beer tasting" loading="lazy">
@@ -104,7 +104,7 @@
       <div class="step" style="background:var(--stout-2);border-color:rgba(247,241,229,.14)">
         <span class="num">1</span>
         <h3 style="color:#fffcf5">Tell us your plans</h3>
-        <p style="color:rgba(247,241,229,.75)">Message us on WhatsApp or email with your city, group size and rough dates.</p>
+        <p style="color:rgba(247,241,229,.75)">Send the enquiry form below or chat with us — your city, group size and rough dates is all we need to start.</p>
       </div>
       <div class="step" style="background:var(--stout-2);border-color:rgba(247,241,229,.14)">
         <span class="num">2</span>
@@ -119,8 +119,73 @@
     </div>
     <p class="mt-3" style="font-size:.88rem;color:rgba(247,241,229,.6)">There's no strict minimum group size, but the typical minimum fee is the equivalent of 10 guests. Deposits are non-refundable unless the tour is cancelled by us. Beer's included, other drinks can be arranged, and routes can be adapted for accessibility — see the <a href="/contact/#faq" style="color:var(--amber)">FAQ</a>.</p>
     <p class="mt-3">
-      <a class="btn btn-whatsapp" href="{{whatsapp_url}}?text=Hi!%20I'd%20like%20to%20enquire%20about%20a%20private%20group%20brewery%20tour.">{{wa_icon}} Enquire on WhatsApp</a>
-      <a class="btn btn-outline-light" href="/contact/">Use the contact form</a>
+      <a class="btn btn-primary" href="#enquire">Send a group enquiry</a>
+      <a class="btn btn-outline-light" href="#enquire" data-chat-open data-chat-topic="group" data-chat-text="Hi! I'd like to enquire about a private group brewery tour.">Or chat with us</a>
     </p>
+  </div>
+</section>
+
+<section class="section band-mist" id="enquire">
+  <div class="container">
+    <div class="form-card">
+      <div data-contact-intro>
+        <span class="kicker">Group enquiry</span>
+        <h2 style="margin:6px 0 8px">Tell us about your group</h2>
+        <p style="color:var(--ink-soft);margin-bottom:26px">The more you tell us, the more useful our first reply — we usually come back within a few hours with options and a price.</p>
+      </div>
+      <form class="form-grid" data-contact-form data-type="group" novalidate>
+        <!-- honeypot: hidden from people, filled in by bots -->
+        <input type="text" name="company" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div>
+          <label for="g-name">Name</label>
+          <input id="g-name" name="name" type="text" required autocomplete="name">
+        </div>
+        <div>
+          <label for="g-email">Email</label>
+          <input id="g-email" name="email" type="email" required autocomplete="email">
+        </div>
+        <div>
+          <label for="g-phone">Phone</label>
+          <input id="g-phone" name="phone" type="tel" autocomplete="tel" placeholder="Optional — handy for a quick call">
+        </div>
+        <div>
+          <label for="g-city">City</label>
+          <input id="g-city" type="text" data-field="city" required placeholder="e.g. Manchester">
+        </div>
+        <div>
+          <label for="g-size">Group size</label>
+          <input id="g-size" type="text" inputmode="numeric" data-field="group_size" required placeholder="e.g. 14">
+        </div>
+        <div>
+          <label for="g-date">Preferred date(s)</label>
+          <input id="g-date" type="text" data-field="preferred_date" placeholder="e.g. Sat 18 Oct, or any weekend in Nov">
+        </div>
+        <div class="full">
+          <label for="g-occasion">Occasion</label>
+          <select id="g-occasion" data-field="occasion">
+            <option value="">Choose one (optional)</option>
+            <option>Stag or hen do</option>
+            <option>Corporate or team building</option>
+            <option>Birthday</option>
+            <option>Other celebration</option>
+            <option>Just a great day out</option>
+          </select>
+        </div>
+        <div class="full">
+          <label for="g-message">Anything else?</label>
+          <textarea id="g-message" name="message" rows="4" placeholder="Budget, food, accessibility, a brewery you'd love to visit…"></textarea>
+        </div>
+        <div class="full">
+          <p class="form-status" data-contact-error hidden></p>
+          <button class="btn btn-primary" type="submit" data-contact-submit>Send group enquiry</button>
+        </div>
+      </form>
+      <div class="form-sent" data-contact-success hidden>
+        <div class="form-sent__mark">✓</div>
+        <h3>Enquiry sent</h3>
+        <p>Thanks — we've emailed you a confirmation and will come back with options, usually within a few hours.</p>
+        <p class="mt-2"><a class="btn btn-outline" href="#" data-contact-thread hidden>View your conversation</a></p>
+      </div>
+    </div>
   </div>
 </section>
