@@ -122,9 +122,8 @@ closed) on later visits. Replies are always emailed too.
 
 Every outbound email's Reply-To is that conversation's own address —
 `reply-<token>@<INBOUND_REPLY_DOMAIN>` (`replyAddress()` in `_lib/inbox.js`) — so a
-reply names its own thread and needs no guesswork. **Until `INBOUND_REPLY_DOMAIN` is
-set, Reply-To falls back to info@** and nothing breaks; it just doesn't come back
-into the inbox.
+reply names its own thread and needs no guesswork. Unset `INBOUND_REPLY_DOMAIN` and
+Reply-To falls back to info@; nothing breaks, replies just stop coming back in.
 
 `POST /api/inbound-email` is Resend's `email.received` webhook:
 Svix-signed (`INBOUND_WEBHOOK_SECRET`, 5-minute replay window), fetches the body from
@@ -136,14 +135,29 @@ Retries dedupe on `message_id` (stored in `enquiry_messages.email_id`); auto-rep
 bounces and bulk mail (`Auto-Submitted`, `Precedence`, `List-Unsubscribe`, no-reply
 senders) are dropped. Alerts then follow the normal rules (assignee, else admin).
 
-**To switch it on:**
-1. Resend → Domains → add `reply.ukbrewerytours.com` with receiving, and add the MX
-   record it gives you to that **subdomain** in Cloudflare DNS. The apex keeps its
-   Google Workspace MX — do not enable Cloudflare Email Routing on the apex.
-2. Resend → Webhooks → endpoint `https://www.ukbrewerytours.com/api/inbound-email`,
-   event `email.received`; copy the signing secret.
-3. Pages → Settings → Variables: `INBOUND_WEBHOOK_SECRET=whsec_…` and
-   `INBOUND_REPLY_DOMAIN=reply.ukbrewerytours.com`, then redeploy.
+**LIVE since 16 Sep 2026.** As configured:
+- Resend domain `reply.ukbrewerytours.com` (id `1f42835a-b40a-4ab7-9777-a563fa14c0a5`),
+  **receive-only** — capabilities `{sending: disabled, receiving: enabled}`. DNS on the
+  ukbrewerytours.com zone: `reply` MX → `inbound-smtp.eu-west-1.amazonaws.com` (prio 10,
+  verified) plus the DKIM TXT `resend._domainkey.reply`. The apex keeps its Google
+  Workspace MX — never enable Cloudflare Email Routing on the apex.
+- Resend webhook `c39e3c7a-…` → `https://www.ukbrewerytours.com/api/inbound-email`,
+  event `email.received`.
+- Pages secrets: `INBOUND_WEBHOOK_SECRET` (the webhook's signing secret),
+  `INBOUND_API_KEY` (a full-access Resend key named `ukbrewerytours-inbound`;
+  reading a *received* email needs more than sending access), and
+  `INBOUND_REPLY_DOMAIN=reply.ukbrewerytours.com`. Pages applies variables at deploy
+  time, so a push is needed after changing them.
+
+Two things that cost time and will again:
+- **Signing-secret whitespace.** Piping a secret into `wrangler pages secret put` can
+  append a newline, which decodes to a different key and fails every signature.
+  `verifySvix` now trims, but store it clean.
+- **Header names.** Svix sends `svix-id/-timestamp/-signature` OR the standard
+  `webhook-*` pair; both are accepted.
+- The domain reads "pending" in Resend because the DKIM record belongs to sending,
+  which is disabled here. Receiving only needs the MX, which is verified — this is
+  expected, not a fault.
 
 The same endpoint is how info@ mail could join the helpdesk: a Google Workspace
 recipient-address-map rule copying (or redirecting) info@ to an address on the
