@@ -18,7 +18,10 @@ export async function verifySvix(request, rawBody, secret) {
   const age = Math.abs(Date.now() / 1000 - Number(ts));
   if (!Number.isFinite(age) || age > 300) return false;
 
-  const keyB64 = secret.startsWith('whsec_') ? secret.slice(6) : secret;
+  // Trimmed: a secret pasted (or piped) with a trailing newline decodes to a
+  // different key and every delivery then fails signature verification.
+  const clean = String(secret).trim();
+  const keyB64 = clean.startsWith('whsec_') ? clean.slice(6) : clean;
   let keyBytes;
   try {
     keyBytes = Uint8Array.from(atob(keyB64), c => c.charCodeAt(0));
