@@ -14,7 +14,7 @@ export async function onRequestGet({ params, request, env }) {
   const after = Math.max(0, parseInt(url.searchParams.get('after') || '0', 10) || 0);
 
   const [head, fresh] = await env.DB.batch([
-    env.DB.prepare('SELECT id, status, type, unread, voucher_code FROM enquiries WHERE id = ?').bind(id),
+    env.DB.prepare('SELECT id, status, type, unread, voucher_code, deleted_at FROM enquiries WHERE id = ?').bind(id),
     env.DB.prepare(
       'SELECT id, direction, channel, body, author, created_at FROM enquiry_messages WHERE enquiry_id = ? AND id > ? ORDER BY id',
     ).bind(id, after),
@@ -26,7 +26,7 @@ export async function onRequestGet({ params, request, env }) {
   const newInbound = messages.some(m => m.direction === 'in');
 
   // The conversation is on screen, so a customer message is read as it arrives.
-  if (enquiry.unread && url.searchParams.get('seen') === '1') {
+  if (enquiry.unread && !enquiry.deleted_at && url.searchParams.get('seen') === '1') {
     await env.DB.prepare('UPDATE enquiries SET unread = 0 WHERE id = ?').bind(id).run();
   }
 

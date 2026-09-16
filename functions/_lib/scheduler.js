@@ -29,6 +29,7 @@
 import { isChargeReady } from './team-auth.js';
 import { retrieveAccount } from './stripe.js';
 import { sendEmail } from './email.js';
+import { purgeBin } from './inbox.js';
 import {
   mayEmail, recordEvent, alertOps, paymentRequestHtml, randomId,
 } from './connect.js';
@@ -514,6 +515,10 @@ export async function runScheduler(env) {
     summary.reminders = await sendDueReminders(env);
 
     summary.monitors = await checkMonitors(env);
+
+    // Housekeeping for the inbox rather than for payments, but this is the only
+    // thing on the site that runs to a clock. See BIN_DAYS in _lib/inbox.js.
+    summary.binned = await purgeBin(env);
   } catch (err) {
     // A tick that throws is a tick that does not happen again until someone
     // reads the logs, so this is reported and swallowed.

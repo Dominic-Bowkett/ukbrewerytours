@@ -28,7 +28,7 @@ export async function onRequestGet({ params, env }) {
 
   let enquiry = null;
   if (parts.length === 1 && TOKEN_RE.test(token)) {
-    enquiry = await env.DB.prepare('SELECT site FROM enquiries WHERE token = ?').bind(token).first();
+    enquiry = await env.DB.prepare('SELECT site FROM enquiries WHERE token = ? AND deleted_at IS NULL').bind(token).first();
   }
 
   if (!enquiry) {

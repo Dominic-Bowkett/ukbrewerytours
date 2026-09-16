@@ -17,7 +17,7 @@ export async function onRequestGet({ request, env, data }) {
   const since = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(url.searchParams.get('since') || '')
     ? url.searchParams.get('since') : null;
 
-  const where = ['e.assigned_to = ?', 'e.is_notification = 0'];
+  const where = ['e.assigned_to = ?', 'e.is_notification = 0', 'e.deleted_at IS NULL'];
   const args = [me];
   if (status === 'open') where.push("e.status != 'closed'");
   else if (STATUSES[status]) { where.push('e.status = ?'); args.push(status); }
@@ -46,12 +46,12 @@ export async function onRequestGet({ request, env, data }) {
        ORDER BY COALESCE(e.last_message_at, e.created_at) DESC, e.id DESC
        LIMIT ? OFFSET ?`).bind(...args, PAGE_SIZE + 1, (page - 1) * PAGE_SIZE),
     env.DB.prepare(
-      `SELECT status, COUNT(*) AS n, SUM(unread) AS unread FROM enquiries WHERE assigned_to = ? AND is_notification = 0 GROUP BY status`,
+      `SELECT status, COUNT(*) AS n, SUM(unread) AS unread FROM enquiries WHERE assigned_to = ? AND is_notification = 0 AND deleted_at IS NULL GROUP BY status`,
     ).bind(me),
     env.DB.prepare(
       `SELECT e.id, e.name, e.email AS _mask, e.last_inbound_at,
               (SELECT substr(body, 1, 140) FROM enquiry_messages m WHERE m.enquiry_id = e.id AND m.direction = 'in' ORDER BY m.id DESC LIMIT 1) AS snippet
-         FROM enquiries e WHERE e.assigned_to = ? AND e.is_notification = 0 AND ? IS NOT NULL AND e.last_inbound_at >= ?
+         FROM enquiries e WHERE e.assigned_to = ? AND e.is_notification = 0 AND e.deleted_at IS NULL AND ? IS NOT NULL AND e.last_inbound_at >= ?
         ORDER BY e.last_inbound_at DESC LIMIT 5`,
     ).bind(me, since, since),
   ]);

@@ -17,6 +17,8 @@
 
   const state = { view: 'inbox', status: 'open', type: '', site: '', assignee: '', q: '', page: 1, current: null, labels: null, list: [], team: [] };
   const isNotif = () => state.view === 'notifications';
+  const isBin = () => state.view === 'bin';
+  let binDays = 7;
   let loadedOnce = false;
   let currentThread = null;
   let composerMode = 'reply';
@@ -71,6 +73,9 @@
       state.list = d.enquiries;
       loadedOnce = true;
 
+      // In the bin, a conversation keeps whatever status it had when it went in;
+      // filtering on that would only hide things from someone looking for them.
+      $('ibStatus').hidden = isBin();
       $('ibStatus').innerHTML = STATUS_CHIPS
         .filter(([key]) => !isNotif() || !['dealing', 'waiting'].includes(key))
         .map(([key, label]) => {
@@ -88,11 +93,14 @@
         .map(s => `<option value="${esc(s.site)}">${esc(s.label)}</option>`).join('');
       siteSel.value = state.site;
 
-      // Type, website and owner mean nothing to a Stripe receipt.
-      const notif = isNotif();
-      ['ibType', 'ibSite', 'ibAssignee'].forEach(id => { $(id).hidden = notif; });
+      // Type, website and owner mean nothing to a Stripe receipt or to the bin.
+      const plain = state.view === 'inbox';
+      binDays = d.bin_days || binDays;
+      ['ibType', 'ibSite', 'ibAssignee'].forEach(id => { $(id).hidden = !plain; });
       $('ibNotifTab').textContent = 'Notifications' + (d.counts.notifications ? ` (${d.counts.notifications})` : '');
-      $('ibQ').placeholder = notif ? 'Search notifications…' : 'Search name, email, code or message…';
+      $('ibBinTab').textContent = 'Bin' + (d.counts.bin ? ` (${d.counts.bin})` : '');
+      $('ibEmptyBin').hidden = !isBin() || !d.counts.bin;
+      $('ibQ').placeholder = isBin() ? 'Search the bin…' : isNotif() ? 'Search notifications…' : 'Search name, email, code or message…';
 
       state.team = d.team || [];
       const ownerSel = $('ibAssignee');
@@ -118,7 +126,28 @@
 
   // A notification is read by its subject line — who sent it and what it says —
   // where a conversation is read by who it is from and what they want.
+  /** How long a binned conversation has left. */
+  function binCountdown(deletedAt) {
+    const d = parseTs(deletedAt);
+    if (!d) return '';
+    const days = Math.ceil((d.getTime() + binDays * 86400000 - Date.now()) / 86400000);
+    return days <= 0 ? 'going any minute now' : days === 1 ? 'gone tomorrow' : `gone in ${days} days`;
+  }
+
   function listItem(e) {
+    if (e.deleted_at) {
+      return `<li class="ib-item${state.current === e.id ? ' active' : ''}" data-ib="${e.id}" tabindex="0">
+        <div class="ib-row1"><span class="ib-name">${esc(e.name)}</span><time title="Deleted ${esc(when(e.deleted_at))}">${ago(e.deleted_at)}</time></div>
+        ${e.subject && e.is_notification ? `<div class="ib-subject">${esc(e.subject)}</div>` : ''}
+        <div class="ib-row2">
+          ${e.is_notification
+            ? '<span class="type-pill type-notification">Notification</span>'
+            : `<span class="type-pill type-${esc(e.type)}">${esc(typeLabel(e.type))}</span>`}
+          <span class="ib-why">${esc(binCountdown(e.deleted_at))}</span>
+        </div>
+        <div class="ib-snippet">${esc(e.snippet || '')}</div>
+      </li>`;
+    }
     const rest = e.is_notification
       ? `${e.subject ? `<div class="ib-subject">${esc(e.subject)}</div>` : ''}
          <div class="ib-row2">
@@ -140,6 +169,7 @@
 
   function emptyList() {
     if (state.q || state.type || state.site) return 'Nothing matches those filters.';
+    if (isBin()) return `The bin is empty. Anything you delete waits here for ${binDays} days before it goes for good.`;
     if (isNotif()) return 'Nothing filed here yet. Receipts, booking confirmations and other machine-written mail lands here instead of the inbox.';
     return state.status === 'open' ? 'Inbox zero — nothing open. 🍺' : 'No conversations here.';
   }
@@ -221,9 +251,11 @@
   $('ibSite').addEventListener('change', e => { state.site = e.target.value; state.page = 1; loadList(); });
   $('ibAssignee').addEventListener('change', e => { state.assignee = e.target.value; state.page = 1; loadList(); });
 
-  const emptyThread = () => (isNotif()
-    ? '<div class="thread-empty"><strong>Nothing selected</strong>Receipts, confirmations and other machine-written mail are kept here. Pick one to read it.</div>'
-    : '<div class="thread-empty"><strong>No conversation selected</strong>Pick one from the list to read and reply.</div>');
+  const emptyThread = () => {
+    if (isBin()) return `<div class="thread-empty"><strong>Nothing selected</strong>Deleted conversations wait here for ${binDays} days. Pick one to read it, put it back, or delete it for good.</div>`;
+    if (isNotif()) return '<div class="thread-empty"><strong>Nothing selected</strong>Receipts, confirmations and other machine-written mail are kept here. Pick one to read it.</div>';
+    return '<div class="thread-empty"><strong>No conversation selected</strong>Pick one from the list to read and reply.</div>';
+  };
 
   // Switching view closes whatever was open: the conversation on screen belongs
   // to the list you just left. Callers that want one open reopen it afterwards.
@@ -234,7 +266,9 @@
     threadEl.innerHTML = emptyThread();
     inboxEl.classList.remove('show-thread');
     // The filters mean different things in each view, so none of them carry over.
-    state.page = 1; state.type = ''; state.site = ''; state.assignee = ''; state.status = 'open';
+    // The bin shows everything in it: its rows keep the status they had going in.
+    state.page = 1; state.type = ''; state.site = ''; state.assignee = '';
+    state.status = view === 'bin' ? 'all' : 'open';
     document.querySelectorAll('[data-ib-view]').forEach(x => x.classList.toggle('on', x.dataset.ibView === view));
     loadList();
   }
@@ -642,6 +676,18 @@
 
   $('ibCompose').addEventListener('click', () => openCompose());
 
+  $('ibEmptyBin').addEventListener('click', async () => {
+    const n = state.list.length;
+    if (!confirm(`Empty the bin now?\n\nEverything in it goes for good, without waiting out the ${binDays} days. This cannot be undone.`)) return;
+    try {
+      const res = await api('/api/admin/inbox/bin', { method: 'DELETE' });
+      state.current = null;
+      location.hash = 'inbox';
+      loadList();
+      alert(res.deleted === 1 ? '1 conversation deleted.' : `${res.deleted || n} conversations deleted.`);
+    } catch (err) { alert(err.message); }
+  });
+
   /* ---------------- conversation ---------------- */
 
   const draftKey = id => 'ib_draft_' + id;
@@ -683,7 +729,10 @@
     // and a machine that wrote this. Either way the reply box would only produce
     // an error, so it is replaced by a line saying why. Notes still work.
     const notif = Boolean(e.is_notification);
-    const canEmail = !notif && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(e.email || ''));
+    // In the bin nothing is editable at all: it is either coming back or going.
+    const binned = Boolean(e.deleted_at);
+    binDays = d.bin_days || binDays;
+    const canEmail = !notif && !binned && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(e.email || ''));
     if (!canEmail) composerMode = 'note';
     const noReply = notif
       ? '🗂 Filed as a notification — nothing here is waiting on an answer.'
@@ -704,6 +753,9 @@
           </div>
         </div>
         <div class="th-actions">
+          ${binned ? `
+          <button class="btn btn-primary btn-sm" type="button" id="thRestore">Put it back</button>
+          <button class="btn btn-ghost btn-sm" type="button" id="thForever">Delete forever</button>` : `
           <div class="seg" role="group" aria-label="Status">
             ${Object.entries(d.labels.statuses)
               // Nobody is "dealing with" a receipt or "awaiting" it: a
@@ -718,23 +770,28 @@
           <select id="thAssign" aria-label="Assigned to" title="Hand this conversation to a team member. They see only what is assigned to them.">
             <option value="">Not assigned — you handle it</option>
             ${state.team.map(t => `<option value="${esc(t.id)}" ${e.assigned_to === t.id ? 'selected' : ''}>Assign to ${esc(t.name)}</option>`).join('')}
-          </select>`}
+          </select>`}`}
         </div>
       </div>
 
       <div class="th-scroll">
+        ${binned ? `<div class="th-binned">
+          <strong>🗑 In the bin</strong>
+          Deleted ${esc(when(e.deleted_at))} — ${esc(binCountdown(e.deleted_at))}, unless you put it back.
+          The customer can no longer open their copy of this conversation, and a reply from them would start a new one.
+        </div>` : ''}
         <div class="th-meta">
-          <span class="th-live" title="New messages appear here automatically">Live</span>
+          ${binned ? '' : '<span class="th-live" title="New messages appear here automatically">Live</span>'}
           <span>#${e.id}</span>
           <span>${esc(e.site_label)} · ${esc(e.channel_label)}${e.widget_name ? ` (${esc(e.widget_name)})` : ''}</span>
           <span>Received ${esc(when(e.created_at))}</span>
           ${e.page ? `<span>From ${/^https?:/.test(e.page) ? `<a href="${esc(e.page)}" target="_blank" rel="noopener">${esc(e.page.replace(/^https?:\/\/(www\.)?/, ''))}</a>` : esc(e.page)}</span>` : ''}
           ${e.assignee_name ? `<span class="ib-owner">Assigned to ${esc(e.assignee_name)}</span>` : ''}
-          ${notif
+          ${binned ? '' : notif
             ? `<span class="th-why">Filed here${e.notification_reason ? ` — ${esc(e.notification_reason)}` : ''}</span>`
             : `<a href="${esc(e.thread_url)}" target="_blank" rel="noopener" title="The page the customer sees">Customer's view ↗</a>
                <button type="button" class="btn btn-ghost btn-sm" id="thFile" style="padding:0 6px;font-size:.78rem" title="Not a customer — move it to Notifications, out of the inbox">File away</button>`}
-          <button type="button" class="btn btn-ghost btn-sm" id="thDelete" style="padding:0 6px;font-size:.78rem">Delete (spam)</button>
+          ${binned ? '' : `<button type="button" class="btn btn-ghost btn-sm" id="thDelete" style="padding:0 6px;font-size:.78rem" title="Moves it to the bin for ${binDays} days">Delete</button>`}
         </div>
 
         ${e.fields.length || e.voucher_code ? `<div class="th-fields">
@@ -742,12 +799,13 @@
           ${e.fields.map(f => `<div><span>${esc(f.label)}</span>${esc(f.value)}</div>`).join('')}
         </div>` : ''}
 
-        ${notif ? '' : voucherCard(d)}
+        ${notif || binned ? '' : voucherCard(d)}
 
         <div class="timeline">${d.messages.map(m => timelineItem(m, e)).join('')}</div>
         <button type="button" class="th-newpill" id="thNewPill" hidden>↓ New message</button>
       </div>
 
+      ${binned ? '' : `
       <div class="th-composer${composerMode === 'note' ? ' note-mode' : ''}" id="thComposer">
         <div class="composer-tabs">
           ${canEmail
@@ -770,21 +828,23 @@
             <button class="btn btn-primary" type="button" id="thSend">Send reply</button>
           </div>
         </div>
-      </div>`;
+      </div>`}`;
 
     // Composer: restore the draft, or start a greeting and sign-off.
     const text = $('thText');
-    const draft = getDraft(e.id);
     const signOff = `\n\nCheers,\n${e.brand}`;
-    if (draft !== null) text.value = draft;
-    else if (composerMode === 'reply') text.value = `Hi ${first},\n\n${signOff}`;
-    syncComposer(e, canEmail);
-    text.addEventListener('input', () => setDraft(e.id, text.value));
-    if (!draft && composerMode === 'reply' && !keepScroll && window.innerWidth > 900) {
-      const pos = `Hi ${first},\n\n`.length;
-      // Focus without scrolling the page on open; the caret sits under the greeting.
-      text.focus({ preventScroll: true });
-      text.setSelectionRange(pos, pos);
+    const draft = text ? getDraft(e.id) : null;
+    if (text) {
+      if (draft !== null) text.value = draft;
+      else if (composerMode === 'reply') text.value = `Hi ${first},\n\n${signOff}`;
+      syncComposer(e, canEmail);
+      text.addEventListener('input', () => setDraft(e.id, text.value));
+      if (!draft && composerMode === 'reply' && !keepScroll && window.innerWidth > 900) {
+        const pos = `Hi ${first},\n\n`.length;
+        // Focus without scrolling the page on open; the caret sits under the greeting.
+        text.focus({ preventScroll: true });
+        text.setSelectionRange(pos, pos);
+      }
     }
 
     const sc = threadEl.querySelector('.th-scroll');
@@ -830,10 +890,29 @@
       if (!confirm(question)) { ev.target.value = e.assigned_to || ''; return; }
       patch(e.id, { assigned_to: to || null });
     });
-    $('thDelete').addEventListener('click', async () => {
-      if (!confirm(`Delete this conversation with ${e.name}?\n\nUse this for spam only — it can't be undone. To file a real enquiry away, mark it Closed instead.`)) return;
+    $('thDelete')?.addEventListener('click', async () => {
+      if (!confirm(`Delete this conversation with ${e.name}?\n\nIt goes to the bin, where you have ${binDays} days to change your mind. To file a real enquiry away instead, mark it Closed.`)) return;
       try {
         await api('/api/admin/inbox/' + e.id, { method: 'DELETE' });
+        setDraft(e.id, null);
+        state.current = null;
+        location.hash = 'inbox';
+        loadList();
+      } catch (err) { alert(err.message); }
+    });
+    $('thRestore')?.addEventListener('click', async () => {
+      try {
+        await api('/api/admin/inbox/' + e.id, {
+          method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ restore: true }),
+        });
+        switchView(e.is_notification ? 'notifications' : 'inbox');
+        await openThread(e.id);
+      } catch (err) { alert(err.message); }
+    });
+    $('thForever')?.addEventListener('click', async () => {
+      if (!confirm(`Delete this conversation with ${e.name} for good?\n\nThe whole thread goes with it. This one cannot be undone — leave it in the bin if you are not certain.`)) return;
+      try {
+        await api('/api/admin/inbox/' + e.id + '?forever=1', { method: 'DELETE' });
         setDraft(e.id, null);
         state.current = null;
         location.hash = 'inbox';
@@ -849,10 +928,12 @@
       syncComposer(e, canEmail);
       text.focus();
     }));
-    $('thSend').addEventListener('click', () => send(e, lastIn));
-    text.addEventListener('keydown', ev => {
-      if ((ev.ctrlKey || ev.metaKey) && ev.key === 'Enter') { ev.preventDefault(); send(e, lastIn); }
-    });
+    if (text) {
+      $('thSend').addEventListener('click', () => send(e, lastIn));
+      text.addEventListener('keydown', ev => {
+        if ((ev.ctrlKey || ev.metaKey) && ev.key === 'Enter') { ev.preventDefault(); send(e, lastIn); }
+      });
+    }
     bindVoucherCard(d);
   }
 
@@ -1133,6 +1214,7 @@
   async function pollThread() {
     const id = state.current;
     if (threadPolling || !id || !currentThread || currentThread.enquiry.id !== id) return;
+    if (currentThread.enquiry.deleted_at) return;   // nothing arrives in the bin
     if (document.querySelector('[data-panel="inbox"]').hidden) return;
     if (document.visibilityState !== 'visible' && Date.now() - lastThreadPoll < 20000) return;
     lastThreadPoll = Date.now();

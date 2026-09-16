@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
-<meta name="admin-build" content="fd25ca469d">
+<meta name="admin-build" content="af667bbdf9">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
 <title>Admin — UK Brewery Tours</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍺%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="/assets/css/admin.css?v=fd25ca469d">
+<link rel="stylesheet" href="/assets/css/admin.css?v=af667bbdf9">
 </head>
 <body>
 <header class="admin-header">
@@ -31,6 +31,7 @@
           <div class="seg view-seg" role="group" aria-label="View">
             <button type="button" data-ib-view="inbox" class="on">Inbox</button>
             <button type="button" data-ib-view="notifications" id="ibNotifTab" title="Receipts, booking confirmations and other machine-written mail — filed here, never alerted on, never shown to the team">Notifications</button>
+            <button type="button" data-ib-view="bin" id="ibBinTab" title="Deleted conversations wait here for 7 days before they are gone for good">Bin</button>
           </div>
           <button type="button" class="btn btn-primary btn-sm" id="ibCompose">✉️ New email</button>
         </div>
@@ -41,6 +42,7 @@
           <select id="ibAssignee" aria-label="Assigned to"><option value="">Anyone</option><option value="none">Unassigned</option></select>
           <button type="button" class="chip-btn" id="ibContacts" title="Your address book">Contacts</button>
           <button type="button" class="chip-btn" id="ibTeam" title="Who can be given conversations">Team access</button>
+          <button type="button" class="chip-btn chip-danger" id="ibEmptyBin" hidden title="Delete everything in the bin now, without waiting out the 7 days">Empty the bin</button>
         </div>
         <div class="inbox-search">
           <input type="search" id="ibQ" placeholder="Search name, email, code or message…" aria-label="Search conversations">
@@ -1353,7 +1355,7 @@ document.addEventListener('DOMContentLoaded', () => showTab(location.hash.slice(
 window.addEventListener('hashchange', () => showTab(location.hash.slice(1) || 'inbox'));
 </script>
 <div class="ib-toast" id="ibToast" role="status" aria-live="polite" hidden></div>
-<script src="/admin/inbox.js?v=fd25ca469d" defer></script>
-<script src="/admin/imported.js?v=fd25ca469d" defer></script>
+<script src="/admin/inbox.js?v=af667bbdf9" defer></script>
+<script src="/admin/imported.js?v=af667bbdf9" defer></script>
 </body>
 </html>

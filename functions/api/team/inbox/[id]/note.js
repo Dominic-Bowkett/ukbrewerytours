@@ -3,7 +3,7 @@
 
 export async function onRequestPost({ params, request, env, data }) {
   if (!/^\d+$/.test(String(params.id))) return Response.json({ error: 'Conversation not found.' }, { status: 404 });
-  const enquiry = await env.DB.prepare('SELECT id FROM enquiries WHERE id = ? AND assigned_to = ? AND is_notification = 0')
+  const enquiry = await env.DB.prepare('SELECT id FROM enquiries WHERE id = ? AND assigned_to = ? AND is_notification = 0 AND deleted_at IS NULL')
     .bind(Number(params.id), data.teamMemberId).first();
   if (!enquiry) return Response.json({ error: 'Conversation not found.' }, { status: 404 });
 

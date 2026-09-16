@@ -88,7 +88,7 @@ async function ingest(env, data) {
   const token = tokenFromRecipients(data.to, data.received_for, data.cc, full.to, full.reply_to);
   let enquiry = null;
   if (token && TOKEN_RE.test(token)) {
-    enquiry = await env.DB.prepare('SELECT * FROM enquiries WHERE token = ?').bind(token).first();
+    enquiry = await env.DB.prepare('SELECT * FROM enquiries WHERE token = ? AND deleted_at IS NULL').bind(token).first();
   }
 
   // 2. Otherwise the sender's most recent conversation, if it is still live.
@@ -97,7 +97,7 @@ async function ingest(env, data) {
   if (!enquiry && !reason && from.email) {
     enquiry = await env.DB.prepare(
       `SELECT * FROM enquiries WHERE lower(email) = ? AND last_message_at > datetime('now','-90 days')
-         AND is_notification = 0
+         AND is_notification = 0 AND deleted_at IS NULL
         ORDER BY COALESCE(last_message_at, created_at) DESC LIMIT 1`,
     ).bind(from.email).first();
   }

@@ -49,6 +49,34 @@ export const brandFor = site => SITE_LABELS[site] || 'UK Brewery Tours';
 
 export const TOKEN_RE = /^[0-9a-f]{32}$/;
 
+/** How long a deleted conversation waits in the bin before it is really gone. */
+export const BIN_DAYS = 7;
+
+/**
+ * Empty the bin of anything older than BIN_DAYS. Called by the cron Worker every
+ * five minutes and again whenever the admin opens the inbox, so it still happens
+ * if that Worker is ever down.
+ *
+ * Capped per run: a purge is housekeeping, and housekeeping must never be the
+ * slow query on somebody's page load.
+ */
+export async function purgeBin(env, limit = 200) {
+  const { results } = await env.DB.prepare(
+    `SELECT id FROM enquiries
+      WHERE deleted_at IS NOT NULL AND deleted_at < datetime('now', ?)
+      ORDER BY deleted_at LIMIT ?`,
+  ).bind(`-${BIN_DAYS} days`, limit).all();
+
+  const ids = (results || []).map(r => r.id);
+  if (!ids.length) return 0;
+  const list = ids.map(() => '?').join(',');
+  await env.DB.batch([
+    env.DB.prepare(`DELETE FROM enquiry_messages WHERE enquiry_id IN (${list})`).bind(...ids),
+    env.DB.prepare(`DELETE FROM enquiries WHERE id IN (${list})`).bind(...ids),
+  ]);
+  return ids.length;
+}
+
 export function newToken() {
   const bytes = new Uint8Array(16);
   crypto.getRandomValues(bytes);
@@ -232,6 +260,8 @@ export async function alertAdmin(env, enquiry, { body, followUp = false, matches
   if (!env.RESEND_API_KEY) return false;
   // Notifications are machine-written. They are the reason this filter exists.
   if (enquiry.is_notification) return false;
+  // Nothing in the bin is worth waking anyone for.
+  if (enquiry.deleted_at) return false;
   const claim = await env.DB.prepare(
     followUp
       ? "UPDATE enquiries SET alerted_at = datetime('now') WHERE id = ? AND (alerted_at IS NULL OR alerted_at < datetime('now','-10 minutes'))"

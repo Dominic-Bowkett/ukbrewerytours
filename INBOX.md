@@ -179,6 +179,32 @@ Two things that cost time and will again:
   which is disabled here. Receiving only needs the MX, which is verified — this is
   expected, not a fault.
 
+## The bin
+
+**Delete** no longer means gone. It sets `enquiries.deleted_at` and the
+conversation moves to the **Bin** tab, where it stays for `BIN_DAYS` (7,
+`_lib/inbox.js`) and can be read and put back. **Delete forever** on a binned
+conversation, and **Empty the bin** (`DELETE /api/admin/inbox/bin`) for all of
+them, skip the wait. Only the admin has any of this: a team member cannot delete,
+and cannot see the bin.
+
+While a conversation is in the bin it is out of everything: the lists, the
+counts, the badge, the new-message alerts, the team's portal, the customer's own
+`/messages/` page and `/api/thread`, and the inbound-email matcher — a reply from
+the customer starts a fresh conversation rather than resurrecting a deleted one.
+It cannot be replied to, noted on, re-triaged (PATCH answers 409, "restore it
+first") or marked read; the reply box, the voucher card and the status buttons
+are all gone from the thread, replaced by **Put it back** / **Delete forever**
+and a banner saying when it goes.
+
+`purgeBin()` does the removing, from two places on purpose: the cron Worker every
+five minutes (`runScheduler`, the only thing on the site that runs to a clock),
+and again on every admin inbox load via `waitUntil`, so the seven days hold even
+if that Worker is down. It deletes the messages and the row, capped at 200 a run.
+
+**The cron Worker must be redeployed** (`cd workers/scheduler && npx wrangler
+deploy`) for the scheduled half — it bundles `_lib/scheduler.js` at build time.
+
 ## Notifications (machine-written mail)
 
 Most of what arrives at info@ is written by a machine: Stripe receipts,
@@ -276,6 +302,7 @@ offers a **Reload** bar rather than quietly running old code.
 - `migrations/0013_inbound_email.sql` — `team_members.notify_email`, the email-id index
 - `migrations/0014_notifications_contacts.sql` — `enquiries.is_notification/notification_reason`,
   the `contacts` table
+- `migrations/0015_bin.sql` — `enquiries.deleted_at` and its index
 - `functions/api/admin/compose.js`, `functions/api/admin/contacts/*`,
   `functions/_lib/contacts.js` — emailing out, and the address book
 - `functions/api/team/inbox/*` — the team member's scoped API; `team/inbox.js` its UI

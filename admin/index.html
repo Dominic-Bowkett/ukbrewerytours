@@ -30,6 +30,7 @@
           <div class="seg view-seg" role="group" aria-label="View">
             <button type="button" data-ib-view="inbox" class="on">Inbox</button>
             <button type="button" data-ib-view="notifications" id="ibNotifTab" title="Receipts, booking confirmations and other machine-written mail — filed here, never alerted on, never shown to the team">Notifications</button>
+            <button type="button" data-ib-view="bin" id="ibBinTab" title="Deleted conversations wait here for 7 days before they are gone for good">Bin</button>
           </div>
           <button type="button" class="btn btn-primary btn-sm" id="ibCompose">✉️ New email</button>
         </div>
@@ -40,6 +41,7 @@
           <select id="ibAssignee" aria-label="Assigned to"><option value="">Anyone</option><option value="none">Unassigned</option></select>
           <button type="button" class="chip-btn" id="ibContacts" title="Your address book">Contacts</button>
           <button type="button" class="chip-btn" id="ibTeam" title="Who can be given conversations">Team access</button>
+          <button type="button" class="chip-btn chip-danger" id="ibEmptyBin" hidden title="Delete everything in the bin now, without waiting out the 7 days">Empty the bin</button>
         </div>
         <div class="inbox-search">
           <input type="search" id="ibQ" placeholder="Search name, email, code or message…" aria-label="Search conversations">

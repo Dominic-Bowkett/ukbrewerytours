@@ -20,6 +20,14 @@
         ],
         "createdAt": "2026-09-16T19:14:52.822Z",
         "reason": "The one side border left is the Stripe live-mode alert bar, a deliberate alarm that predates the inbox work"
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "admin/index.html"
+        ],
+        "createdAt": "2026-09-16T20:14:29.747Z"
       }
     ]
   }

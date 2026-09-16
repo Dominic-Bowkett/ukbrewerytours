@@ -18,7 +18,7 @@ const json = (data, status = 200) => Response.json(data, { status, headers: HEAD
 async function findThread(env, token) {
   token = String(token || '').toLowerCase();
   if (!TOKEN_RE.test(token)) return null;
-  return env.DB.prepare('SELECT * FROM enquiries WHERE token = ?').bind(token).first();
+  return env.DB.prepare('SELECT * FROM enquiries WHERE token = ? AND deleted_at IS NULL').bind(token).first();
 }
 
 async function threadPayload(env, enquiry) {

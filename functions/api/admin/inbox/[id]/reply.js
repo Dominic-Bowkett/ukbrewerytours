@@ -7,7 +7,7 @@ import { STATUSES, brandFor, threadUrl, replyAddress } from '../../../../_lib/in
 
 export async function onRequestPost({ params, request, env, data }) {
   if (!/^\d+$/.test(String(params.id))) return Response.json({ error: 'Conversation not found.' }, { status: 404 });
-  const enquiry = await env.DB.prepare('SELECT * FROM enquiries WHERE id = ?').bind(Number(params.id)).first();
+  const enquiry = await env.DB.prepare('SELECT * FROM enquiries WHERE id = ? AND deleted_at IS NULL').bind(Number(params.id)).first();
   if (!enquiry) return Response.json({ error: 'Conversation not found.' }, { status: 404 });
   if (!env.RESEND_API_KEY) return Response.json({ error: 'Email is not configured.' }, { status: 503 });
 

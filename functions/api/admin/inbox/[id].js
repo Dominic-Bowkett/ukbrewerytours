@@ -1,10 +1,12 @@
 // /api/admin/inbox/:id
 //   GET     the conversation, its full timeline and a voucher check. Marks it read.
-//   PATCH   { status?, type? } — triage. Each change is logged on the timeline.
-//   DELETE  remove a conversation outright (spam).
+//   PATCH   { status?, type?, assigned_to?, is_notification?, restore? } — triage.
+//           Each change is logged on the timeline.
+//   DELETE  move it to the bin, where it waits BIN_DAYS before the scheduler
+//           removes it. ?forever=1 skips the wait and deletes it outright.
 
 import {
-  TYPES, STATUSES, CHANNELS, FIELD_LABELS, siteLabel, brandFor, threadUrl, voucherCheck, logEvent, teamUrl, hideEmails,
+  TYPES, STATUSES, CHANNELS, FIELD_LABELS, BIN_DAYS, siteLabel, brandFor, threadUrl, voucherCheck, logEvent, teamUrl, hideEmails,
 } from '../../../_lib/inbox.js';
 import { sendEmail, assignmentEmailHtml } from '../../../_lib/email.js';
 
@@ -21,7 +23,8 @@ export async function onRequestGet({ params, env }) {
     'SELECT id, direction, channel, body, author, created_at FROM enquiry_messages WHERE enquiry_id = ? ORDER BY id',
   ).bind(enquiry.id).all();
 
-  if (enquiry.unread) {
+  // Reading something in the bin does not count as dealing with it.
+  if (enquiry.unread && !enquiry.deleted_at) {
     await env.DB.prepare('UPDATE enquiries SET unread = 0 WHERE id = ?').bind(enquiry.id).run();
   }
 
@@ -52,9 +55,10 @@ export async function onRequestGet({ params, env }) {
 
   const { ip, token, ...safe } = enquiry;
   return Response.json({
+    bin_days: BIN_DAYS,
     enquiry: {
       ...safe,
-      unread: 0,
+      unread: enquiry.deleted_at ? enquiry.unread : 0,
       fields: Object.entries(fields).map(([k, v]) => ({ key: k, label: FIELD_LABELS[k] || k, value: v })),
       site_label: siteLabel(enquiry.site),
       brand: brandFor(enquiry.site),
@@ -80,6 +84,15 @@ export async function onRequestPatch({ params, request, env, data }) {
   const sets = [];
   const args = [];
   const events = [];
+
+  // Restore comes first: everything else is an edit, and a conversation in the
+  // bin is not somewhere to be doing them.
+  if (body.restore && enquiry.deleted_at) {
+    sets.push('deleted_at = NULL');
+    events.push('Restored from the bin');
+  } else if (enquiry.deleted_at) {
+    return Response.json({ error: 'That conversation is in the bin. Restore it first.' }, { status: 409 });
+  }
 
   if (body.status !== undefined && body.status !== enquiry.status) {
     if (!STATUSES[body.status]) return Response.json({ error: 'Unknown status.' }, { status: 400 });
@@ -173,12 +186,22 @@ export async function onRequestPatch({ params, request, env, data }) {
   return Response.json({ ok: true });
 }
 
-export async function onRequestDelete({ params, env }) {
+export async function onRequestDelete({ params, request, env, data }) {
   const enquiry = await findEnquiry(env, params.id);
   if (!enquiry) return Response.json({ error: 'Conversation not found.' }, { status: 404 });
+
+  // Deleting a real customer by mistake used to be unrecoverable. Now it costs
+  // seven days of patience to undo, and "forever" is a separate, deliberate act.
+  const forever = new URL(request.url).searchParams.get('forever') === '1';
+  if (!forever) {
+    await env.DB.prepare("UPDATE enquiries SET deleted_at = datetime('now') WHERE id = ?").bind(enquiry.id).run();
+    await logEvent(env, enquiry.id, 'Moved to the bin', data?.user?.email || 'admin');
+    return Response.json({ ok: true, binned: true, bin_days: BIN_DAYS });
+  }
+
   await env.DB.batch([
     env.DB.prepare('DELETE FROM enquiry_messages WHERE enquiry_id = ?').bind(enquiry.id),
     env.DB.prepare('DELETE FROM enquiries WHERE id = ?').bind(enquiry.id),
   ]);
-  return Response.json({ ok: true });
+  return Response.json({ ok: true, deleted: true });
 }
