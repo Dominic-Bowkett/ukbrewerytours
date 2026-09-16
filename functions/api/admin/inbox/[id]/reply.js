@@ -16,6 +16,14 @@ export async function onRequestPost({ params, request, env, data }) {
 
   const text = String(body.body ?? '').replace(/\r\n/g, '\n').trim().slice(0, 20000);
   if (text.length < 2) return Response.json({ error: 'Write a reply first.' }, { status: 400 });
+  // Phone callers do not always leave an email, so there is nobody to reply to.
+  if (!String(enquiry.email || '').trim()) {
+    return Response.json({
+      error: enquiry.phone
+        ? `No email address on this one — they left a phone number instead: ${enquiry.phone}`
+        : 'No email address on this one, so there is nobody to reply to.',
+    }, { status: 400 });
+  }
   const status = STATUSES[body.status] ? body.status : 'waiting';
   const who = data?.user?.email || 'admin';
 
