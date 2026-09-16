@@ -6,9 +6,12 @@
  * base64 body of the whsec_ secret, compared base64 against each v1 signature.
  */
 export async function verifySvix(request, rawBody, secret) {
-  const id = request.headers.get('svix-id');
-  const ts = request.headers.get('svix-timestamp');
-  const sigHeader = request.headers.get('svix-signature');
+  // Svix sends either the svix-* headers or the standard webhook-* ones,
+  // depending on the sender's configuration — accept both.
+  const header = name => request.headers.get(`svix-${name}`) || request.headers.get(`webhook-${name}`);
+  const id = header('id');
+  const ts = header('timestamp');
+  const sigHeader = header('signature');
   if (!id || !ts || !sigHeader || !secret) return false;
 
   // Replay window: a captured request stops being accepted after five minutes.
