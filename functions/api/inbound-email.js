@@ -48,12 +48,15 @@ async function ingest(env, data) {
     if (seen) return;                                   // webhook retry
   }
 
-  // The webhook carries metadata only; the body comes from the API.
+  // The webhook carries metadata only; the body comes from the API. Reading a
+  // received email needs a full-access key, which the sending key may not be —
+  // hence a separate INBOUND_API_KEY, falling back to the sending one.
+  const apiKey = env.INBOUND_API_KEY || env.RESEND_API_KEY;
   let full = {};
-  if (data.email_id && env.RESEND_API_KEY) {
+  if (data.email_id && apiKey) {
     try {
       const res = await fetch(`https://api.resend.com/emails/receiving/${encodeURIComponent(data.email_id)}`, {
-        headers: { Authorization: `Bearer ${env.RESEND_API_KEY}` },
+        headers: { Authorization: `Bearer ${apiKey}` },
         signal: AbortSignal.timeout(10000),
       });
       if (res.ok) full = await res.json();
