@@ -80,6 +80,18 @@ Scope is enforced server-side: every `/api/team/inbox*` query binds `assigned_to
 session's member id (`functions/api/team/inbox/*`), and the team gate additionally
 requires `inbox_access = 1`. There is no parameter that widens it.
 
+## Phone calls (no email address)
+
+A caller often leaves only a number, so `enquiries.email` is empty. On those
+conversations the composer is **notes-only** in both the admin and the team
+portal: the Reply tab is replaced by "No email address — call them back", Notes
+opens selected, and the Call button sits beside the name. Both reply endpoints
+refuse with the same message (naming the number), and the team API exposes
+`can_email` — a boolean, never the address — so the portal knows without being
+told who the customer is. Opening a different conversation resets the composer
+to Reply. **Notes work on every conversation**, for the admin and the assigned
+team member, whether or not a reply is possible.
+
 ## Voucher check
 
 Each conversation is scanned for codes: the explicit voucher code field (split on
