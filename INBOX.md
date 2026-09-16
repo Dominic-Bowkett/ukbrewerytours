@@ -118,18 +118,46 @@ The conversation token lives in the iframe's localStorage (`ubt_chat_<site>`), s
 a visitor sees their thread and team replies (polled every 12s while open, 60s
 closed) on later visits. Replies are always emailed too.
 
-## Customer replies by email — not routed yet
+## Customer replies by email (per-conversation reply addresses)
 
-Reply-To on our emails is still `info@ukbrewerytours.com` (Google Workspace), so a
-customer who hits Reply in their mail app reaches the info@ mailbox, **not** the
-inbox. The emails steer people to the conversation page instead.
+Every outbound email's Reply-To is that conversation's own address —
+`reply-<token>@<INBOUND_REPLY_DOMAIN>` (`replyAddress()` in `_lib/inbox.js`) — so a
+reply names its own thread and needs no guesswork. **Until `INBOUND_REPLY_DOMAIN` is
+set, Reply-To falls back to info@** and nothing breaks; it just doesn't come back
+into the inbox.
 
-To bring email replies into conversations: route a subdomain (e.g.
-`reply.ukbrewerytours.com`) to an inbound handler that looks up the token in
-`reply-<token>@…` and calls `appendCustomerMessage`, then set the Pages variable
-`INBOUND_REPLY_DOMAIN=reply.ukbrewerytours.com` — `replyAddress()` in
-`functions/_lib/inbox.js` switches every Reply-To over. Do NOT enable Cloudflare
-Email Routing on the apex: its MX records are Google Workspace's.
+`POST /api/inbound-email` is Resend's `email.received` webhook:
+Svix-signed (`INBOUND_WEBHOOK_SECRET`, 5-minute replay window), fetches the body from
+`GET /emails/receiving/{id}`, trims the quoted history, and then:
+1. **token in the recipient** → that conversation;
+2. **no token, known sender** → their most recent conversation of the last 90 days;
+3. **otherwise** → a new conversation (channel `email`, type guessed from the subject).
+Retries dedupe on `message_id` (stored in `enquiry_messages.email_id`); auto-replies,
+bounces and bulk mail (`Auto-Submitted`, `Precedence`, `List-Unsubscribe`, no-reply
+senders) are dropped. Alerts then follow the normal rules (assignee, else admin).
+
+**To switch it on:**
+1. Resend → Domains → add `reply.ukbrewerytours.com` with receiving, and add the MX
+   record it gives you to that **subdomain** in Cloudflare DNS. The apex keeps its
+   Google Workspace MX — do not enable Cloudflare Email Routing on the apex.
+2. Resend → Webhooks → endpoint `https://www.ukbrewerytours.com/api/inbound-email`,
+   event `email.received`; copy the signing secret.
+3. Pages → Settings → Variables: `INBOUND_WEBHOOK_SECRET=whsec_…` and
+   `INBOUND_REPLY_DOMAIN=reply.ukbrewerytours.com`, then redeploy.
+
+The same endpoint is how info@ mail could join the helpdesk: a Google Workspace
+recipient-address-map rule copying (or redirecting) info@ to an address on the
+receiving domain.
+
+## A team member's addresses
+
+Three different things, deliberately separate:
+- **login email** — `team_members.email`, just a username (london@ukbrewerytours.com
+  has no mailbox);
+- **inbox_from_email** — what customers see their replies coming from; must be on a
+  Resend-verified domain, needs no mailbox;
+- **notify_email** — where that member's own alerts and assignments are sent; must be
+  a real mailbox (falls back to the login email when null).
 
 ## Live updates
 
@@ -162,4 +190,5 @@ offers a **Reload** bar rather than quietly running old code.
 `wrangler pages dev` here cannot reach Resend (the fetch hangs), so put
 `EMAIL_DRY_RUN=1` (and `ALERT_EMAIL=delivered@resend.dev`) in `.dev.vars`; emails
 are logged instead. The contact endpoint allows 5 new conversations per IP per
-hour — local requests all share the IP "unknown".
+hour (`CONTACT_MAX_PER_HOUR` overrides it — set it high locally, since every local
+request shares the IP "unknown"). `.dev.vars` changes need a dev-server restart.

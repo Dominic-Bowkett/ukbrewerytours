@@ -13,7 +13,12 @@ import {
   siteFromUrl, brandFor, threadUrl, replyAddress,
 } from '../_lib/inbox.js';
 
-const MAX_PER_HOUR = 5;   // new conversations per IP
+// New conversations per IP per hour. Override with the CONTACT_MAX_PER_HOUR
+// variable (local testing sets it high; production leaves it at 5).
+const maxPerHour = env => {
+  const n = Number(env.CONTACT_MAX_PER_HOUR);
+  return Number.isFinite(n) && n > 0 ? n : 5;
+};
 const isEmail = s => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(s || '').trim());
 const clean = (s, max) => String(s ?? '').trim().slice(0, max);
 
@@ -76,7 +81,7 @@ export async function onRequestPost({ request, env }) {
     const { results } = await env.DB.prepare(
       "SELECT COUNT(*) AS n FROM enquiries WHERE ip = ? AND created_at > datetime('now','-1 hour')",
     ).bind(ip).all();
-    if ((results?.[0]?.n || 0) >= MAX_PER_HOUR) {
+    if ((results?.[0]?.n || 0) >= maxPerHour(env)) {
       return Response.json({ error: "You've sent several messages already — please email us directly." }, { status: 429 });
     }
   } catch (err) {

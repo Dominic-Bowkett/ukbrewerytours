@@ -5,7 +5,7 @@
 // so the admin sees exactly what the customer was told.
 
 import { sendEmail, inboxReplyHtml } from '../../../../_lib/email.js';
-import { STATUSES, brandFor, threadUrl, senderFor } from '../../../../_lib/inbox.js';
+import { STATUSES, brandFor, threadUrl, senderFor, replyAddress } from '../../../../_lib/inbox.js';
 
 export async function onRequestPost({ params, request, env, data }) {
   const me = data.teamMemberId;
@@ -27,7 +27,11 @@ export async function onRequestPost({ params, request, env, data }) {
   ).bind(enquiry.id).first();
 
   const subject = enquiry.subject || `Your enquiry — ${brandFor(enquiry.site)}`;
-  const { from, replyTo } = senderFor(data.team);
+  // Sent FROM the member's address (which may be a username rather than a real
+  // mailbox), but replies go to this conversation's own reply address — or to
+  // info@ until inbound email is switched on.
+  const { from, replyTo: fromAddress } = senderFor(data.team);
+  const replyTo = replyAddress(env, enquiry.token);
   let sent;
   try {
     sent = await sendEmail(env, {
@@ -61,5 +65,5 @@ export async function onRequestPost({ params, request, env, data }) {
     ).bind(enquiry.id, 'event', 'admin', `Marked as ${STATUSES[status]}`, data.team?.email || 'team').run();
   }
 
-  return Response.json({ ok: true, sent_to: enquiry.email, sent_from: replyTo, status });
+  return Response.json({ ok: true, sent_to: enquiry.email, sent_from: fromAddress, reply_to: replyTo, status });
 }

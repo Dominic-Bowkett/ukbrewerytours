@@ -83,6 +83,15 @@ export async function onRequestPatch({ request, env, params }) {
   if (body.inbox_from_name !== undefined) {
     sets.push('inbox_from_name = ?'); binds.push(String(body.inbox_from_name ?? '').trim().slice(0, 100) || null);
   }
+  // Where this member's own alerts are sent — their login email may be a
+  // username with no mailbox behind it.
+  if (body.notify_email !== undefined) {
+    const e = String(body.notify_email ?? '').trim().toLowerCase().slice(0, 200);
+    if (e && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) {
+      return Response.json({ error: 'Enter a valid “send alerts to” address.' }, { status: 400 });
+    }
+    sets.push('notify_email = ?'); binds.push(e || null);
+  }
 
   if (!sets.length) return Response.json({ error: 'Nothing to change.' }, { status: 400 });
 

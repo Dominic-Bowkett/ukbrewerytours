@@ -101,7 +101,7 @@ export async function onRequestPatch({ params, request, env, data }) {
   if (body.assigned_to !== undefined && (body.assigned_to || null) !== (enquiry.assigned_to || null)) {
     if (body.assigned_to) {
       newOwner = await env.DB.prepare(
-        'SELECT id, name, email, active, inbox_access FROM team_members WHERE id = ?',
+        'SELECT id, name, email, active, inbox_access, notify_email FROM team_members WHERE id = ?',
       ).bind(String(body.assigned_to)).first();
       if (!newOwner || newOwner.active !== 1 || newOwner.inbox_access !== 1) {
         return Response.json({ error: 'That team member cannot take conversations.' }, { status: 400 });
@@ -129,7 +129,8 @@ export async function onRequestPatch({ params, request, env, data }) {
         "SELECT body FROM enquiry_messages WHERE enquiry_id = ? AND direction = 'in' ORDER BY id DESC LIMIT 1",
       ).bind(enquiry.id).first();
       await sendEmail(env, {
-        to: newOwner.email,
+        // Their login email may be a username with no mailbox behind it.
+        to: newOwner.notify_email || newOwner.email,
         subject: `Assigned to you: ${TYPES[body.type || enquiry.type] || 'Enquiry'} — ${enquiry.name}`,
         html: assignmentEmailHtml({
           enquiry,

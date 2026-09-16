@@ -232,6 +232,7 @@
         <tr>
           <td><strong>${esc(m.name)}</strong><br><span class="muted">${esc(m.email)}</span></td>
           <td class="muted">replies from<br>${esc(m.inbox_from_email || m.email)}</td>
+          <td class="muted">alerts to<br>${esc(m.notify_email || m.email)}</td>
           <td class="muted">${m.open_conversations || 0} open</td>
           <td><span class="pill pill-${m.active ? 'active' : 'pending'}">${m.active ? 'Active' : 'Disabled'}</span></td>
           <td><button class="btn btn-ghost btn-sm" data-revoke="${esc(m.id)}" data-name="${esc(m.name)}">Remove access</button></td>
@@ -246,9 +247,13 @@
           <div class="field"><label for="ti-email">Their login email</label>
             <input id="ti-email" type="email" required placeholder="london@ukbrewerytours.com"></div>
         </div>
-        <div class="field" style="margin-top:12px"><label for="ti-from">Replies to customers come from</label>
-          <input id="ti-from" type="email" placeholder="Same as the login email">
-          <p class="muted" style="font-size:.8rem;margin-top:6px">Must be an address on a domain we send from (ukbrewerytours.com). For customers to be able to reply to it, it also needs a real mailbox or alias.</p></div>
+        <div class="redeem-row" style="margin-top:12px">
+          <div class="field"><label for="ti-from">Replies to customers come from</label>
+            <input id="ti-from" type="email" placeholder="Same as the login email"></div>
+          <div class="field"><label for="ti-notify">Send their alerts to</label>
+            <input id="ti-notify" type="email" placeholder="A real mailbox they read"></div>
+        </div>
+        <p class="muted" style="font-size:.8rem;margin-top:6px">The "from" address only needs to be on ukbrewerytours.com — it does not need a mailbox, because customer replies come back to the conversation's own reply address. The alerts address does need to be a real mailbox.</p>
         <p class="error" id="teamAddError" hidden></p>
         <div class="redeem-actions"><button class="btn btn-primary" type="submit">Create login</button></div>
       </form>`;
@@ -279,6 +284,7 @@
             email: $('ti-email').value,
             inbox_from_email: $('ti-from').value,
             inbox_from_name: $('ti-name').value,
+            notify_email: $('ti-notify').value,
           }),
         });
         teamBody.innerHTML = `

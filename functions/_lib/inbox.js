@@ -63,7 +63,7 @@ export async function assignee(env, enquiry) {
   if (!enquiry?.assigned_to) return null;
   try {
     const m = await env.DB.prepare(
-      'SELECT id, name, email, active, inbox_access, inbox_from_email, inbox_from_name FROM team_members WHERE id = ?',
+      'SELECT id, name, email, active, inbox_access, inbox_from_email, inbox_from_name, notify_email FROM team_members WHERE id = ?',
     ).bind(enquiry.assigned_to).first();
     return m && m.active === 1 ? m : null;
   } catch (err) {
@@ -77,6 +77,13 @@ export const senderFor = member => ({
   from: `${member.inbox_from_name || member.name || 'UK Brewery Tours'} <${member.inbox_from_email || member.email}>`,
   replyTo: member.inbox_from_email || member.email,
 });
+
+/**
+ * Where a member's own notifications go. Their login email can be a username
+ * with no mailbox behind it (london@ukbrewerytours.com), so alerts addressed
+ * there would bounce — notify_email is the real destination.
+ */
+export const notifyAddressFor = member => member?.notify_email || member?.email || null;
 
 /**
  * Where a customer's email reply should land. Until inbound email is routed
@@ -206,7 +213,7 @@ export async function alertAdmin(env, enquiry, { body, followUp = false, matches
   const typeLabel = TYPES[enquiry.type] || 'Enquiry';
   const prefix = followUp ? 'New reply' : `New ${typeLabel.toLowerCase()}`;
   await sendEmail(env, {
-    to: owner ? owner.email : (env.ALERT_EMAIL || 'dom@ukbrewerytours.com'),
+    to: (owner && notifyAddressFor(owner)) || env.ALERT_EMAIL || 'dom@ukbrewerytours.com',
     subject: `${prefix} — ${enquiry.name} (${siteLabel(enquiry.site)})`,
     html: inboxAlertHtml({
       enquiry, body, followUp, matches, unmatched,

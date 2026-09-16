@@ -32,7 +32,7 @@ export async function onRequestGet({ env }) {
   const { results } = await env.DB.prepare(`
     SELECT m.id, m.email, m.name, m.stripe_account_id, m.fee_bps, m.active,
            m.created_at, m.last_login_at, m.stripe_charges_enabled,
-           m.inbox_access, m.inbox_from_email, m.inbox_from_name,
+           m.inbox_access, m.inbox_from_email, m.inbox_from_name, m.notify_email,
            (SELECT COUNT(*) FROM enquiries e WHERE e.assigned_to = m.id AND e.status != 'closed') AS open_conversations,
            (SELECT COUNT(*) FROM payment_requests r WHERE r.team_member_id = m.id) AS request_count,
            (SELECT COALESCE(SUM(amount_paid_pence), 0) FROM payment_requests r
@@ -69,7 +69,11 @@ export async function onRequestPost({ request, env }) {
   if (body.kind === 'inbox') {
     const fromEmail = clean(body.inbox_from_email, 200).toLowerCase() || email;
     const fromName = clean(body.inbox_from_name, 100) || name;
+    // Their login email is often just a username (london@…), so alerts need a
+    // real mailbox. Defaults to the login email when one isn't given.
+    const notifyEmail = clean(body.notify_email, 200).toLowerCase() || null;
     if (!isEmail(fromEmail)) return Response.json({ error: 'Enter a valid “replies come from” address.' }, { status: 400 });
+    if (notifyEmail && !isEmail(notifyEmail)) return Response.json({ error: 'Enter a valid “send alerts to” address.' }, { status: 400 });
 
     const configProblem = teamAuthConfigError(env);
     if (configProblem) return Response.json({ error: `Team auth is not configured: ${configProblem}` }, { status: 503 });
@@ -84,10 +88,10 @@ export async function onRequestPost({ request, env }) {
     try {
       await env.DB.prepare(`
         INSERT INTO team_members (id, email, name, password_hash, password_salt, iterations, algo,
-                                  active, must_change_password, inbox_access, inbox_from_email, inbox_from_name)
-        VALUES (?,?,?,?,?,?,?,1,?,1,?,?)`)
+                                  active, must_change_password, inbox_access, inbox_from_email, inbox_from_name, notify_email)
+        VALUES (?,?,?,?,?,?,?,1,?,1,?,?,?)`)
         .bind(id, email, name, hash, salt, TEAM_ITERATIONS, ALGO_PEPPERED,
-              body.must_change_password === false ? 0 : 1, fromEmail, fromName).run();
+              body.must_change_password === false ? 0 : 1, fromEmail, fromName, notifyEmail).run();
     } catch (err) {
       if (String(err.message || '').includes('UNIQUE')) {
         return Response.json({ error: 'A team member with that email already exists.' }, { status: 409 });
@@ -97,7 +101,7 @@ export async function onRequestPost({ request, env }) {
 
     return Response.json({
       ok: true,
-      member: { id, email, name, inbox_access: 1, inbox_from_email: fromEmail, inbox_from_name: fromName },
+      member: { id, email, name, inbox_access: 1, inbox_from_email: fromEmail, inbox_from_name: fromName, notify_email: notifyEmail },
       password,
       notice: 'Save this password now — it is not stored in plain text and cannot be shown again.',
     });
