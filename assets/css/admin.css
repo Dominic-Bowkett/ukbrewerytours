@@ -307,7 +307,9 @@ code.small { font-size: .78rem; }
 .inbox-top .btn-sm { white-space: nowrap; }
 
 /* A notification is read by its subject, and by the line saying why it is here. */
-.ib-subject { font-size: .86rem; font-weight: 600; margin: 3px 0 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Same size as the snippet below it: weight and colour separate them, the way a
+   mail client reads. A fourth near-identical step would only blur the card. */
+.ib-subject { font-size: .83rem; font-weight: 600; margin: 3px 0 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ib-why, .th-why { font-size: .72rem; color: var(--ink-soft); font-style: italic; }
 .th-subject { font-weight: 600; }
 
