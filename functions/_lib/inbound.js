@@ -106,15 +106,51 @@ export function htmlToText(html) {
     .trim();
 }
 
-/** Automated mail that should never open or reopen a conversation. */
-export function isAutomated(headers = {}, from = '') {
+/**
+ * Senders whose mail is always machine-written. Deliberately narrow: a domain
+ * on this list can never reach the inbox, so the consumer mailbox providers
+ * customers actually write from (gmail, outlook, yahoo…) must never appear here.
+ * NOTIFICATION_SENDERS adds to it without a deploy.
+ */
+const NOTIFY_SENDERS = [
+  'stripe.com', 'designmynight.com', 'google.com', 'paypal.com', 'xero.com',
+  'gocardless.com', 'squareup.com', 'sumup.com', 'intuit.com', 'quickbooks.com',
+  'mailchimp.com', 'resend.com', 'sendgrid.net', 'cloudflare.com', 'godaddy.com',
+  '123-reg.co.uk', 'shopify.com', 'wordpress.com', 'eventbrite.com',
+  'trustpilot.com', 'tripadvisor.com', 'tripadvisor.co.uk',
+  'facebookmail.com', 'linkedin.com', 'slack.com', 'zoom.us',
+];
+
+/** Local parts that announce a machine on the other end. */
+const NOTIFY_LOCAL = /^(no-?reply|do-?not-?reply|donotreply|notifications?|alerts?|mailer|automated|auto-?confirm|receipts?|billing|invoices?|support-?noreply)([._+-]|$)/i;
+
+/**
+ * Why this message is machine-written — "automated mail from stripe.com", "an
+ * automatic reply" — or null when a person wrote it.
+ *
+ * Machine-written mail is filed as a notification rather than answered: no alert,
+ * no place in the inbox, invisible to team members. The admin can overrule it
+ * either way, so a wrong guess costs one click and nothing is ever lost.
+ */
+export function notificationReason(headers = {}, from = '', extraSenders = '') {
   const get = k => {
     const hit = Object.entries(headers || {}).find(([name]) => name.toLowerCase() === k);
     return hit ? String(hit[1] || '') : '';
   };
-  if (get('auto-submitted') && get('auto-submitted').toLowerCase() !== 'no') return true;
-  if (get('x-autoreply') || get('x-autorespond')) return true;
-  if (/^(bulk|list|junk)$/i.test(get('precedence'))) return true;
-  if (get('list-unsubscribe')) return true;
-  return /^(mailer-daemon|no-?reply|postmaster|bounce)/i.test(String(from || ''));
+  const addr = String(from || '').trim().toLowerCase();
+  const [local = '', domain = ''] = addr.split('@');
+
+  const extra = String(extraSenders || '').toLowerCase().split(/[,\s]+/).map(s => s.trim()).filter(Boolean);
+  const sender = [...NOTIFY_SENDERS, ...extra]
+    .find(s => addr === s || domain === s || domain.endsWith('.' + s));
+  if (sender) return `automated mail from ${sender}`;
+
+  const auto = get('auto-submitted');
+  if (auto && auto.toLowerCase() !== 'no') return 'an automatic reply';
+  if (get('x-autoreply') || get('x-autorespond')) return 'an automatic reply';
+  if (/^(bulk|list|junk)$/i.test(get('precedence'))) return 'bulk mail';
+  if (get('list-unsubscribe')) return 'a mailing list';
+  if (/^(mailer-daemon|postmaster|bounce)/i.test(local)) return 'a delivery failure';
+  if (NOTIFY_LOCAL.test(local)) return 'a no-reply sender';
+  return null;
 }

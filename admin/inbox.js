@@ -15,7 +15,8 @@
   const VSTATUS = { active: 'Unused', partially_redeemed: 'Part-used', redeemed: 'Fully used', pending: 'Unpaid', void: 'Void', refunded: 'Refunded' };
   const CHANNEL_SHORT = { form: 'form', widget: 'embedded form', chat: 'live chat', web: 'messages page', email: 'email', phone: 'phone call' };
 
-  const state = { status: 'open', type: '', site: '', assignee: '', q: '', page: 1, current: null, labels: null, list: [], team: [] };
+  const state = { view: 'inbox', status: 'open', type: '', site: '', assignee: '', q: '', page: 1, current: null, labels: null, list: [], team: [] };
+  const isNotif = () => state.view === 'notifications';
   let loadedOnce = false;
   let currentThread = null;
   let composerMode = 'reply';
@@ -49,6 +50,10 @@
     const d = parseTs(s);
     return d ? d.toLocaleString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
   };
+  const dateShort = s => {
+    const d = parseTs(s);
+    return d ? d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+  };
   const linkify = s => esc(s).replace(/https?:\/\/[^\s<]+[^\s<.,;:!?)]/g, u => `<a href="${u}" target="_blank" rel="noopener noreferrer">${u}</a>`);
   const typeLabel = t => (state.labels?.types?.[t]) || t;
   const statusLabel = s => (state.labels?.statuses?.[s]) || s;
@@ -56,7 +61,7 @@
   /* ---------------- list ---------------- */
 
   async function loadList({ quiet = false } = {}) {
-    const params = new URLSearchParams({ status: state.status, type: state.type, site: state.site, assignee: state.assignee, q: state.q, page: state.page });
+    const params = new URLSearchParams({ view: state.view, status: state.status, type: state.type, site: state.site, assignee: state.assignee, q: state.q, page: state.page });
     if (since) params.set('since', since);
     if (!quiet) listEl.innerHTML = '<li class="muted pad">Loading…</li>';
     try {
@@ -66,10 +71,12 @@
       state.list = d.enquiries;
       loadedOnce = true;
 
-      $('ibStatus').innerHTML = STATUS_CHIPS.map(([key, label]) => {
-        const n = d.counts.status[key] || 0;
-        return `<button type="button" class="chip-btn${state.status === key ? ' on' : ''}" data-ib-status="${key}">${label}<b>${n}</b></button>`;
-      }).join('');
+      $('ibStatus').innerHTML = STATUS_CHIPS
+        .filter(([key]) => !isNotif() || !['dealing', 'waiting'].includes(key))
+        .map(([key, label]) => {
+          const n = d.counts.status[key] || 0;
+          return `<button type="button" class="chip-btn${state.status === key ? ' on' : ''}" data-ib-status="${key}">${label}<b>${n}</b></button>`;
+        }).join('');
 
       const typeSel = $('ibType');
       typeSel.innerHTML = '<option value="">All types</option>' + Object.entries(d.labels.types)
@@ -81,24 +88,20 @@
         .map(s => `<option value="${esc(s.site)}">${esc(s.label)}</option>`).join('');
       siteSel.value = state.site;
 
+      // Type, website and owner mean nothing to a Stripe receipt.
+      const notif = isNotif();
+      ['ibType', 'ibSite', 'ibAssignee'].forEach(id => { $(id).hidden = notif; });
+      $('ibNotifTab').textContent = 'Notifications' + (d.counts.notifications ? ` (${d.counts.notifications})` : '');
+      $('ibQ').placeholder = notif ? 'Search notifications…' : 'Search name, email, code or message…';
+
       state.team = d.team || [];
       const ownerSel = $('ibAssignee');
       ownerSel.innerHTML = '<option value="">Anyone</option><option value="none">Unassigned</option>'
         + state.team.map(t => `<option value="${esc(t.id)}">${esc(t.name)}${t.open_count ? ` (${t.open_count})` : ''}</option>`).join('');
       ownerSel.value = state.assignee;
 
-      listEl.innerHTML = d.enquiries.length ? d.enquiries.map(e => `
-        <li class="ib-item${e.unread ? ' unread' : ''}${state.current === e.id ? ' active' : ''}" data-ib="${e.id}" tabindex="0">
-          <div class="ib-row1"><span class="ib-name">${esc(e.name)}</span><time title="${esc(when(e.last_message_at))}">${ago(e.last_message_at || e.created_at)}</time></div>
-          <div class="ib-row2">
-            <span class="type-pill type-${esc(e.type)}">${esc(typeLabel(e.type))}</span>
-            ${state.status === 'open' || state.status === 'all' ? `<span class="st-pill st-${esc(e.status)}">${esc(statusLabel(e.status))}</span>` : ''}
-            <span class="ib-site">${esc(e.site_label)}${e.channel === 'chat' ? ' · chat' : ''}</span>
-            ${e.assignee_name ? `<span class="ib-owner">→ ${esc(e.assignee_name)}</span>` : ''}
-          </div>
-          <div class="ib-snippet">${e.last_direction === 'out' ? '<strong>You:</strong> ' : ''}${esc(e.snippet || '')}</div>
-        </li>`).join('')
-        : `<li class="muted pad">${state.q || state.type || state.site ? 'Nothing matches those filters.' : state.status === 'open' ? 'Inbox zero — nothing open. 🍺' : 'No conversations here.'}</li>`;
+      listEl.innerHTML = d.enquiries.length ? d.enquiries.map(listItem).join('')
+        : `<li class="muted pad">${esc(emptyList())}</li>`;
 
       // The list just refreshed — make sure the open conversation is as current as it is.
       if (state.current) setTimeout(pollThread, 0);
@@ -111,6 +114,34 @@
     } catch (err) {
       if (!quiet) listEl.innerHTML = `<li class="pad error">${esc(err.message)}</li>`;
     }
+  }
+
+  // A notification is read by its subject line — who sent it and what it says —
+  // where a conversation is read by who it is from and what they want.
+  function listItem(e) {
+    const rest = e.is_notification
+      ? `${e.subject ? `<div class="ib-subject">${esc(e.subject)}</div>` : ''}
+         <div class="ib-row2">
+           <span class="type-pill type-notification">Notification</span>
+           ${e.notification_reason ? `<span class="ib-why">${esc(e.notification_reason)}</span>` : ''}
+         </div>`
+      : `<div class="ib-row2">
+           <span class="type-pill type-${esc(e.type)}">${esc(typeLabel(e.type))}</span>
+           ${state.status === 'open' || state.status === 'all' ? `<span class="st-pill st-${esc(e.status)}">${esc(statusLabel(e.status))}</span>` : ''}
+           <span class="ib-site">${esc(e.site_label)}${e.channel === 'chat' ? ' · chat' : ''}</span>
+           ${e.assignee_name ? `<span class="ib-owner">→ ${esc(e.assignee_name)}</span>` : ''}
+         </div>`;
+    return `<li class="ib-item${e.unread ? ' unread' : ''}${state.current === e.id ? ' active' : ''}" data-ib="${e.id}" tabindex="0">
+      <div class="ib-row1"><span class="ib-name">${esc(e.name)}</span><time title="${esc(when(e.last_message_at))}">${ago(e.last_message_at || e.created_at)}</time></div>
+      ${rest}
+      <div class="ib-snippet">${e.last_direction === 'out' ? '<strong>You:</strong> ' : ''}${esc(e.snippet || '')}</div>
+    </li>`;
+  }
+
+  function emptyList() {
+    if (state.q || state.type || state.site) return 'Nothing matches those filters.';
+    if (isNotif()) return 'Nothing filed here yet. Receipts, booking confirmations and other machine-written mail lands here instead of the inbox.';
+    return state.status === 'open' ? 'Inbox zero — nothing open. 🍺' : 'No conversations here.';
   }
 
   function setBadge(n) {
@@ -189,6 +220,36 @@
   $('ibType').addEventListener('change', e => { state.type = e.target.value; state.page = 1; loadList(); });
   $('ibSite').addEventListener('change', e => { state.site = e.target.value; state.page = 1; loadList(); });
   $('ibAssignee').addEventListener('change', e => { state.assignee = e.target.value; state.page = 1; loadList(); });
+
+  const emptyThread = () => (isNotif()
+    ? '<div class="thread-empty"><strong>Nothing selected</strong>Receipts, confirmations and other machine-written mail are kept here. Pick one to read it.</div>'
+    : '<div class="thread-empty"><strong>No conversation selected</strong>Pick one from the list to read and reply.</div>');
+
+  // Switching view closes whatever was open: the conversation on screen belongs
+  // to the list you just left. Callers that want one open reopen it afterwards.
+  function switchView(view) {
+    if (state.view === view) return;
+    state.view = view;
+    state.current = null;
+    threadEl.innerHTML = emptyThread();
+    inboxEl.classList.remove('show-thread');
+    // The filters mean different things in each view, so none of them carry over.
+    state.page = 1; state.type = ''; state.site = ''; state.assignee = ''; state.status = 'open';
+    document.querySelectorAll('[data-ib-view]').forEach(x => x.classList.toggle('on', x.dataset.ibView === view));
+    loadList();
+  }
+
+  document.querySelector('.view-seg').addEventListener('click', e => {
+    const b = e.target.closest('[data-ib-view]');
+    if (!b || b.classList.contains('on')) return;
+    if (location.hash.startsWith('#inbox/')) location.hash = 'inbox';
+    switchView(b.dataset.ibView);
+  });
+
+  /** Move a conversation between the inbox and Notifications. */
+  const file = (id, filed) => api('/api/admin/inbox/' + id, {
+    method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ is_notification: filed }),
+  });
   let qTimer;
   $('ibQ').addEventListener('input', e => {
     clearTimeout(qTimer);
@@ -304,6 +365,283 @@
   }
   $('ibTeam').addEventListener('click', openTeamManager);
 
+  /* ---------------- address book ---------------- */
+
+  // Admin only. Nothing in the team portal reads or writes it: a team member
+  // replies to the conversation they were given, and has no way to start one.
+  const contactsModal = $('contactsModal');
+  const contactsEl = $('contactsBody');
+  let contacts = [];
+  let contactsLoaded = false;
+
+  contactsModal.addEventListener('click', ev => { if (ev.target.closest('[data-close]')) contactsModal.hidden = true; });
+
+  async function loadContacts(q = '') {
+    const d = await api('/api/admin/contacts' + (q ? '?q=' + encodeURIComponent(q) : ''));
+    contacts = d.contacts || [];
+    contactsLoaded = true;
+    return contacts;
+  }
+
+  async function openContacts(q = '') {
+    contactsModal.hidden = false;
+    contactsEl.innerHTML = '<p class="muted pad">Loading…</p>';
+    try {
+      await loadContacts(q);
+    } catch (err) {
+      contactsEl.innerHTML = `<p class="pad error">${esc(err.message)}</p>`;
+      return;
+    }
+    renderContacts(q);
+  }
+
+  function renderContacts(q = '', editing = null) {
+    const row = c => {
+      const edit = editing === c.id;
+      if (edit) {
+        return `<tr class="ct-editing"><td colspan="3">
+          <div class="redeem-row even">
+            <div class="field"><label for="ct-name">Name</label><input id="ct-name" type="text" value="${esc(c.name)}" maxlength="120"></div>
+            <div class="field"><label for="ct-email">Email</label><input id="ct-email" type="email" value="${esc(c.email)}"></div>
+          </div>
+          <div class="redeem-row even" style="margin-top:12px">
+            <div class="field"><label for="ct-phone">Phone</label><input id="ct-phone" type="tel" value="${esc(c.phone || '')}"></div>
+            <div class="field"><label for="ct-company">Company</label><input id="ct-company" type="text" value="${esc(c.company || '')}" maxlength="120"></div>
+          </div>
+          <div class="field" style="margin-top:12px"><label for="ct-notes">Notes</label>
+            <textarea id="ct-notes" rows="2">${esc(c.notes || '')}</textarea></div>
+          <div class="redeem-actions">
+            <button class="btn btn-primary btn-sm" type="button" data-ct-save="${esc(c.id)}">Save</button>
+            <button class="btn btn-ghost btn-sm" type="button" data-ct-cancel>Cancel</button>
+            <button class="btn btn-ghost btn-sm" type="button" data-ct-del="${esc(c.id)}" style="margin-left:auto">Delete contact</button>
+          </div>
+        </td></tr>`;
+      }
+      return `<tr>
+        <td class="ct-who">
+          <strong>${esc(c.name)}</strong>
+          <span class="muted">${[c.company, c.last_emailed_at ? `emailed ${dateShort(c.last_emailed_at)}` : 'not emailed yet'].filter(Boolean).map(esc).join(' · ')}</span>
+          ${c.notes ? `<span class="muted">${esc(String(c.notes).slice(0, 110))}</span>` : ''}
+        </td>
+        <td class="ct-reach muted">
+          ${esc(c.email)}
+          ${c.phone ? `<a class="btn-call" href="tel:${esc(String(c.phone).replace(/[^\d+]/g, ''))}">📞 ${esc(c.phone)}</a>` : ''}
+        </td>
+        <td class="ct-actions"><div>
+          <button class="btn btn-outline btn-sm" type="button" data-ct-email="${esc(c.id)}">Email</button>
+          <button class="btn btn-ghost btn-sm" type="button" data-ct-edit="${esc(c.id)}">Edit</button>
+        </div></td></tr>`;
+    };
+
+    contactsEl.innerHTML = `
+      <h2 style="margin-bottom:6px">Contacts</h2>
+      <p class="muted" style="margin-bottom:16px">People you email who haven't written in — venues, breweries, coach firms, past organisers. Yours alone: the team never sees this.</p>
+      <div class="inbox-search" style="margin-bottom:14px">
+        <input type="search" id="ctQ" placeholder="Search name, email, company or phone…" value="${esc(q)}" aria-label="Search contacts">
+      </div>
+      ${contacts.length
+        ? `<table class="hist"><tbody>${contacts.map(row).join('')}</tbody></table>`
+        : `<p class="muted">${q ? 'Nobody matches that.' : 'No contacts yet. Add the first one below — or tick "Add them to my contacts" when you send an email.'}</p>`}
+
+      <form class="redeem-form" id="ctAddForm">
+        <h3>Add a contact</h3>
+        <div class="redeem-row even">
+          <div class="field"><label for="ct-new-name">Name</label><input id="ct-new-name" type="text" required maxlength="120" placeholder="e.g. Sarah at Beavertown"></div>
+          <div class="field"><label for="ct-new-email">Email</label><input id="ct-new-email" type="email" required placeholder="sarah@example.com"></div>
+        </div>
+        <div class="redeem-row even" style="margin-top:12px">
+          <div class="field"><label for="ct-new-phone">Phone <span class="muted">(optional)</span></label><input id="ct-new-phone" type="tel"></div>
+          <div class="field"><label for="ct-new-company">Company <span class="muted">(optional)</span></label><input id="ct-new-company" type="text" maxlength="120"></div>
+        </div>
+        <div class="field" style="margin-top:12px"><label for="ct-new-notes">Notes <span class="muted">(optional)</span></label>
+          <textarea id="ct-new-notes" rows="2" placeholder="Books the Bermondsey groups — prefers a call first"></textarea></div>
+        <p class="error" id="ctError" hidden></p>
+        <div class="redeem-actions"><button class="btn btn-primary" type="submit">Add contact</button></div>
+      </form>`;
+
+    let ctTimer;
+    $('ctQ').addEventListener('input', ev => {
+      clearTimeout(ctTimer);
+      const value = ev.target.value.trim();
+      ctTimer = setTimeout(() => openContacts(value), 300);
+    });
+
+    $('ctAddForm').addEventListener('submit', async ev => {
+      ev.preventDefault();
+      const errEl = $('ctError');
+      errEl.hidden = true;
+      const btn = ev.target.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      try {
+        await api('/api/admin/contacts', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: $('ct-new-name').value, email: $('ct-new-email').value, phone: $('ct-new-phone').value,
+            company: $('ct-new-company').value, notes: $('ct-new-notes').value,
+          }),
+        });
+        await openContacts(q);
+      } catch (err) {
+        errEl.textContent = err.message; errEl.hidden = false;
+        btn.disabled = false;
+      }
+    });
+  }
+
+  contactsEl.addEventListener('click', async ev => {
+    const find = id => contacts.find(c => c.id === id);
+
+    const mail = ev.target.closest('[data-ct-email]');
+    if (mail) {
+      const c = find(mail.dataset.ctEmail);
+      contactsModal.hidden = true;
+      openCompose({ to: c?.email, name: c?.name });
+      return;
+    }
+    const edit = ev.target.closest('[data-ct-edit]');
+    if (edit) { renderContacts($('ctQ').value.trim(), edit.dataset.ctEdit); return; }
+    if (ev.target.closest('[data-ct-cancel]')) { renderContacts($('ctQ').value.trim()); return; }
+
+    const save = ev.target.closest('[data-ct-save]');
+    if (save) {
+      save.disabled = true;
+      try {
+        await api('/api/admin/contacts/' + encodeURIComponent(save.dataset.ctSave), {
+          method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: $('ct-name').value, email: $('ct-email').value, phone: $('ct-phone').value,
+            company: $('ct-company').value, notes: $('ct-notes').value,
+          }),
+        });
+        await openContacts($('ctQ').value.trim());
+      } catch (err) { alert(err.message); save.disabled = false; }
+      return;
+    }
+
+    const del = ev.target.closest('[data-ct-del]');
+    if (del) {
+      const c = find(del.dataset.ctDel);
+      if (!c || !confirm(`Delete ${c.name} from your contacts?\n\nConversations with them stay exactly as they are — only the address book card goes.`)) return;
+      try {
+        await api('/api/admin/contacts/' + encodeURIComponent(c.id), { method: 'DELETE' });
+        await openContacts($('ctQ').value.trim());
+      } catch (err) { alert(err.message); }
+    }
+  });
+
+  $('ibContacts').addEventListener('click', () => openContacts());
+
+  /* ---------------- new email ---------------- */
+
+  const composeModal = $('composeModal');
+  const composeEl = $('composeBody');
+  composeModal.addEventListener('click', ev => { if (ev.target.closest('[data-close]')) composeModal.hidden = true; });
+
+  const SIGN_OFF = '\n\nCheers,\nUK Brewery Tours';
+
+  function openCompose(prefill = {}) {
+    composeModal.hidden = false;
+    composeEl.innerHTML = `
+      <h2 style="margin-bottom:6px">New email</h2>
+      <p class="muted" style="margin-bottom:18px">
+        Goes out from <strong>info@ukbrewerytours.com</strong> and starts a conversation here, so their reply
+        comes back to this inbox instead of a mailbox somewhere.
+      </p>
+      <form class="redeem-form" id="cmForm" style="margin-top:0;border-top:0;padding-top:0">
+        <div class="field">
+          <label for="cm-to">To</label>
+          <input id="cm-to" type="text" required autocomplete="off" list="cmContacts"
+                 placeholder="name@example.com — separate several with commas" value="${esc(prefill.to || '')}">
+          <datalist id="cmContacts"></datalist>
+        </div>
+        <div id="cm-extra" hidden>
+          <div class="redeem-row even" style="margin-top:12px">
+            <div class="field"><label for="cm-cc">Cc</label><input id="cm-cc" type="text" autocomplete="off" placeholder="Everyone can see these"></div>
+            <div class="field"><label for="cm-bcc">Bcc</label><input id="cm-bcc" type="text" autocomplete="off" placeholder="Hidden from the others"></div>
+          </div>
+          <div class="field" style="margin-top:12px">
+            <label for="cm-reply">Replies come back to</label>
+            <input id="cm-reply" type="email" placeholder="This conversation — recommended">
+            <span class="muted" style="font-size:.8rem;display:block;margin-top:4px">Leave it blank and their reply lands on this thread. Name a mailbox and it goes there instead — you won't see the reply here.</span>
+          </div>
+        </div>
+        <div class="field" style="margin-top:12px">
+          <label for="cm-subject">Subject</label>
+          <input id="cm-subject" type="text" required maxlength="200" value="${esc(prefill.subject || '')}" placeholder="What it's about">
+        </div>
+        <div class="field" style="margin-top:12px">
+          <label for="cm-body">Message</label>
+          <textarea id="cm-body" rows="11" required></textarea>
+        </div>
+        <label class="cm-check"><input type="checkbox" id="cm-save" checked> Add them to my contacts</label>
+        <p class="error" id="cmError" hidden></p>
+        <div class="redeem-actions">
+          <button class="btn btn-ghost" type="button" id="cmMore">Cc, Bcc, reply-to</button>
+          <button class="btn btn-primary" type="submit">Send email</button>
+        </div>
+      </form>`;
+
+    const body = $('cm-body');
+    body.value = prefill.body || SIGN_OFF;
+    const to = $('cm-to');
+    (to.value ? $('cm-subject') : to).focus();
+    if (!prefill.body) body.setSelectionRange(0, 0);
+
+    $('cmMore').addEventListener('click', () => {
+      const extra = $('cm-extra');
+      extra.hidden = !extra.hidden;
+      $('cmMore').textContent = extra.hidden ? 'Cc, Bcc, reply-to' : 'Hide Cc, Bcc, reply-to';
+      if (!extra.hidden) $('cm-cc').focus();
+    });
+
+    // The address book, offered as you type rather than as a second dialogue.
+    (contactsLoaded ? Promise.resolve(contacts) : loadContacts().catch(() => []))
+      .then(list => {
+        const dl = $('cmContacts');
+        if (dl) dl.innerHTML = list.map(c => `<option value="${esc(c.email)}">${esc(c.name)}${c.company ? ` — ${esc(c.company)}` : ''}</option>`).join('');
+      });
+
+    $('cmForm').addEventListener('submit', async ev => {
+      ev.preventDefault();
+      const errEl = $('cmError');
+      errEl.hidden = true;
+      const btn = ev.target.querySelector('button[type="submit"]');
+      const recipients = $('cm-to').value.split(/[,;\n]+/).map(s => s.trim()).filter(Boolean);
+      const bcc = $('cm-bcc')?.value.trim();
+      if (!confirm(`Send this to ${recipients.join(', ')}${bcc ? ` (bcc ${bcc})` : ''}?`)) return;
+
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      try {
+        const res = await api('/api/admin/compose', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            to: $('cm-to').value,
+            cc: $('cm-cc')?.value || '',
+            bcc: bcc || '',
+            reply_to: $('cm-reply')?.value || '',
+            subject: $('cm-subject').value,
+            body: $('cm-body').value,
+            name: prefill.name || '',
+            save_contact: $('cm-save').checked,
+          }),
+        });
+        composeModal.hidden = true;
+        contactsLoaded = false;              // the address book may have just grown
+        switchView('inbox');
+        location.hash = 'inbox/' + res.id;
+        loadList({ quiet: true });
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.hidden = false;
+        btn.disabled = false;
+        btn.textContent = 'Send email';
+      }
+    });
+  }
+
+  $('ibCompose').addEventListener('click', () => openCompose());
+
   /* ---------------- conversation ---------------- */
 
   const draftKey = id => 'ib_draft_' + id;
@@ -341,34 +679,46 @@
     const scroller = threadEl.querySelector('.th-scroll');
     const prevScroll = scroller ? scroller.scrollTop : 0;
     const first = String(e.name || '').split(/\s+/)[0];
-    // A phone caller often leaves no email, so there is nobody to reply to —
-    // the reply box would only produce an error. Notes still work.
-    const canEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(e.email || ''));
+    // Two reasons there is nobody to reply to: a phone caller who left no email,
+    // and a machine that wrote this. Either way the reply box would only produce
+    // an error, so it is replaced by a line saying why. Notes still work.
+    const notif = Boolean(e.is_notification);
+    const canEmail = !notif && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(e.email || ''));
     if (!canEmail) composerMode = 'note';
+    const noReply = notif
+      ? '🗂 Filed as a notification — nothing here is waiting on an answer.'
+      : `📞 No email address — ${e.phone ? 'call them back' : 'nothing to reply to'}. Notes are saved here.`;
     const lastIn = [...d.messages].reverse().find(m => m.direction === 'in');
 
     threadEl.innerHTML = `
       <div class="th-head">
         <button class="btn btn-ghost btn-sm th-back" type="button" id="thBack">← Inbox</button>
         <div class="th-title">
-          <h2>${esc(e.name)} <span class="type-pill type-${esc(e.type)}">${esc(typeLabel(e.type))}</span></h2>
+          <h2>${esc(e.name)} ${notif
+            ? '<span class="type-pill type-notification">Notification</span>'
+            : `<span class="type-pill type-${esc(e.type)}">${esc(typeLabel(e.type))}</span>`}</h2>
           <div class="th-contact">
-            ${e.phone ? `<a class="btn-call" href="tel:${esc(String(e.phone).replace(/[^\d+]/g, ''))}">📞 Call ${esc(e.phone)}</a>` : ''}
-            <a href="mailto:${esc(e.email)}">${esc(e.email)}</a>
+            ${notif ? `<span class="th-subject">${esc(e.subject || '(no subject)')}</span>` : ''}
+            ${!notif && e.phone ? `<a class="btn-call" href="tel:${esc(String(e.phone).replace(/[^\d+]/g, ''))}">📞 Call ${esc(e.phone)}</a>` : ''}
+            ${e.email ? `<a href="mailto:${esc(e.email)}">${esc(e.email)}</a>` : ''}
           </div>
         </div>
         <div class="th-actions">
           <div class="seg" role="group" aria-label="Status">
-            ${Object.entries(d.labels.statuses).map(([k, v]) =>
-              `<button type="button" data-th-status="${k}" class="${e.status === k ? 'on' : ''}">${esc(v)}</button>`).join('')}
+            ${Object.entries(d.labels.statuses)
+              // Nobody is "dealing with" a receipt or "awaiting" it: a
+              // notification is either still there or filed.
+              .filter(([k]) => !notif || k === 'new' || k === 'closed')
+              .map(([k, v]) => `<button type="button" data-th-status="${k}" class="${e.status === k ? 'on' : ''}">${esc(v)}</button>`).join('')}
           </div>
+          ${notif ? '<button class="btn btn-outline btn-sm" type="button" id="thPromote" title="Treat this as a real conversation: it moves to the inbox, where it can be typed, assigned and replied to">Move into the inbox</button>' : `
           <select id="thType" aria-label="Enquiry type">
             ${Object.entries(d.labels.types).map(([k, v]) => `<option value="${k}" ${e.type === k ? 'selected' : ''}>${esc(v)}</option>`).join('')}
           </select>
           <select id="thAssign" aria-label="Assigned to" title="Hand this conversation to a team member. They see only what is assigned to them.">
             <option value="">Not assigned — you handle it</option>
             ${state.team.map(t => `<option value="${esc(t.id)}" ${e.assigned_to === t.id ? 'selected' : ''}>Assign to ${esc(t.name)}</option>`).join('')}
-          </select>
+          </select>`}
         </div>
       </div>
 
@@ -380,7 +730,10 @@
           <span>Received ${esc(when(e.created_at))}</span>
           ${e.page ? `<span>From ${/^https?:/.test(e.page) ? `<a href="${esc(e.page)}" target="_blank" rel="noopener">${esc(e.page.replace(/^https?:\/\/(www\.)?/, ''))}</a>` : esc(e.page)}</span>` : ''}
           ${e.assignee_name ? `<span class="ib-owner">Assigned to ${esc(e.assignee_name)}</span>` : ''}
-          <a href="${esc(e.thread_url)}" target="_blank" rel="noopener" title="The page the customer sees">Customer's view ↗</a>
+          ${notif
+            ? `<span class="th-why">Filed here${e.notification_reason ? ` — ${esc(e.notification_reason)}` : ''}</span>`
+            : `<a href="${esc(e.thread_url)}" target="_blank" rel="noopener" title="The page the customer sees">Customer's view ↗</a>
+               <button type="button" class="btn btn-ghost btn-sm" id="thFile" style="padding:0 6px;font-size:.78rem" title="Not a customer — move it to Notifications, out of the inbox">File away</button>`}
           <button type="button" class="btn btn-ghost btn-sm" id="thDelete" style="padding:0 6px;font-size:.78rem">Delete (spam)</button>
         </div>
 
@@ -389,7 +742,7 @@
           ${e.fields.map(f => `<div><span>${esc(f.label)}</span>${esc(f.value)}</div>`).join('')}
         </div>` : ''}
 
-        ${voucherCard(d)}
+        ${notif ? '' : voucherCard(d)}
 
         <div class="timeline">${d.messages.map(m => timelineItem(m, e)).join('')}</div>
         <button type="button" class="th-newpill" id="thNewPill" hidden>↓ New message</button>
@@ -399,7 +752,7 @@
         <div class="composer-tabs">
           ${canEmail
             ? `<button type="button" data-mode="reply" class="${composerMode === 'reply' ? 'on' : ''}">Reply to ${esc(first || 'customer')}</button>`
-            : `<span class="composer-nomail">📞 No email address — ${e.phone ? 'call them back' : 'nothing to reply to'}. Notes are saved here.</span>`}
+            : `<span class="composer-nomail">${esc(noReply)}</span>`}
           <button type="button" data-mode="note" class="${composerMode === 'note' ? 'on' : ''}">Internal note</button>
         </div>
         <textarea id="thText" aria-label="Message"></textarea>
@@ -450,8 +803,25 @@
 
     $('thBack').addEventListener('click', () => { location.hash = 'inbox'; });
     threadEl.querySelectorAll('[data-th-status]').forEach(b => b.addEventListener('click', () => patch(e.id, { status: b.dataset.thStatus })));
-    $('thType').addEventListener('change', ev => patch(e.id, { type: ev.target.value }));
-    $('thAssign').addEventListener('change', ev => {
+    $('thType')?.addEventListener('change', ev => patch(e.id, { type: ev.target.value }));
+    $('thPromote')?.addEventListener('click', async () => {
+      if (!confirm('Move this into the inbox?\n\nIt becomes an ordinary conversation — you can set its type, assign it and reply to it.')) return;
+      try {
+        await file(e.id, false);
+        switchView('inbox');
+        await openThread(e.id, { keepScroll: true });
+      } catch (err) { alert(err.message); }
+    });
+    $('thFile')?.addEventListener('click', async () => {
+      if (!confirm(`Move this out of the inbox?\n\nIt goes to Notifications: kept and searchable, but it stops counting as something to answer${e.assignee_name ? ` and comes off ${e.assignee_name}'s desk` : ''}.`)) return;
+      try {
+        await file(e.id, true);
+        state.current = null;
+        location.hash = 'inbox';
+        switchView('notifications');
+      } catch (err) { alert(err.message); }
+    });
+    $('thAssign')?.addEventListener('change', ev => {
       const to = ev.target.value;
       const who = state.team.find(t => t.id === to);
       const question = who
@@ -720,7 +1090,7 @@
       state.current = null;
       inboxEl.classList.remove('show-thread');
       listEl.querySelectorAll('.ib-item.active').forEach(li => li.classList.remove('active'));
-      if (window.innerWidth <= 900) threadEl.innerHTML = '<div class="thread-empty"><strong>No conversation selected</strong>Pick one from the list to read and reply.</div>';
+      if (window.innerWidth <= 900) threadEl.innerHTML = emptyThread();
     }
   };
 

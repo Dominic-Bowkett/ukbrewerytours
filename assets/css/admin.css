@@ -185,6 +185,8 @@ code.small { font-size: .78rem; }
 .pill-refunded { background: #f0e0df; color: #8f2a22; }
 .balance-box.four { grid-template-columns: repeat(4, 1fr); }
 .redeem-row { display: grid; grid-template-columns: 150px 1fr; gap: 12px; }
+/* Two fields of equal weight — Cc and Bcc, a name beside an email address. */
+.redeem-row.even { grid-template-columns: 1fr 1fr; }
 .field label { display: block; font-size: .78rem; font-weight: 600; margin-bottom: 5px; color: var(--ink-soft); }
 /* select and textarea must be listed explicitly — styling `input` alone left the
    payment-request form's dropdowns and notes box as raw browser defaults. */
@@ -292,11 +294,22 @@ code.small { font-size: .78rem; }
 .type-booking { background: #fbeacd; color: #8a5a10; }
 .type-voucher { background: #f5dfe0; color: #8a3a44; }
 .type-general { background: #e8e2d8; color: #5d5044; }
+.type-notification { background: #e4e8ec; color: #4a5a68; }
 .st-pill { display: inline-block; font-size: .7rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
 .st-new { background: #c8412f; color: #fff; }
 .st-dealing { background: #fbeacd; color: #8a5a10; }
 .st-waiting { background: #dfe7f1; color: #2f4a6b; }
 .st-closed { background: #e8e2d8; color: #6b5c4f; }
+
+/* Inbox or Notifications, and the one button that starts an email from nothing. */
+.inbox-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.view-seg button { padding: 7px 14px; }
+.inbox-top .btn-sm { white-space: nowrap; }
+
+/* A notification is read by its subject, and by the line saying why it is here. */
+.ib-subject { font-size: .86rem; font-weight: 600; margin: 3px 0 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ib-why, .th-why { font-size: .72rem; color: var(--ink-soft); font-style: italic; }
+.th-subject { font-weight: 600; }
 
 .inbox-search { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
 .inbox-search .chip-btn { white-space: nowrap; padding: 8px 11px; }
@@ -404,6 +417,27 @@ code.small { font-size: .78rem; }
 .composer-tabs button.on { background: var(--stout); color: var(--paper); }
 /* Shown instead of the Reply tab when there is no email address to reply to. */
 .composer-nomail { font-size: .84rem; color: var(--ink-soft); padding: 6px 10px 6px 2px; align-self: center; }
+
+/* Composing a new email, and the address book behind it. */
+#composeModal .modal-panel, #contactsModal .modal-panel { max-width: 720px; }
+.cm-check { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: .85rem; color: var(--ink-soft); }
+.cm-check input { width: 16px; height: 16px; accent-color: var(--amber); }
+.ct-editing td { background: var(--cream); padding: 14px 12px; border-radius: 10px; }
+#contactsBody .hist td { vertical-align: top; padding: 12px 10px 12px 0; }
+.ct-who strong, .ct-who .muted { display: block; }
+.ct-who .muted { font-size: .8rem; margin-top: 2px; }
+.ct-reach { overflow-wrap: anywhere; }
+.ct-reach .btn-call { margin-top: 6px; }
+.ct-actions { width: 150px; }
+.ct-actions > div { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+
+/* On a phone each contact reads as a stacked card rather than a squeezed row. */
+@media (max-width: 620px) {
+  #contactsBody .hist, #contactsBody .hist tbody, #contactsBody .hist tr, #contactsBody .hist td { display: block; width: auto; }
+  #contactsBody .hist td { border-bottom: 0; padding: 2px 0; }
+  #contactsBody .hist tr { border-bottom: 1px solid var(--line); padding: 12px 0; }
+  .ct-actions > div { justify-content: flex-start; margin-top: 8px; }
+}
 .composer-tabs button[data-mode="note"].on { background: #e2c85c; color: #3d3100; }
 .th-composer textarea { width: 100%; min-height: 110px; max-height: 40vh; resize: vertical; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font: inherit; font-size: .93rem; line-height: 1.55; background: #fff; }
 .th-composer textarea:focus { outline: 2px solid var(--amber); outline-offset: -1px; }

@@ -27,7 +27,10 @@ export async function onRequestGet({ params, env }) {
 
   let vouchers = { matches: [], unmatched: [] };
   try {
-    vouchers = await voucherCheck(env, enquiry, (messages || []).filter(m => m.direction === 'in').map(m => m.body));
+    // A Stripe receipt is full of code-shaped strings and none of them are ours.
+    if (!enquiry.is_notification) {
+      vouchers = await voucherCheck(env, enquiry, (messages || []).filter(m => m.direction === 'in').map(m => m.body));
+    }
   } catch (err) {
     console.error('voucher check failed', err);
   }
@@ -95,10 +98,30 @@ export async function onRequestPatch({ params, request, env, data }) {
     args.push(body.unread ? 1 : 0);
   }
 
+  // Move a notification into the inbox, or file a conversation away as one.
+  // Filing something away takes it off a team member's desk with it — they can
+  // no longer see it, so leaving it assigned would only be misleading.
+  if (body.is_notification !== undefined && Boolean(body.is_notification) !== (enquiry.is_notification === 1)) {
+    const filed = Boolean(body.is_notification);
+    sets.push('is_notification = ?', 'notification_reason = ?');
+    args.push(filed ? 1 : 0, filed ? 'filed by hand' : null);
+    events.push(filed ? 'Filed away as a notification' : 'Moved into the inbox');
+    if (filed && enquiry.assigned_to && body.assigned_to === undefined) {
+      sets.push('assigned_to = NULL', 'assigned_at = NULL', 'assigned_by = ?');
+      args.push(who);
+      events.push('Unassigned — a notification has no owner');
+    }
+  }
+
   // Assignment. null hands it back to the admin; otherwise it must be an active
   // member with inbox access, who then sees this conversation and nothing else.
   let newOwner = null;
   if (body.assigned_to !== undefined && (body.assigned_to || null) !== (enquiry.assigned_to || null)) {
+    // Unless this same request is promoting it, a team member cannot be handed
+    // something they would not be able to see.
+    if (body.assigned_to && enquiry.is_notification && body.is_notification !== false) {
+      return Response.json({ error: 'Move this into the inbox before assigning it.' }, { status: 400 });
+    }
     if (body.assigned_to) {
       newOwner = await env.DB.prepare(
         'SELECT id, name, email, active, inbox_access, notify_email FROM team_members WHERE id = ?',

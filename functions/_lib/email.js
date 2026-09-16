@@ -13,11 +13,17 @@ const esc = s => String(s ?? '')
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;');
 
-export async function sendEmail(env, { to, subject, html, replyTo, from }) {
+export async function sendEmail(env, { to, subject, html, replyTo, from, cc, bcc }) {
+  const list = v => (Array.isArray(v) ? v : [v]).map(s => String(s ?? '').trim()).filter(Boolean);
+  const ccList = list(cc);
+  const bccList = list(bcc);
+
   // Local dev only: `wrangler pages dev` on this machine cannot reach Resend
   // (the fetch hangs), so EMAIL_DRY_RUN=1 in .dev.vars logs instead of sending.
   if (env.EMAIL_DRY_RUN) {
-    console.log(`[email dry-run] from=${from || env.FROM_EMAIL || 'info@'} to=${[].concat(to).join(',')} replyTo=${replyTo || '-'} subject=${subject}`);
+    console.log(`[email dry-run] from=${from || env.FROM_EMAIL || 'info@'} to=${list(to).join(',')}`
+      + `${ccList.length ? ` cc=${ccList.join(',')}` : ''}${bccList.length ? ` bcc=${bccList.join(',')}` : ''}`
+      + ` replyTo=${replyTo || '-'} subject=${subject}`);
     return { id: 'dry-run-' + Date.now() };
   }
   const res = await fetch('https://api.resend.com/emails', {
@@ -32,9 +38,11 @@ export async function sendEmail(env, { to, subject, html, replyTo, from }) {
       // `from` lets a team member's reply come from their own address; everything
       // else sends as the house address. Both must be on a Resend-verified domain.
       from: from || env.FROM_EMAIL || 'UK Brewery Tours <info@ukbrewerytours.com>',
-      to: Array.isArray(to) ? to : [to],
+      to: list(to),
       subject,
       html,
+      ...(ccList.length ? { cc: ccList } : {}),
+      ...(bccList.length ? { bcc: bccList } : {}),
       ...(replyTo ? { reply_to: replyTo } : {}),
     }),
   });

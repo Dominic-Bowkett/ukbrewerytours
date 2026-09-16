@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
-<meta name="admin-build" content="3b28ae4715">
+<meta name="admin-build" content="ae385b4018">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
 <title>Admin — UK Brewery Tours</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍺%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="/assets/css/admin.css?v=3b28ae4715">
+<link rel="stylesheet" href="/assets/css/admin.css?v=ae385b4018">
 </head>
 <body>
 <header class="admin-header">
@@ -27,11 +27,19 @@
   <div class="inbox" id="inbox">
     <aside class="inbox-side" aria-label="Conversations">
       <div class="inbox-tools">
+        <div class="inbox-top">
+          <div class="seg view-seg" role="group" aria-label="View">
+            <button type="button" data-ib-view="inbox" class="on">Inbox</button>
+            <button type="button" data-ib-view="notifications" id="ibNotifTab" title="Receipts, booking confirmations and other machine-written mail — filed here, never alerted on, never shown to the team">Notifications</button>
+          </div>
+          <button type="button" class="btn btn-primary btn-sm" id="ibCompose">✉️ New email</button>
+        </div>
         <div class="status-chips" id="ibStatus"></div>
         <div class="inbox-filters">
           <select id="ibType" aria-label="Enquiry type"><option value="">All types</option></select>
           <select id="ibSite" aria-label="Website"><option value="">All websites</option></select>
           <select id="ibAssignee" aria-label="Assigned to"><option value="">Anyone</option><option value="none">Unassigned</option></select>
+          <button type="button" class="chip-btn" id="ibContacts" title="Your address book">Contacts</button>
           <button type="button" class="chip-btn" id="ibTeam" title="Who can be given conversations">Team access</button>
         </div>
         <div class="inbox-search">
@@ -281,6 +289,24 @@
   <div class="modal-panel" role="dialog" aria-modal="true">
     <button class="modal-close" data-close aria-label="Close">&times;</button>
     <div id="widgetBody"></div>
+  </div>
+</div>
+
+<!-- Start an email to someone who hasn't written in -->
+<div class="modal" id="composeModal" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-label="New email">
+    <button class="modal-close" data-close aria-label="Close">&times;</button>
+    <div id="composeBody"></div>
+  </div>
+</div>
+
+<!-- The address book -->
+<div class="modal" id="contactsModal" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-label="Contacts">
+    <button class="modal-close" data-close aria-label="Close">&times;</button>
+    <div id="contactsBody"></div>
   </div>
 </div>
 
@@ -1327,7 +1353,7 @@ document.addEventListener('DOMContentLoaded', () => showTab(location.hash.slice(
 window.addEventListener('hashchange', () => showTab(location.hash.slice(1) || 'inbox'));
 </script>
 <div class="ib-toast" id="ibToast" role="status" aria-live="polite" hidden></div>
-<script src="/admin/inbox.js?v=3b28ae4715" defer></script>
-<script src="/admin/imported.js?v=3b28ae4715" defer></script>
+<script src="/admin/inbox.js?v=ae385b4018" defer></script>
+<script src="/admin/imported.js?v=ae385b4018" defer></script>
 </body>
 </html>

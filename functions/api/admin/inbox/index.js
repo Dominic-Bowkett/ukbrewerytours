@@ -1,5 +1,12 @@
 // GET /api/admin/inbox — the conversation list, with per-status and per-type counts.
-// Query: status (open|new|dealing|waiting|closed|all), type, site, q, page
+// Query: status (open|new|dealing|waiting|closed|all), type, site, q, page,
+//        view (inbox|notifications)
+//
+// Notifications are the machine-written mail that arrives at info@: Stripe
+// receipts, DesignMyNight bookings, Google security notices. They live in the
+// same table behind is_notification, so they are searchable and can be promoted
+// into the inbox, but they never appear in it, never count towards the badge,
+// and never reach a team member.
 
 import { TYPES, STATUSES, siteLabel } from '../../../_lib/inbox.js';
 
@@ -13,9 +20,11 @@ export async function onRequestGet({ request, env }) {
   const q = (url.searchParams.get('q') || '').trim().slice(0, 100);
   const page = Math.max(1, parseInt(url.searchParams.get('page') || '1', 10) || 1);
 
+  const view = url.searchParams.get('view') === 'notifications' ? 'notifications' : 'inbox';
+
   // Filters other than status/type, shared by the list and both count queries.
-  const base = [];
-  const baseArgs = [];
+  const base = ['e.is_notification = ?'];
+  const baseArgs = [view === 'notifications' ? 1 : 0];
   if (site) { base.push('e.site = ?'); baseArgs.push(site); }
   // assignee=<member id> | none (unassigned) | mine is not a thing here: the admin sees all.
   const assignee = url.searchParams.get('assignee') || '';
@@ -23,9 +32,12 @@ export async function onRequestGet({ request, env }) {
   else if (assignee) { base.push('e.assigned_to = ?'); baseArgs.push(assignee); }
   if (q) {
     const like = `%${q.replace(/[%_]/g, m => '\\' + m)}%`;
+    // Subject included: a notification is remembered by its subject line
+    // ("the Stripe payout one"), not by who sent it.
     base.push(`(e.name LIKE ? ESCAPE '\\' OR e.email LIKE ? ESCAPE '\\' OR e.voucher_code LIKE ? ESCAPE '\\' OR e.phone LIKE ? ESCAPE '\\'
+      OR e.subject LIKE ? ESCAPE '\\'
       OR e.id IN (SELECT enquiry_id FROM enquiry_messages WHERE body LIKE ? ESCAPE '\\')${/^\d+$/.test(q) ? ' OR e.id = ?' : ''})`);
-    baseArgs.push(like, like, like, like, like);
+    baseArgs.push(like, like, like, like, like, like);
     if (/^\d+$/.test(q)) baseArgs.push(Number(q));
   }
 
@@ -43,7 +55,7 @@ export async function onRequestGet({ request, env }) {
 
   const listSql = `
     SELECT e.id, e.name, e.email, e.phone, e.type, e.channel, e.site, e.status, e.unread, e.voucher_code,
-           e.created_at, e.last_message_at, e.assigned_to,
+           e.created_at, e.last_message_at, e.assigned_to, e.subject, e.is_notification, e.notification_reason,
            (SELECT name FROM team_members t WHERE t.id = e.assigned_to) AS assignee_name,
            (SELECT substr(body, 1, 160) FROM enquiry_messages m WHERE m.enquiry_id = e.id AND m.direction IN ('in','out') ORDER BY m.id DESC LIMIT 1) AS snippet,
            (SELECT direction FROM enquiry_messages m WHERE m.enquiry_id = e.id AND m.direction IN ('in','out') ORDER BY m.id DESC LIMIT 1) AS last_direction,
@@ -58,28 +70,32 @@ export async function onRequestGet({ request, env }) {
   const since = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(url.searchParams.get('since') || '')
     ? url.searchParams.get('since') : null;
 
-  const [nowRow, list, byStatus, byType, sites, team, unread, recent] = await env.DB.batch([
+  const [nowRow, list, byStatus, byType, sites, team, unread, recent, notifications] = await env.DB.batch([
     env.DB.prepare("SELECT datetime('now') AS now"),
     env.DB.prepare(listSql).bind(...baseArgs, ...statusArgs, ...typeArgs, PAGE_SIZE + 1, (page - 1) * PAGE_SIZE),
     env.DB.prepare(`SELECT e.status, COUNT(*) AS n, SUM(e.unread) AS unread FROM enquiries e ${where(base, typeClause)} GROUP BY e.status`)
       .bind(...baseArgs, ...typeArgs),
     env.DB.prepare(`SELECT e.type, COUNT(*) AS n FROM enquiries e ${where(base, statusClause)} GROUP BY e.type`)
       .bind(...baseArgs, ...statusArgs),
-    env.DB.prepare('SELECT site, COUNT(*) AS n FROM enquiries GROUP BY site ORDER BY n DESC'),
+    env.DB.prepare('SELECT site, COUNT(*) AS n FROM enquiries WHERE is_notification = 0 GROUP BY site ORDER BY n DESC'),
     // Who conversations can be handed to, and how much each is holding.
     env.DB.prepare(
       `SELECT t.id, t.name, t.email, t.inbox_from_email,
               (SELECT COUNT(*) FROM enquiries e WHERE e.assigned_to = t.id AND e.status != 'closed') AS open_count
          FROM team_members t WHERE t.inbox_access = 1 AND t.active = 1 ORDER BY t.name`,
     ),
-    env.DB.prepare("SELECT COUNT(*) AS n FROM enquiries WHERE unread = 1 AND status != 'closed'"),
+    // The badge counts people waiting for an answer. Notifications never do.
+    env.DB.prepare("SELECT COUNT(*) AS n FROM enquiries WHERE unread = 1 AND status != 'closed' AND is_notification = 0"),
     // >= and a client-side dedupe: timestamps are whole seconds.
     env.DB.prepare(
       `SELECT e.id, e.name, e.last_inbound_at,
               (SELECT substr(body, 1, 140) FROM enquiry_messages m WHERE m.enquiry_id = e.id AND m.direction = 'in' ORDER BY m.id DESC LIMIT 1) AS snippet
-         FROM enquiries e WHERE ? IS NOT NULL AND e.last_inbound_at >= ?
+         FROM enquiries e WHERE ? IS NOT NULL AND e.last_inbound_at >= ? AND e.is_notification = 0
         ORDER BY e.last_inbound_at DESC LIMIT 5`,
     ).bind(since, since),
+    env.DB.prepare(
+      "SELECT COUNT(*) AS n, COALESCE(SUM(unread), 0) AS unread FROM enquiries WHERE is_notification = 1 AND status != 'closed'",
+    ),
   ]);
 
   const rows = list.results || [];
@@ -91,11 +107,14 @@ export async function onRequestGet({ request, env }) {
   }
 
   return Response.json({
+    view,
     enquiries: rows.slice(0, PAGE_SIZE).map(r => ({ ...r, site_label: siteLabel(r.site) })),
     hasMore: rows.length > PAGE_SIZE,
     counts: {
       status: statusCounts,
       type: Object.fromEntries((byType.results || []).map(r => [r.type, r.n])),
+      notifications: notifications.results?.[0]?.n || 0,
+      notifications_unread: notifications.results?.[0]?.unread || 0,
     },
     sites: (sites.results || []).map(s => ({ site: s.site, label: siteLabel(s.site), n: s.n })),
     team: team.results || [],

@@ -9,7 +9,7 @@
 // before anything is read. Retries are deduped on the message id.
 
 import {
-  verifySvix, parseAddress, tokenFromRecipients, stripQuoted, htmlToText, isAutomated,
+  verifySvix, parseAddress, tokenFromRecipients, stripQuoted, htmlToText, notificationReason,
 } from '../_lib/inbound.js';
 import {
   TOKEN_RE, appendCustomerMessage, alertAdmin, createEnquiry, voucherCheck, cleanFields,
@@ -68,11 +68,14 @@ async function ingest(env, data) {
 
   const from = parseAddress(full.from || data.from);
   const subject = String(full.subject || data.subject || '(no subject)').slice(0, 200);
-  const headers = full.headers || {};
-  if (isAutomated(headers, from.email)) {
-    console.log('inbound: ignoring automated mail from', from.email);
-    return;
-  }
+  // Normally from the API call above; a webhook payload that carries its own
+  // headers (or a replayed test) is just as good.
+  const headers = full.headers || data.headers || {};
+
+  // Stripe receipts, DesignMyNight bookings, Google security mail, bounces,
+  // out-of-office replies: filed as notifications, never alerted on, never shown
+  // to a team member. `reason` is null when a person wrote the message.
+  const reason = notificationReason(headers, from.email, env.NOTIFICATION_SENDERS);
 
   // Resend's webhook is metadata-only, so the body normally comes from the API
   // call above; a payload that does carry one (or a replayed test) still works.
@@ -89,18 +92,26 @@ async function ingest(env, data) {
   }
 
   // 2. Otherwise the sender's most recent conversation, if it is still live.
-  if (!enquiry && from.email) {
+  //    People only: a Stripe receipt must never land on a customer's thread
+  //    just because the two addresses happen to match.
+  if (!enquiry && !reason && from.email) {
     enquiry = await env.DB.prepare(
       `SELECT * FROM enquiries WHERE lower(email) = ? AND last_message_at > datetime('now','-90 days')
+         AND is_notification = 0
         ORDER BY COALESCE(last_message_at, created_at) DESC LIMIT 1`,
     ).bind(from.email).first();
   }
 
   if (enquiry) {
-    await appendCustomerMessage(env, enquiry, { body, channel: 'email', author: from.name || enquiry.name });
+    // An out-of-office or a bounce belongs on the thread it answers, but it is
+    // not the customer coming back: file it quietly.
+    await appendCustomerMessage(env, enquiry, {
+      body, channel: 'email', author: from.name || enquiry.name, silent: Boolean(reason),
+    });
     await stampEmailId(env, enquiry.id, messageId);
+    if (reason) return;
   } else {
-    // 3. A new conversation, started by email.
+    // 3. A new conversation, started by email — or a notification, filed away.
     const created = await createEnquiry(env, {
       name: from.name || 'Email enquiry',
       email: from.email,
@@ -115,10 +126,12 @@ async function ingest(env, data) {
       site: 'ukbrewerytours.com',
       fields: cleanFields({}),
       voucherCode: null,
+      subject,
+      notification: reason,
     });
-    enquiry = { id: created.id, token: created.token, name: from.name, email: from.email, type: 'general', channel: 'email', site: 'ukbrewerytours.com', subject };
-    await env.DB.prepare('UPDATE enquiries SET subject = ? WHERE id = ?').bind(`Re: ${subject}`.slice(0, 200), created.id).run();
     await stampEmailId(env, created.id, messageId);
+    if (reason) return;
+    enquiry = { id: created.id, token: created.token, name: from.name, email: from.email, type: 'general', channel: 'email', site: 'ukbrewerytours.com', subject };
   }
 
   try {

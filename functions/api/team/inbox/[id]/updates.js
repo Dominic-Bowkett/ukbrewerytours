@@ -10,7 +10,7 @@ export async function onRequestGet({ params, request, env, data }) {
   const after = Math.max(0, parseInt(url.searchParams.get('after') || '0', 10) || 0);
 
   const enquiry = await env.DB.prepare(
-    'SELECT id, status, type, unread, voucher_code, email FROM enquiries WHERE id = ? AND assigned_to = ?',
+    'SELECT id, status, type, unread, voucher_code, email FROM enquiries WHERE id = ? AND assigned_to = ? AND is_notification = 0',
   ).bind(id, data.teamMemberId).first();
   if (!enquiry) return Response.json({ error: 'Conversation not found.' }, { status: 404 });
 

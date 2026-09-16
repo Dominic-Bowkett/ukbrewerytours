@@ -151,9 +151,9 @@ Svix-signed (`INBOUND_WEBHOOK_SECRET`, 5-minute replay window), fetches the body
 1. **token in the recipient** → that conversation;
 2. **no token, known sender** → their most recent conversation of the last 90 days;
 3. **otherwise** → a new conversation (channel `email`, type guessed from the subject).
-Retries dedupe on `message_id` (stored in `enquiry_messages.email_id`); auto-replies,
-bounces and bulk mail (`Auto-Submitted`, `Precedence`, `List-Unsubscribe`, no-reply
-senders) are dropped. Alerts then follow the normal rules (assignee, else admin).
+Retries dedupe on `message_id` (stored in `enquiry_messages.email_id`). Machine-written
+mail becomes a **notification** instead (see below). Alerts then follow the normal rules
+(assignee, else admin).
 
 **LIVE since 16 Sep 2026.** As configured:
 - Resend domain `reply.ukbrewerytours.com` (id `1f42835a-b40a-4ab7-9777-a563fa14c0a5`),
@@ -179,9 +179,71 @@ Two things that cost time and will again:
   which is disabled here. Receiving only needs the MX, which is verified — this is
   expected, not a fault.
 
-The same endpoint is how info@ mail could join the helpdesk: a Google Workspace
-recipient-address-map rule copying (or redirecting) info@ to an address on the
-receiving domain.
+## Notifications (machine-written mail)
+
+Most of what arrives at info@ is written by a machine: Stripe receipts,
+DesignMyNight bookings, Google security notices, bounces, out-of-office replies.
+None of it is a customer waiting for an answer, so it is filed away rather than
+answered — and rather than deleted, because the one you want back is always the
+one that was thrown away.
+
+`notificationReason()` in `_lib/inbound.js` returns a short human reason
+("automated mail from stripe.com", "a no-reply sender", "bulk mail") or null when
+a person wrote it. It matches a sender list — narrow on purpose, and it must
+never contain gmail/outlook/yahoo, which is where customers write from — plus the
+familiar headers (`Auto-Submitted`, `Precedence`, `List-Unsubscribe`) and
+no-reply-ish local parts. `NOTIFICATION_SENDERS` (comma-separated domains) adds
+to the list without a deploy.
+
+What that means in practice:
+- `enquiries.is_notification` = 1, with the reason in `notification_reason`.
+- It never appears in the inbox, never counts towards the badge, never fires an
+  alert email or a browser notification, and is invisible to every team member
+  (`is_notification = 0` is on every team query, not just on assignment).
+- The admin's **Notifications** tab lists them, searchable by subject — the way
+  you actually remember one. **Move into the inbox** promotes a wrong guess;
+  **File away** on any conversation does the reverse, taking it off a team
+  member's desk as it goes.
+- Automated mail addressed to a conversation's own reply address — an
+  out-of-office, a bounce — is filed *on that conversation* instead, quietly:
+  `appendCustomerMessage(..., { silent: true })` leaves the status, the unread
+  flag and the alert clock alone.
+
+### Routing info@ into the helpdesk
+
+Decided 16 Sep 2026: keep a Gmail copy for now, and file automated mail under
+Notifications. The receiving side is already live, so what remains is one setting
+in Gmail, on the info@ mailbox:
+
+1. **Settings → Forwarding and POP/IMAP → Add a forwarding address** →
+   `info@reply.ukbrewerytours.com`.
+2. Google emails a confirmation code to that address. It arrives here as a
+   **notification** (it is from `forwarding-noreply@google.com`) — find it under
+   the Notifications tab, subject "Gmail Forwarding Confirmation".
+3. Back in Gmail, enter the code, then choose **Forward a copy of incoming mail
+   to … and keep Gmail's copy in the Inbox.**
+
+Everything then lands in both places. Once the helpdesk has proved itself, change
+that last setting to "archive Gmail's copy" and info@ lives here alone. dom@ is
+untouched either way and stays on Gmail.
+
+## Emailing someone first (admin only)
+
+**✉️ New email** in the inbox opens a composer: To (several addresses allowed),
+Cc, Bcc, Subject, message, and a Reply-to override. `POST /api/admin/compose`
+sends it and starts a conversation, so the reply comes back to the thread like
+any other — that is the point of it, rather than emailing from Gmail and losing
+the thread. The Reply-to override exists for handing something to another
+mailbox; fill it in and the reply goes there and never reaches the inbox, which
+the field says out loud. Cc, Bcc and any extra recipients are recorded as a
+timeline event, because the email itself does not show them.
+
+The **Contacts** button is the address book behind it: `contacts`, one card per
+address (the unique index is on `lower(email)`), searchable by name, company,
+email or phone, with `last_emailed_at` stamped on every send. Saving the same
+address again merges into the existing card and never blanks what it already
+knew. Admin only — `/api/admin/*` is behind the admin session, and nothing in the
+team portal reads or writes it.
 
 ## A team member's addresses
 
@@ -211,6 +273,11 @@ offers a **Reload** bar rather than quietly running old code.
   (+ redemptions), backfill (old enquiries arrive closed and read)
 - `migrations/0012_inbox_assignment.sql` — `enquiries.assigned_to/at/by`,
   `team_members.inbox_access/inbox_from_email/inbox_from_name`
+- `migrations/0013_inbound_email.sql` — `team_members.notify_email`, the email-id index
+- `migrations/0014_notifications_contacts.sql` — `enquiries.is_notification/notification_reason`,
+  the `contacts` table
+- `functions/api/admin/compose.js`, `functions/api/admin/contacts/*`,
+  `functions/_lib/contacts.js` — emailing out, and the address book
 - `functions/api/team/inbox/*` — the team member's scoped API; `team/inbox.js` its UI
 - `functions/_lib/inbox.js` — types/statuses, site detection, create/append, alerts, code matching
 - `functions/_lib/chat-ui.js` — chat UI (frame + `/messages/` page)

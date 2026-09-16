@@ -26,11 +26,19 @@
   <div class="inbox" id="inbox">
     <aside class="inbox-side" aria-label="Conversations">
       <div class="inbox-tools">
+        <div class="inbox-top">
+          <div class="seg view-seg" role="group" aria-label="View">
+            <button type="button" data-ib-view="inbox" class="on">Inbox</button>
+            <button type="button" data-ib-view="notifications" id="ibNotifTab" title="Receipts, booking confirmations and other machine-written mail — filed here, never alerted on, never shown to the team">Notifications</button>
+          </div>
+          <button type="button" class="btn btn-primary btn-sm" id="ibCompose">✉️ New email</button>
+        </div>
         <div class="status-chips" id="ibStatus"></div>
         <div class="inbox-filters">
           <select id="ibType" aria-label="Enquiry type"><option value="">All types</option></select>
           <select id="ibSite" aria-label="Website"><option value="">All websites</option></select>
           <select id="ibAssignee" aria-label="Assigned to"><option value="">Anyone</option><option value="none">Unassigned</option></select>
+          <button type="button" class="chip-btn" id="ibContacts" title="Your address book">Contacts</button>
           <button type="button" class="chip-btn" id="ibTeam" title="Who can be given conversations">Team access</button>
         </div>
         <div class="inbox-search">
@@ -280,6 +288,24 @@
   <div class="modal-panel" role="dialog" aria-modal="true">
     <button class="modal-close" data-close aria-label="Close">&times;</button>
     <div id="widgetBody"></div>
+  </div>
+</div>
+
+<!-- Start an email to someone who hasn't written in -->
+<div class="modal" id="composeModal" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-label="New email">
+    <button class="modal-close" data-close aria-label="Close">&times;</button>
+    <div id="composeBody"></div>
+  </div>
+</div>
+
+<!-- The address book -->
+<div class="modal" id="contactsModal" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-label="Contacts">
+    <button class="modal-close" data-close aria-label="Close">&times;</button>
+    <div id="contactsBody"></div>
   </div>
 </div>
 

@@ -33,6 +33,7 @@ export const CHANNELS = {
   chat: 'Live chat',
   web: 'Messages page',
   email: 'Email',
+  phone: 'Phone call',
 };
 
 const SITE_LABELS = {
@@ -161,20 +162,26 @@ export function cleanFields(input) {
   return out;
 }
 
-/** Create the conversation and its first message. Returns { id, token, subject }. */
+/**
+ * Create the conversation and its first message. Returns { id, token, subject }.
+ * `notification` is the reason machine-written mail was filed away from the
+ * inbox; `subject` overrides the generated one (inbound email keeps its own).
+ */
 export async function createEnquiry(env, e) {
   const token = newToken();
-  const subject = defaultSubject(e.type, e.site);
+  const subject = String(e.subject || defaultSubject(e.type, e.site)).slice(0, 200);
   const fieldsJson = Object.keys(e.fields || {}).length ? JSON.stringify(e.fields) : null;
 
   const res = await env.DB.prepare(
     `INSERT INTO enquiries (name, email, phone, message, page, ip, widget_id, widget_origin,
-       type, channel, site, status, unread, token, subject, fields, voucher_code, last_message_at, last_inbound_at)
-     VALUES (?,?,?,?,?,?,?,?,?,?,?,'new',1,?,?,?,?,datetime('now'),datetime('now'))`,
+       type, channel, site, status, unread, token, subject, fields, voucher_code,
+       is_notification, notification_reason, last_message_at, last_inbound_at)
+     VALUES (?,?,?,?,?,?,?,?,?,?,?,'new',1,?,?,?,?,?,?,datetime('now'),datetime('now'))`,
   ).bind(
     e.name, e.email, e.phone || null, e.message, e.page || null, e.ip || null,
     e.widgetId || null, e.widgetOrigin || null,
     e.type, e.channel, e.site, token, subject, fieldsJson, e.voucherCode || null,
+    e.notification ? 1 : 0, e.notification || null,
   ).run();
 
   const id = res.meta.last_row_id;
@@ -185,18 +192,27 @@ export async function createEnquiry(env, e) {
   return { id, token, subject };
 }
 
-/** A customer follow-up (chat, messages page, email reply). Reopens a closed conversation. */
-export async function appendCustomerMessage(env, enquiry, { body, channel, author, ip }) {
+/**
+ * A customer follow-up (chat, messages page, email reply). Reopens a closed
+ * conversation.
+ *
+ * `silent` files the message on the thread without any of that: an out-of-office
+ * or a bounce belongs on the conversation it answers, but it is not the customer
+ * coming back, so it must not reopen a closed thread, mark it unread, or alert.
+ */
+export async function appendCustomerMessage(env, enquiry, { body, channel, author, ip, silent = false }) {
   await env.DB.batch([
     env.DB.prepare(
       'INSERT INTO enquiry_messages (enquiry_id, direction, channel, body, author, ip) VALUES (?,?,?,?,?,?)',
     ).bind(enquiry.id, 'in', channel, body, author || enquiry.name, ip || null),
-    env.DB.prepare(
-      `UPDATE enquiries SET unread = 1, last_message_at = datetime('now'), last_inbound_at = datetime('now'),
-         status = CASE WHEN status IN ('waiting','closed') THEN 'dealing' ELSE status END,
-         closed_at = NULL
-       WHERE id = ?`,
-    ).bind(enquiry.id),
+    silent
+      ? env.DB.prepare("UPDATE enquiries SET last_message_at = datetime('now') WHERE id = ?").bind(enquiry.id)
+      : env.DB.prepare(
+        `UPDATE enquiries SET unread = 1, last_message_at = datetime('now'), last_inbound_at = datetime('now'),
+           status = CASE WHEN status IN ('waiting','closed') THEN 'dealing' ELSE status END,
+           closed_at = NULL
+         WHERE id = ?`,
+      ).bind(enquiry.id),
   ]);
 }
 
@@ -214,6 +230,8 @@ export async function logEvent(env, enquiryId, body, author) {
  */
 export async function alertAdmin(env, enquiry, { body, followUp = false, matches = [], unmatched = [] }) {
   if (!env.RESEND_API_KEY) return false;
+  // Notifications are machine-written. They are the reason this filter exists.
+  if (enquiry.is_notification) return false;
   const claim = await env.DB.prepare(
     followUp
       ? "UPDATE enquiries SET alerted_at = datetime('now') WHERE id = ? AND (alerted_at IS NULL OR alerted_at < datetime('now','-10 minutes'))"

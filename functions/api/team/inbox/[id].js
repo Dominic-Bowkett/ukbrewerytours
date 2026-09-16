@@ -9,7 +9,7 @@ import {
 /** The scope check: id AND owner, in one query. */
 export async function mine(env, id, me) {
   if (!/^\d+$/.test(String(id))) return null;
-  return env.DB.prepare('SELECT * FROM enquiries WHERE id = ? AND assigned_to = ?').bind(Number(id), me).first();
+  return env.DB.prepare('SELECT * FROM enquiries WHERE id = ? AND assigned_to = ? AND is_notification = 0').bind(Number(id), me).first();
 }
 
 export async function onRequestGet({ params, env, data }) {
