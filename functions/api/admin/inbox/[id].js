@@ -4,7 +4,7 @@
 //   DELETE  remove a conversation outright (spam).
 
 import {
-  TYPES, STATUSES, CHANNELS, FIELD_LABELS, siteLabel, brandFor, threadUrl, voucherCheck, logEvent, teamUrl,
+  TYPES, STATUSES, CHANNELS, FIELD_LABELS, siteLabel, brandFor, threadUrl, voucherCheck, logEvent, teamUrl, hideEmails,
 } from '../../../_lib/inbox.js';
 import { sendEmail, assignmentEmailHtml } from '../../../_lib/email.js';
 
@@ -137,7 +137,8 @@ export async function onRequestPatch({ params, request, env, data }) {
           typeLabel: TYPES[body.type || enquiry.type] || 'Enquiry',
           siteName: siteLabel(enquiry.site),
           link: teamUrl(enquiry.id),
-          body: last?.body || enquiry.message,
+          // The team member never sees the customer's email address.
+          body: hideEmails(last?.body || enquiry.message, enquiry.email),
           assignedBy: who,
         }),
       });

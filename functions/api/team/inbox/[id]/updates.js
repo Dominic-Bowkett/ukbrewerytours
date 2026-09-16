@@ -1,7 +1,7 @@
 // GET /api/team/inbox/:id/updates?after=<message id>&seen=1
 // The team portal's live poll — same contract as the admin's, scoped to the owner.
 
-import { voucherCheck } from '../../../../_lib/inbox.js';
+import { voucherCheck, hideEmails } from '../../../../_lib/inbox.js';
 
 export async function onRequestGet({ params, request, env, data }) {
   if (!/^\d+$/.test(String(params.id))) return Response.json({ error: 'Conversation not found.' }, { status: 404 });
@@ -10,7 +10,7 @@ export async function onRequestGet({ params, request, env, data }) {
   const after = Math.max(0, parseInt(url.searchParams.get('after') || '0', 10) || 0);
 
   const enquiry = await env.DB.prepare(
-    'SELECT id, status, type, unread, voucher_code FROM enquiries WHERE id = ? AND assigned_to = ?',
+    'SELECT id, status, type, unread, voucher_code, email FROM enquiries WHERE id = ? AND assigned_to = ?',
   ).bind(id, data.teamMemberId).first();
   if (!enquiry) return Response.json({ error: 'Conversation not found.' }, { status: 404 });
 
@@ -34,6 +34,10 @@ export async function onRequestGet({ params, request, env, data }) {
       console.error('voucher re-check failed', err);
     }
   }
+
+  // Same rule as the detail route: no customer email address reaches a team member.
+  for (const m of messages) m.body = hideEmails(m.body, enquiry.email);
+  for (const m of (vouchers?.matches || [])) m.holder_email = null;
 
   return Response.json({ status: enquiry.status, type: enquiry.type, messages, vouchers });
 }

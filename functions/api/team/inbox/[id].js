@@ -3,7 +3,7 @@
 //   PATCH  { status } — triage. Assignment and deletion stay with the admin.
 
 import {
-  TYPES, STATUSES, CHANNELS, FIELD_LABELS, siteLabel, brandFor, voucherCheck, logEvent,
+  TYPES, STATUSES, CHANNELS, FIELD_LABELS, siteLabel, brandFor, voucherCheck, logEvent, hideEmails,
 } from '../../../_lib/inbox.js';
 
 /** The scope check: id AND owner, in one query. */
@@ -32,9 +32,15 @@ export async function onRequestGet({ params, env, data }) {
   let fields = {};
   try { fields = JSON.parse(enquiry.fields || '{}') || {}; } catch { fields = {}; }
 
+  // The customer's email address is never sent to a team member — not as a
+  // field, and not left sitting inside a message body or a voucher record.
+  const clean = messages || [];
+  for (const m of clean) m.body = hideEmails(m.body, enquiry.email);
+  for (const m of vouchers.matches || []) m.holder_email = null;
+
   return Response.json({
     enquiry: {
-      id: enquiry.id, name: enquiry.name, email: enquiry.email, phone: enquiry.phone,
+      id: enquiry.id, name: enquiry.name, phone: enquiry.phone,
       type: enquiry.type, status: enquiry.status, site: enquiry.site, page: enquiry.page,
       voucher_code: enquiry.voucher_code, created_at: enquiry.created_at, unread: 0,
       fields: Object.entries(fields).map(([k, v]) => ({ key: k, label: FIELD_LABELS[k] || k, value: v })),
@@ -42,7 +48,7 @@ export async function onRequestGet({ params, env, data }) {
       brand: brandFor(enquiry.site),
       channel_label: CHANNELS[enquiry.channel] || enquiry.channel,
     },
-    messages: messages || [],
+    messages: clean,
     vouchers,
     labels: { types: TYPES, statuses: STATUSES },
   });

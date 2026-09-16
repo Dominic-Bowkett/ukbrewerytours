@@ -40,6 +40,7 @@ export async function onRequestPost({ params, request, env, data }) {
       to: enquiry.email,
       subject: /^re:/i.test(subject) ? subject : `Re: ${subject}`,
       html: inboxReplyHtml({
+        // The quote goes to the customer, so it keeps their own address intact.
         body: text, quoted: last?.body, quotedName: enquiry.name,
         threadLink: threadUrl(enquiry.token), brand: brandFor(enquiry.site),
       }),
@@ -65,5 +66,7 @@ export async function onRequestPost({ params, request, env, data }) {
     ).bind(enquiry.id, 'event', 'admin', `Marked as ${STATUSES[status]}`, data.team?.email || 'team').run();
   }
 
-  return Response.json({ ok: true, sent_to: enquiry.email, sent_from: fromAddress, reply_to: replyTo, status });
+  // sent_to is the customer's NAME, not their address — see the email rule in
+  // functions/api/team/inbox/[id].js.
+  return Response.json({ ok: true, sent_to: enquiry.name, sent_from: fromAddress, reply_to: replyTo, status });
 }

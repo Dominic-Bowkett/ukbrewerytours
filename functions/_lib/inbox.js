@@ -86,6 +86,20 @@ export const senderFor = member => ({
 export const notifyAddressFor = member => member?.notify_email || member?.email || null;
 
 /**
+ * Hide a customer's email address in text shown to a team member. Only their own
+ * address is masked — an address they typed for someone else (a colleague, the
+ * recipient of a gift voucher) is left alone, because that is content, not the
+ * identity we are withholding.
+ */
+export function hideEmails(text, customerEmail) {
+  const body = String(text ?? '');
+  const addr = String(customerEmail || '').trim();
+  if (!addr) return body;
+  const escaped = addr.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return body.replace(new RegExp(escaped, 'gi'), '[email hidden]');
+}
+
+/**
  * Where a customer's email reply should land. Until inbound email is routed
  * (INBOUND_REPLY_DOMAIN set, see INBOX.md) replies go to the info@ mailbox as
  * they always have; after, they come straight back into the conversation.
@@ -212,11 +226,15 @@ export async function alertAdmin(env, enquiry, { body, followUp = false, matches
   const owner = await assignee(env, enquiry);
   const typeLabel = TYPES[enquiry.type] || 'Enquiry';
   const prefix = followUp ? 'New reply' : `New ${typeLabel.toLowerCase()}`;
+  // A team member is told the customer's name and phone, never their email —
+  // including inside the quoted message.
+  const forTeam = Boolean(owner);
   await sendEmail(env, {
     to: (owner && notifyAddressFor(owner)) || env.ALERT_EMAIL || 'dom@ukbrewerytours.com',
     subject: `${prefix} — ${enquiry.name} (${siteLabel(enquiry.site)})`,
     html: inboxAlertHtml({
-      enquiry, body, followUp, matches, unmatched,
+      enquiry, followUp, matches, unmatched, hideEmail: forTeam,
+      body: forTeam ? hideEmails(body, enquiry.email) : body,
       typeLabel, channelLabel: CHANNELS[enquiry.channel] || enquiry.channel,
       siteName: siteLabel(enquiry.site), link: owner ? teamUrl(enquiry.id) : adminUrl(enquiry.id),
     }),

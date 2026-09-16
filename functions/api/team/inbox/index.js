@@ -4,7 +4,7 @@
 // takes from the session and nothing else. A member can never see a conversation
 // that is not assigned to them, and there is no parameter that widens this.
 
-import { TYPES, STATUSES, siteLabel } from '../../../_lib/inbox.js';
+import { TYPES, STATUSES, siteLabel, hideEmails } from '../../../_lib/inbox.js';
 
 const PAGE_SIZE = 30;
 
@@ -23,7 +23,9 @@ export async function onRequestGet({ request, env, data }) {
   else if (STATUSES[status]) { where.push('e.status = ?'); args.push(status); }
   if (q) {
     const like = `%${q.replace(/[%_]/g, m => '\\' + m)}%`;
-    where.push(`(e.name LIKE ? ESCAPE '\\' OR e.email LIKE ? ESCAPE '\\' OR e.voucher_code LIKE ? ESCAPE '\\'
+    // Searching e.email is deliberately absent: a team member could otherwise
+    // confirm a customer's address by guessing at it.
+    where.push(`(e.name LIKE ? ESCAPE '\\' OR e.phone LIKE ? ESCAPE '\\' OR e.voucher_code LIKE ? ESCAPE '\\'
       OR e.id IN (SELECT enquiry_id FROM enquiry_messages WHERE body LIKE ? ESCAPE '\\'))`);
     args.push(like, like, like, like);
   }
@@ -32,7 +34,10 @@ export async function onRequestGet({ request, env, data }) {
   const [nowRow, list, counts, recent] = await env.DB.batch([
     env.DB.prepare("SELECT datetime('now') AS now"),
     env.DB.prepare(`
-      SELECT e.id, e.name, e.email, e.phone, e.type, e.channel, e.site, e.status, e.unread,
+      -- e.email is selected ONLY to mask it out of the snippets below; it is
+      -- deleted before the response goes out. A team member never sees the
+      -- customer's email address, only their name and phone number.
+      SELECT e.id, e.name, e.email AS _mask, e.phone, e.type, e.channel, e.site, e.status, e.unread,
              e.voucher_code, e.created_at, e.last_message_at,
              (SELECT substr(body, 1, 160) FROM enquiry_messages m WHERE m.enquiry_id = e.id AND m.direction IN ('in','out') ORDER BY m.id DESC LIMIT 1) AS snippet,
              (SELECT direction FROM enquiry_messages m WHERE m.enquiry_id = e.id AND m.direction IN ('in','out') ORDER BY m.id DESC LIMIT 1) AS last_direction,
@@ -44,7 +49,7 @@ export async function onRequestGet({ request, env, data }) {
       `SELECT status, COUNT(*) AS n, SUM(unread) AS unread FROM enquiries WHERE assigned_to = ? GROUP BY status`,
     ).bind(me),
     env.DB.prepare(
-      `SELECT e.id, e.name, e.last_inbound_at,
+      `SELECT e.id, e.name, e.email AS _mask, e.last_inbound_at,
               (SELECT substr(body, 1, 140) FROM enquiry_messages m WHERE m.enquiry_id = e.id AND m.direction = 'in' ORDER BY m.id DESC LIMIT 1) AS snippet
          FROM enquiries e WHERE e.assigned_to = ? AND ? IS NOT NULL AND e.last_inbound_at >= ?
         ORDER BY e.last_inbound_at DESC LIMIT 5`,
@@ -60,13 +65,20 @@ export async function onRequestGet({ request, env, data }) {
     if (r.status !== 'closed') { statusCounts.open += r.n; unread += r.unread || 0; }
   }
 
+  // Message previews can quote the customer's own address — mask it, then drop
+  // the column that made that possible.
+  const scrub = r => {
+    const { _mask, ...rest } = r;
+    return { ...rest, snippet: hideEmails(rest.snippet, _mask) };
+  };
+
   return Response.json({
-    enquiries: rows.slice(0, PAGE_SIZE).map(r => ({ ...r, site_label: siteLabel(r.site) })),
+    enquiries: rows.slice(0, PAGE_SIZE).map(r => ({ ...scrub(r), site_label: siteLabel(r.site) })),
     hasMore: rows.length > PAGE_SIZE,
     counts: { status: statusCounts },
     unread,
     server_now: nowRow.results?.[0]?.now || null,
-    recent_inbound: recent.results || [],
+    recent_inbound: (recent.results || []).map(scrub),
     labels: { types: TYPES, statuses: STATUSES },
   });
 }

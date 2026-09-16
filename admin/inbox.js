@@ -346,8 +346,8 @@
         <div class="th-title">
           <h2>${esc(e.name)} <span class="type-pill type-${esc(e.type)}">${esc(typeLabel(e.type))}</span></h2>
           <div class="th-contact">
+            ${e.phone ? `<a class="btn-call" href="tel:${esc(String(e.phone).replace(/[^\d+]/g, ''))}">📞 Call ${esc(e.phone)}</a>` : ''}
             <a href="mailto:${esc(e.email)}">${esc(e.email)}</a>
-            ${e.phone ? `<a href="tel:${esc(String(e.phone).replace(/[^\d+]/g, ''))}">${esc(e.phone)}</a>` : ''}
           </div>
         </div>
         <div class="th-actions">

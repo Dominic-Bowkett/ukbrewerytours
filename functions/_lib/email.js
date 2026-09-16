@@ -222,7 +222,7 @@ function voucherSummary(matches, unmatched = []) {
 }
 
 /** Alert to Dom: a new enquiry or a customer follow-up, with a link into the admin inbox. */
-export function inboxAlertHtml({ enquiry, body, followUp, matches = [], unmatched = [], typeLabel, channelLabel, siteName, link }) {
+export function inboxAlertHtml({ enquiry, body, followUp, matches = [], unmatched = [], typeLabel, channelLabel, siteName, link, hideEmail = false }) {
   const row = (label, value) => `<tr>
       <td style="padding:6px 14px 6px 0;font-size:14px;color:${INK_SOFT};white-space:nowrap;vertical-align:top;">${label}</td>
       <td style="padding:6px 0;font-size:14px;font-weight:600;">${value}</td>
@@ -244,8 +244,10 @@ export function inboxAlertHtml({ enquiry, body, followUp, matches = [], unmatche
     <div style="font-size:15px;line-height:1.7;border-left:3px solid ${AMBER};padding:2px 0 2px 14px;margin:0 0 22px;">${esc(body).replace(/\n/g, '<br>')}</div>
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #e7ddcd;border-bottom:1px solid #e7ddcd;">
-      ${row('Email', esc(enquiry.email))}
-      ${enquiry.phone ? row('Phone', `<a href="tel:${esc(String(enquiry.phone).replace(/[^\d+]/g, ''))}" style="color:#b3701d;">${esc(enquiry.phone)}</a>`) : ''}
+      ${hideEmail ? '' : row('Email', esc(enquiry.email))}
+      ${enquiry.phone
+        ? row('Phone', `<a href="tel:${esc(String(enquiry.phone).replace(/[^\d+]/g, ''))}" style="color:#b3701d;">${esc(enquiry.phone)}</a>`)
+        : (hideEmail ? row('Phone', '<span style="font-weight:400;">none given — reply from the portal</span>') : '')}
       ${row('Type', esc(typeLabel))}
       ${row('Via', `${esc(channelLabel)} · ${esc(siteName)}`)}
       ${enquiry.voucher_code ? row('Voucher code', `<span style="font-family:'Courier New',monospace;">${esc(enquiry.voucher_code)}</span>`) : ''}
@@ -254,7 +256,9 @@ export function inboxAlertHtml({ enquiry, body, followUp, matches = [], unmatche
     </table>
 
     <p style="margin:22px 0 0;font-size:13px;color:${INK_SOFT};line-height:1.6;">
-      Replies you send from the admin go from info@ukbrewerytours.com and are saved with the conversation.
+      ${hideEmail
+        ? 'Reply from the portal — it emails the customer for you and keeps the conversation together.'
+        : 'Replies you send from the admin go from info@ukbrewerytours.com and are saved with the conversation.'}
     </p>
   </td></tr>`);
 }
@@ -273,7 +277,9 @@ export function assignmentEmailHtml({ enquiry, typeLabel, siteName, link, body, 
     ${body ? `<div style="font-size:15px;line-height:1.7;border-left:3px solid ${AMBER};padding:2px 0 2px 14px;margin:0 0 22px;">${esc(body).replace(/\n/g, '<br>')}</div>` : ''}
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #e7ddcd;border-bottom:1px solid #e7ddcd;">
       <tr><td style="padding:7px 14px 7px 0;font-size:14px;color:${INK_SOFT};">Customer</td>
-          <td style="padding:7px 0;font-size:14px;font-weight:600;">${esc(enquiry.email)}${enquiry.phone ? ` · ${esc(enquiry.phone)}` : ''}</td></tr>
+          <td style="padding:7px 0;font-size:14px;font-weight:600;">${esc(enquiry.name)}${enquiry.phone
+            ? ` · <a href="tel:${esc(String(enquiry.phone).replace(/[^\d+]/g, ''))}" style="color:#b3701d;">${esc(enquiry.phone)}</a>`
+            : ''}</td></tr>
     </table>
   </td></tr>`);
 }

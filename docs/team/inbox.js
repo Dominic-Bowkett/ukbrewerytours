@@ -79,6 +79,7 @@
           <div class="ib-row2">
             <span class="type-pill type-${esc(e.type)}">${esc(typeLabel(e.type))}</span>
             <span class="st-pill st-${esc(e.status)}">${esc(statusLabel(e.status))}</span>
+            ${e.phone ? `<a class="ib-call" href="tel:${esc(String(e.phone).replace(/[^\d+]/g, ''))}" title="Call ${esc(e.phone)}" onclick="event.stopPropagation()">📞 ${esc(e.phone)}</a>` : ''}
             <span class="ib-site">${esc(e.site_label)}${e.channel === 'chat' ? ' · chat' : ''}</span>
           </div>
           <div class="ib-snippet">${e.last_direction === 'out' ? '<strong>You:</strong> ' : ''}${esc(e.snippet || '')}</div>
@@ -224,8 +225,9 @@
         <div class="th-title">
           <h2>${esc(e.name)} <span class="type-pill type-${esc(e.type)}">${esc(typeLabel(e.type))}</span></h2>
           <div class="th-contact">
-            <a href="mailto:${esc(e.email)}">${esc(e.email)}</a>
-            ${e.phone ? `<a href="tel:${esc(String(e.phone).replace(/[^\d+]/g, ''))}">${esc(e.phone)}</a>` : ''}
+            ${e.phone
+              ? `<a class="btn-call" href="tel:${esc(String(e.phone).replace(/[^\d+]/g, ''))}">📞 Call ${esc(e.phone)}</a>`
+              : '<span class="muted">No phone number given — reply below</span>'}
           </div>
         </div>
         <div class="th-actions">
@@ -334,7 +336,7 @@
     $('thAfterWrap').hidden = !reply;
     $('thSend').textContent = reply ? 'Send reply' : 'Save note';
     $('thHint').textContent = reply
-      ? `Emails ${e.email} from ${sendAs} · Ctrl+Enter to send`
+      ? `Emails ${e.name} from ${sendAs} · Ctrl+Enter to send`
       : 'Only visible to you and the office — never sent to the customer';
     if (reply) $('thAfter').value = 'waiting';
   }
@@ -363,7 +365,7 @@
       errEl.hidden = false;
       return;
     }
-    if (reply && !confirm(`Send this reply to ${e.email}?`)) return;
+    if (reply && !confirm(`Send this reply to ${e.name}?`)) return;
     btn.disabled = true;
     btn.textContent = reply ? 'Sending…' : 'Saving…';
     try {
@@ -401,7 +403,7 @@
           <div class="vc-nums">${tracked
             ? `Balance <strong>${money(m.balance_pence)}</strong>${m.amount_pence != null ? ` <span class="muted">of ${money(m.amount_pence)}</span>` : ''}`
             : `<span class="muted">No value recorded</span>${m.description ? ` — <strong>${esc(m.description)}</strong>` : ''}`}</div>
-          <div class="vc-who muted">${m.holder_name || m.holder_email ? `Holder: ${esc(m.holder_name || '')}${m.holder_email ? ` &lt;${esc(m.holder_email)}&gt;` : ''}` : ''}</div>
+          <div class="vc-who muted">${m.holder_name ? `Holder: ${esc(m.holder_name)}` : ''}</div>
         </div>`;
       }).join('')}
       ${unmatched.map(c => `<div class="vc-miss">❌ <code>${esc(c)}</code> — no matching code found. Check with the office.</div>`).join('')}
