@@ -15,7 +15,7 @@
     ['waiting', 'Awaiting customer'], ['closed', 'Closed'], ['all', 'All'],
   ];
   const VSTATUS = { active: 'Unused', partially_redeemed: 'Part-used', redeemed: 'Fully used', pending: 'Unpaid', void: 'Void', refunded: 'Refunded' };
-  const CHANNEL_SHORT = { form: 'form', widget: 'embedded form', chat: 'live chat', web: 'messages page', email: 'email' };
+  const CHANNEL_SHORT = { form: 'form', widget: 'embedded form', chat: 'live chat', web: 'messages page', email: 'email', phone: 'phone call' };
   const THREAD_POLL = 4000;
   const LIST_POLL = 15000;
 
@@ -191,6 +191,8 @@
   const setDraft = (id, v) => { try { v ? localStorage.setItem(draftKey(id), v) : localStorage.removeItem(draftKey(id)); } catch { /* private mode */ } };
 
   async function openThread(id, { keepScroll = false } = {}) {
+    // A different conversation starts on Reply again (see the admin equivalent).
+    if (state.current !== id) composerMode = 'reply';
     state.current = id;
     inboxEl.classList.add('show-thread');
     listEl.querySelectorAll('.ib-item').forEach(li => {
@@ -218,6 +220,10 @@
     const prevScroll = scroller ? scroller.scrollTop : 0;
     const first = String(e.name || '').split(/\s+/)[0];
     const sendAs = window.teamMe?.inboxFrom || 'your address';
+    // Phone callers often leave no email — then there is nothing to reply to,
+    // and the composer is notes-only.
+    const canEmail = e.can_email !== false;
+    if (!canEmail) composerMode = 'note';
 
     threadEl.innerHTML = `
       <div class="th-head">
@@ -259,7 +265,9 @@
 
       <div class="th-composer${composerMode === 'note' ? ' note-mode' : ''}" id="thComposer">
         <div class="composer-tabs">
-          <button type="button" data-mode="reply" class="${composerMode === 'reply' ? 'on' : ''}">Reply to ${esc(first || 'customer')}</button>
+          ${canEmail
+            ? `<button type="button" data-mode="reply" class="${composerMode === 'reply' ? 'on' : ''}">Reply to ${esc(first || 'customer')}</button>`
+            : `<span class="composer-nomail">📞 No email address — ${e.phone ? 'call them back' : 'nothing to reply to'}. Notes are saved here.</span>`}
           <button type="button" data-mode="note" class="${composerMode === 'note' ? 'on' : ''}">Internal note</button>
         </div>
         <textarea id="thText" aria-label="Message"></textarea>
@@ -284,7 +292,7 @@
     const signOff = `\n\nCheers,\n${window.teamMe?.inboxFromName || e.brand}`;
     if (draft !== null) text.value = draft;
     else if (composerMode === 'reply') text.value = `Hi ${first},\n\n${signOff}`;
-    syncComposer(e, sendAs);
+    syncComposer(e, sendAs, canEmail);
     text.addEventListener('input', () => setDraft(e.id, text.value));
     if (!draft && composerMode === 'reply' && !keepScroll && window.innerWidth > 900) {
       const pos = `Hi ${first},\n\n`.length;
@@ -322,7 +330,7 @@
       $('thComposer').classList.toggle('note-mode', composerMode === 'note');
       const squash = s => s.replace(/\s+/g, ' ').trim();
       if (composerMode === 'note' && squash(text.value) === squash(`Hi ${first},${signOff}`)) { text.value = ''; setDraft(e.id, null); }
-      syncComposer(e, sendAs);
+      syncComposer(e, sendAs, canEmail);
       text.focus();
     }));
     $('thSend').addEventListener('click', () => send(e));
@@ -331,10 +339,11 @@
     });
   }
 
-  function syncComposer(e, sendAs) {
-    const reply = composerMode === 'reply';
+  function syncComposer(e, sendAs, canEmail = true) {
+    const reply = composerMode === 'reply' && canEmail;
     $('thAfterWrap').hidden = !reply;
     $('thSend').textContent = reply ? 'Send reply' : 'Save note';
+    $('thText').placeholder = reply ? '' : 'Note for you and the office — what was said, what you agreed…';
     $('thHint').textContent = reply
       ? `Emails ${e.name} from ${sendAs} · Ctrl+Enter to send`
       : 'Only visible to you and the office — never sent to the customer';

@@ -15,6 +15,15 @@ export async function onRequestPost({ params, request, env, data }) {
   if (!enquiry) return Response.json({ error: 'Conversation not found.' }, { status: 404 });
   if (!env.RESEND_API_KEY) return Response.json({ error: 'Email is not configured.' }, { status: 503 });
 
+  // Phone callers do not always leave an email, so there is nobody to reply to.
+  if (!String(enquiry.email || '').trim()) {
+    return Response.json({
+      error: enquiry.phone
+        ? `No email address on this one — they left a phone number instead: ${enquiry.phone}`
+        : 'No email address on this one, so there is nobody to reply to.',
+    }, { status: 400 });
+  }
+
   let body;
   try { body = await request.json(); } catch { return Response.json({ error: 'Invalid request.' }, { status: 400 }); }
 

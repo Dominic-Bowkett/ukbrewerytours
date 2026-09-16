@@ -402,6 +402,8 @@ code.small { font-size: .78rem; }
 .composer-tabs { display: flex; gap: 4px; margin-bottom: 8px; }
 .composer-tabs button { border: 0; background: none; font: inherit; font-size: .84rem; font-weight: 600; color: var(--ink-soft); padding: 5px 12px; border-radius: 999px; cursor: pointer; }
 .composer-tabs button.on { background: var(--stout); color: var(--paper); }
+/* Shown instead of the Reply tab when there is no email address to reply to. */
+.composer-nomail { font-size: .84rem; color: var(--ink-soft); padding: 6px 10px 6px 2px; align-self: center; }
 .composer-tabs button[data-mode="note"].on { background: #e2c85c; color: #3d3100; }
 .th-composer textarea { width: 100%; min-height: 110px; max-height: 40vh; resize: vertical; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font: inherit; font-size: .93rem; line-height: 1.55; background: #fff; }
 .th-composer textarea:focus { outline: 2px solid var(--amber); outline-offset: -1px; }

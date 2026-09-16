@@ -41,6 +41,9 @@ export async function onRequestGet({ params, env, data }) {
   return Response.json({
     enquiry: {
       id: enquiry.id, name: enquiry.name, phone: enquiry.phone,
+      // Not the address itself — only whether there is one to reply to. A phone
+      // caller who left no email can only be called back or noted.
+      can_email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(enquiry.email || '')),
       type: enquiry.type, status: enquiry.status, site: enquiry.site, page: enquiry.page,
       voucher_code: enquiry.voucher_code, created_at: enquiry.created_at, unread: 0,
       fields: Object.entries(fields).map(([k, v]) => ({ key: k, label: FIELD_LABELS[k] || k, value: v })),
