@@ -64,6 +64,14 @@ The admin sees everything. A team member sees **only** what is assigned to them.
 - **They can:** reply, add internal notes, change status, and see the voucher check
   (read-only). **They cannot:** see anything unassigned or assigned to someone else,
   assign, delete, redeem vouchers, or reach any admin route (`/api/admin/*` → 401).
+- **They never see the customer's email address.** `/api/team/inbox*` doesn't select
+  it; message bodies, list snippets and voucher holder records are scrubbed of that
+  one address (`hideEmails()` masks the customer's own address only — one they typed
+  for someone else is content and stays); their search doesn't match the email column,
+  which would otherwise confirm an address by guessing; and the alert and assignment
+  emails they receive show the phone number instead. What they get instead is
+  **click-to-call**: a Call button beside the name and a tappable number on each list
+  row. The admin has the same Call button and still sees the address.
 - **Take it back:** set the dropdown to "Not assigned". **Remove access:** Team access →
   Remove access — their session is cut immediately (`session_epoch` bump) and any
   conversations they held stay put for you to reassign.
