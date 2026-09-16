@@ -101,7 +101,7 @@ export async function onRequestPatch({ request, env, params }) {
 
   const updated = await env.DB.prepare(
     `SELECT id, email, name, stripe_account_id, fee_bps, terms_override, active, reply_to_email,
-            inbox_access, inbox_from_email, inbox_from_name FROM team_members WHERE id = ?`,
+            inbox_access, inbox_from_email, inbox_from_name, notify_email FROM team_members WHERE id = ?`,
   ).bind(id).first();
 
   return Response.json({ ok: true, member: updated });
