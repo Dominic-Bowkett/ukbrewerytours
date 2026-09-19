@@ -237,7 +237,11 @@ export function inboxAlertHtml({ enquiry, body, followUp, matches = [], unmatche
     </tr>`;
   let fields = {};
   try { fields = JSON.parse(enquiry.fields || '{}') || {}; } catch { fields = {}; }
-  const labels = { tour: 'Tour', preferred_date: 'Preferred date', group_size: 'Group size', city: 'City', occasion: 'Occasion', budget: 'Budget' };
+  const labels = { tour: 'Tour', tour_url: 'Tour link', preferred_date: 'Preferred date', group_size: 'Group size', city: 'City', occasion: 'Occasion', budget: 'Budget' };
+  // Only our own tour pages ever get this far (cleanFields in _lib/inbox.js).
+  const fieldValue = (k, v) => k === 'tour_url' && /^https:\/\//.test(v)
+    ? `<a href="${esc(v)}" style="color:#b3701d;">${esc(v.replace(/^https:\/\/(www\.)?/, ''))}</a>`
+    : esc(v);
 
   return shell(`<tr><td style="padding:30px 28px;">
     <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${INK_SOFT};">${followUp ? 'New reply in conversation' : esc(typeLabel)} · ${esc(siteName)}</div>
@@ -259,7 +263,7 @@ export function inboxAlertHtml({ enquiry, body, followUp, matches = [], unmatche
       ${row('Type', esc(typeLabel))}
       ${row('Via', `${esc(channelLabel)} · ${esc(siteName)}`)}
       ${enquiry.voucher_code ? row('Voucher code', `<span style="font-family:'Courier New',monospace;">${esc(enquiry.voucher_code)}</span>`) : ''}
-      ${Object.entries(fields).map(([k, v]) => row(labels[k] || esc(k), esc(v))).join('')}
+      ${Object.entries(fields).map(([k, v]) => row(labels[k] || esc(k), fieldValue(k, v))).join('')}
       ${enquiry.page ? row('Page', `<span style="font-weight:400;">${esc(enquiry.page)}</span>`) : ''}
     </table>
 

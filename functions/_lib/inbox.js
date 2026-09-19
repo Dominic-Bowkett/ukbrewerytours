@@ -174,17 +174,22 @@ export function defaultSubject(type, site) {
 }
 
 // Structured extras a form may send alongside the message. Anything else is dropped.
-const FIELD_KEYS = ['tour', 'preferred_date', 'group_size', 'city', 'occasion', 'budget'];
+const FIELD_KEYS = ['tour', 'tour_url', 'city', 'preferred_date', 'group_size', 'occasion', 'budget'];
 export const FIELD_LABELS = {
-  tour: 'Tour', preferred_date: 'Preferred date', group_size: 'Group size',
+  tour: 'Tour', tour_url: 'Tour link', preferred_date: 'Preferred date', group_size: 'Group size',
   city: 'City', occasion: 'Occasion', budget: 'Budget',
 };
+
+// The tour link is shown to the admin as a clickable link, so only one of our
+// own tour pages is accepted — never an address a stranger typed in.
+const TOUR_URL_RE = /^https:\/\/www\.ukbrewerytours\.com\/tours\/[a-z0-9-]+\/$/;
 
 export function cleanFields(input) {
   const out = {};
   if (!input || typeof input !== 'object') return out;
   for (const k of FIELD_KEYS) {
     const v = String(input[k] ?? '').replace(/[\r\n]+/g, ' ').trim().slice(0, 200);
+    if (k === 'tour_url' && !TOUR_URL_RE.test(v)) continue;
     if (v) out[k] = v;
   }
   return out;

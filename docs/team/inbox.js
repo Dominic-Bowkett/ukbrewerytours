@@ -254,7 +254,9 @@
 
         ${e.fields.length || e.voucher_code ? `<div class="th-fields">
           ${e.voucher_code ? `<div><span>Voucher code given</span><code>${esc(e.voucher_code)}</code></div>` : ''}
-          ${e.fields.map(f => `<div><span>${esc(f.label)}</span>${esc(f.value)}</div>`).join('')}
+          ${e.fields.map(f => `<div><span>${esc(f.label)}</span>${f.key === 'tour_url' && /^https:\/\//.test(f.value)
+            ? `<a href="${esc(f.value)}" target="_blank" rel="noopener">${esc(f.value.replace(/^https:\/\/(www\.)?/, ''))}</a>`
+            : esc(f.value)}</div>`).join('')}
         </div>` : ''}
 
         ${voucherCard(d)}

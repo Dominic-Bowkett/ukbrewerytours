@@ -9,23 +9,47 @@
 // (first message) and /api/thread (everything after), and team replies arrive
 // by polling. Every reply is also emailed, so nobody has to keep the tab open.
 
+import TOUR_DATA from '../../content/tours.json';
+
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => (
   { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
 ));
 
+// `city` puts that city's tours first in the redemption picker and prefills a
+// group enquiry: someone chatting on the London site is most likely in London.
 export const PROFILES = {
-  ukbt: { name: 'UK Brewery Tours', home: 'https://www.ukbrewerytours.com/', accent: '#e0932f', accentInk: '#241505', head: '#201611' },
-  london: { name: 'London Brewery Tours', home: 'https://www.londonbrewerytour.com/', accent: '#ffb703', accentInk: '#1c1208', head: '#1c1208' },
-  bristol: { name: 'Bristol Brewery Tours', home: 'https://www.bristolbrewerytours.com/', accent: '#e8942e', accentInk: '#1b1206', head: '#0e2b2f' },
+  ukbt: { name: 'UK Brewery Tours', home: 'https://www.ukbrewerytours.com/', accent: '#e0932f', accentInk: '#241505', head: '#201611', city: '' },
+  london: { name: 'London Brewery Tours', home: 'https://www.londonbrewerytour.com/', accent: '#ffb703', accentInk: '#1c1208', head: '#1c1208', city: 'London' },
+  bristol: { name: 'Bristol Brewery Tours', home: 'https://www.bristolbrewerytours.com/', accent: '#e8942e', accentInk: '#1b1206', head: '#0e2b2f', city: 'Bristol' },
 };
 
+// Our own tours: the ones a gift voucher is spent on. Partner experiences are
+// booked with the partner, so they are not offered here. Read straight from
+// content/tours.json, so the list can never drift from the site.
+const TOURS = TOUR_DATA
+  .filter(t => t.active !== false && t.old_slug)
+  .map(t => ({ slug: t.old_slug, name: t.name, city: t.city || 'Elsewhere', url: `https://www.ukbrewerytours.com/tours/${t.old_slug}/` }));
+const CITIES = [...new Set(TOURS.map(t => t.city))].sort();
+
+// Group bookings and redemptions are structured requests: picking one opens a
+// short form (city, numbers, date — or code, tour, date) instead of a free
+// message, so the inbox gets everything needed to book in the first message.
 const TOPICS = [
   ['booking', '🍺 Book a tour', 'Which tour are you interested in, and roughly when?'],
-  ['group', '👥 Group booking', 'Brilliant — tell us your city, group size and rough dates.'],
-  ['redemption', '🎟️ Redeem a voucher', "Lovely — which tour and date would you like? We'll ask for your voucher code in a moment."],
+  ['group', '👥 Group booking', "Brilliant — a few quick details and we'll come back with options and prices."],
+  ['redemption', '🎟️ Redeem a voucher', "Lovely — pop in your voucher code, tour and date and we'll book you on."],
   ['voucher', '🎁 Gift vouchers', 'What would you like to know about gift vouchers?'],
   ['general', '💬 Something else', 'Go ahead — what can we help with?'],
 ];
+
+/** The redemption picker: tours grouped by city, the profile's own city first. */
+function tourOptions(homeCity) {
+  const cities = [...CITIES].sort((a, b) => (b === homeCity) - (a === homeCity) || a.localeCompare(b));
+  return cities.map(city => `<optgroup label="${esc(city)}">${TOURS
+    .filter(t => t.city === city)
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map(t => `<option value="${esc(t.slug)}">${esc(t.name)}</option>`).join('')}</optgroup>`).join('');
+}
 
 const CHAT_ICON = '<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" aria-hidden="true"><path d="M12 3C6.5 3 2 6.6 2 11.1c0 2.4 1.3 4.6 3.4 6.1-.2 1.3-.8 2.6-1.9 3.6-.2.2 0 .6.3.6 2.1-.1 3.8-.9 5-1.9 1 .3 2.1.4 3.2.4 5.5 0 10-3.6 10-8.1S17.5 3 12 3Zm-4.5 9.4a1.3 1.3 0 1 1 0-2.6 1.3 1.3 0 0 1 0 2.6Zm4.5 0a1.3 1.3 0 1 1 0-2.6 1.3 1.3 0 0 1 0 2.6Zm4.5 0a1.3 1.3 0 1 1 0-2.6 1.3 1.3 0 0 1 0 2.6Z"/></svg>';
 const SEND_ICON = '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z"/></svg>';
@@ -41,6 +65,8 @@ export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = ''
     token,
     hostUrl: String(hostUrl || '').slice(0, 500),
     topics: TOPICS.map(([key, , prompt]) => [key, prompt]),
+    homeCity: p.city,
+    tours: TOURS,
   };
 
   return `<!DOCTYPE html>
@@ -101,8 +127,13 @@ export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = ''
   .details { align-self: stretch; background: var(--paper); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 1px 1px rgba(0,0,0,.06); }
   .details p { font-size: .9rem; font-weight: 600; }
   .details label { font-size: .74rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-soft); display: block; margin-bottom: 4px; }
-  .details input { width: 100%; border: 1.5px solid var(--line); border-radius: 9px; padding: 9px 11px; font: inherit; font-size: .95rem; color: var(--ink); background: #fff; }
-  .details input:focus, .composer textarea:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  .details input, .details select, .details textarea { width: 100%; border: 1.5px solid var(--line); border-radius: 9px; padding: 9px 11px; font: inherit; font-size: .95rem; color: var(--ink); background: #fff; }
+  .details input[type=date] { min-height: 42px; }
+  .details textarea { resize: vertical; min-height: 64px; line-height: 1.4; }
+  .details input:focus, .details select:focus, .details textarea:focus, .composer textarea:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  .details label .opt { text-transform: none; letter-spacing: 0; font-weight: 500; }
+  .pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 10px; }
+  .tour-link { display: inline-block; margin-top: 5px; font-size: .8rem; color: var(--ink-soft); font-weight: 600; }
   .go { border: 0; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font-weight: 700; padding: 11px 16px; }
   .go:disabled, .send:disabled { opacity: .5; cursor: default; }
   .err { color: var(--red); font-size: .85rem; }
@@ -145,10 +176,21 @@ export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = ''
       `<button type="button" class="topic" data-topic="${key}">${label}</button>`).join('')}</div>`}
     <div id="thread"></div>
     <form class="details" id="details" hidden novalidate>
-      <p>Where should we send our reply?</p>
+      <p id="d-title">Where should we send our reply?</p>
+      <div id="d-code-row" hidden><label for="d-code">Voucher code</label><input id="d-code" type="text" autocomplete="off" maxlength="200" placeholder="e.g. UBT-XXXX-XXXX" style="text-transform:uppercase"></div>
+      <div id="d-tour-row" hidden><label for="d-tour">Tour</label>
+        <select id="d-tour"><option value="">Choose a tour…</option>${tourOptions(p.city)}<option value="other">Another tour, or not sure yet</option></select>
+        <a class="tour-link" id="d-tour-link" target="_blank" rel="noopener" hidden>View this tour ↗</a></div>
+      <div id="d-city-row" hidden><label for="d-city">City</label><input id="d-city" type="text" list="d-cities" maxlength="100" autocomplete="off" placeholder="e.g. Leeds">
+        <datalist id="d-cities">${CITIES.map(c => `<option value="${esc(c)}"></option>`).join('')}</datalist></div>
+      <div class="pair" id="d-when-row" hidden>
+        <div><label for="d-date">Date of tour</label><input id="d-date" type="date"></div>
+        <div><label for="d-people">Number of people</label><input id="d-people" type="number" min="1" max="500" inputmode="numeric" placeholder="e.g. 2"></div>
+      </div>
       <div><label for="d-name">Name</label><input id="d-name" type="text" autocomplete="name" maxlength="100"></div>
       <div><label for="d-email">Email</label><input id="d-email" type="email" autocomplete="email" maxlength="200"></div>
-      <div id="d-code-row" hidden><label for="d-code">Voucher code</label><input id="d-code" type="text" autocomplete="off" maxlength="200" placeholder="e.g. UBT-XXXX-XXXX" style="text-transform:uppercase"></div>
+      <div id="d-phone-row" hidden><label for="d-phone" id="d-phone-label">Mobile</label><input id="d-phone" type="tel" autocomplete="tel" maxlength="40" placeholder="So we can reach you on the day"></div>
+      <div id="d-note-row" hidden><label for="d-note">Anything else? <span class="opt">(optional)</span></label><textarea id="d-note" rows="3" maxlength="4000" placeholder="The occasion, timings, dietary needs…"></textarea></div>
       <div class="hp" aria-hidden="true"><label for="d-company">Company</label><input id="d-company" type="text" tabindex="-1" autocomplete="off"></div>
       <p class="err" id="d-err" hidden></p>
       <button class="go" id="d-go" type="submit">Send message</button>
@@ -297,11 +339,79 @@ export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = ''
     post({ type: 'state', open: v });
     if (v) {
       markSeen(); updateBadge(); scrollDown();
-      setTimeout(function () { if (!$('details').hidden) $('d-name').focus(); else $('text').focus(); }, 60);
+      setTimeout(function () { if (!$('details').hidden) focusFirstEmpty(); else $('text').focus(); }, 60);
       if (token) load().then(schedule);
     } else {
       schedule();
     }
+  }
+
+  // Topics that open a form straight away instead of waiting for a message.
+  var FORM_TOPICS = { group: 'A few details for your group', redemption: 'Your voucher and booking' };
+  function isForm(key) { return Object.prototype.hasOwnProperty.call(FORM_TOPICS, key || ''); }
+
+  function tourBySlug(slug) { return C.tours.filter(function (t) { return t.slug === slug; })[0] || null; }
+  // The tour page the chat was opened on, if it is one of ours.
+  function hostTour() {
+    try { var m = /^\\/tours\\/([a-z0-9-]+)\\/?$/.exec(new URL(C.hostUrl).pathname); return m ? tourBySlug(m[1]) : null; }
+    catch (e) { return null; }
+  }
+  function todayIso() {
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  // 2026-11-14 → "Sat 14 Nov 2026". Noon, so no timezone can tip it into another day.
+  function fmtDay(iso) {
+    var d = new Date(iso + 'T12:00:00');
+    return isNaN(d) ? iso : d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  // Which rows the details form shows, by topic.
+  function configureDetails(key) {
+    var form = isForm(key);
+    $('d-title').textContent = FORM_TOPICS[key] || 'Where should we send our reply?';
+    $('d-code-row').hidden = key !== 'redemption';
+    $('d-tour-row').hidden = key !== 'redemption';
+    $('d-city-row').hidden = key !== 'group';
+    $('d-when-row').hidden = !form;
+    $('d-phone-row').hidden = !form;
+    $('d-phone-label').innerHTML = key === 'redemption' ? 'Mobile' : 'Mobile <span class="opt">(optional)</span>';
+    $('d-note-row').hidden = !form;
+  }
+
+  function tourChanged() {
+    var t = tourBySlug($('d-tour').value);
+    $('d-tour-link').hidden = !t;
+    if (t) $('d-tour-link').href = t.url;
+  }
+
+  function prefill() {
+    $('d-name').value = $('d-name').value || store.get('name') || '';
+    $('d-email').value = $('d-email').value || store.get('email') || '';
+    $('d-phone').value = $('d-phone').value || store.get('phone') || '';
+    $('d-date').min = todayIso();
+    var here = hostTour();
+    if (topic === 'redemption' && !$('d-tour').value && here) { $('d-tour').value = here.slug; tourChanged(); }
+    if (topic === 'group' && !$('d-city').value) $('d-city').value = (here && here.city) || C.homeCity || '';
+  }
+
+  function focusFirstEmpty() {
+    var els = $('details').querySelectorAll('input, select, textarea');
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i];
+      if (el.id === 'd-company' || el.id === 'd-note' || el.closest('[hidden]')) continue;
+      if (!el.value) { el.focus(); return; }
+    }
+    $('d-go').focus();
+  }
+
+  function showDetails() {
+    configureDetails(topic);
+    prefill();
+    $('details').hidden = false;
+    $('composer').hidden = true;
+    $('topicbar').hidden = true;
+    scrollDown();
   }
 
   function setTopic(key) {
@@ -313,10 +423,18 @@ export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = ''
       var btn = document.querySelector('.topic[data-topic="' + key + '"]');
       $('topiclabel').textContent = 'Topic: ' + (btn ? btn.textContent.replace(/^\\S+\\s/, '') : key);
     }
-    $('d-code-row').hidden = key !== 'redemption';
+    configureDetails(key);
     if (t && !token) {
       $('greet').querySelector('.bubble').textContent = t[1];
-      $('text').focus();
+      if (isForm(key)) {
+        showDetails();
+        setTimeout(focusFirstEmpty, 30);
+      } else if (!pendingText) {
+        // Back from a form topic to a plain message.
+        $('details').hidden = true;
+        $('composer').hidden = false;
+        $('text').focus();
+      }
     }
   }
 
@@ -338,13 +456,8 @@ export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = ''
       pendingText = text;
       messages = [{ from: 'you', body: text, pending: true, at: '' }];
       render();
-      $('d-name').value = $('d-name').value || store.get('name') || '';
-      $('d-email').value = $('d-email').value || store.get('email') || '';
-      $('details').hidden = false;
-      $('composer').hidden = true;
-      $('topicbar').hidden = true;
-      scrollDown();
-      setTimeout(function () { ($('d-name').value ? ($('d-email').value ? ($('d-code-row').hidden ? $('d-go') : $('d-code')) : $('d-email')) : $('d-name')).focus(); }, 30);
+      showDetails();
+      setTimeout(focusFirstEmpty, 30);
       return;
     }
 
@@ -372,18 +485,61 @@ export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = ''
     e.preventDefault();
     var err = $('d-err');
     err.hidden = true;
-    var name = $('d-name').value.trim(), email = $('d-email').value.trim(), code = $('d-code').value.trim();
+    var name = $('d-name').value.trim(), email = $('d-email').value.trim(), code = $('d-code').value.trim().toUpperCase();
+    var form = isForm(topic);
+    var phone = form ? $('d-phone').value.trim() : '';
+    var date = $('d-date').value, people = $('d-people').value.trim(), city = $('d-city').value.trim();
+    var tourKey = $('d-tour').value, tour = tourBySlug(tourKey);
     function fail(msg, el) { err.textContent = msg; err.hidden = false; if (el) el.focus(); }
+
+    // In the order the fields appear, so the first complaint is about the first gap.
+    if (topic === 'redemption') {
+      if (!code) return fail('Please add your voucher code — it is in your voucher email.', $('d-code'));
+      if (!tourKey) return fail('Please choose your tour — or "Another tour, or not sure yet".', $('d-tour'));
+    }
+    if (topic === 'group' && !city) return fail('Which city would you like the tour in?', $('d-city'));
+    if (form) {
+      if (!date) return fail('Please pick a date for the tour — your best guess is fine.', $('d-date'));
+      if (date < todayIso()) return fail('That date has already been — please pick one from today on.', $('d-date'));
+      if (!/^\\d+$/.test(people) || Number(people) < 1) return fail('How many people are coming?', $('d-people'));
+    }
     if (!name) return fail('Please enter your name.', $('d-name'));
     if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return fail('Please enter a valid email so we can reply.', $('d-email'));
-    if (topic === 'redemption' && !code) return fail('Please add your voucher code — it is in your voucher email.', $('d-code'));
+    if (form && (phone || topic === 'redemption') && phone.replace(/\\D/g, '').length < 7) {
+      return fail('Please add a mobile number we can reach you on.', $('d-phone'));
+    }
+
+    // A form topic has no typed message: its answers become the first message,
+    // so the thread (and the emails) read on their own. They also travel as
+    // fields, which the inbox shows as a grid at the top of the conversation.
+    var message = pendingText, fields = {};
+    if (form) {
+      var lines = [topic === 'group' ? 'Group booking request' : 'Voucher redemption request'];
+      if (topic === 'redemption') {
+        var tourName = tour ? tour.name : 'Another tour, or not sure yet';
+        lines.push('Voucher code: ' + code, 'Tour: ' + tourName);
+        if (tour) lines.push(tour.url);
+        fields.tour = tourName;
+        if (tour) fields.tour_url = tour.url;
+      } else {
+        lines.push('City: ' + city);
+        fields.city = city;
+      }
+      lines.push('Date of tour: ' + fmtDay(date), 'Number of people: ' + people);
+      fields.preferred_date = fmtDay(date);
+      fields.group_size = people;
+      var note = $('d-note').value.trim();
+      message = lines.join('\\n') + (note ? '\\n\\n' + note : '');
+      messages = [{ from: 'you', body: message, pending: true, at: '' }];
+      render();
+    }
 
     $('d-go').disabled = true;
     $('d-go').textContent = 'Sending…';
     fetch('/api/contact', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        channel: 'chat', name: name, email: email, message: pendingText,
+        channel: 'chat', name: name, email: email, message: message, phone: phone, fields: fields,
         type: topic || 'general', voucher_code: topic === 'redemption' ? code : '',
         hostUrl: C.hostUrl, company: $('d-company').value
       })
@@ -391,6 +547,7 @@ export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = ''
       .then(function (d) {
         token = d.token;
         store.set('token', token); store.set('name', name); store.set('email', email); store.set('seen', 0);
+        if (phone) store.set('phone', phone);
         thanks = 'Thanks ' + name.split(' ')[0] + "! We've got your message and will reply here and by email to " + email + '.';
         $('details').hidden = true;
         $('composer').hidden = false;
@@ -399,7 +556,11 @@ export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = ''
         return load();
       })
       .then(function () { $('text').value = ''; autosize(); render(); schedule(); })
-      .catch(function (e2) { fail(e2.message || 'Could not send — please try again.'); })
+      .catch(function (e2) {
+        // The form is still there to resend from; the pending bubble is not a message yet.
+        if (form && !token) { messages = []; render(); }
+        fail(e2.message || 'Could not send — please try again.');
+      })
       .then(function () { $('d-go').disabled = false; $('d-go').textContent = 'Send message'; });
   });
 
@@ -407,12 +568,15 @@ export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = ''
   if ($('topics')) $('topics').addEventListener('click', function (e) {
     var b = e.target.closest('.topic'); if (b) setTopic(b.getAttribute('data-topic'));
   });
+  $('d-tour').addEventListener('change', tourChanged);
   $('cleartopic').addEventListener('click', function () { setTopic(null); $('topicbar').hidden = true; });
   if ($('close')) $('close').addEventListener('click', function () { setOpen(false); });
   $('launcher').addEventListener('click', function () { setOpen(!open); });
   $('newchat').addEventListener('click', function () {
     if (!confirm('Start a new conversation? Your previous messages stay with us and in your email.')) return;
     token = null; store.set('token', null); messages = []; thanks = ''; closedNote = false; topic = null;
+    configureDetails(null);
+    [].forEach.call(document.querySelectorAll('.topic'), function (b) { b.classList.remove('on'); });
     $('greet').querySelector('.bubble').textContent = 'Hi there 👋 What can we help with this time?';
     $('details').hidden = true; $('composer').hidden = false;
     render(); clearTimeout(pollTimer); $('text').focus();
@@ -425,7 +589,9 @@ export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = ''
     if (e.data.type === 'layout') document.body.classList.toggle('full', !!e.data.full);
     if (e.data.type === 'open') {
       if (!token && e.data.topic && C.topics.some(function (x) { return x[0] === e.data.topic; })) setTopic(e.data.topic);
-      if (typeof e.data.text === 'string' && e.data.text && !$('text').value) $('text').value = e.data.text.slice(0, 1000);
+      // A form topic has no message box, so a preset message becomes its note.
+      var into = !token && isForm(topic) ? $('d-note') : $('text');
+      if (typeof e.data.text === 'string' && e.data.text && !into.value) into.value = e.data.text.slice(0, 1000);
       setOpen(true);
       // Size the box once the panel is visible — a hidden textarea measures 0.
       setTimeout(autosize, 60);
