@@ -1,12 +1,13 @@
 // GET /api/admin/inbox — the conversation list, with per-status and per-type counts.
 // Query: status (open|new|dealing|waiting|closed|all), type, site, q, page,
-//        view (inbox|notifications)
+//        view (inbox|notifications|sales|bin)
 //
 // Notifications are the machine-written mail that arrives at info@: Stripe
 // receipts, DesignMyNight bookings, Google security notices. They live in the
 // same table behind is_notification, so they are searchable and can be promoted
 // into the inbox, but they never appear in it, never count towards the badge,
-// and never reach a team member.
+// and never reach a team member. Sales are notifications too — the site's own
+// voucher-sale heads-ups (notification_kind 'sale') — kept in a folder of their own.
 
 import { TYPES, STATUSES, BIN_DAYS, siteLabel, purgeBin } from '../../../_lib/inbox.js';
 
@@ -26,15 +27,17 @@ export async function onRequestGet({ request, env, waitUntil }) {
   const page = Math.max(1, parseInt(url.searchParams.get('page') || '1', 10) || 1);
 
   const asked = url.searchParams.get('view');
-  const view = asked === 'notifications' || asked === 'bin' ? asked : 'inbox';
+  const view = ['notifications', 'sales', 'bin'].includes(asked) ? asked : 'inbox';
 
   // Filters other than status/type, shared by the list and both count queries.
-  // The bin cuts across the other two: a binned notification is in the bin.
+  // The bin cuts across the others: a binned notification is in the bin.
   const base = [view === 'bin' ? 'e.deleted_at IS NOT NULL' : 'e.deleted_at IS NULL'];
   const baseArgs = [];
   if (view !== 'bin') {
     base.push('e.is_notification = ?');
-    baseArgs.push(view === 'notifications' ? 1 : 0);
+    baseArgs.push(view === 'inbox' ? 0 : 1);
+    if (view === 'sales') base.push("e.notification_kind = 'sale'");
+    if (view === 'notifications') base.push("COALESCE(e.notification_kind, '') != 'sale'");
   }
   if (site) { base.push('e.site = ?'); baseArgs.push(site); }
   // assignee=<member id> | none (unassigned) | mine is not a thing here: the admin sees all.
@@ -67,7 +70,7 @@ export async function onRequestGet({ request, env, waitUntil }) {
   const listSql = `
     SELECT e.id, e.name, e.email, e.phone, e.type, e.channel, e.site, e.status, e.unread, e.voucher_code,
            e.created_at, e.last_message_at, e.assigned_to, e.subject, e.is_notification, e.notification_reason,
-           e.deleted_at,
+           e.notification_kind, e.deleted_at,
            (SELECT name FROM team_members t WHERE t.id = e.assigned_to) AS assignee_name,
            (SELECT substr(body, 1, 160) FROM enquiry_messages m WHERE m.enquiry_id = e.id AND m.direction IN ('in','out') ORDER BY m.id DESC LIMIT 1) AS snippet,
            (SELECT direction FROM enquiry_messages m WHERE m.enquiry_id = e.id AND m.direction IN ('in','out') ORDER BY m.id DESC LIMIT 1) AS last_direction,
@@ -82,7 +85,7 @@ export async function onRequestGet({ request, env, waitUntil }) {
   const since = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(url.searchParams.get('since') || '')
     ? url.searchParams.get('since') : null;
 
-  const [nowRow, list, byStatus, byType, sites, team, unread, recent, notifications, binned] = await env.DB.batch([
+  const [nowRow, list, byStatus, byType, sites, team, unread, recent, notifications, sales, binned] = await env.DB.batch([
     env.DB.prepare("SELECT datetime('now') AS now"),
     env.DB.prepare(listSql).bind(...baseArgs, ...statusArgs, ...typeArgs, PAGE_SIZE + 1, (page - 1) * PAGE_SIZE),
     env.DB.prepare(`SELECT e.status, COUNT(*) AS n, SUM(e.unread) AS unread FROM enquiries e ${where(base, typeClause)} GROUP BY e.status`)
@@ -106,7 +109,12 @@ export async function onRequestGet({ request, env, waitUntil }) {
         ORDER BY e.last_inbound_at DESC LIMIT 5`,
     ).bind(since, since),
     env.DB.prepare(
-      "SELECT COUNT(*) AS n, COALESCE(SUM(unread), 0) AS unread FROM enquiries WHERE is_notification = 1 AND status != 'closed' AND deleted_at IS NULL",
+      `SELECT COUNT(*) AS n, COALESCE(SUM(unread), 0) AS unread FROM enquiries
+        WHERE is_notification = 1 AND COALESCE(notification_kind, '') != 'sale' AND status != 'closed' AND deleted_at IS NULL`,
+    ),
+    // Sales are a log, not a to-do list: the tab counts the ones not yet looked at.
+    env.DB.prepare(
+      "SELECT COUNT(*) AS n, COALESCE(SUM(unread), 0) AS unread FROM enquiries WHERE is_notification = 1 AND notification_kind = 'sale' AND deleted_at IS NULL",
     ),
     env.DB.prepare('SELECT COUNT(*) AS n FROM enquiries WHERE deleted_at IS NOT NULL'),
   ]);
@@ -128,6 +136,8 @@ export async function onRequestGet({ request, env, waitUntil }) {
       type: Object.fromEntries((byType.results || []).map(r => [r.type, r.n])),
       notifications: notifications.results?.[0]?.n || 0,
       notifications_unread: notifications.results?.[0]?.unread || 0,
+      sales: sales.results?.[0]?.n || 0,
+      sales_unread: sales.results?.[0]?.unread || 0,
       bin: binned.results?.[0]?.n || 0,
     },
     bin_days: BIN_DAYS,

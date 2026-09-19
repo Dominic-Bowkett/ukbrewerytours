@@ -193,7 +193,8 @@ export function cleanFields(input) {
 /**
  * Create the conversation and its first message. Returns { id, token, subject }.
  * `notification` is the reason machine-written mail was filed away from the
- * inbox; `subject` overrides the generated one (inbound email keeps its own).
+ * inbox, and `notificationKind` which folder it goes in ('sale' → Sales, else
+ * Notifications); `subject` overrides the generated one (inbound email keeps its own).
  */
 export async function createEnquiry(env, e) {
   const token = newToken();
@@ -203,13 +204,13 @@ export async function createEnquiry(env, e) {
   const res = await env.DB.prepare(
     `INSERT INTO enquiries (name, email, phone, message, page, ip, widget_id, widget_origin,
        type, channel, site, status, unread, token, subject, fields, voucher_code,
-       is_notification, notification_reason, last_message_at, last_inbound_at)
-     VALUES (?,?,?,?,?,?,?,?,?,?,?,'new',1,?,?,?,?,?,?,datetime('now'),datetime('now'))`,
+       is_notification, notification_reason, notification_kind, last_message_at, last_inbound_at)
+     VALUES (?,?,?,?,?,?,?,?,?,?,?,'new',1,?,?,?,?,?,?,?,datetime('now'),datetime('now'))`,
   ).bind(
     e.name, e.email, e.phone || null, e.message, e.page || null, e.ip || null,
     e.widgetId || null, e.widgetOrigin || null,
     e.type, e.channel, e.site, token, subject, fieldsJson, e.voucherCode || null,
-    e.notification ? 1 : 0, e.notification || null,
+    e.notification ? 1 : 0, e.notification || null, (e.notification && e.notificationKind) || null,
   ).run();
 
   const id = res.meta.last_row_id;

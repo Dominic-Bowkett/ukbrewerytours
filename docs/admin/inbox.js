@@ -17,7 +17,13 @@
 
   const state = { view: 'inbox', status: 'open', type: '', site: '', assignee: '', q: '', page: 1, current: null, labels: null, list: [], team: [] };
   const isNotif = () => state.view === 'notifications';
+  const isSales = () => state.view === 'sales';
   const isBin = () => state.view === 'bin';
+  // Sales are notifications with a folder of their own.
+  const isSale = e => e.notification_kind === 'sale';
+  const filedPill = e => isSale(e)
+    ? '<span class="type-pill type-sale">Sale</span>'
+    : '<span class="type-pill type-notification">Notification</span>';
   let binDays = 7;
   let loadedOnce = false;
   let currentThread = null;
@@ -75,7 +81,8 @@
 
       // In the bin, a conversation keeps whatever status it had when it went in;
       // filtering on that would only hide things from someone looking for them.
-      $('ibStatus').hidden = isBin();
+      // Sales are a log: nothing in there is waiting to be closed.
+      $('ibStatus').hidden = isBin() || isSales();
       $('ibStatus').innerHTML = STATUS_CHIPS
         .filter(([key]) => !isNotif() || !['dealing', 'waiting'].includes(key))
         .map(([key, label]) => {
@@ -98,9 +105,11 @@
       binDays = d.bin_days || binDays;
       ['ibType', 'ibSite', 'ibAssignee'].forEach(id => { $(id).hidden = !plain; });
       $('ibNotifTab').textContent = 'Notifications' + (d.counts.notifications ? ` (${d.counts.notifications})` : '');
+      $('ibSalesTab').textContent = 'Sales' + (d.counts.sales_unread ? ` (${d.counts.sales_unread} new)` : '');
       $('ibBinTab').textContent = 'Bin' + (d.counts.bin ? ` (${d.counts.bin})` : '');
       $('ibEmptyBin').hidden = !isBin() || !d.counts.bin;
-      $('ibQ').placeholder = isBin() ? 'Search the bin…' : isNotif() ? 'Search notifications…' : 'Search name, email, code or message…';
+      $('ibQ').placeholder = isBin() ? 'Search the bin…' : isNotif() ? 'Search notifications…'
+        : isSales() ? 'Search sales — buyer, code or amount…' : 'Search name, email, code or message…';
 
       state.team = d.team || [];
       const ownerSel = $('ibAssignee');
@@ -141,7 +150,7 @@
         ${e.subject && e.is_notification ? `<div class="ib-subject">${esc(e.subject)}</div>` : ''}
         <div class="ib-row2">
           ${e.is_notification
-            ? '<span class="type-pill type-notification">Notification</span>'
+            ? filedPill(e)
             : `<span class="type-pill type-${esc(e.type)}">${esc(typeLabel(e.type))}</span>`}
           <span class="ib-why">${esc(binCountdown(e.deleted_at))}</span>
         </div>
@@ -151,8 +160,8 @@
     const rest = e.is_notification
       ? `${e.subject ? `<div class="ib-subject">${esc(e.subject)}</div>` : ''}
          <div class="ib-row2">
-           <span class="type-pill type-notification">Notification</span>
-           ${e.notification_reason ? `<span class="ib-why">${esc(e.notification_reason)}</span>` : ''}
+           ${filedPill(e)}
+           ${e.notification_reason && !isSale(e) ? `<span class="ib-why">${esc(e.notification_reason)}</span>` : ''}
          </div>`
       : `<div class="ib-row2">
            <span class="type-pill type-${esc(e.type)}">${esc(typeLabel(e.type))}</span>
@@ -171,6 +180,7 @@
     if (state.q || state.type || state.site) return 'Nothing matches those filters.';
     if (isBin()) return `The bin is empty. Anything you delete waits here for ${binDays} days before it goes for good.`;
     if (isNotif()) return 'Nothing filed here yet. Receipts, booking confirmations and other machine-written mail lands here instead of the inbox.';
+    if (isSales()) return 'No sales filed here yet. When a voucher sells, the heads-up emailed to info@ lands here — no alert, nothing to answer.';
     return state.status === 'open' ? 'Inbox zero — nothing open. 🍺' : 'No conversations here.';
   }
 
@@ -254,6 +264,7 @@
   const emptyThread = () => {
     if (isBin()) return `<div class="thread-empty"><strong>Nothing selected</strong>Deleted conversations wait here for ${binDays} days. Pick one to read it, put it back, or delete it for good.</div>`;
     if (isNotif()) return '<div class="thread-empty"><strong>Nothing selected</strong>Receipts, confirmations and other machine-written mail are kept here. Pick one to read it.</div>';
+    if (isSales()) return '<div class="thread-empty"><strong>Nothing selected</strong>Every voucher sale is filed here. Pick one to see the order.</div>';
     return '<div class="thread-empty"><strong>No conversation selected</strong>Pick one from the list to read and reply.</div>';
   };
 
@@ -268,7 +279,7 @@
     // The filters mean different things in each view, so none of them carry over.
     // The bin shows everything in it: its rows keep the status they had going in.
     state.page = 1; state.type = ''; state.site = ''; state.assignee = '';
-    state.status = view === 'bin' ? 'all' : 'open';
+    state.status = view === 'bin' || view === 'sales' ? 'all' : 'open';
     document.querySelectorAll('[data-ib-view]').forEach(x => x.classList.toggle('on', x.dataset.ibView === view));
     loadList();
   }
@@ -734,7 +745,10 @@
     binDays = d.bin_days || binDays;
     const canEmail = !notif && !binned && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(e.email || ''));
     if (!canEmail) composerMode = 'note';
-    const noReply = notif
+    const sale = notif && isSale(e);
+    const noReply = sale
+      ? '💷 A voucher sale, filed in Sales — nothing here needs an answer.'
+      : notif
       ? '🗂 Filed as a notification — nothing here is waiting on an answer.'
       : `📞 No email address — ${e.phone ? 'call them back' : 'nothing to reply to'}. Notes are saved here.`;
     const lastIn = [...d.messages].reverse().find(m => m.direction === 'in');
@@ -744,19 +758,19 @@
         <button class="btn btn-ghost btn-sm th-back" type="button" id="thBack">← Inbox</button>
         <div class="th-title">
           <h2>${esc(e.name)} ${notif
-            ? '<span class="type-pill type-notification">Notification</span>'
+            ? filedPill(e)
             : `<span class="type-pill type-${esc(e.type)}">${esc(typeLabel(e.type))}</span>`}</h2>
           <div class="th-contact">
             ${notif ? `<span class="th-subject">${esc(e.subject || '(no subject)')}</span>` : ''}
             ${!notif && e.phone ? `<a class="btn-call" href="tel:${esc(String(e.phone).replace(/[^\d+]/g, ''))}">📞 Call ${esc(e.phone)}</a>` : ''}
-            ${e.email ? `<a href="mailto:${esc(e.email)}">${esc(e.email)}</a>` : ''}
+            ${e.email && !sale ? `<a href="mailto:${esc(e.email)}">${esc(e.email)}</a>` : ''}
           </div>
         </div>
         <div class="th-actions">
           ${binned ? `
           <button class="btn btn-primary btn-sm" type="button" id="thRestore">Put it back</button>
           <button class="btn btn-ghost btn-sm" type="button" id="thForever">Delete forever</button>` : `
-          <div class="seg" role="group" aria-label="Status">
+          <div class="seg" role="group" aria-label="Status"${sale ? ' hidden' : ''}>
             ${Object.entries(d.labels.statuses)
               // Nobody is "dealing with" a receipt or "awaiting" it: a
               // notification is either still there or filed.
@@ -905,7 +919,7 @@
         await api('/api/admin/inbox/' + e.id, {
           method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ restore: true }),
         });
-        switchView(e.is_notification ? 'notifications' : 'inbox');
+        switchView(e.is_notification ? (isSale(e) ? 'sales' : 'notifications') : 'inbox');
         await openThread(e.id);
       } catch (err) { alert(err.message); }
     });

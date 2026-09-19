@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
-<meta name="admin-build" content="af667bbdf9">
+<meta name="admin-build" content="8a846fc37e">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
 <title>Admin — UK Brewery Tours</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍺%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="/assets/css/admin.css?v=af667bbdf9">
+<link rel="stylesheet" href="/assets/css/admin.css?v=8a846fc37e">
 </head>
 <body>
 <header class="admin-header">
@@ -30,6 +30,7 @@
         <div class="inbox-top">
           <div class="seg view-seg" role="group" aria-label="View">
             <button type="button" data-ib-view="inbox" class="on">Inbox</button>
+            <button type="button" data-ib-view="sales" id="ibSalesTab" title="Every voucher sale — the heads-up the site emails to info@ lands here instead of the inbox, with no alert">Sales</button>
             <button type="button" data-ib-view="notifications" id="ibNotifTab" title="Receipts, booking confirmations and other machine-written mail — filed here, never alerted on, never shown to the team">Notifications</button>
             <button type="button" data-ib-view="bin" id="ibBinTab" title="Deleted conversations wait here for 7 days before they are gone for good">Bin</button>
           </div>
@@ -1355,7 +1356,7 @@ document.addEventListener('DOMContentLoaded', () => showTab(location.hash.slice(
 window.addEventListener('hashchange', () => showTab(location.hash.slice(1) || 'inbox'));
 </script>
 <div class="ib-toast" id="ibToast" role="status" aria-live="polite" hidden></div>
-<script src="/admin/inbox.js?v=af667bbdf9" defer></script>
-<script src="/admin/imported.js?v=af667bbdf9" defer></script>
+<script src="/admin/inbox.js?v=8a846fc37e" defer></script>
+<script src="/admin/imported.js?v=8a846fc37e" defer></script>
 </body>
 </html>

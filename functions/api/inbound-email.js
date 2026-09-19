@@ -9,7 +9,7 @@
 // before anything is read. Retries are deduped on the message id.
 
 import {
-  verifySvix, parseAddress, tokenFromRecipients, stripQuoted, htmlToText, notificationReason,
+  verifySvix, parseAddress, tokenFromRecipients, stripQuoted, htmlToText, notificationReason, siteMail,
 } from '../_lib/inbound.js';
 import {
   TOKEN_RE, appendCustomerMessage, alertAdmin, createEnquiry, voucherCheck, cleanFields,
@@ -75,7 +75,10 @@ async function ingest(env, data) {
   // Stripe receipts, DesignMyNight bookings, Google security mail, bounces,
   // out-of-office replies: filed as notifications, never alerted on, never shown
   // to a team member. `reason` is null when a person wrote the message.
-  const reason = notificationReason(headers, from.email, env.NOTIFICATION_SENDERS);
+  // The site's own mail to info@ (voucher sales, ops alerts) comes back this way
+  // too; sales get a folder of their own.
+  const own = siteMail(from.email, subject, env.FROM_EMAIL);
+  const reason = own ? own.reason : notificationReason(headers, from.email, env.NOTIFICATION_SENDERS);
 
   // Resend's webhook is metadata-only, so the body normally comes from the API
   // call above; a payload that does carry one (or a replayed test) still works.
@@ -113,7 +116,7 @@ async function ingest(env, data) {
   } else {
     // 3. A new conversation, started by email — or a notification, filed away.
     const created = await createEnquiry(env, {
-      name: from.name || 'Email enquiry',
+      name: own?.name || from.name || 'Email enquiry',
       email: from.email,
       phone: null,
       message: body,
@@ -128,6 +131,7 @@ async function ingest(env, data) {
       voucherCode: null,
       subject,
       notification: reason,
+      notificationKind: own?.kind || null,
     });
     await stampEmailId(env, created.id, messageId);
     if (reason) return;

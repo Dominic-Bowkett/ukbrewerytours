@@ -6,7 +6,7 @@
 // and `orders.email_sent` guards the emails, so a retry never double-sends.
 
 import { verifyWebhook } from '../_lib/stripe.js';
-import { sendEmail, voucherEmailHtml, receiptEmailHtml, saleNotificationHtml } from '../_lib/email.js';
+import { sendEmail, voucherEmailHtml, receiptEmailHtml, saleNotificationHtml, SALE_SUBJECT } from '../_lib/email.js';
 import { orderToken } from '../_lib/auth.js';
 
 export async function onRequestPost({ request, env }) {
@@ -82,7 +82,7 @@ export async function onRequestPost({ request, env }) {
         : null;
       await sendEmail(env, {
         to: env.NOTIFY_EMAIL || 'info@ukbrewerytours.com',
-        subject: `New voucher sale — ${(order.total_pence / 100).toFixed(2)} GBP (${order.purchaser_name || order.purchaser_email})`,
+        subject: `${SALE_SUBJECT} — ${(order.total_pence / 100).toFixed(2)} GBP (${order.purchaser_name || order.purchaser_email})`,
         html: saleNotificationHtml({ order, vouchers, widget }),
         replyTo: order.purchaser_email,
       });

@@ -1,5 +1,7 @@
 // Helpers for inbound email (functions/api/inbound-email.js).
 
+import { SALE_SUBJECT } from './email.js';
+
 /**
  * Verify a Svix-signed webhook (Resend uses Svix).
  * Signs `${svix-id}.${svix-timestamp}.${rawBody}` with HMAC-SHA256, keyed by the
@@ -123,6 +125,30 @@ const NOTIFY_SENDERS = [
 
 /** Local parts that announce a machine on the other end. */
 const NOTIFY_LOCAL = /^(no-?reply|do-?not-?reply|donotreply|notifications?|alerts?|mailer|automated|auto-?confirm|receipts?|billing|invoices?|support-?noreply)([._+-]|$)/i;
+
+/**
+ * Mail this website sent to itself, or null.
+ *
+ * info@ forwards into the helpdesk, and info@ is also where the site sends its
+ * own heads-ups — voucher sales, payment alerts, "send a copy" checks — so they
+ * come straight back in, from our own sending address. Taken for a customer,
+ * they all piled onto one conversation called "Info", each one alerting.
+ *
+ * Only the address the site sends from counts: dom@ is a person and can write
+ * in like anyone else. Returns { reason, kind, name }: kind 'sale' is a voucher
+ * sale, filed in its own Sales folder under the buyer's name.
+ */
+export function siteMail(fromEmail, subject, fromSetting) {
+  const own = parseAddress(fromSetting || 'info@ukbrewerytours.com').email;
+  if (!fromEmail || fromEmail !== own) return null;
+  const s = String(subject || '').trim();
+  if (new RegExp(`^(fwd?:\\s*)?${SALE_SUBJECT}\\b`, 'i').test(s)) {
+    // "New voucher sale — 100.00 GBP (Jane Smith)" → "Jane Smith"
+    const buyer = /\(([^()]+)\)\s*$/.exec(s)?.[1]?.trim();
+    return { reason: 'a voucher sale on this website', kind: 'sale', name: (buyer || 'Voucher sale').slice(0, 100) };
+  }
+  return { reason: 'sent by this website', kind: null, name: 'UK Brewery Tours website' };
+}
 
 /**
  * Why this message is machine-written — "automated mail from stripe.com", "an

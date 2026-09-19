@@ -116,7 +116,9 @@ export async function onRequestPatch({ params, request, env, data }) {
   // no longer see it, so leaving it assigned would only be misleading.
   if (body.is_notification !== undefined && Boolean(body.is_notification) !== (enquiry.is_notification === 1)) {
     const filed = Boolean(body.is_notification);
-    sets.push('is_notification = ?', 'notification_reason = ?');
+    // Either way it stops being a Sales entry: promoted, it is a conversation;
+    // filed by hand, it goes to Notifications.
+    sets.push('is_notification = ?', 'notification_reason = ?', 'notification_kind = NULL');
     args.push(filed ? 1 : 0, filed ? 'filed by hand' : null);
     events.push(filed ? 'Filed away as a notification' : 'Moved into the inbox');
     if (filed && enquiry.assigned_to && body.assigned_to === undefined) {

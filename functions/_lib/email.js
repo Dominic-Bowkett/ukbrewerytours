@@ -311,6 +311,13 @@ export function inboxReplyHtml({ body, quoted, quotedName, threadLink, brand = '
   </td></tr>`);
 }
 
+/**
+ * How the sale heads-up's subject starts. The inbound filer recognises the
+ * email by it when info@ forwards it back into the helpdesk, so change both
+ * together or sales land among the other notifications.
+ */
+export const SALE_SUBJECT = 'New voucher sale';
+
 /** Internal heads-up to info@ when a voucher sells. */
 export function saleNotificationHtml({ order, vouchers, widget }) {
   const row = (label, value) =>
