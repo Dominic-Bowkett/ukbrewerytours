@@ -262,6 +262,26 @@ export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = ''
 
   function scrollDown() { var b = $('body'); b.scrollTop = b.scrollHeight; }
 
+  // On a phone, putting the cursor in a box opens the on-screen keyboard, which
+  // covers half the chat before the visitor has read it. So nothing is focused
+  // for them on a touch screen: they see the whole box, then tap where they want.
+  // A mouse has no such cost, so a desktop still gets the cursor put in place.
+  function touchScreen() {
+    try { return window.matchMedia('(hover: none) and (pointer: coarse)').matches; }
+    catch (e) { return 'ontouchstart' in window; }
+  }
+  function focusSoon(el, delay) {
+    if (!el || touchScreen()) return;
+    setTimeout(function () { el.focus(); }, delay || 0);
+  }
+
+  // The details form is taller than a phone screen, so it opens at its top —
+  // the first question — rather than scrolled to the send button.
+  function scrollToDetails() {
+    var b = $('body'), d = $('details');
+    b.scrollTop = Math.max(0, d.offsetTop - b.offsetTop - 8);
+  }
+
   function render() {
     var html = messages.map(function (m) {
       return '<div class="msg ' + (m.from === 'team' ? 'team' : 'you') + (m.pending ? ' pending' : '') + '">'
@@ -338,8 +358,9 @@ export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = ''
     $('l-close').hidden = !v;
     post({ type: 'state', open: v });
     if (v) {
-      markSeen(); updateBadge(); scrollDown();
-      setTimeout(function () { if (!$('details').hidden) focusFirstEmpty(); else $('text').focus(); }, 60);
+      markSeen(); updateBadge();
+      if ($('details').hidden) scrollDown(); else scrollToDetails();
+      setTimeout(function () { if (!$('details').hidden) focusFirstEmpty(); else focusSoon($('text')); }, 60);
       if (token) load().then(schedule);
     } else {
       schedule();
@@ -396,6 +417,7 @@ export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = ''
   }
 
   function focusFirstEmpty() {
+    if (touchScreen()) return;
     var els = $('details').querySelectorAll('input, select, textarea');
     for (var i = 0; i < els.length; i++) {
       var el = els[i];
@@ -411,7 +433,7 @@ export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = ''
     $('details').hidden = false;
     $('composer').hidden = true;
     $('topicbar').hidden = true;
-    scrollDown();
+    scrollToDetails();
   }
 
   function setTopic(key) {
@@ -433,7 +455,7 @@ export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = ''
         // Back from a form topic to a plain message.
         $('details').hidden = true;
         $('composer').hidden = false;
-        $('text').focus();
+        focusSoon($('text'));
       }
     }
   }
@@ -569,6 +591,22 @@ export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = ''
     var b = e.target.closest('.topic'); if (b) setTopic(b.getAttribute('data-topic'));
   });
   $('d-tour').addEventListener('change', tourChanged);
+
+  // Once they do tap a box, the keyboard can still cover it: it shrinks the visual
+  // viewport without moving the panel. Nudge the form up by however much of the
+  // box is covered, after the keyboard has finished appearing. Where a browser
+  // reports no keyboard (the panel is already fully visible), this does nothing.
+  if (window.visualViewport) {
+    document.addEventListener('focusin', function (e) {
+      var el = e.target;
+      if (!touchScreen() || !el || !el.closest || !el.closest('.details')) return;
+      setTimeout(function () {
+        var vv = window.visualViewport;
+        var covered = el.getBoundingClientRect().bottom - (vv.height + vv.offsetTop) + 12;
+        if (covered > 0) $('body').scrollTop += covered;
+      }, 350);
+    });
+  }
   $('cleartopic').addEventListener('click', function () { setTopic(null); $('topicbar').hidden = true; });
   if ($('close')) $('close').addEventListener('click', function () { setOpen(false); });
   $('launcher').addEventListener('click', function () { setOpen(!open); });
@@ -579,7 +617,7 @@ export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = ''
     [].forEach.call(document.querySelectorAll('.topic'), function (b) { b.classList.remove('on'); });
     $('greet').querySelector('.bubble').textContent = 'Hi there 👋 What can we help with this time?';
     $('details').hidden = true; $('composer').hidden = false;
-    render(); clearTimeout(pollTimer); $('text').focus();
+    render(); clearTimeout(pollTimer); focusSoon($('text'));
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && open && !PAGE) setOpen(false); });
 
@@ -601,7 +639,7 @@ export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = ''
 
   render();
   if (token) load().then(schedule);
-  if (PAGE) { setTimeout(function () { $('text').focus(); }, 100); }
+  if (PAGE) focusSoon($('text'), 100);
   post({ type: 'ready' });
 })();
 </script>
