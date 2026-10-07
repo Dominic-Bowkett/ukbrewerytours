@@ -7,9 +7,10 @@
 //
 // copy_to sends the same email to an internal address instead, subject-prefixed
 // "Copy:", WITHOUT touching the order — for checking what the customer received.
+// A normal resend of a gift also copies the purchaser, matching checkout.
 
 import { normaliseCode } from '../../_lib/codes.js';
-import { sendEmail, voucherEmailHtml } from '../../_lib/email.js';
+import { sendVoucherEmails, voucherHolderEmail, isSendToSelf } from '../../_lib/email.js';
 import { orderToken } from '../../_lib/auth.js';
 
 const isEmail = s => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(s || '').trim());
@@ -45,15 +46,15 @@ export async function onRequestPost({ request, env }) {
     if (!isEmail(newEmail) || /[\r\n]/.test(newEmail)) {
       return Response.json({ error: 'That does not look like a valid email address.' }, { status: 400 });
     }
-    const field = order.send_to_self === 1 ? 'purchaser_email' : 'recipient_email';
+    const field = isSendToSelf(order) ? 'purchaser_email' : 'recipient_email';
     if (newEmail !== order[field]) {
       await env.DB.prepare(`UPDATE orders SET ${field}=? WHERE id=?`).bind(newEmail, order.id).run();
       order[field] = newEmail;
     }
   }
 
-  const deliverTo = order.send_to_self === 1 ? order.purchaser_email : order.recipient_email;
-  if (!deliverTo) return Response.json({ error: 'No delivery email on this order.' }, { status: 400 });
+  const deliverTo = voucherHolderEmail(order);
+  if (!copyTo && !deliverTo) return Response.json({ error: 'No delivery email on this order.' }, { status: 400 });
 
   const { results: vouchers } = await env.DB
     .prepare('SELECT code, amount_pence FROM vouchers WHERE order_id=? ORDER BY id')
@@ -63,16 +64,14 @@ export async function onRequestPost({ request, env }) {
   const token = await orderToken(order.id, env.ADMIN_SESSION_SECRET);
   const printUrl = `${origin}/my-vouchers/?order=${order.id}&t=${token}`;
 
-  const subject = order.send_to_self === 1
-    ? `Your UK Brewery Tours gift voucher${vouchers.length > 1 ? 's' : ''}`
-    : `${order.purchaser_name || 'Someone'} has sent you a UK Brewery Tours gift voucher`;
-
   try {
-    await sendEmail(env, {
+    await sendVoucherEmails(env, {
+      order,
+      vouchers,
+      printUrl,
       to: copyTo || deliverTo,
-      subject: copyTo ? `Copy: ${subject}` : subject,
-      html: voucherEmailHtml({ order, vouchers, printUrl }),
-      replyTo: 'info@ukbrewerytours.com',
+      skipPurchaserCopy: !!copyTo,
+      subjectPrefix: copyTo ? 'Copy: ' : '',
     });
   } catch (err) {
     // The address change (if any) has been saved — only the send failed.

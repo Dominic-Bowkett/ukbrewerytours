@@ -359,7 +359,7 @@ export async function lookupCodes(env, candidates) {
         kind: 'ukbt', id: v.id, code: v.code, code_norm: norm(v.code), source: 'UK Brewery Tours',
         amount_pence: v.amount_pence, balance_pence: v.balance_pence, refunded_pence: v.refunded_pence,
         status: v.status, is_demo: v.is_demo === 1, description: v.tour_name || null,
-        holder_name: toSelf ? v.purchaser_name : (v.recipient_name || v.purchaser_name),
+        holder_name: v.recipient_name || v.purchaser_name,
         holder_email: toSelf ? v.purchaser_email : (v.recipient_email || v.purchaser_email),
         purchaser_name: v.purchaser_name, purchased_at: v.paid_at || v.created_at, expires_at: null,
       });

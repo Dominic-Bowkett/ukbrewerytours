@@ -4,6 +4,7 @@
 // voucher needs — no email addresses, no payment details.
 
 import { verifyOrderToken } from '../_lib/auth.js';
+import { voucherHolderName, isSendToSelf } from '../_lib/email.js';
 
 export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
@@ -28,10 +29,16 @@ export async function onRequestGet({ request, env }) {
 
   if (!vouchers.length) return deny();
 
+  // "For …" on the printed sheet. A send-to-self order shows the buyer's own
+  // name unless admin made it out to someone else, in which case the buyer
+  // signs the message as the giver.
+  const holderName = voucherHolderName(order) || null;
+  const selfNamed = isSendToSelf(order) && !order.recipient_name;
+
   return Response.json({
     order: {
-      recipient_name: order.send_to_self === 1 ? order.purchaser_name : order.recipient_name,
-      from_name: order.send_to_self === 1 ? null : order.purchaser_name,
+      recipient_name: holderName,
+      from_name: selfNamed ? null : (order.purchaser_name || null),
       message: order.message,
       tour_name: order.tour_name,
       tour_slug: order.tour_slug,

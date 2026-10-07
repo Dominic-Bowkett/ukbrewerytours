@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
-<meta name="admin-build" content="52321c31d3">
+<meta name="admin-build" content="6c7f9859b3">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
 <title>Admin — UK Brewery Tours</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍺%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="/assets/css/admin.css?v=52321c31d3">
+<link rel="stylesheet" href="/assets/css/admin.css?v=6c7f9859b3">
 </head>
 <body>
 <header class="admin-header">
@@ -390,7 +390,9 @@ async function load() {
         <td><strong>${money(v.balance_pence)}</strong></td>
         <td><span class="pill pill-${v.status}">${LABEL[v.status] || v.status}</span></td>
         <td>${esc(v.purchaser_name || '—')}<br><span class="muted">${esc(v.purchaser_email || '')}</span></td>
-        <td>${v.send_to_self ? '<span class="muted">Themselves</span>' : esc(v.recipient_name || '—') + '<br><span class="muted">' + esc(v.recipient_email || '') + '</span>'}</td>
+        <td>${v.send_to_self
+          ? (v.recipient_name ? esc(v.recipient_name) + '<br><span class="muted">via buyer</span>' : '<span class="muted">Themselves</span>')
+          : esc(v.recipient_name || '—') + '<br><span class="muted">' + esc(v.recipient_email || '') + '</span>'}</td>
         <td class="muted">${dt(v.paid_at || v.created_at)}</td>
         <td><button class="btn btn-sm" data-view="${esc(v.code)}">View</button></td>
       </tr>`).join('') : '<tr><td colspan="8" class="muted pad">No vouchers found.</td></tr>';
@@ -471,11 +473,27 @@ async function openVoucher(code) {
       <div class="meta-grid">
         <div><span>Bought by</span>${esc(v.purchaser_name || '—')}<br><span class="muted">${esc(v.purchaser_email)}</span></div>
         <div><span>Delivered to</span>${v.send_to_self ? 'Themselves' : esc(v.recipient_name || '—') + '<br><span class="muted">' + esc(v.recipient_email || '') + '</span>'}</div>
+        <div><span>Name on voucher</span>${esc(v.recipient_name || v.purchaser_name || '—')}</div>
         <div><span>Issued</span>${dt(v.paid_at || v.created_at)}</div>
         <div><span>Tour</span>${esc(v.tour_name || '—')}</div>
         ${v.widget_id ? `<div><span>Sold via widget</span>${esc(v.widget_name || v.widget_id)}${v.widget_origin ? `<br><span class="muted">${esc(v.widget_origin)}</span>` : ''}</div>` : ''}
         ${v.message ? `<div class="full"><span>Message</span><em>${esc(v.message)}</em></div>` : ''}
       </div>
+
+      <form class="redeem-form" id="namesForm">
+        <h3>Names <span class="sub">— who the voucher is made out to</span></h3>
+        <div class="redeem-row">
+          <div class="field"><label for="nrecip">Name on the voucher</label>
+            <input id="nrecip" type="text" maxlength="80" value="${esc(v.recipient_name || v.purchaser_name || '')}" placeholder="e.g. Steve Richardson" ${v.send_to_self ? '' : 'required'}></div>
+          <div class="field"><label for="nbuyer">Buyer's name</label>
+            <input id="nbuyer" type="text" maxlength="80" value="${esc(v.purchaser_name || '')}" required></div>
+        </div>
+        <p class="error" id="namesError" hidden></p>
+        <div class="redeem-actions">
+          <button class="btn btn-primary" type="submit">Save names</button>
+        </div>
+        <p class="muted refund-hint">Typical fix: someone bought it under their own name but it's a present — put the recipient's name here. Their existing print link updates straight away; use Delivery below to email them a fresh copy.${v.send_to_self ? ' Leave blank to go back to the buyer\'s own name.' : ''}</p>
+      </form>
 
       ${v.status !== 'pending' ? `
         <form class="redeem-form" id="resendForm">
@@ -528,6 +546,37 @@ async function openVoucher(code) {
       form.addEventListener('submit', e => { e.preventDefault(); doRedeem({ amount: document.getElementById('amt').value }); });
       document.getElementById('redeemFull').addEventListener('click', () => {
         if (confirm(`Redeem the full remaining ${money(v.balance_pence)}?`)) doRedeem({ full: true });
+      });
+    }
+
+    const nForm = document.getElementById('namesForm');
+    if (nForm) {
+      nForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const errEl = document.getElementById('namesError');
+        errEl.hidden = true;
+        const recipient = document.getElementById('nrecip').value.trim();
+        const buyer = document.getElementById('nbuyer').value.trim();
+        const btn = nForm.querySelector('button');
+        btn.disabled = true;
+        try {
+          await api('/api/admin/names', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              code: v.code,
+              // On a send-to-self order the buyer's own name means "not set".
+              recipient_name: (v.send_to_self && recipient === buyer) ? '' : recipient,
+              purchaser_name: buyer,
+            }),
+          });
+          await openVoucher(v.code);
+          load();
+        } catch (err) {
+          errEl.textContent = err.message;
+          errEl.hidden = false;
+          btn.disabled = false;
+        }
       });
     }
 
@@ -1356,7 +1405,7 @@ document.addEventListener('DOMContentLoaded', () => showTab(location.hash.slice(
 window.addEventListener('hashchange', () => showTab(location.hash.slice(1) || 'inbox'));
 </script>
 <div class="ib-toast" id="ibToast" role="status" aria-live="polite" hidden></div>
-<script src="/admin/inbox.js?v=52321c31d3" defer></script>
-<script src="/admin/imported.js?v=52321c31d3" defer></script>
+<script src="/admin/inbox.js?v=6c7f9859b3" defer></script>
+<script src="/admin/imported.js?v=6c7f9859b3" defer></script>
 </body>
 </html>

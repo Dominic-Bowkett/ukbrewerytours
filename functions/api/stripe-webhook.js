@@ -1,12 +1,12 @@
 // POST /api/stripe-webhook
 // Stripe's payment confirmation. Marks the order paid, activates the voucher
-// codes, then emails the voucher + receipt.
+// codes, then emails the voucher (plus a purchaser copy on gifts) and receipt.
 //
 // Idempotency: Stripe retries on non-2xx. `orders.status` guards the DB write
 // and `orders.email_sent` guards the emails, so a retry never double-sends.
 
 import { verifyWebhook } from '../_lib/stripe.js';
-import { sendEmail, voucherEmailHtml, receiptEmailHtml, saleNotificationHtml, SALE_SUBJECT } from '../_lib/email.js';
+import { sendEmail, sendVoucherEmails, receiptEmailHtml, saleNotificationHtml, SALE_SUBJECT, isSendToSelf } from '../_lib/email.js';
 import { orderToken } from '../_lib/auth.js';
 
 export async function onRequestPost({ request, env }) {
@@ -47,24 +47,17 @@ export async function onRequestPost({ request, env }) {
     .bind(order.id).all();
 
   try {
-    const deliverTo = order.send_to_self === 1 ? order.purchaser_email : order.recipient_email;
-
     // Signed link to the printable version — unguessable, and scoped to this order.
     const origin = env.BASE_URL || new URL(request.url).origin;
     const token = await orderToken(order.id, env.ADMIN_SESSION_SECRET);
     const printUrl = `${origin}/my-vouchers/?order=${order.id}&t=${token}`;
 
-    await sendEmail(env, {
-      to: deliverTo,
-      subject: order.send_to_self === 1
-        ? `Your UK Brewery Tours gift voucher${vouchers.length > 1 ? 's' : ''}`
-        : `${order.purchaser_name || 'Someone'} has sent you a UK Brewery Tours gift voucher`,
-      html: voucherEmailHtml({ order, vouchers, printUrl }),
-      replyTo: 'info@ukbrewerytours.com',
-    });
+    // Holder gets the voucher; gifts also send the purchaser an identical copy.
+    await sendVoucherEmails(env, { order, vouchers, printUrl });
 
-    // Receipt to the purchaser — skipped when it would duplicate the voucher email.
-    if (order.send_to_self !== 1) {
+    // Receipt to the purchaser — skipped when they already received the voucher
+    // itself (buying for themselves). Gifts still get the receipt on top of the copy.
+    if (!isSendToSelf(order)) {
       await sendEmail(env, {
         to: order.purchaser_email,
         subject: 'Receipt — your UK Brewery Tours gift voucher',

@@ -214,7 +214,7 @@ export async function onRequestGet({ params, env }) {
     </div>
 
     <div class="note"><strong>&#128231; Delivered instantly by email</strong>
-      The email contains the voucher code and is everything needed to book — nothing is posted.</div>
+      The voucher email contains the code — nothing is posted. Gifts go to the recipient, and you get a copy plus a receipt.</div>
 
     <p class="err" id="err" hidden></p>
     <button class="submit" id="go" type="submit">Continue to payment</button>

@@ -107,13 +107,87 @@ function printBlock(printUrl, count) {
   </div>`;
 }
 
-export function voucherEmailHtml({ order, vouchers, printUrl }) {
-  const toSelf = order.send_to_self === 1;
+const sameAddr = (a, b) =>
+  String(a || '').trim().toLowerCase() === String(b || '').trim().toLowerCase();
+
+/** SQLite INTEGER 0/1, and D1 can surface it as a number or a string. */
+export function isSendToSelf(order) {
+  return Number(order?.send_to_self) === 1;
+}
+
+export function voucherHolderEmail(order) {
+  return isSendToSelf(order) ? order.purchaser_email : order.recipient_email;
+}
+
+/**
+ * The name printed on the voucher ("For …"). Gifts carry the recipient's name;
+ * a send-to-self order uses the buyer's own name unless admin has set a
+ * recipient name on it (bought under their own name to hand over in person).
+ */
+export function voucherHolderName(order) {
+  const r = String(order?.recipient_name || '').trim();
+  if (r) return r;
+  return isSendToSelf(order) ? String(order?.purchaser_name || '').trim() : '';
+}
+
+export function voucherEmailSubject(order, vouchers) {
+  return isSendToSelf(order)
+    ? `Your UK Brewery Tours gift voucher${vouchers.length > 1 ? 's' : ''}`
+    : `${order.purchaser_name || 'Someone'} has sent you a UK Brewery Tours gift voucher`;
+}
+
+/**
+ * Send the live voucher to its holder. Gifts also get an identical copy to the
+ * purchaser so they can confirm it went out and forward it if needed.
+ *
+ * `to` overrides the holder address (admin resend / internal copy).
+ * `skipPurchaserCopy` is for those internal checks — don't also ping the buyer.
+ */
+export async function sendVoucherEmails(env, {
+  order, vouchers, printUrl, to, skipPurchaserCopy = false, subjectPrefix = '',
+}) {
+  const holder = String(to || voucherHolderEmail(order) || '').trim();
+  if (!holder) throw new Error('No delivery email on this order');
+
+  await sendEmail(env, {
+    to: holder,
+    subject: `${subjectPrefix}${voucherEmailSubject(order, vouchers)}`,
+    html: voucherEmailHtml({ order, vouchers, printUrl }),
+    replyTo: 'info@ukbrewerytours.com',
+  });
+
+  const purchaser = String(order.purchaser_email || '').trim();
+  if (skipPurchaserCopy || isSendToSelf(order) || !purchaser || sameAddr(purchaser, holder)) return;
+
+  const who = order.recipient_name || holder;
+  await sendEmail(env, {
+    to: purchaser,
+    subject: `Copy of the gift voucher sent to ${who}`,
+    html: voucherEmailHtml({ order, vouchers, printUrl, purchaserCopy: true }),
+    replyTo: 'info@ukbrewerytours.com',
+  });
+}
+
+export function voucherEmailHtml({ order, vouchers, printUrl, purchaserCopy = false }) {
+  const toSelf = isSendToSelf(order);
   const greetingName = toSelf ? order.purchaser_name : order.recipient_name;
   const total = vouchers.reduce((s, v) => s + v.amount_pence, 0);
 
+  const copyBanner = purchaserCopy
+    ? `<p style="margin:0 0 18px;padding:12px 14px;background:${CREAM};border-radius:8px;font-size:13px;line-height:1.65;color:${INK_SOFT};">
+        This is a copy of the voucher emailed to
+        <strong style="color:${STOUT};">${esc(order.recipient_name || 'the recipient')}</strong>
+        (${esc(order.recipient_email)}). You can forward this email if they need it again.
+      </p>`
+    : '';
+
+  // Send-to-self order made out to someone else (admin-set recipient name).
+  const madeOutTo = toSelf && order.recipient_name && !sameAddr(order.recipient_name, order.purchaser_name)
+    ? ` ${vouchers.length === 1 ? 'It is' : 'They are'} made out to <strong style="color:${STOUT};">${esc(order.recipient_name)}</strong>.`
+    : '';
+
   const intro = toSelf
-    ? `<p style="margin:0 0 16px;font-size:15px;line-height:1.7;">Thanks for your purchase — here ${vouchers.length === 1 ? 'is your gift voucher' : `are your ${vouchers.length} gift vouchers`}, ready to use or pass on.</p>`
+    ? `<p style="margin:0 0 16px;font-size:15px;line-height:1.7;">Thanks for your purchase — here ${vouchers.length === 1 ? 'is your gift voucher' : `are your ${vouchers.length} gift vouchers`}, ready to use or pass on.${madeOutTo}</p>`
     : `<p style="margin:0 0 16px;font-size:15px;line-height:1.7;">Good news — <strong>${esc(order.purchaser_name || 'someone')}</strong> has sent you ${vouchers.length === 1 ? 'a gift voucher' : `${vouchers.length} gift vouchers`} for UK Brewery Tours.</p>`;
 
   const message = order.message
@@ -130,6 +204,7 @@ export function voucherEmailHtml({ order, vouchers, printUrl }) {
     : '';
 
   return shell(`<tr><td style="padding:30px 28px 8px;">
+    ${copyBanner}
     <h1 style="margin:0 0 14px;font-size:24px;line-height:1.3;">${toSelf ? 'Your gift voucher' + (vouchers.length > 1 ? 's' : '') : `You've been gifted a brewery tour${vouchers.length > 1 ? ' — x' + vouchers.length : ''}`}</h1>
     ${greetingName ? `<p style="margin:0 0 12px;font-size:15px;">Hi ${esc(greetingName)},</p>` : ''}
     ${intro}
@@ -330,7 +405,7 @@ export function saleNotificationHtml({ order, vouchers, widget }) {
       <td style="padding:7px 0;font-size:14px;font-weight:600;">${value}</td>
     </tr>`;
 
-  const delivery = order.send_to_self === 1
+  const delivery = isSendToSelf(order)
     ? `Bought for themselves`
     : `Gift for ${esc(order.recipient_name || '—')} &lt;${esc(order.recipient_email)}&gt;`;
 
@@ -369,13 +444,13 @@ export function receiptEmailHtml({ order, vouchers }) {
       <td style="padding:7px 0;font-size:14px;text-align:right;font-weight:600;">${value}</td>
     </tr>`;
 
-  const delivery = order.send_to_self === 1
+  const delivery = isSendToSelf(order)
     ? `Sent to you (${esc(order.purchaser_email)})`
-    : `Sent to ${esc(order.recipient_name || 'recipient')} (${esc(order.recipient_email)})`;
+    : `Sent to ${esc(order.recipient_name || 'recipient')} (${esc(order.recipient_email)}), with a copy to you`;
 
   return shell(`<tr><td style="padding:30px 28px;">
     <h1 style="margin:0 0 8px;font-size:22px;">Receipt</h1>
-    <p style="margin:0 0 22px;font-size:15px;line-height:1.7;">Thanks${order.purchaser_name ? ` ${esc(order.purchaser_name)}` : ''} — your payment went through and the voucher${vouchers.length > 1 ? 's have' : ' has'} been emailed.</p>
+    <p style="margin:0 0 22px;font-size:15px;line-height:1.7;">Thanks${order.purchaser_name ? ` ${esc(order.purchaser_name)}` : ''} — your payment went through and the voucher${vouchers.length > 1 ? 's have' : ' has'} been emailed${isSendToSelf(order) ? '' : ' to the recipient, with a copy to you'}.</p>
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #e7ddcd;border-bottom:1px solid #e7ddcd;margin-bottom:20px;">
       ${row('Voucher value', formatMoney(order.amount_pence))}

@@ -238,6 +238,23 @@ The address is saved on the order and the voucher email is sent again to it —
 one email covering every code on that order, identical to the original. Works
 on any paid order; unpaid orders have nothing to send.
 
+## Wrong name on the voucher
+
+A common one: someone buys the voucher as a gift but puts **their own** name
+and email in the form, so the printable voucher says "For Julie" instead of
+"For Steve".
+
+1. Search the code (or the buyer's name/email) and **View** it.
+2. In the **Names** panel, put the recipient's name in **Name on the voucher**
+   and click **Save names**. (The buyer's name can be corrected there too.)
+3. The buyer's existing **Print or save as PDF** link reads live data, so it
+   shows the new name straight away. To email them a fresh copy, use
+   **Delivery → Save & resend email**.
+
+The order stays a send-to-self order (the buyer keeps the email); only the
+name printed on the voucher changes. Clearing the field puts the buyer's own
+name back. Endpoint: `POST /api/admin/names`.
+
 ## Refunding a voucher
 
 Same screen, the red **Refund** panel below Redeem. Enter an amount (or
