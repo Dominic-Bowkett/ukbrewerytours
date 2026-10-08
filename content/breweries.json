@@ -1,5 +1,5 @@
 {
-  "total": 126,
+  "total": 127,
   "regions": [
     {
       "region": "Scotland",
@@ -868,6 +868,15 @@
           "city": "Battersea",
           "price_gbp": "20",
           "notes": "Guided tour of the 20HL brewhouse (malt store to bottling line) + 3x 1/3-pint tasting flight in Mondo Tap. £20. Set-date tickets sold via their own web shop (shop.mondobeer.com) when dates are released; private tours also available."
+        },
+        {
+          "brewery": "Hiver Beers (Hiverquarters Taproom)",
+          "tour_name": "Beer, Cider & Honey Tastings and Workshops",
+          "url": "https://hiverbeers.com/pages/tastings",
+          "location": "Bermondsey, London SE1 (Greater London)",
+          "city": "London",
+          "price_gbp": "19",
+          "notes": "Honey beer brand on the Bermondsey Beer Mile with a live exhibition beehive in the taproom. Tastings from £19pp (beer, cider & honey; Beer Mile; cider), plus seasonal cider-making (£68) and honey-harvesting (£35) workshops and beekeeping experiences in London and Sussex. Fri–Sun, 18+ for tastings."
         }
       ]
     },

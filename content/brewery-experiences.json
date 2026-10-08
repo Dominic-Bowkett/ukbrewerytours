@@ -1748,5 +1748,125 @@
     "price_gbp": "17",
     "notes": "Brewing since 1777. Brewery Tour (£17): 90+ min tour of Victorian maltings + modern brewery with a flight of beers. Brewery Experience (£25): adds an expert tasting (18+). Mon/Tue/Thu/Fri plus Sat; max 20. Book online via badgerbeers.com.",
     "image": "brew-6"
+  },
+  {
+    "slug": "hiver-from-hive-to-pint-tasting",
+    "brewery": "Hiver Beers",
+    "city": "London",
+    "on_guide": true,
+    "region": "London",
+    "location": "Arch 55 Stanworth St, Bermondsey, London SE1 3NY",
+    "title": "From Hive to Pint: Beer, Cider & Honey Tasting",
+    "tour_name": "From Hive to Pint: Beer, Cider & Honey Tasting",
+    "url": "https://fareharbor.com/embeds/book/hiverbeers/items/412087/?full-items=yes&flow=826098",
+    "price_gbp": "19",
+    "notes": "50-minute beer, cider and honey tasting at Hiver’s Bermondsey Beer Mile taproom, with snacks and honey sampling. Runs Fri 4pm–10pm, Sat 11am–late, Sun 12pm–9pm. 18+.",
+    "gallery_alt": [
+      "Tasting room at Hiver on the Bermondsey Beer Mile",
+      "Hiver honey beer with Beer Mile beers and snacks",
+      "Guide leading a tasting at Hiver"
+    ]
+  },
+  {
+    "slug": "hiver-bermondsey-beer-mile-tasting",
+    "brewery": "Hiver Beers",
+    "city": "London",
+    "on_guide": true,
+    "region": "London",
+    "location": "Arch 55 Stanworth St, Bermondsey, London SE1 3NY",
+    "title": "Bermondsey Beer Mile Tasting at Hiver",
+    "tour_name": "Bermondsey Beer Mile Tasting at Hiver",
+    "url": "https://fareharbor.com/embeds/book/hiverbeers/items/413557/?full-items=yes&flow=826098",
+    "price_gbp": "25.50",
+    "notes": "80-minute expert-guided tasting at Hiver, one of the longest-standing Beer Mile venues, plus a self-guided map of local food and drink businesses to carry on exploring. Fri–Sun. 18+.",
+    "gallery_alt": [
+      "Hiver honey beer and Beer Mile beers with a cheese board",
+      "Guests enjoying a tutored tasting at Hiver",
+      "A group tasting beers at the Hiver taproom",
+      "Guests sampling beer at Hiver, Bermondsey"
+    ]
+  },
+  {
+    "slug": "hiver-cider-tasting",
+    "brewery": "Hiver Beers",
+    "city": "London",
+    "on_guide": true,
+    "region": "London",
+    "location": "Arch 55 Stanworth St, Bermondsey, London SE1 3NY",
+    "title": "Hiver’s Cider Tasting",
+    "tour_name": "Hiver’s Cider Tasting",
+    "url": "https://fareharbor.com/embeds/book/hiverbeers/items/518424/?full-items=yes&flow=826098",
+    "price_gbp": "25.50",
+    "notes": "Tutored tasting of a top-five pick from the UK’s cideries, covering cider history, styles and how it’s made. Held at the Hiver taproom in Bermondsey, Fri–Sun. 18+.",
+    "gallery_alt": [
+      "Holding up a tasting glass at Hiver",
+      "Guests enjoying a tasting at Hiver"
+    ]
+  },
+  {
+    "slug": "hiver-cider-making-workshop",
+    "brewery": "Hiver Beers",
+    "city": "London",
+    "on_guide": true,
+    "region": "London",
+    "location": "Arch 55 Stanworth St, Bermondsey, London SE1 3NY",
+    "title": "Cider Making Workshop at Hiver",
+    "tour_name": "Cider Making Workshop at Hiver",
+    "url": "https://fareharbor.com/embeds/book/hiverbeers/items/518414/?full-items=yes&flow=826098",
+    "price_gbp": "68",
+    "notes": "2.5-hour hands-on workshop: prepare and press your own apples, taste ciders and apples, enjoy a cheese and crackers plate, and take home bottles of your own cider. Runs September–March, max 12 people. 18+."
+  },
+  {
+    "slug": "hiver-honey-harvesting-workshop",
+    "brewery": "Hiver Beers",
+    "city": "London",
+    "on_guide": true,
+    "region": "London",
+    "location": "Arch 55 Stanworth St, Bermondsey, London SE1 3NY",
+    "title": "Honey Harvesting Workshop at Hiver",
+    "tour_name": "Honey Harvesting Workshop at Hiver",
+    "url": "https://fareharbor.com/embeds/book/hiverbeers/items/508502/?full-items=yes&flow=826098",
+    "price_gbp": "35",
+    "notes": "1.5-hour hands-on honey extraction with expert guidance, taking home a jar of the honey you harvested. Runs September–March in the Hiver Events Space, up to 20 people. 14+.",
+    "type": "food"
+  },
+  {
+    "slug": "hiver-london-beekeeping-and-beer-tasting",
+    "brewery": "Hiver Beers",
+    "city": "London",
+    "on_guide": true,
+    "region": "London",
+    "location": "Bee Urban, Kennington Park, London SE11",
+    "title": "London Beekeeping & Beer Tasting",
+    "tour_name": "London Beekeeping & Beer Tasting",
+    "url": "https://fareharbor.com/embeds/book/hiverbeers/items/412078/?full-items=yes&flow=826098",
+    "price_gbp": "62.50",
+    "notes": "2-hour urban beekeeping experience with Hiver at Bee Urban, Kennington Park: an introduction to bees, a hands-on hive inspection, then a tutored tasting of Hiver’s honey beers. Weekly April–September, monthly in winter."
+  },
+  {
+    "slug": "hiver-beekeeping-taster-workshop",
+    "brewery": "Hiver Beers",
+    "city": "London",
+    "on_guide": true,
+    "region": "London",
+    "location": "Central London or Sussex countryside",
+    "title": "Beekeeping Taster Workshop with Honey Tasting",
+    "tour_name": "Beekeeping Taster Workshop with Honey Tasting",
+    "url": "https://fareharbor.com/embeds/book/hiverbeers/items/671001/?full-items=yes&flow=826098",
+    "price_gbp": "45",
+    "notes": "1-hour taster with Hiver: hive inspection, frame handling and expert instruction, finishing with a honey tasting. Runs April–September in central London or the Sussex countryside."
+  },
+  {
+    "slug": "hiver-rural-beekeeping-and-beer-tasting",
+    "brewery": "Hiver Beers",
+    "city": "Albourne",
+    "on_guide": true,
+    "region": "South East England",
+    "location": "Albourne Estate, West Sussex (near Brighton)",
+    "title": "Rural Beekeeping & Beer Tasting in Sussex",
+    "tour_name": "Rural Beekeeping & Beer Tasting in Sussex",
+    "url": "https://fareharbor.com/embeds/book/hiverbeers/items/412086/?full-items=yes&flow=826098",
+    "price_gbp": "68",
+    "notes": "2-hour in-depth hive inspection and frame handling with Hiver’s beekeepers at Albourne Estate, 8 miles from Brighton, followed by a guided tasting of three award-winning honey beers with food pairing. Weekly April–September, monthly in winter."
   }
 ]
