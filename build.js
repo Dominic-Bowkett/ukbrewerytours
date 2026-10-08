@@ -336,8 +336,9 @@ const brewExpFile = path.join(ROOT, 'content', 'brewery-experiences.json');
 const allDirect = fs.existsSync(brewExpFile)
   ? JSON.parse(read('content/brewery-experiences.json')).map(b => ({
       ...b, source: 'direct',
-      description_md: b.notes,
-      duration: b.tour_name,                 // shown as the card's meta line
+      description_md: b.description_md || b.notes,
+      summary: b.summary || b.notes,         // meta description
+      duration: b.duration || b.tour_name,   // shown as the card's meta line
     }))
   : [];
 
@@ -962,7 +963,6 @@ ${related.length ? `<section class="section band-dark">
     title: `${t.title} | UK Brewery Tours`,
     description: (t.summary || t.description_md || '').replace(/\s+/g, ' ').slice(0, 158),
     content, nav: 'tours', ogImage: img,
-    robots: 'noindex,follow',
   });
 }
 
@@ -1078,6 +1078,7 @@ const urls = [
   '/', '/about/', '/contact/', '/tours/', '/breweries/', '/gift-vouchers/', '/group-tours/', '/blog/', '/returns-policy/', '/redeem/',
   ...cityGuides.map(g => `/tours/${g.slug}/`),
   ...activeTours.map(t => `/tours/${t.old_slug}/`),
+  ...allExperiences.map(e => `/tours/experiences/${e.slug}/`),
   ...posts.map(p => `/blog/${p.slug}/`),
 ];
 fs.writeFileSync(path.join(OUT, 'sitemap.xml'),
