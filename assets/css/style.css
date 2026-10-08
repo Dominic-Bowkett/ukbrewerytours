@@ -1431,3 +1431,17 @@ details .a { padding: 0 0 20px; color: var(--ink-soft); font-size: .97rem; }
   .salespop-card { transition: opacity .35s ease; transform: none; }
   .salespop-pill { transition: none; }
 }
+
+/* Gift voucher page: tours a voucher covers, grouped by city */
+.voucher-cities { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; margin-top: 24px; }
+.voucher-city { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 16px 18px; min-width: 0; }
+.voucher-city h3 { font-size: 1.05rem; margin: 0 0 8px; }
+.voucher-city ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.voucher-city li { display: flex; justify-content: space-between; gap: 10px; font-size: .95rem; }
+.voucher-city li a { min-width: 0; }
+.vc-price { flex: none; font-weight: 600; color: var(--amber-deep); font-variant-numeric: tabular-nums; }
+
+/* Seasonal gift panel inside blog posts */
+.gift-panel { margin: 28px 0; padding: 20px 22px; border-radius: var(--radius-sm); background: var(--cream); border: 1px solid var(--line); border-left: 4px solid var(--amber-deep); }
+.gift-panel .gift-panel__title { font-weight: 700; font-size: 1.15rem; margin: 4px 0 6px; }
+.gift-panel p { margin: 0 0 12px; }

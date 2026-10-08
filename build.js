@@ -597,7 +597,18 @@ const typesPresent = [...new Set([...activeTours, ...allExperiences].map(e => no
   .sort((a, b) => TYPE_ORDER.indexOf(a) - TYPE_ORDER.indexOf(b));
 const typeOptions = typesPresent.map(t => `<option value="${t}">${TYPE_LABELS[t] || t}</option>`).join('');
 
+// Gift voucher page: every bookable tour with its price, grouped by city, so gift buyers can see what a voucher covers.
+const voucherTourList = (() => {
+  const byCity = {};
+  for (const t of activeTours) (byCity[t.city] = byCity[t.city] || []).push(t);
+  return Object.keys(byCity).sort().map(city => `<div class="voucher-city">
+        <h3>${esc(city)}</h3>
+        <ul>${byCity[city].map(t => `<li><a href="/tours/${t.old_slug}/">${esc(t.name)}</a>${t.price ? `<span class="vc-price">£${esc(String(t.price))}pp</span>` : ''}</li>`).join('')}</ul>
+      </div>`).join('\n      ');
+})();
+
 const pageTokens = {
+  voucher_tour_list: voucherTourList,
   featured_cards: featuredCards,
   explore_tiles: exploreTiles,
   city_options: cityOptions,
@@ -625,7 +636,7 @@ const staticPages = [
   { src: 'contact.html', out: 'contact/index.html', nav: '', title: 'Contact Us | UK Brewery Tours', description: 'Get in touch with UK Brewery Tours — live chat, email or contact form. Questions about tours, group bookings and gift vouchers answered within hours.', contactForm: true },
   { src: 'tours.html', out: 'tours/index.html', nav: 'tours', title: 'Brewery Tours & Beer Tastings Across the UK | UK Brewery Tours', description: `Browse ${activeTours.length} brewery tours and beer tasting experiences in ${citiesWithTours.length} UK cities — London, Bristol, Manchester, Liverpool, Leeds and more.` },
   { src: 'blog.html', out: 'blog/index.html', nav: 'blog', title: 'Beer Blog | UK Brewery Tours', description: 'Craft beer guides, brewery profiles and beer knowledge from the UK Brewery Tours team — from the Bermondsey Beer Mile to the best beer gardens in London.' },
-  { src: 'gift-vouchers.html', out: 'gift-vouchers/index.html', nav: 'vouchers', title: 'Brewery Tour Gift Vouchers — Never Expire | UK Brewery Tours', description: 'Monetary gift vouchers for brewery tours anywhere in the UK. Instant email delivery, never expire, refundable up to 12 months. The perfect gift for beer lovers.' },
+  { src: 'gift-vouchers.html', out: 'gift-vouchers/index.html', nav: 'vouchers', title: 'Brewery Tour & Beer Tasting Experience Gift Vouchers | UK Brewery Tours', description: 'Beer tasting experience and brewery tour gift vouchers for any UK city. Choose any amount from £10. Emailed in minutes, never expire. A gift beer lovers will remember.', faqLd: true },
   { src: 'group-tours.html', out: 'group-tours/index.html', nav: 'groups', title: 'Private Group Brewery Tours from £29pp | UK Brewery Tours', description: 'Private brewery tours and beer tastings for corporate teams, stags, hens and groups — available in most UK cities from £29 per person.', contactForm: true },
   { src: 'returns-policy.html', out: 'returns-policy/index.html', nav: '', title: 'Returns Policy | UK Brewery Tours', description: 'Gift voucher returns and refunds policy for UK Brewery Tours.' },
   { src: 'redeem.html', out: 'redeem/index.html', nav: 'vouchers', title: 'Redeem Your Gift Voucher | UK Brewery Tours', description: 'Redeem a UK Brewery Tours gift voucher — tell us your tour, date and voucher code and we\'ll book you on and confirm by email, usually within 1 working day.', redeemForm: true },
@@ -637,9 +648,18 @@ const staticPages = [
   { src: 'my-vouchers.html', out: 'my-vouchers/index.html', nav: '', title: 'Your gift vouchers | UK Brewery Tours', description: 'Print or save your UK Brewery Tours gift voucher.', robots: 'noindex,nofollow', voucherPrint: true },
 ];
 
+// FAQPage structured data built from a page's <details><summary>Q</summary><p class="a">A</p></details> blocks.
+const faqJsonld = html => ({
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: [...html.matchAll(/<summary>([\s\S]*?)<\/summary>\s*<p class="a">([\s\S]*?)<\/p>/g)].map(m => ({
+    '@type': 'Question', name: m[1].replace(/<[^>]+>/g, '').trim(),
+    acceptedAnswer: { '@type': 'Answer', text: m[2].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim() },
+  })),
+});
+
 for (const p of staticPages) {
   const content = fill(read('pages/' + p.src), pageTokens);
-  writePage(p.out, { ...p, content });
+  writePage(p.out, { ...p, content, jsonld: p.faqLd ? faqJsonld(content) : p.jsonld });
 }
 
 /* ----- direct-booking breweries directory (/breweries/) ----- */
@@ -779,13 +799,28 @@ for (const t of activeTours) {
 /* ----- blog posts ----- */
 
 const postTpl = read('templates/blog-post.html');
+// Christmas gift panel, shown on every blog post from 1 Nov to 24 Dec (UK time). The site rebuilds
+// daily, so it switches itself on and off. Placed after the opening paragraph.
+const ukToday = new Date().toLocaleDateString('en-CA', { timeZone: 'Europe/London' }); // YYYY-MM-DD
+const GIFT_SEASON = process.env.GIFT_SEASON === '1' || ukToday.slice(5) >= '11-01' && ukToday.slice(5) <= '12-24';
+const GIFT_PANEL = `<aside class="gift-panel" aria-label="Christmas gift vouchers">
+  <span class="kicker">Christmas gift idea</span>
+  <p class="gift-panel__title">Give a brewery tour this Christmas</p>
+  <p>A UK Brewery Tours voucher can be spent on any of our tours, in any city. It's emailed in minutes and never expires, so it works right up to Christmas Eve.</p>
+  <a class="btn btn-primary" href="/gift-vouchers/" data-voucher-open>🎁 Buy a gift voucher</a>
+</aside>`;
+const withGiftPanel = html => {
+  if (!GIFT_SEASON) return html;
+  const i = html.indexOf('</p>');
+  return i === -1 ? GIFT_PANEL + html : html.slice(0, i + 4) + GIFT_PANEL + html.slice(i + 4);
+};
 for (const p of posts) {
   const heroLocal = localizeUrl(p.hero_image);
   const heroBlock = heroLocal ? `<div class="post-hero-img"><img src="${heroLocal}" alt="${esc(p.title)}"></div>` : '';
   const content = fill(postTpl, {
     title: esc(p.title), description: esc(p.description),
     date_human: humanDate(p.date), hero_block: heroBlock,
-    content: mdToHtml(p.body),
+    content: withGiftPanel(mdToHtml(p.body)),
   });
   writePage(`blog/${p.slug}/index.html`, {
     title: `${p.title} | UK Brewery Tours`,
@@ -963,6 +998,8 @@ ${related.length ? `<section class="section band-dark">
     title: `${t.title} | UK Brewery Tours`,
     description: (t.summary || t.description_md || '').replace(/\s+/g, ' ').slice(0, 158),
     content, nav: 'tours', ogImage: img,
+    // Only pages with our own write-up (`original: true`) are indexed; copied partner blurbs stay out of Google.
+    robots: t.original ? undefined : 'noindex,follow',
   });
 }
 
@@ -1078,7 +1115,7 @@ const urls = [
   '/', '/about/', '/contact/', '/tours/', '/breweries/', '/gift-vouchers/', '/group-tours/', '/blog/', '/returns-policy/', '/redeem/',
   ...cityGuides.map(g => `/tours/${g.slug}/`),
   ...activeTours.map(t => `/tours/${t.old_slug}/`),
-  ...allExperiences.map(e => `/tours/experiences/${e.slug}/`),
+  ...allExperiences.filter(e => e.original).map(e => `/tours/experiences/${e.slug}/`),
   ...posts.map(p => `/blog/${p.slug}/`),
 ];
 fs.writeFileSync(path.join(OUT, 'sitemap.xml'),
