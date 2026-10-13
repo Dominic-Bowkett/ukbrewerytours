@@ -383,3 +383,11 @@ one by hand if the payment calls for it.
   done in the Stripe dashboard.
 - Table `inbox_payments` (`migrations/0018_inbox_payments.sql`, applied by hand). Kept
   when a conversation is deleted for good.
+
+## Cc / Bcc on a reply (13 Oct 2026)
+
+**Cc / Bcc** in the composer (reply mode) opens two address fields, with the address
+book offered as you type. Several addresses, comma-separated; anything that is not an
+address is refused rather than dropped. Recorded on the timeline as "Reply also sent
+to cc … · bcc …". Reply-To stays the conversation's own address, so a Cc'd person's
+reply lands on this thread (matched by the token, not the sender).

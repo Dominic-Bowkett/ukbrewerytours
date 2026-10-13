@@ -1092,6 +1092,11 @@
             : `<span class="composer-nomail">${esc(noReply)}</span>`}
           <button type="button" data-mode="note" class="${composerMode === 'note' ? 'on' : ''}">Internal note</button>
         </div>
+        <div class="th-ccrow" id="thCcRow" hidden>
+          <input type="text" id="thCc" autocomplete="off" list="thContacts" placeholder="Cc — they see each other; separate several with commas" aria-label="Cc">
+          <input type="text" id="thBcc" autocomplete="off" list="thContacts" placeholder="Bcc — hidden from the others" aria-label="Bcc">
+          <datalist id="thContacts"></datalist>
+        </div>
         <textarea id="thText" aria-label="Message"></textarea>
         <div class="att-pick" id="thFiles" hidden></div>
         <p class="error" id="thError" hidden></p>
@@ -1099,6 +1104,7 @@
           <span class="muted" id="thHint"></span>
           <div class="send-row">
             ${notif ? '' : '<button class="btn btn-ghost att-btn" type="button" id="thPay" title="Send them a secure Stripe link to pay an amount you choose">💷 Request payment</button>'}
+            <button class="btn btn-ghost att-btn" type="button" id="thCcBtn" title="Copy someone else in on this reply">Cc / Bcc</button>
             <button class="btn btn-ghost att-btn" type="button" id="thAttach" title="Attach photos or files — or drag them onto the reply box, or paste a screenshot">📎 Attach</button>
             <input type="file" id="thFileInput" multiple hidden>
             <label class="muted" id="thAfterWrap">then mark
@@ -1136,6 +1142,18 @@
       picker = filePicker($('thFiles'), files => { files.length ? pending.set(e.id, [...files]) : pending.delete(e.id); });
       picker.set(pending.get(e.id));
       $('thAttach').addEventListener('click', () => $('thFileInput').click());
+      $('thCcBtn').addEventListener('click', () => {
+        const row = $('thCcRow');
+        row.hidden = !row.hidden;
+        if (!row.hidden) {
+          $('thCc').focus();
+          // The address book, offered as you type.
+          (contactsLoaded ? Promise.resolve(contacts) : loadContacts().catch(() => [])).then(list => {
+            const dl = $('thContacts');
+            if (dl) dl.innerHTML = list.map(c => `<option value="${esc(c.email)}">${esc(c.name)}${c.company ? ` — ${esc(c.company)}` : ''}</option>`).join('');
+          });
+        }
+      });
       $('thFileInput').addEventListener('change', ev => { picker.add(ev.target.files); ev.target.value = ''; });
       acceptFiles($('thComposer'), text, picker);
       syncComposer(e, canEmail);
@@ -1233,6 +1251,8 @@
     $('thAfterWrap').hidden = !reply;
     // A note is never sent anywhere, so there is nothing to attach it to.
     $('thAttach').hidden = !reply;
+    $('thCcBtn').hidden = !reply;
+    if (!reply) $('thCcRow').hidden = true;
     $('thFiles').hidden = !reply || !picker?.files.length;
     $('thSend').textContent = reply ? 'Send reply' : 'Save note';
     $('thText').placeholder = reply ? '' : 'Note for you and the team — what was said, what you agreed…';
@@ -1448,7 +1468,11 @@
       return;
     }
     const withFiles = files.length ? ` with ${files.length === 1 ? '1 attachment' : `${files.length} attachments`}` : '';
-    if (reply && !confirm(`Send this reply to ${e.email}${withFiles}?`)) return;
+    const ccRow = $('thCcRow');
+    const cc = reply && !ccRow.hidden ? $('thCc').value.trim() : '';
+    const bcc = reply && !ccRow.hidden ? $('thBcc').value.trim() : '';
+    const copied = [cc ? `cc ${cc}` : '', bcc ? `bcc ${bcc}` : ''].filter(Boolean).join(', ');
+    if (reply && !confirm(`Send this reply to ${e.email}${copied ? ` (${copied})` : ''}${withFiles}?`)) return;
 
     btn.disabled = true;
     btn.textContent = reply ? 'Sending…' : 'Saving…';
@@ -1457,12 +1481,14 @@
         const form = new FormData();
         form.append('body', body);
         form.append('status', $('thAfter').value);
+        form.append('cc', cc);
+        form.append('bcc', bcc);
         files.forEach(f => form.append('files', f, f.name));
         await api(`/api/admin/inbox/${e.id}/reply`, { method: 'POST', body: form });
       } else if (reply) {
         await api(`/api/admin/inbox/${e.id}/reply`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ body, status: $('thAfter').value }),
+          body: JSON.stringify({ body, status: $('thAfter').value, cc, bcc }),
         });
       } else {
         await api(`/api/admin/inbox/${e.id}/note`, {

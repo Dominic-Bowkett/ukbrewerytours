@@ -1,10 +1,21 @@
-// POST /api/admin/inbox/:id/reply  { body, status? }  — JSON, or multipart with `files`
+// POST /api/admin/inbox/:id/reply  { body, status?, cc?, bcc? }  — JSON, or multipart with `files`
+// cc / bcc: extra recipients for this one reply. Their replies come back to this
+// thread too (Reply-To is the conversation's own address).
 // Emails the customer from info@ukbrewerytours.com and saves the reply on the
 // thread. status is what the conversation becomes afterwards (default: waiting).
 
 import { sendEmail, inboxReplyHtml } from '../../../../_lib/email.js';
 import { STATUSES, brandFor, threadUrl, replyAddress } from '../../../../_lib/inbox.js';
 import { readBody, readUploads, forResend, storeUploads } from '../../../../_lib/attachments.js';
+import { parseRecipients } from '../../../../_lib/contacts.js';
+
+/** Typed addresses, or the first one that is not an address — a typo must not be dropped silently. */
+function recipients(value) {
+  const typed = String(value ?? '').split(/[,;\n]+/).map(s => s.trim()).filter(Boolean);
+  const list = parseRecipients(value);
+  const bad = typed.find(t => !list.includes((/<([^>]+)>/.exec(t)?.[1] || t).trim().toLowerCase()));
+  return { list, bad };
+}
 
 export async function onRequestPost({ params, request, env, data }) {
   if (!/^\d+$/.test(String(params.id))) return Response.json({ error: 'Conversation not found.' }, { status: 404 });
@@ -27,6 +38,10 @@ export async function onRequestPost({ params, request, env, data }) {
         : 'No email address on this one, so there is nobody to reply to.',
     }, { status: 400 });
   }
+  const cc = recipients(body.cc);
+  const bcc = recipients(body.bcc);
+  const bad = cc.bad || bcc.bad;
+  if (bad) return Response.json({ error: `"${bad.slice(0, 80)}" is not an email address — check the Cc / Bcc.` }, { status: 400 });
   const status = STATUSES[body.status] ? body.status : 'waiting';
   const who = data?.user?.email || 'admin';
 
@@ -47,6 +62,8 @@ export async function onRequestPost({ params, request, env, data }) {
       }),
       replyTo: replyAddress(env, enquiry.token),
       attachments: forResend(uploads),
+      cc: cc.list,
+      bcc: bcc.list,
     });
   } catch (err) {
     console.error('inbox reply send failed', err);
@@ -71,11 +88,19 @@ export async function onRequestPost({ params, request, env, data }) {
     console.error('keeping sent attachments failed', err);
   }
 
+  // The email itself does not show who else got it, so the timeline records it.
+  if (cc.list.length || bcc.list.length) {
+    const also = [cc.list.length ? `cc ${cc.list.join(', ')}` : '', bcc.list.length ? `bcc ${bcc.list.join(', ')}` : ''].filter(Boolean).join(' · ');
+    await env.DB.prepare(
+      'INSERT INTO enquiry_messages (enquiry_id, direction, channel, body, author) VALUES (?,?,?,?,?)',
+    ).bind(enquiry.id, 'event', 'admin', `Reply also sent to ${also}`, who).run();
+  }
+
   if (status !== enquiry.status) {
     await env.DB.prepare(
       'INSERT INTO enquiry_messages (enquiry_id, direction, channel, body, author) VALUES (?,?,?,?,?)',
     ).bind(enquiry.id, 'event', 'admin', `Marked as ${STATUSES[status]}`, who).run();
   }
 
-  return Response.json({ ok: true, sent_to: enquiry.email, status });
+  return Response.json({ ok: true, sent_to: enquiry.email, cc: cc.list, bcc: bcc.list, status });
 }
