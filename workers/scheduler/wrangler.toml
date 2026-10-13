@@ -4,6 +4,8 @@
 # scheduled event — but bound to the SAME D1 database, so there is one set of
 # payment rows, not two.
 name = "ukbrewerytours-scheduler"
+# The info@dominicbowkett.com Cloudflare account (same as the Pages project).
+account_id = "e2bdf844902d43c877a78ddd56a4e5ad"
 main = "index.js"
 compatibility_date = "2025-01-01"
 
