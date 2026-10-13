@@ -359,7 +359,25 @@
     const by = out
       ? `${esc(m.author || 'You')} · emailed · ${esc(when(m.created_at))}`
       : `${esc(m.author || e.name)} · via ${esc(CHANNEL_SHORT[m.channel] || m.channel)} · ${esc(when(m.created_at))}`;
-    return `<div class="tl-msg ${out ? 'out' : 'in'}"><div class="tl-by">${by}</div><div class="tl-body">${linkify(m.body)}</div></div>`;
+    return `<div class="tl-msg ${out ? 'out' : 'in'}"><div class="tl-by">${by}</div><div class="tl-body">${linkify(m.body)}</div>${filesBlock(m)}</div>`;
+  }
+
+  // Photos and files on the message — the same look as the admin's, opening in a new tab.
+  const fmtSize = n => (!n ? '' : n < 1024 ? `${n} B` : n < 1048576 ? `${Math.round(n / 1024)} KB` : `${(n / 1048576).toFixed(1)} MB`);
+  // A tiny inline picture is a signature logo, not something the customer sent.
+  const shownFiles = m => (m.attachments || []).filter(a => !(a.inline && a.is_image && a.size < 12000));
+  function filesBlock(m) {
+    const files = shownFiles(m);
+    if (!files.length) return '';
+    const imgs = files.filter(a => a.is_image);
+    const others = files.filter(a => !a.is_image);
+    const href = a => (/pdf|^text\/plain/i.test(a.content_type) ? a.url : `${a.url}?download=1`);
+    return `<div class="tl-files">
+      ${imgs.length ? `<div class="att-grid${imgs.length === 1 ? ' one' : ''}">${imgs.map(a => `
+        <a class="att-thumb" href="${esc(a.url)}" target="_blank" rel="noopener" title="${esc(a.filename)} · ${fmtSize(a.size)}"><img src="${esc(a.url)}" alt="${esc(a.filename)}" loading="lazy"></a>`).join('')}</div>` : ''}
+      ${others.length ? `<div class="att-chips">${others.map(a => `
+        <a class="att-chip" href="${esc(href(a))}" target="_blank" rel="noopener" title="${esc(a.filename)}">📎 <span class="att-name">${esc(a.filename)}</span><small>${fmtSize(a.size)}</small></a>`).join('')}</div>` : ''}
+    </div>`;
   }
 
   async function send(e) {
@@ -480,6 +498,12 @@
       if (d.status !== e.status) {
         e.status = d.status;
         threadEl.querySelectorAll('[data-th-status]').forEach(b => b.classList.toggle('on', b.dataset.thStatus === d.status));
+      }
+      // Photos land a moment after their message; redraw once they are in.
+      const shownCount = currentThread.messages.reduce((n, m) => n + (m.attachments?.length || 0), 0);
+      if (typeof d.attachment_count === 'number' && d.attachment_count !== shownCount
+          && !threadEl.querySelector('#thText')?.matches(':focus')) {
+        setTimeout(() => openThread(id, { keepScroll: true }), 0);
       }
       const card = threadEl.querySelector('.vcheck');
       if (d.vouchers && card && JSON.stringify(d.vouchers) !== JSON.stringify(currentThread.vouchers)) {

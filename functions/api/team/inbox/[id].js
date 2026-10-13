@@ -5,6 +5,7 @@
 import {
   TYPES, STATUSES, CHANNELS, FIELD_LABELS, siteLabel, brandFor, voucherCheck, logEvent, hideEmails,
 } from '../../../_lib/inbox.js';
+import { attachmentsByMessage } from '../../../_lib/attachments.js';
 
 /** The scope check: id AND owner, in one query. */
 export async function mine(env, id, me) {
@@ -36,6 +37,9 @@ export async function onRequestGet({ params, env, data }) {
   // field, and not left sitting inside a message body or a voucher record.
   const clean = messages || [];
   for (const m of clean) m.body = hideEmails(m.body, enquiry.email);
+  // Photos and files, but not the original HTML: that would show the address.
+  const files = await attachmentsByMessage(env, enquiry.id, '/api/team/inbox');
+  for (const m of clean) m.attachments = files[m.id] || [];
   for (const m of vouchers.matches || []) m.holder_email = null;
 
   return Response.json({

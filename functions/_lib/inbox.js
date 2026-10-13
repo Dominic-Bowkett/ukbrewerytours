@@ -7,6 +7,7 @@
 // page, the chat widget's history and (once inbound email is switched on) the
 // reply-to address on our emails.
 
+import { deleteFilesFor } from './attachments.js';
 import { sendEmail, inboxAlertHtml } from './email.js';
 import { normaliseCode } from './codes.js';
 
@@ -69,12 +70,22 @@ export async function purgeBin(env, limit = 200) {
 
   const ids = (results || []).map(r => r.id);
   if (!ids.length) return 0;
-  const list = ids.map(() => '?').join(',');
-  await env.DB.batch([
-    env.DB.prepare(`DELETE FROM enquiry_messages WHERE enquiry_id IN (${list})`).bind(...ids),
-    env.DB.prepare(`DELETE FROM enquiries WHERE id IN (${list})`).bind(...ids),
-  ]);
+  await deleteConversations(env, ids);
   return ids.length;
+}
+
+/** Delete conversations for good: their attachments, messages and the rows themselves. */
+export async function deleteConversations(env, ids) {
+  // D1 binds at most 100 parameters a statement, so a big bin goes in slices.
+  for (let i = 0; i < ids.length; i += 90) {
+    const chunk = ids.slice(i, i + 90);
+    await deleteFilesFor(env, chunk);
+    const list = chunk.map(() => '?').join(',');
+    await env.DB.batch([
+      env.DB.prepare(`DELETE FROM enquiry_messages WHERE enquiry_id IN (${list})`).bind(...chunk),
+      env.DB.prepare(`DELETE FROM enquiries WHERE id IN (${list})`).bind(...chunk),
+    ]);
+  }
 }
 
 export function newToken() {

@@ -320,3 +320,42 @@ offers a **Reload** bar rather than quietly running old code.
 are logged instead. The contact endpoint allows 5 new conversations per IP per
 hour (`CONTACT_MAX_PER_HOUR` overrides it — set it high locally, since every local
 request shares the IP "unknown"). `.dev.vars` changes need a dev-server restart.
+
+## Attachments and photos (13 Oct 2026)
+
+Inbound email attachments — photos, inline iPhone pictures, PDFs — are kept in R2
+(bucket `ukbrewerytours-mail`, binding `MAIL_FILES`), indexed in `enquiry_attachments`
+(`migrations/0017_attachments.sql`, applied by hand with `d1 execute --file`, like 0014–0016).
+The webhook saves the message, then `keepFiles()` pulls the files from Resend
+(`GET /emails/receiving/{id}/attachments`) after the response via `waitUntil`; the
+Resend id is stored as `enquiry_messages.inbound_id` and the original HTML in R2
+(`html_key`). The timeline shows photos as thumbnails (click for a full-size viewer,
+arrow keys step through), other files as chips, and **View original email** renders
+the HTML sandboxed with inline images embedded. Tiny inline images (signature logos)
+are left out of the timeline. Team members see the photos on their own conversations
+(`/api/team/inbox/:id/attachments/:aid`), never the original HTML.
+
+Files only download (never render) unless they are images, PDF, plain text or
+audio/video — an HTML or SVG someone emails in must never run on this origin.
+
+**Sending:** 📎 Attach on Reply and New email (or drag files on, or paste a
+screenshot). Up to 25 MB per email; a copy is kept on the sent message.
+
+**Backfill:** `POST /api/admin/inbox/attachments-backfill` finds emails received before
+this existed (body ends "[Attachments: …]"), matches them in Resend by Message-ID,
+saves their files and removes the placeholder. Call repeatedly with `{after: next}`
+until `next` is null. `{message_id}` retries one message.
+
+Deleting forever (by hand, Empty the bin, or the 7-day purge) removes the R2 files too —
+`deleteConversations()` in `_lib/inbox.js`. The scheduler Worker has the R2 binding for this.
+
+## Selecting several (13 Oct 2026)
+
+Tick boxes on every row; Ctrl/Cmd-click to add one, Shift-click for a run, press and
+hold (finger or mouse) to start selecting, after which taps tick. The bar above the
+list acts on the selection, or on the open conversation when nothing is ticked:
+Delete (to the bin, no question asked, **Undo** in the toast), Mark read / Unread /
+Close; in the Bin, Put back / Delete forever. Delete key (or #) deletes, Escape
+clears. `POST /api/admin/inbox/bulk { ids, action }`.
+
+Admin replies and new emails are signed "Cheers, / Dom / <site brand>".

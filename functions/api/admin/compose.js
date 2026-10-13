@@ -1,5 +1,5 @@
 // POST /api/admin/compose
-//   { to, cc?, bcc?, subject, body, reply_to?, type?, save_contact? }
+//   { to, cc?, bcc?, subject, body, reply_to?, type?, save_contact? }  — JSON, or multipart with `files`
 //
 // Starts a conversation from our side: an email to someone who has not written
 // in. It becomes a normal conversation in the inbox, so the reply comes back to
@@ -10,14 +10,19 @@
 import { sendEmail, inboxReplyHtml } from '../../_lib/email.js';
 import { TYPES, brandFor, newToken, threadUrl, replyAddress, logEvent } from '../../_lib/inbox.js';
 import { isEmail, parseRecipients, upsertContact } from '../../_lib/contacts.js';
+import { readBody, readUploads, forResend, storeUploads } from '../../_lib/attachments.js';
 
 const SITE = 'ukbrewerytours.com';
 
 export async function onRequestPost({ request, env, data }) {
   if (!env.RESEND_API_KEY) return Response.json({ error: 'Email is not configured.' }, { status: 503 });
 
-  let body;
-  try { body = await request.json(); } catch { return Response.json({ error: 'Invalid request.' }, { status: 400 }); }
+  let body, files;
+  try { ({ body, files } = await readBody(request)); } catch { return Response.json({ error: 'Invalid request.' }, { status: 400 }); }
+  let uploads;
+  try { uploads = await readUploads(files); } catch (err) { return Response.json({ error: err.message }, { status: 400 }); }
+  // Multipart sends everything as text.
+  if (typeof body.save_contact === 'string') body.save_contact = body.save_contact === '1' || body.save_contact === 'true';
 
   const to = parseRecipients(body.to);
   const cc = parseRecipients(body.cc);
@@ -58,6 +63,7 @@ export async function onRequestPost({ request, env, data }) {
       subject,
       html: inboxReplyHtml({ body: text, threadLink: threadUrl(token), brand: brandFor(SITE) }),
       replyTo: replyTo || replyAddress(env, token),
+      attachments: forResend(uploads),
     });
   } catch (err) {
     console.error('compose send failed', err);
@@ -72,9 +78,14 @@ export async function onRequestPost({ request, env, data }) {
   ).bind(name, to[0], known?.phone || null, text, type, SITE, token, subject).run();
   const id = res.meta.last_row_id;
 
-  await env.DB.prepare(
+  const msg = await env.DB.prepare(
     'INSERT INTO enquiry_messages (enquiry_id, direction, channel, body, author, email_id) VALUES (?,?,?,?,?,?)',
   ).bind(id, 'out', 'email', text, who, sent?.id || null).run();
+  try {
+    await storeUploads(env, id, msg.meta.last_row_id, uploads);
+  } catch (err) {
+    console.error('keeping sent attachments failed', err);
+  }
 
   // Who else got it, and where a reply will land: invisible in the email itself,
   // so the timeline is the only place it is recorded.

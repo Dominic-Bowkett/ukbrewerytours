@@ -14,10 +14,11 @@ import {
 import {
   TOKEN_RE, appendCustomerMessage, alertAdmin, createEnquiry, voucherCheck, cleanFields,
 } from '../_lib/inbox.js';
+import { saveInbound } from '../_lib/attachments.js';
 
 const MAX_BODY = 20000;
 
-export async function onRequestPost({ request, env }) {
+export async function onRequestPost({ request, env, waitUntil }) {
   if (!env.INBOUND_WEBHOOK_SECRET) {
     return Response.json({ error: 'Inbound email is not configured.' }, { status: 503 });
   }
@@ -34,14 +35,14 @@ export async function onRequestPost({ request, env }) {
   // Anything after this point answers 200: a failure we retry into is worse than
   // one we can see in the logs, and Resend retries on any non-2xx.
   try {
-    await ingest(env, event.data || {});
+    await ingest(env, event.data || {}, waitUntil);
   } catch (err) {
     console.error('inbound email ingest failed', err);
   }
   return Response.json({ ok: true });
 }
 
-async function ingest(env, data) {
+async function ingest(env, data, waitUntil) {
   const messageId = String(data.message_id || data.email_id || '').slice(0, 200);
   if (messageId) {
     const seen = await env.DB.prepare('SELECT 1 AS x FROM enquiry_messages WHERE email_id = ?').bind(messageId).first();
@@ -83,9 +84,15 @@ async function ingest(env, data) {
   // Resend's webhook is metadata-only, so the body normally comes from the API
   // call above; a payload that does carry one (or a replayed test) still works.
   let body = stripQuoted(full.text || data.text || htmlToText(full.html || data.html)).slice(0, MAX_BODY);
-  const attachments = (full.attachments || data.attachments || []).map(a => a.filename).filter(Boolean);
-  if (attachments.length) body += `\n\n[Attachments: ${attachments.join(', ')} — in the ${from.email} email]`;
-  if (!body.trim()) body = '(no message body)';
+  // The files themselves are fetched and kept once the message is saved (see
+  // keepFiles); only the alert email names them.
+  const attachments = full.attachments || data.attachments || [];
+  const attachmentNames = attachments.map(a => a.filename || 'photo');
+  if (!body.trim()) {
+    body = attachments.length
+      ? `📎 Sent ${attachments.length === 1 ? 'an attachment' : `${attachments.length} attachments`}`
+      : '(no message body)';
+  }
 
   // 1. The reply address names the conversation.
   const token = tokenFromRecipients(data.to, data.received_for, data.cc, full.to, full.reply_to);
@@ -112,6 +119,7 @@ async function ingest(env, data) {
       body, channel: 'email', author: from.name || enquiry.name, silent: Boolean(reason),
     });
     await stampEmailId(env, enquiry.id, messageId);
+    keepFiles(env, enquiry.id, data.email_id, full.html || data.html, attachments.length, waitUntil);
     if (reason) return;
   } else {
     // 3. A new conversation, started by email — or a notification, filed away.
@@ -134,13 +142,15 @@ async function ingest(env, data) {
       notificationKind: own?.kind || null,
     });
     await stampEmailId(env, created.id, messageId);
+    keepFiles(env, created.id, data.email_id, full.html || data.html, attachments.length, waitUntil);
     if (reason) return;
     enquiry = { id: created.id, token: created.token, name: from.name, email: from.email, type: 'general', channel: 'email', site: 'ukbrewerytours.com', subject };
   }
 
   try {
     const { matches, unmatched } = await voucherCheck(env, enquiry, [body, subject]);
-    await alertAdmin(env, enquiry, { body, followUp: true, matches, unmatched });
+    const alertBody = attachmentNames.length ? `${body}\n\n📎 ${attachmentNames.join(', ')}` : body;
+    await alertAdmin(env, enquiry, { body: alertBody, followUp: true, matches, unmatched });
   } catch (err) {
     console.error('inbound alert failed', err);
   }
@@ -153,6 +163,26 @@ async function stampEmailId(env, enquiryId, messageId) {
     `UPDATE enquiry_messages SET email_id = ?
       WHERE id = (SELECT MAX(id) FROM enquiry_messages WHERE enquiry_id = ? AND direction = 'in')`,
   ).bind(messageId, enquiryId).run();
+}
+
+/**
+ * Keep the email's attachments and original HTML against the message just
+ * written. Runs after the response — downloading a few photos can outlast
+ * Resend's webhook timeout. The Resend id is stored on the message either way,
+ * so anything that fails here can be fetched again (POST /api/admin/inbox/attachments-backfill).
+ */
+function keepFiles(env, enquiryId, inboundId, html, count, waitUntil) {
+  if (!inboundId) return;
+  const job = (async () => {
+    const msg = await env.DB.prepare(
+      "SELECT MAX(id) AS id FROM enquiry_messages WHERE enquiry_id = ? AND direction = 'in'",
+    ).bind(enquiryId).first();
+    if (!msg?.id) return;
+    await env.DB.prepare('UPDATE enquiry_messages SET inbound_id = ? WHERE id = ?').bind(String(inboundId), msg.id).run();
+    if (!count && !html) return;
+    await saveInbound(env, { enquiryId, messageId: msg.id, inboundId: String(inboundId), html: html || null });
+  })().catch(err => console.error('saving inbound attachments failed', err));
+  if (waitUntil) waitUntil(job);
 }
 
 /** Subject-line hints when an email starts a conversation from nothing. */

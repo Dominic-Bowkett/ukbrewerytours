@@ -13,7 +13,7 @@ const esc = s => String(s ?? '')
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;');
 
-export async function sendEmail(env, { to, subject, html, replyTo, from, cc, bcc }) {
+export async function sendEmail(env, { to, subject, html, replyTo, from, cc, bcc, attachments }) {
   const list = v => (Array.isArray(v) ? v : [v]).map(s => String(s ?? '').trim()).filter(Boolean);
   const ccList = list(cc);
   const bccList = list(bcc);
@@ -23,13 +23,14 @@ export async function sendEmail(env, { to, subject, html, replyTo, from, cc, bcc
   if (env.EMAIL_DRY_RUN) {
     console.log(`[email dry-run] from=${from || env.FROM_EMAIL || 'info@'} to=${list(to).join(',')}`
       + `${ccList.length ? ` cc=${ccList.join(',')}` : ''}${bccList.length ? ` bcc=${bccList.join(',')}` : ''}`
-      + ` replyTo=${replyTo || '-'} subject=${subject}`);
+      + ` replyTo=${replyTo || '-'} subject=${subject}`
+      + `${attachments?.length ? ` attachments=${attachments.map(a => a.filename).join(',')}` : ''}`);
     return { id: 'dry-run-' + Date.now() };
   }
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     // A stuck send must not hold a customer's request open indefinitely.
-    signal: AbortSignal.timeout(15000),
+    signal: AbortSignal.timeout(attachments?.length ? 60000 : 15000),
     headers: {
       Authorization: `Bearer ${env.RESEND_API_KEY}`,
       'Content-Type': 'application/json',
@@ -44,6 +45,8 @@ export async function sendEmail(env, { to, subject, html, replyTo, from, cc, bcc
       ...(ccList.length ? { cc: ccList } : {}),
       ...(bccList.length ? { bcc: bccList } : {}),
       ...(replyTo ? { reply_to: replyTo } : {}),
+      // [{ filename, content (base64) }] — see _lib/attachments.js forResend().
+      ...(attachments?.length ? { attachments } : {}),
     }),
   });
   if (!res.ok) throw new Error(`Resend ${res.status}: ${await res.text()}`);

@@ -13,11 +13,15 @@ export async function onRequestGet({ params, request, env }) {
   const id = Number(params.id);
   const after = Math.max(0, parseInt(url.searchParams.get('after') || '0', 10) || 0);
 
-  const [head, fresh] = await env.DB.batch([
+  const [head, fresh, files] = await env.DB.batch([
     env.DB.prepare('SELECT id, status, type, unread, voucher_code, deleted_at FROM enquiries WHERE id = ?').bind(id),
     env.DB.prepare(
       'SELECT id, direction, channel, body, author, created_at FROM enquiry_messages WHERE enquiry_id = ? AND id > ? ORDER BY id',
     ).bind(id, after),
+    // Attachments land a moment after their message (they are fetched from
+    // Resend once the message is saved), so the page compares this count with
+    // what it shows and redraws when they arrive.
+    env.DB.prepare('SELECT COUNT(*) AS n FROM enquiry_attachments WHERE enquiry_id = ?').bind(id),
   ]);
   const enquiry = head.results?.[0];
   if (!enquiry) return Response.json({ error: 'Conversation not found.' }, { status: 404 });
@@ -43,7 +47,7 @@ export async function onRequestGet({ params, request, env }) {
   }
 
   return Response.json(
-    { status: enquiry.status, type: enquiry.type, messages, vouchers },
+    { status: enquiry.status, type: enquiry.type, messages, vouchers, attachment_count: files.results?.[0]?.n || 0 },
     { headers: { 'Cache-Control': 'no-store' } },
   );
 }

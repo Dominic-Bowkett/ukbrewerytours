@@ -13,3 +13,9 @@ compatibility_date = "2025-01-01"
 binding = "DB"
 database_name = "ukbrewerytours-vouchers"
 database_id = "638775d1-9738-4480-a247-248bac910c1e"
+
+# Inbox attachments: photos and files customers email in, files attached to
+# replies, and the original HTML of received emails. See INBOX.md.
+[[r2_buckets]]
+binding = "MAIL_FILES"
+bucket_name = "ukbrewerytours-mail"

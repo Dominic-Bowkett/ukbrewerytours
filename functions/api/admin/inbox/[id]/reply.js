@@ -1,9 +1,10 @@
-// POST /api/admin/inbox/:id/reply  { body, status? }
+// POST /api/admin/inbox/:id/reply  { body, status? }  — JSON, or multipart with `files`
 // Emails the customer from info@ukbrewerytours.com and saves the reply on the
 // thread. status is what the conversation becomes afterwards (default: waiting).
 
 import { sendEmail, inboxReplyHtml } from '../../../../_lib/email.js';
 import { STATUSES, brandFor, threadUrl, replyAddress } from '../../../../_lib/inbox.js';
+import { readBody, readUploads, forResend, storeUploads } from '../../../../_lib/attachments.js';
 
 export async function onRequestPost({ params, request, env, data }) {
   if (!/^\d+$/.test(String(params.id))) return Response.json({ error: 'Conversation not found.' }, { status: 404 });
@@ -11,8 +12,10 @@ export async function onRequestPost({ params, request, env, data }) {
   if (!enquiry) return Response.json({ error: 'Conversation not found.' }, { status: 404 });
   if (!env.RESEND_API_KEY) return Response.json({ error: 'Email is not configured.' }, { status: 503 });
 
-  let body;
-  try { body = await request.json(); } catch { return Response.json({ error: 'Invalid request.' }, { status: 400 }); }
+  let body, files;
+  try { ({ body, files } = await readBody(request)); } catch { return Response.json({ error: 'Invalid request.' }, { status: 400 }); }
+  let uploads;
+  try { uploads = await readUploads(files); } catch (err) { return Response.json({ error: err.message }, { status: 400 }); }
 
   const text = String(body.body ?? '').replace(/\r\n/g, '\n').trim().slice(0, 20000);
   if (text.length < 2) return Response.json({ error: 'Write a reply first.' }, { status: 400 });
@@ -43,13 +46,14 @@ export async function onRequestPost({ params, request, env, data }) {
         threadLink: threadUrl(enquiry.token), brand: brandFor(enquiry.site),
       }),
       replyTo: replyAddress(env, enquiry.token),
+      attachments: forResend(uploads),
     });
   } catch (err) {
     console.error('inbox reply send failed', err);
     return Response.json({ error: `The email could not be sent: ${String(err.message || err).slice(0, 200)}` }, { status: 502 });
   }
 
-  await env.DB.batch([
+  const [inserted] = await env.DB.batch([
     env.DB.prepare(
       'INSERT INTO enquiry_messages (enquiry_id, direction, channel, body, author, email_id) VALUES (?,?,?,?,?,?)',
     ).bind(enquiry.id, 'out', 'email', text, who, sent?.id || null),
@@ -60,6 +64,13 @@ export async function onRequestPost({ params, request, env, data }) {
        WHERE id = ?`,
     ).bind(status, status, enquiry.id),
   ]);
+  // Keep a copy of what was attached, shown on the reply in the timeline.
+  try {
+    await storeUploads(env, enquiry.id, inserted.meta.last_row_id, uploads);
+  } catch (err) {
+    console.error('keeping sent attachments failed', err);
+  }
+
   if (status !== enquiry.status) {
     await env.DB.prepare(
       'INSERT INTO enquiry_messages (enquiry_id, direction, channel, body, author) VALUES (?,?,?,?,?)',

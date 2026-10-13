@@ -18,6 +18,11 @@ binding = "DB"
 database_name = "ukbrewerytours-vouchers"
 database_id = "638775d1-9738-4480-a247-248bac910c1e"
 
+# The bin purge deletes binned conversations' attachments from here too.
+[[r2_buckets]]
+binding = "MAIL_FILES"
+bucket_name = "ukbrewerytours-mail"
+
 [vars]
 BASE_URL = "https://www.ukbrewerytours.com"
 FROM_EMAIL = "UK Brewery Tours <info@ukbrewerytours.com>"

@@ -28,6 +28,13 @@
   let loadedOnce = false;
   let currentThread = null;
   let composerMode = 'reply';
+  let picker = null;                // the open conversation's reply attachments
+
+  // Ticked rows in the list, for doing one thing to several at once.
+  const selected = new Set();
+  let anchor = null;                // last row ticked, for shift-click ranges
+  let holdMode = false;             // after a long press, taps tick rather than open
+  const pending = new Map();        // conversation id → files attached to the unsent reply
 
   // Live updates: the open conversation is checked every THREAD_POLL ms, the list
   // (and new-message alerts) every LIST_POLL ms — both only while the tab is visible.
@@ -117,8 +124,13 @@
         + state.team.map(t => `<option value="${esc(t.id)}">${esc(t.name)}${t.open_count ? ` (${t.open_count})` : ''}</option>`).join('');
       ownerSel.value = state.assignee;
 
+      // A refresh can take rows away (deleted elsewhere, closed out of the Open
+      // view); a tick on something no longer shown would act on it unseen.
+      const shown = new Set(d.enquiries.map(x => x.id));
+      for (const id of [...selected]) if (!shown.has(id)) selected.delete(id);
       listEl.innerHTML = d.enquiries.length ? d.enquiries.map(listItem).join('')
         : `<li class="muted pad">${esc(emptyList())}</li>`;
+      renderBar();
 
       // The list just refreshed — make sure the open conversation is as current as it is.
       if (state.current) setTimeout(pollThread, 0);
@@ -143,9 +155,14 @@
     return days <= 0 ? 'going any minute now' : days === 1 ? 'gone tomorrow' : `gone in ${days} days`;
   }
 
+  /** The row's tick box. A span rather than an input, so a click on it never also opens the row. */
+  const checkBox = e => `<span class="ib-check" role="checkbox" aria-checked="${selected.has(e.id)}" aria-label="Select ${esc(e.name)}" title="Select"></span>`;
+  const rowClass = e => `${state.current === e.id ? ' active' : ''}${selected.has(e.id) ? ' selected' : ''}`;
+
   function listItem(e) {
     if (e.deleted_at) {
-      return `<li class="ib-item${state.current === e.id ? ' active' : ''}" data-ib="${e.id}" tabindex="0">
+      return `<li class="ib-item${rowClass(e)}" data-ib="${e.id}" tabindex="0">
+        ${checkBox(e)}
         <div class="ib-row1"><span class="ib-name">${esc(e.name)}</span><time title="Deleted ${esc(when(e.deleted_at))}">${ago(e.deleted_at)}</time></div>
         ${e.subject && e.is_notification ? `<div class="ib-subject">${esc(e.subject)}</div>` : ''}
         <div class="ib-row2">
@@ -169,7 +186,8 @@
            <span class="ib-site">${esc(e.site_label)}${e.channel === 'chat' ? ' · chat' : ''}</span>
            ${e.assignee_name ? `<span class="ib-owner">→ ${esc(e.assignee_name)}</span>` : ''}
          </div>`;
-    return `<li class="ib-item${e.unread ? ' unread' : ''}${state.current === e.id ? ' active' : ''}" data-ib="${e.id}" tabindex="0">
+    return `<li class="ib-item${e.unread ? ' unread' : ''}${rowClass(e)}" data-ib="${e.id}" tabindex="0">
+      ${checkBox(e)}
       <div class="ib-row1"><span class="ib-name">${esc(e.name)}</span><time title="${esc(when(e.last_message_at))}">${ago(e.last_message_at || e.created_at)}</time></div>
       ${rest}
       <div class="ib-snippet">${e.last_direction === 'out' ? '<strong>You:</strong> ' : ''}${esc(e.snippet || '')}</div>
@@ -255,11 +273,11 @@
   $('ibStatus').addEventListener('click', e => {
     const b = e.target.closest('[data-ib-status]');
     if (!b) return;
-    state.status = b.dataset.ibStatus; state.page = 1; loadList();
+    state.status = b.dataset.ibStatus; state.page = 1; selected.clear(); loadList();
   });
-  $('ibType').addEventListener('change', e => { state.type = e.target.value; state.page = 1; loadList(); });
-  $('ibSite').addEventListener('change', e => { state.site = e.target.value; state.page = 1; loadList(); });
-  $('ibAssignee').addEventListener('change', e => { state.assignee = e.target.value; state.page = 1; loadList(); });
+  $('ibType').addEventListener('change', e => { state.type = e.target.value; state.page = 1; selected.clear(); loadList(); });
+  $('ibSite').addEventListener('change', e => { state.site = e.target.value; state.page = 1; selected.clear(); loadList(); });
+  $('ibAssignee').addEventListener('change', e => { state.assignee = e.target.value; state.page = 1; selected.clear(); loadList(); });
 
   const emptyThread = () => {
     if (isBin()) return `<div class="thread-empty"><strong>Nothing selected</strong>Deleted conversations wait here for ${binDays} days. Pick one to read it, put it back, or delete it for good.</div>`;
@@ -274,6 +292,8 @@
     if (state.view === view) return;
     state.view = view;
     state.current = null;
+    selected.clear();
+    holdMode = false;
     threadEl.innerHTML = emptyThread();
     inboxEl.classList.remove('show-thread');
     // The filters mean different things in each view, so none of them carry over.
@@ -298,16 +318,233 @@
   let qTimer;
   $('ibQ').addEventListener('input', e => {
     clearTimeout(qTimer);
-    qTimer = setTimeout(() => { state.q = e.target.value.trim(); state.page = 1; loadList(); }, 300);
+    qTimer = setTimeout(() => { state.q = e.target.value.trim(); state.page = 1; selected.clear(); loadList(); }, 300);
   });
-  $('ibPrev').addEventListener('click', () => { if (state.page > 1) { state.page--; loadList(); } });
-  $('ibNext').addEventListener('click', () => { state.page++; loadList(); });
+  $('ibPrev').addEventListener('click', () => { if (state.page > 1) { state.page--; selected.clear(); loadList(); } });
+  $('ibNext').addEventListener('click', () => { state.page++; selected.clear(); loadList(); });
 
   function go(id) { location.hash = 'inbox/' + id; }
-  listEl.addEventListener('click', e => { const li = e.target.closest('[data-ib]'); if (li) go(li.dataset.ib); });
-  listEl.addEventListener('keydown', e => {
-    if (e.key !== 'Enter') return;
-    const li = e.target.closest('[data-ib]'); if (li) go(li.dataset.ib);
+
+  /* ---------------- selecting several ----------------
+   * Like a mail client: click a row to read it; tick its box (or Ctrl/Cmd-click)
+   * to select it; Shift-click selects a run; press and hold a row to start
+   * selecting, after which taps tick rather than open. The bar above the list
+   * acts on the selection — or, with nothing ticked, on the open conversation. */
+
+  const rowIds = () => [...listEl.querySelectorAll('[data-ib]')].map(li => Number(li.dataset.ib));
+
+  function paintSelection() {
+    listEl.querySelectorAll('[data-ib]').forEach(li => {
+      const on = selected.has(Number(li.dataset.ib));
+      li.classList.toggle('selected', on);
+      li.querySelector('.ib-check')?.setAttribute('aria-checked', String(on));
+    });
+    if (!selected.size) holdMode = false;
+    renderBar();
+  }
+
+  function toggleSelect(id, range = false) {
+    if (range && anchor !== null) return selectRange(id);
+    if (selected.has(id)) selected.delete(id); else selected.add(id);
+    anchor = id;
+    paintSelection();
+  }
+
+  function selectRange(id) {
+    const ids = rowIds();
+    const a = ids.indexOf(anchor ?? id);
+    const b = ids.indexOf(id);
+    if (a < 0 || b < 0) return toggleSelect(id);
+    for (const x of ids.slice(Math.min(a, b), Math.max(a, b) + 1)) selected.add(x);
+    anchor = id;
+    paintSelection();
+  }
+
+  function clearSelection() {
+    selected.clear();
+    anchor = null;
+    holdMode = false;
+    paintSelection();
+  }
+
+  // Press and hold (finger or mouse) to start selecting.
+  let holdTimer = null;
+  let holdStart = null;
+  let suppressClick = false;
+  listEl.addEventListener('pointerdown', ev => {
+    const li = ev.target.closest('[data-ib]');
+    if (!li || ev.button > 0) return;
+    holdStart = { x: ev.clientX, y: ev.clientY };
+    clearTimeout(holdTimer);
+    holdTimer = setTimeout(() => {
+      holdTimer = null;
+      suppressClick = true;           // the click that ends this press must not open the row
+      holdMode = true;
+      const id = Number(li.dataset.ib);
+      if (!selected.has(id)) toggleSelect(id);
+      try { navigator.vibrate?.(15); } catch { /* not on this device */ }
+    }, 480);
+  });
+  const cancelHold = () => { clearTimeout(holdTimer); holdTimer = null; };
+  listEl.addEventListener('pointermove', ev => {
+    if (holdTimer && holdStart && Math.hypot(ev.clientX - holdStart.x, ev.clientY - holdStart.y) > 10) cancelHold();
+  });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(t => listEl.addEventListener(t, cancelHold));
+  // A long press on a phone otherwise opens the browser's own menu.
+  listEl.addEventListener('contextmenu', ev => { if (suppressClick || holdMode) ev.preventDefault(); });
+
+  listEl.addEventListener('click', ev => {
+    const li = ev.target.closest('[data-ib]');
+    if (!li) return;
+    const id = Number(li.dataset.ib);
+    if (suppressClick) { suppressClick = false; return; }
+    if (ev.target.closest('.ib-check')) { toggleSelect(id, ev.shiftKey); return; }
+    if (ev.shiftKey) { ev.preventDefault(); selectRange(id); return; }
+    if (ev.ctrlKey || ev.metaKey || (holdMode && selected.size)) { toggleSelect(id); return; }
+    go(id);
+  });
+  listEl.addEventListener('keydown', ev => {
+    const li = ev.target.closest('[data-ib]');
+    if (!li) return;
+    if (ev.key === 'Enter') go(li.dataset.ib);
+    else if (ev.key === ' ' || ev.key === 'x') { ev.preventDefault(); toggleSelect(Number(li.dataset.ib), ev.shiftKey); }
+  });
+
+  /** The bar above the list. Rebuilt whenever the selection or the view changes. */
+  function renderBar() {
+    const bar = $('ibBar');
+    const ids = rowIds();
+    const n = selected.size;
+    const all = n && ids.length && ids.every(id => selected.has(id));
+    const target = n ? `${n} selected` : state.current ? 'Open conversation' : '';
+    const canAct = n > 0 || Boolean(state.current);
+    const btn = (action, label, title, cls = '') =>
+      `<button type="button" class="chip-btn${cls}" data-bulk="${action}" title="${esc(title)}"${canAct ? '' : ' disabled'}>${label}</button>`;
+    // Two fixed rows, so ticking the first row never moves the list under the pointer.
+    bar.innerHTML = `
+      <span class="ib-bar-top">
+        <span class="ib-check" role="checkbox" data-all aria-checked="${all ? 'true' : n ? 'mixed' : 'false'}"
+              aria-label="Select all on this page" title="Select all on this page"></span>
+        <span class="ib-bar-what">${esc(target) || '<span class="muted">Tick, or press and hold, to select several</span>'}</span>
+      </span>
+      <span class="ib-bar-actions">
+        ${isBin()
+          ? `${btn('restore', '↩ Put back', 'Take it out of the bin')}
+             ${btn('forever', '✕ Delete forever', 'Gone for good — cannot be undone', ' chip-danger')}`
+          : `${n ? `${btn('read', 'Mark read', 'Mark as read')}${btn('unread', 'Unread', 'Mark as unread')}${isNotif() || isSales() ? '' : btn('close', 'Close', 'Mark as Closed')}` : ''}
+             ${btn('delete', '🗑 Delete', `Move to the bin — ${binDays} days to change your mind (Delete key)`, ' chip-danger')}`}
+      </span>`;
+  }
+
+  $('ibBar').addEventListener('click', ev => {
+    if (ev.target.closest('[data-all]')) {
+      const ids = rowIds();
+      const all = ids.length && ids.every(id => selected.has(id));
+      if (all) selected.clear(); else ids.forEach(id => selected.add(id));
+      paintSelection();
+      return;
+    }
+    const b = ev.target.closest('[data-bulk]');
+    if (b && !b.disabled) act(b.dataset.bulk);
+  });
+
+  /** What the bar acts on: the ticked rows, or failing that the open conversation. */
+  const targets = () => (selected.size ? [...selected] : state.current ? [state.current] : []);
+
+  const bulk = (action, ids) => api('/api/admin/inbox/bulk', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ids, action }),
+  });
+
+  async function act(action) {
+    const ids = targets();
+    if (!ids.length) return;
+    const many = ids.length === 1 ? 'this conversation' : `these ${ids.length} conversations`;
+    try {
+      if (action === 'delete') return await removeIds(ids);
+      if (action === 'forever') {
+        if (!confirm(`Delete ${many} for good?\n\nEverything in ${ids.length === 1 ? 'it' : 'them'} goes, photos included. This cannot be undone.`)) return;
+        await bulk('forever', ids);
+        afterRemoval(ids);
+        return;
+      }
+      if (action === 'restore') {
+        await bulk('restore', ids);
+        afterRemoval(ids);
+        undoToast(`${ids.length === 1 ? 'Put back' : `${ids.length} put back`} — find ${ids.length === 1 ? 'it' : 'them'} in the inbox.`);
+        return;
+      }
+      await bulk(action, ids);
+      clearSelection();
+      if (state.current && ids.includes(state.current)) openThread(state.current, { keepScroll: true });
+      loadList({ quiet: true });
+    } catch (err) { alert(err.message); }
+  }
+
+  /** To the bin, no questions — Undo is right there, and the bin keeps it a week besides. */
+  async function removeIds(ids) {
+    await bulk('delete', ids);
+    ids.forEach(id => setDraft(id, null));
+    afterRemoval(ids);
+    undoToast(ids.length === 1 ? 'Moved to the bin.' : `${ids.length} conversations moved to the bin.`, async () => {
+      await bulk('restore', ids);
+      loadList({ quiet: true });
+    });
+  }
+
+  /** Take rows off the list at once, and move on to the next conversation if the open one went. */
+  function afterRemoval(ids) {
+    const order = rowIds();
+    const gone = new Set(ids);
+    let next = null;
+    if (state.current && gone.has(state.current)) {
+      const i = order.indexOf(state.current);
+      next = order.slice(i + 1).find(id => !gone.has(id)) ?? order.slice(0, i).reverse().find(id => !gone.has(id)) ?? null;
+    }
+    listEl.querySelectorAll('[data-ib]').forEach(li => { if (gone.has(Number(li.dataset.ib))) li.remove(); });
+    selected.clear();
+    holdMode = false;
+    if (state.current && gone.has(state.current)) {
+      state.current = null;
+      // On a phone the list is the place to land; on a desktop, the next one along.
+      if (next && window.innerWidth > 900) go(next);
+      else { location.hash = 'inbox'; threadEl.innerHTML = emptyThread(); inboxEl.classList.remove('show-thread'); }
+    }
+    paintSelection();
+    loadList({ quiet: true });
+  }
+
+  let undoTimer;
+  function undoToast(text, undo) {
+    let el = $('ibUndo');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'ibUndo';
+      el.className = 'ib-undo';
+      el.setAttribute('role', 'status');
+      document.body.appendChild(el);
+    }
+    el.innerHTML = `<span>${esc(text)}</span>${undo ? '<button type="button">Undo</button>' : ''}`;
+    el.hidden = false;
+    el.querySelector('button')?.addEventListener('click', async () => {
+      el.hidden = true;
+      try { await undo(); } catch (err) { alert(err.message); }
+    });
+    clearTimeout(undoTimer);
+    undoTimer = setTimeout(() => { el.hidden = true; }, 8000);
+  }
+
+  // Delete key (or #, as in Gmail) deletes; Escape lets go of the selection.
+  document.addEventListener('keydown', ev => {
+    if (document.querySelector('[data-panel="inbox"]')?.hidden) return;
+    if (ev.target.closest?.('input, textarea, select, [contenteditable="true"]')) return;
+    if (!document.querySelector('.modal:not([hidden])') && !$('ibLightbox')?.classList.contains('open')) {
+      if (ev.key === 'Delete' || ev.key === '#') {
+        ev.preventDefault();
+        act(isBin() ? 'forever' : 'delete');
+      } else if (ev.key === 'Escape' && selected.size) {
+        clearSelection();
+      }
+    }
   });
 
   /* ---------------- who can be given conversations ---------------- */
@@ -582,7 +819,7 @@
   const composeEl = $('composeBody');
   composeModal.addEventListener('click', ev => { if (ev.target.closest('[data-close]')) composeModal.hidden = true; });
 
-  const SIGN_OFF = '\n\nCheers,\nUK Brewery Tours';
+  const SIGN_OFF = '\n\nCheers,\nDom\nUK Brewery Tours';
 
   function openCompose(prefill = {}) {
     composeModal.hidden = false;
@@ -618,10 +855,13 @@
           <label for="cm-body">Message</label>
           <textarea id="cm-body" rows="11" required></textarea>
         </div>
+        <div class="att-pick" id="cmFiles" hidden></div>
         <label class="cm-check"><input type="checkbox" id="cm-save" checked> Add them to my contacts</label>
         <p class="error" id="cmError" hidden></p>
         <div class="redeem-actions">
           <button class="btn btn-ghost" type="button" id="cmMore">Cc, Bcc, reply-to</button>
+          <button class="btn btn-ghost att-btn" type="button" id="cmAttach" title="Attach photos or files — or drag them onto this box, or paste a screenshot">📎 Attach</button>
+          <input type="file" id="cmFileInput" multiple hidden>
           <button class="btn btn-primary" type="submit">Send email</button>
         </div>
       </form>`;
@@ -631,6 +871,11 @@
     const to = $('cm-to');
     (to.value ? $('cm-subject') : to).focus();
     if (!prefill.body) body.setSelectionRange(0, 0);
+
+    const cmPicker = filePicker($('cmFiles'));
+    $('cmAttach').addEventListener('click', () => $('cmFileInput').click());
+    $('cmFileInput').addEventListener('change', ev => { cmPicker.add(ev.target.files); ev.target.value = ''; });
+    acceptFiles($('cmForm'), body, cmPicker);
 
     $('cmMore').addEventListener('click', () => {
       const extra = $('cm-extra');
@@ -653,24 +898,40 @@
       const btn = ev.target.querySelector('button[type="submit"]');
       const recipients = $('cm-to').value.split(/[,;\n]+/).map(s => s.trim()).filter(Boolean);
       const bcc = $('cm-bcc')?.value.trim();
-      if (!confirm(`Send this to ${recipients.join(', ')}${bcc ? ` (bcc ${bcc})` : ''}?`)) return;
+      const files = cmPicker.files;
+      if (cmPicker.tooBig) {
+        errEl.textContent = 'Those attachments are over 25 MB together — take some off, or send them in two emails.';
+        errEl.hidden = false;
+        return;
+      }
+      const withFiles = files.length ? ` with ${files.length === 1 ? '1 attachment' : `${files.length} attachments`}` : '';
+      if (!confirm(`Send this to ${recipients.join(', ')}${bcc ? ` (bcc ${bcc})` : ''}${withFiles}?`)) return;
 
       btn.disabled = true;
       btn.textContent = 'Sending…';
       try {
-        const res = await api('/api/admin/compose', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            to: $('cm-to').value,
-            cc: $('cm-cc')?.value || '',
-            bcc: bcc || '',
-            reply_to: $('cm-reply')?.value || '',
-            subject: $('cm-subject').value,
-            body: $('cm-body').value,
-            name: prefill.name || '',
-            save_contact: $('cm-save').checked,
-          }),
-        });
+        const fields = {
+          to: $('cm-to').value,
+          cc: $('cm-cc')?.value || '',
+          bcc: bcc || '',
+          reply_to: $('cm-reply')?.value || '',
+          subject: $('cm-subject').value,
+          body: $('cm-body').value,
+          name: prefill.name || '',
+          save_contact: $('cm-save').checked,
+        };
+        let res;
+        if (files.length) {
+          // Files go as multipart; the server reads the same fields either way.
+          const form = new FormData();
+          for (const [k, v] of Object.entries(fields)) form.append(k, typeof v === 'boolean' ? (v ? '1' : '0') : v);
+          files.forEach(f => form.append('files', f, f.name));
+          res = await api('/api/admin/compose', { method: 'POST', body: form });
+        } else {
+          res = await api('/api/admin/compose', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(fields),
+          });
+        }
         composeModal.hidden = true;
         contactsLoaded = false;              // the address book may have just grown
         switchView('inbox');
@@ -711,6 +972,7 @@
     if (state.current !== id) composerMode = 'reply';
     state.current = id;
     inboxEl.classList.add('show-thread');
+    renderBar();
     listEl.querySelectorAll('.ib-item').forEach(li => {
       const on = Number(li.dataset.ib) === id;
       li.classList.toggle('active', on);
@@ -830,10 +1092,13 @@
           <button type="button" data-mode="note" class="${composerMode === 'note' ? 'on' : ''}">Internal note</button>
         </div>
         <textarea id="thText" aria-label="Message"></textarea>
+        <div class="att-pick" id="thFiles" hidden></div>
         <p class="error" id="thError" hidden></p>
         <div class="composer-foot">
           <span class="muted" id="thHint"></span>
           <div class="send-row">
+            <button class="btn btn-ghost att-btn" type="button" id="thAttach" title="Attach photos or files — or drag them onto the reply box, or paste a screenshot">📎 Attach</button>
+            <input type="file" id="thFileInput" multiple hidden>
             <label class="muted" id="thAfterWrap">then mark
               <select id="thAfter">
                 <option value="waiting">Awaiting customer</option>
@@ -848,7 +1113,7 @@
 
     // Composer: restore the draft, or start a greeting and sign-off.
     const text = $('thText');
-    const signOff = `\n\nCheers,\n${e.brand}`;
+    const signOff = `\n\nCheers,\nDom\n${e.brand}`;
     const draft = text ? getDraft(e.id) : null;
     if (text) {
       if (draft !== null) text.value = draft;
@@ -861,6 +1126,19 @@
         text.focus({ preventScroll: true });
         text.setSelectionRange(pos, pos);
       }
+    }
+
+    // Attachments for the reply, kept per conversation until it is sent, so a
+    // redraw (a status change, a live update) does not lose them.
+    if (text) {
+      picker = filePicker($('thFiles'), files => { files.length ? pending.set(e.id, [...files]) : pending.delete(e.id); });
+      picker.set(pending.get(e.id));
+      $('thAttach').addEventListener('click', () => $('thFileInput').click());
+      $('thFileInput').addEventListener('change', ev => { picker.add(ev.target.files); ev.target.value = ''; });
+      acceptFiles($('thComposer'), text, picker);
+      syncComposer(e, canEmail);
+    } else {
+      picker = null;
     }
 
     const sc = threadEl.querySelector('.th-scroll');
@@ -906,15 +1184,9 @@
       if (!confirm(question)) { ev.target.value = e.assigned_to || ''; return; }
       patch(e.id, { assigned_to: to || null });
     });
+    // Same as the bar's Delete: straight to the bin, with Undo.
     $('thDelete')?.addEventListener('click', async () => {
-      if (!confirm(`Delete this conversation with ${e.name}?\n\nIt goes to the bin, where you have ${binDays} days to change your mind. To file a real enquiry away instead, mark it Closed.`)) return;
-      try {
-        await api('/api/admin/inbox/' + e.id, { method: 'DELETE' });
-        setDraft(e.id, null);
-        state.current = null;
-        location.hash = 'inbox';
-        loadList();
-      } catch (err) { alert(err.message); }
+      try { await removeIds([e.id]); } catch (err) { alert(err.message); }
     });
     $('thRestore')?.addEventListener('click', async () => {
       try {
@@ -956,6 +1228,9 @@
   function syncComposer(e, canEmail = true) {
     const reply = composerMode === 'reply' && canEmail;
     $('thAfterWrap').hidden = !reply;
+    // A note is never sent anywhere, so there is nothing to attach it to.
+    $('thAttach').hidden = !reply;
+    $('thFiles').hidden = !reply || !picker?.files.length;
     $('thSend').textContent = reply ? 'Send reply' : 'Save note';
     $('thText').placeholder = reply ? '' : 'Note for you and the team — what was said, what you agreed…';
     $('thHint').textContent = reply
@@ -976,7 +1251,167 @@
     const by = out
       ? `${esc(m.author || 'You')} · emailed · ${esc(when(m.created_at))}`
       : `${esc(m.author || e.name)} · via ${esc(CHANNEL_SHORT[m.channel] || m.channel)} · ${esc(when(m.created_at))}`;
-    return `<div class="tl-msg ${out ? 'out' : 'in'}"><div class="tl-by">${by}</div><div class="tl-body">${linkify(m.body)}</div></div>`;
+    return `<div class="tl-msg ${out ? 'out' : 'in'}" data-mid="${m.id}"><div class="tl-by">${by}</div><div class="tl-body">${linkify(m.body)}</div>${filesBlock(m)}</div>`;
+  }
+
+  /* ---------------- attachments ---------------- */
+
+  const fmtSize = n => (!n ? '' : n < 1024 ? `${n} B` : n < 1048576 ? `${Math.round(n / 1024)} KB` : `${(n / 1048576).toFixed(1)} MB`);
+  const fileIcon = type => (/pdf/i.test(type) ? '📄' : /^image\//i.test(type) ? '🖼' : /^video\//i.test(type) ? '🎬'
+    : /sheet|excel|csv/i.test(type) ? '📊' : /word|document|text/i.test(type) ? '📝' : /zip|compressed/i.test(type) ? '🗜' : '📎');
+  // A tiny inline picture is a logo in someone's signature, not a photo they sent.
+  // It stays in "View original"; the timeline shows what was meant to be seen.
+  const shownFiles = m => (m.attachments || []).filter(a => !(a.inline && a.is_image && a.size < 12000));
+
+  function filesBlock(m) {
+    const files = shownFiles(m);
+    if (!files.length && !m.original_url) return '';
+    const imgs = files.filter(a => a.is_image);
+    const others = files.filter(a => !a.is_image);
+    // PDFs and text open in the browser; anything else downloads.
+    const href = a => (/pdf|^text\/plain/i.test(a.content_type) ? a.url : `${a.url}?download=1`);
+    return `<div class="tl-files">
+      ${imgs.length ? `<div class="att-grid${imgs.length === 1 ? ' one' : ''}">${imgs.map(a => `
+        <a class="att-thumb" href="${esc(a.url)}" target="_blank" rel="noopener" data-lightbox="${a.id}" title="${esc(a.filename)} · ${fmtSize(a.size)}">
+          <img src="${esc(a.url)}" alt="${esc(a.filename)}" loading="lazy">
+        </a>`).join('')}</div>` : ''}
+      ${others.length ? `<div class="att-chips">${others.map(a => `
+        <a class="att-chip" href="${esc(href(a))}" target="_blank" rel="noopener" title="${esc(a.filename)}">
+          <span class="att-ico">${fileIcon(a.content_type)}</span><span class="att-name">${esc(a.filename)}</span><small>${fmtSize(a.size)}</small>
+        </a>`).join('')}</div>` : ''}
+      ${m.original_url ? `<a class="att-orig" href="${esc(m.original_url)}" target="_blank" rel="noopener" title="The email as they sent it — layout, pictures and all">View original email ↗</a>` : ''}
+    </div>`;
+  }
+
+  // Attachments are saved a moment after their message arrives, so the live
+  // poll can show a message before its photos. When the count moves, fetch the
+  // conversation again and fill in just the attachment blocks.
+  let refreshingFiles = false;
+  async function refreshFiles(id) {
+    if (refreshingFiles) return;
+    refreshingFiles = true;
+    try {
+      const d = await api('/api/admin/inbox/' + id);
+      if (state.current !== id || !currentThread) return;
+      const byId = new Map(d.messages.map(m => [m.id, m]));
+      for (const m of currentThread.messages) {
+        const fresh = byId.get(m.id);
+        if (!fresh) continue;
+        m.attachments = fresh.attachments;
+        m.original_url = fresh.original_url;
+        const node = threadEl.querySelector(`.tl-msg[data-mid="${m.id}"]`);
+        if (!node) continue;
+        node.querySelector('.tl-files')?.remove();
+        node.insertAdjacentHTML('beforeend', filesBlock(m));
+      }
+    } catch { /* the next poll tries again */ }
+    finally { refreshingFiles = false; }
+  }
+
+  // Photos open full size over the page; arrow keys step through every photo in
+  // the conversation. Ctrl/Cmd-click still opens one in a new tab.
+  function lightbox(startId) {
+    const photos = (currentThread?.messages || []).flatMap(m => shownFiles(m).filter(a => a.is_image));
+    let i = Math.max(0, photos.findIndex(a => a.id === startId));
+    if (!photos.length) return;
+    let box = $('ibLightbox');
+    if (!box) {
+      box = document.createElement('div');
+      box.id = 'ibLightbox';
+      box.className = 'lightbox';
+      box.setAttribute('role', 'dialog');
+      box.setAttribute('aria-modal', 'true');
+      document.body.appendChild(box);
+    }
+    const show = () => {
+      const a = photos[i];
+      box.innerHTML = `
+        <div class="lb-top">
+          <span class="lb-name">${esc(a.filename)} <small>${fmtSize(a.size)}${photos.length > 1 ? ` · ${i + 1} of ${photos.length}` : ''}</small></span>
+          <a class="lb-btn" href="${esc(a.url)}?download=1" title="Download">⬇ Download</a>
+          <a class="lb-btn" href="${esc(a.url)}" target="_blank" rel="noopener" title="Open in a new tab">↗</a>
+          <button type="button" class="lb-btn" data-lb="close" aria-label="Close">✕</button>
+        </div>
+        ${photos.length > 1 ? '<button type="button" class="lb-nav prev" data-lb="prev" aria-label="Previous">‹</button><button type="button" class="lb-nav next" data-lb="next" aria-label="Next">›</button>' : ''}
+        <img src="${esc(a.url)}" alt="${esc(a.filename)}" data-lb="img">`;
+    };
+    const close = () => { box.classList.remove('open'); document.removeEventListener('keydown', onKey, true); };
+    const step = d => { i = (i + d + photos.length) % photos.length; show(); };
+    function onKey(ev) {
+      if (ev.key === 'Escape') { ev.stopPropagation(); close(); }
+      else if (ev.key === 'ArrowRight') step(1);
+      else if (ev.key === 'ArrowLeft') step(-1);
+    }
+    box.onclick = ev => {
+      const t = ev.target.closest('[data-lb]')?.dataset.lb;
+      if (t === 'prev') step(-1);
+      else if (t === 'next') step(1);
+      else if (t === 'close' || ev.target === box) close();
+    };
+    show();
+    box.classList.add('open');
+    document.addEventListener('keydown', onKey, true);
+  }
+
+  threadEl.addEventListener('click', ev => {
+    const a = ev.target.closest('[data-lightbox]');
+    if (!a || ev.ctrlKey || ev.metaKey || ev.shiftKey || ev.button) return;
+    ev.preventDefault();
+    lightbox(Number(a.dataset.lightbox));
+  });
+
+  /**
+   * Files waiting to go with an email. Each pick shows as a chip with a ✕;
+   * onChange hears the current list. Drop and paste are wired by the caller.
+   */
+  function filePicker(listEl, onChange) {
+    let files = [];
+    const render = () => {
+      const total = files.reduce((n, f) => n + f.size, 0);
+      listEl.innerHTML = files.map((f, i) => `
+        <span class="att-pending" title="${esc(f.name)}">
+          <span class="att-ico">${fileIcon(f.type)}</span><span class="att-name">${esc(f.name)}</span><small>${fmtSize(f.size)}</small>
+          <button type="button" data-rm="${i}" aria-label="Remove ${esc(f.name)}">✕</button>
+        </span>`).join('')
+        + (total > MAX_ATTACH ? `<span class="att-over">That's ${fmtSize(total)} — emails can carry 25 MB at most.</span>` : '');
+      listEl.hidden = !files.length;
+      onChange?.(files);
+    };
+    listEl.addEventListener('click', ev => {
+      const b = ev.target.closest('[data-rm]');
+      if (b) { files.splice(Number(b.dataset.rm), 1); render(); }
+    });
+    return {
+      add(list) { for (const f of list || []) if (f && f.size) files.push(f); render(); },
+      set(list) { files = [...(list || [])]; render(); },
+      get files() { return files; },
+      get tooBig() { return files.reduce((n, f) => n + f.size, 0) > MAX_ATTACH; },
+    };
+  }
+  const MAX_ATTACH = 25 * 1024 * 1024;
+
+  /** Drag files onto `zone` (or paste a screenshot into `paste`) to attach them. */
+  function acceptFiles(zone, paste, picker) {
+    let depth = 0;
+    zone.addEventListener('dragenter', ev => { if (ev.dataTransfer?.types?.includes('Files')) { depth++; zone.classList.add('drop-on'); } });
+    zone.addEventListener('dragleave', () => { if (--depth <= 0) { depth = 0; zone.classList.remove('drop-on'); } });
+    zone.addEventListener('dragover', ev => { if (ev.dataTransfer?.types?.includes('Files')) ev.preventDefault(); });
+    zone.addEventListener('drop', ev => {
+      if (!ev.dataTransfer?.files?.length) return;
+      ev.preventDefault();
+      depth = 0;
+      zone.classList.remove('drop-on');
+      picker.add(ev.dataTransfer.files);
+    });
+    paste?.addEventListener('paste', ev => {
+      const files = [...(ev.clipboardData?.files || [])];
+      if (!files.length) return;
+      ev.preventDefault();
+      // Pasted screenshots all arrive as "image.png"; give each its own name.
+      picker.add(files.map((f, i) => (f.name === 'image.png'
+        ? new File([f], `screenshot-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}${i ? `-${i}` : ''}.png`, { type: f.type })
+        : f)));
+    });
   }
 
   async function patch(id, body) {
@@ -998,17 +1433,30 @@
     const reply = composerMode === 'reply';
     const first = String(e.name || '').split(/\s+/)[0];
     const squash = s => s.replace(/\s+/g, ' ').trim();
-    if (!body || (reply && squash(body) === squash(`Hi ${first}, Cheers, ${e.brand}`))) {
+    if (!body || (reply && squash(body) === squash(`Hi ${first}, Cheers, Dom ${e.brand}`))) {
       errEl.textContent = reply ? 'Write your reply first.' : 'Write a note first.';
       errEl.hidden = false;
       return;
     }
-    if (reply && !confirm(`Send this reply to ${e.email}?`)) return;
+    const files = reply ? (picker?.files || []) : [];
+    if (picker?.tooBig && reply) {
+      errEl.textContent = 'Those attachments are over 25 MB together — take some off, or send them in two emails.';
+      errEl.hidden = false;
+      return;
+    }
+    const withFiles = files.length ? ` with ${files.length === 1 ? '1 attachment' : `${files.length} attachments`}` : '';
+    if (reply && !confirm(`Send this reply to ${e.email}${withFiles}?`)) return;
 
     btn.disabled = true;
     btn.textContent = reply ? 'Sending…' : 'Saving…';
     try {
-      if (reply) {
+      if (reply && files.length) {
+        const form = new FormData();
+        form.append('body', body);
+        form.append('status', $('thAfter').value);
+        files.forEach(f => form.append('files', f, f.name));
+        await api(`/api/admin/inbox/${e.id}/reply`, { method: 'POST', body: form });
+      } else if (reply) {
         await api(`/api/admin/inbox/${e.id}/reply`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ body, status: $('thAfter').value }),
@@ -1019,6 +1467,7 @@
         });
       }
       setDraft(e.id, null);
+      if (reply) pending.delete(e.id);
       composerMode = 'reply';
       await openThread(e.id);
       loadList({ quiet: true });
@@ -1188,6 +1637,7 @@
       inboxEl.classList.remove('show-thread');
       listEl.querySelectorAll('.ib-item.active').forEach(li => li.classList.remove('active'));
       if (window.innerWidth <= 900) threadEl.innerHTML = emptyThread();
+      renderBar();
     }
   };
 
@@ -1265,6 +1715,9 @@
         }
         loadList({ quiet: true });
       }
+
+      const shownCount = currentThread.messages.reduce((n, m) => n + (m.attachments?.length || 0), 0);
+      if (typeof d.attachment_count === 'number' && d.attachment_count !== shownCount) refreshFiles(id);
 
       if (d.status !== e.status) {
         e.status = d.status;

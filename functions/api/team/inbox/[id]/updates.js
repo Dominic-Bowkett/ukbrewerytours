@@ -39,5 +39,8 @@ export async function onRequestGet({ params, request, env, data }) {
   for (const m of messages) m.body = hideEmails(m.body, enquiry.email);
   for (const m of (vouchers?.matches || [])) m.holder_email = null;
 
-  return Response.json({ status: enquiry.status, type: enquiry.type, messages, vouchers });
+  // Attachments land just after their message; the page redraws when this changes.
+  const files = await env.DB.prepare('SELECT COUNT(*) AS n FROM enquiry_attachments WHERE enquiry_id = ?').bind(id).first();
+
+  return Response.json({ status: enquiry.status, type: enquiry.type, messages, vouchers, attachment_count: files?.n || 0 });
 }

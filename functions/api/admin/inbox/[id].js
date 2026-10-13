@@ -7,8 +7,12 @@
 
 import {
   TYPES, STATUSES, CHANNELS, FIELD_LABELS, BIN_DAYS, siteLabel, brandFor, threadUrl, voucherCheck, logEvent, teamUrl, hideEmails,
+  deleteConversations,
 } from '../../../_lib/inbox.js';
 import { sendEmail, assignmentEmailHtml } from '../../../_lib/email.js';
+import { attachmentsByMessage, withAttachments } from '../../../_lib/attachments.js';
+
+const BASE = '/api/admin/inbox';
 
 async function findEnquiry(env, id) {
   if (!/^\d+$/.test(String(id))) return null;
@@ -20,8 +24,9 @@ export async function onRequestGet({ params, env }) {
   if (!enquiry) return Response.json({ error: 'Conversation not found.' }, { status: 404 });
 
   const { results: messages } = await env.DB.prepare(
-    'SELECT id, direction, channel, body, author, created_at FROM enquiry_messages WHERE enquiry_id = ? ORDER BY id',
+    'SELECT id, direction, channel, body, author, created_at, html_key FROM enquiry_messages WHERE enquiry_id = ? ORDER BY id',
   ).bind(enquiry.id).all();
+  const files = await attachmentsByMessage(env, enquiry.id, BASE);
 
   // Reading something in the bin does not count as dealing with it.
   if (enquiry.unread && !enquiry.deleted_at) {
@@ -67,7 +72,7 @@ export async function onRequestGet({ params, env }) {
       assignee_name: assigneeName,
       thread_url: threadUrl(token),
     },
-    messages: messages || [],
+    messages: withAttachments(messages || [], files, BASE, enquiry.id),
     vouchers,
     labels: { types: TYPES, statuses: STATUSES },
   }, { headers: { 'Cache-Control': 'no-store' } });
@@ -201,9 +206,6 @@ export async function onRequestDelete({ params, request, env, data }) {
     return Response.json({ ok: true, binned: true, bin_days: BIN_DAYS });
   }
 
-  await env.DB.batch([
-    env.DB.prepare('DELETE FROM enquiry_messages WHERE enquiry_id = ?').bind(enquiry.id),
-    env.DB.prepare('DELETE FROM enquiries WHERE id = ?').bind(enquiry.id),
-  ]);
+  await deleteConversations(env, [enquiry.id]);
   return Response.json({ ok: true, deleted: true });
 }
