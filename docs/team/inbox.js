@@ -446,15 +446,35 @@
           <div class="field"><label for="tp-date">Tour date</label>
             <input id="tp-date" type="date" required></div>
         </div>
-        <div class="field" style="margin-top:12px"><label for="tp-note">Message (optional)</label>
-          <textarea id="tp-note" rows="4" placeholder="Shown with the payment details"></textarea></div>
+        <div class="redeem-row even" style="margin-top:12px">
+          <div class="field"><label for="tp-guests">Guests <span class="muted">(optional)</span></label>
+            <input id="tp-guests" type="number" min="1" step="1" placeholder="e.g. 10"></div>
+          <div class="field"><label for="tp-pp">Price per guest (£) <span class="muted">(optional)</span></label>
+            <input id="tp-pp" type="number" inputmode="decimal" min="0.01" step="0.01" placeholder="e.g. 49.00"></div>
+        </div>
+        <p class="muted" id="tp-est" style="font-size:.85rem;margin-top:6px">Fill in both to show the customer an estimated total and what's left after this payment.</p>
+        <div class="field" style="margin-top:12px"><label for="tp-note">Message to the customer <span class="muted">(optional — shown in the email and on the payment page)</span></label>
+          <textarea id="tp-note" rows="6" placeholder="Anything they should know: meeting point, what's included, how the balance works…"></textarea></div>
         <p class="error" id="tpError" hidden></p>
         <div class="redeem-actions">
           <button class="btn btn-primary" type="submit">Send payment link</button>
         </div>
       </form>`;
-    $('tp-note').value = `Hi ${first}, here's the secure link to pay — thanks!`;
     $('tp-amount').focus();
+
+    // Live estimate under the two boxes.
+    const showEst = () => {
+      const g = Number($('tp-guests').value), pp = Number($('tp-pp').value), amt = Number($('tp-amount').value) || 0;
+      const el = $('tp-est');
+      if (g > 0 && pp > 0) {
+        const total = g * pp;
+        const left = $('tp-kind').value === 'deposit' && total > amt ? ` · about £${(total - amt).toFixed(2)} left after this deposit` : '';
+        el.innerHTML = `<strong>Estimated total £${total.toFixed(2)}</strong>${left}`;
+      } else {
+        el.textContent = 'Fill in both to show the customer an estimated total and what\'s left after this payment.';
+      }
+    };
+    ['tp-guests', 'tp-pp', 'tp-amount', 'tp-kind'].forEach(id => $(id).addEventListener('input', showEst));
 
     $('tmPayForm').addEventListener('submit', async ev => {
       ev.preventDefault();
@@ -471,7 +491,10 @@
       try {
         await api(`/api/team/inbox/${e.id}/payment-request`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ kind, amount, tour_name: tour, tour_date: $('tp-date').value, note: $('tp-note').value }),
+          body: JSON.stringify({
+            kind, amount, tour_name: tour, tour_date: $('tp-date').value, note: $('tp-note').value,
+            guests: $('tp-guests').value, price_per_guest: $('tp-pp').value,
+          }),
         });
         modal.hidden = true;
         await openThread(e.id, { keepScroll: true });

@@ -66,6 +66,20 @@ export async function onRequestPost({ params, request, env, data }) {
   }
   if (amountPence > MAX_PENCE) return Response.json({ error: 'For payments over £20,000 please contact the office.' }, { status: 400 });
 
+  // Optional estimate: guests x price per guest. Both or neither.
+  let guests = null, perGuestPence = null, totalPence = null;
+  const hasGuests = String(body.guests ?? '').trim() !== '';
+  const hasPrice = String(body.price_per_guest ?? '').trim() !== '';
+  if (hasGuests || hasPrice) {
+    guests = Math.round(Number(body.guests));
+    perGuestPence = Math.round(Number(String(body.price_per_guest ?? '').replace(/[£,\s]/g, '')) * 100);
+    if (!Number.isInteger(guests) || guests < 1 || guests > 1000) return Response.json({ error: 'Enter the number of guests (or leave both estimate boxes empty).' }, { status: 400 });
+    if (!Number.isFinite(perGuestPence) || perGuestPence < 1) return Response.json({ error: 'Enter the price per guest (or leave both estimate boxes empty).' }, { status: 400 });
+    totalPence = guests * perGuestPence;
+    if (totalPence > MAX_PENCE) return Response.json({ error: 'That estimate is too large.' }, { status: 400 });
+    if (totalPence < amountPence) return Response.json({ error: `This payment is more than the estimated total (${money(totalPence)}).` }, { status: 400 });
+  }
+
   // Money terms from the MEMBER row, never the request body: their connected
   // account, and their fee override or the platform default.
   const settings = await env.DB.prepare('SELECT * FROM platform_settings WHERE id = 1').first();
@@ -87,13 +101,15 @@ export async function onRequestPost({ params, request, env, data }) {
        tour_name, tour_date, tour_details,
        currency, amount_pence, fee_bps, fee_pence, fee_source, fee_frozen_at,
        terms_snapshot, stripe_account_id, member_display_name,
-       status, send_rule, expires_at, created_by, payment_kind, enquiry_id)
-    VALUES (?,?,?,?,?,?,?,?,'gbp',?,?,?,?,datetime('now'),?,?,?,'draft','now',?,?,?,?)`)
+       status, send_rule, expires_at, created_by, payment_kind, enquiry_id,
+       guest_count, price_per_guest_pence, booking_total_pence)
+    VALUES (?,?,?,?,?,?,?,?,'gbp',?,?,?,?,datetime('now'),?,?,?,'draft','now',?,?,?,?,?,?,?)`)
     .bind(id, publicToken, member.id, enquiry.name, clientEmail,
           tourName, tourDate || null, note || null,
           amountPence, frozen.fee_bps, frozen.fee_pence, frozen.fee_source,
           frozen.terms_snapshot, frozen.stripe_account_id, frozen.member_display_name,
-          sqlStamp(expires), `team:${member.email}`, kind, enquiry.id)
+          sqlStamp(expires), `team:${member.email}`, kind, enquiry.id,
+          guests, perGuestPence, totalPence)
     .run();
 
   try {
@@ -104,7 +120,8 @@ export async function onRequestPost({ params, request, env, data }) {
   }
 
   // On the thread, as the customer received it, so the office sees it too.
-  const line = `💷 ${KINDS[kind]} request: ${money(amountPence)} — ${tourName}${tourDate ? `, ${tourDate}` : ''}`;
+  const line = `💷 ${KINDS[kind]} request: ${money(amountPence)} — ${tourName}${tourDate ? `, ${tourDate}` : ''}`
+    + (totalPence ? `\n(${guests} guests × ${money(perGuestPence)} = ${money(totalPence)} estimated${kind === 'deposit' ? `; ${money(totalPence - amountPence)} remaining` : ''})` : '');
   await env.DB.batch([
     env.DB.prepare(
       'INSERT INTO enquiry_messages (enquiry_id, direction, channel, body, author) VALUES (?,?,?,?,?)',

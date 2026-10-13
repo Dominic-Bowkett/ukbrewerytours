@@ -155,6 +155,12 @@ export async function onRequestGet(ctx) {
     tour_time: row.tour_time,
     details: row.tour_details,
 
+    // The optional estimate: guests x price per guest = booking total.
+    guest_count: row.guest_count || null,
+    price_per_guest_pence: row.price_per_guest_pence || null,
+    booking_total_pence: row.booking_total_pence || null,
+    payment_kind: row.payment_kind || 'full',
+
     // GROSS only. There is no field here from which the fee split can be derived.
     amount_pence: row.amount_pence,
     currency: row.currency,

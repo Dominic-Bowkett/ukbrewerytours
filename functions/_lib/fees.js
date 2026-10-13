@@ -62,6 +62,16 @@ export function feePence(amountPence, feeBps) {
  * id are frozen for the same reason as the fee: the client page and the email must
  * keep showing what was actually agreed.
  */
+/**
+ * Put the member's trading name into terms written for everyone:
+ * "{team member}", "{business name}" (any case, spaces/underscores/hyphens) →
+ * e.g. "Alehunters Ltd". Done once, when the terms are frozen onto a request.
+ */
+export function fillTerms(text, name) {
+  if (!text) return text;
+  return String(text).replace(/\{\s*(team[\s_-]*member|business[\s_-]*name|company|member)\s*\}/gi, name || 'UK Brewery Tours');
+}
+
 export function freezeTerms({ request, member, settings }) {
   const { feeBps, source } = resolveFeeBps(request, member, settings);
   if (!member?.stripe_account_id) {
@@ -74,7 +84,7 @@ export function freezeTerms({ request, member, settings }) {
     fee_source: source,
     stripe_account_id: member.stripe_account_id,
     member_display_name: member.company_name || member.name,
-    terms_snapshot: member.terms_override || settings?.default_terms || null,
+    terms_snapshot: fillTerms(member.terms_override || settings?.default_terms || null, member.company_name || member.name),
   };
 }
 

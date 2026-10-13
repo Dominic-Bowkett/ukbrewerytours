@@ -65,17 +65,39 @@
     var when = prettyDate(d.tour_date, d.tour_time);
     if (when) root.appendChild(el('p', 'pay-date', when));
 
-    root.appendChild(el('p', 'pay-amount-label', (d.payment_label ? d.payment_label + ' — ' : '') + 'amount to pay'));
+    root.appendChild(el('p', 'pay-amount-label', (d.payment_label ? d.payment_label + ' — ' : '') + 'amount to pay now'));
     var amount = el('div', 'pay-amount', money(d.amount_pence, d.currency));
     root.appendChild(amount);
 
+    // Optional estimate: guests x price per guest, and what is left after this payment.
+    if (d.booking_total_pence) {
+      var est = el('div', 'pay-estimate');
+      var line = function (label, value) {
+        var r = el('div', 'pay-est-row');
+        r.appendChild(el('span', null, label));
+        r.appendChild(el('strong', null, value));
+        est.appendChild(r);
+      };
+      if (d.guest_count && d.price_per_guest_pence) {
+        line('Guests', d.guest_count + ' × ' + money(d.price_per_guest_pence, d.currency));
+      }
+      line(d.guest_count ? 'Estimated total' : 'Booking total', money(d.booking_total_pence, d.currency));
+      if (d.payment_kind === 'deposit' && d.booking_total_pence > d.amount_pence) {
+        line('Estimated balance remaining', money(d.booking_total_pence - d.amount_pence, d.currency));
+      }
+      root.appendChild(est);
+    }
+
     if (d.details) {
+      var msg = el('div', 'pay-message');
+      msg.appendChild(el('p', 'pay-message-from', 'Message from ' + d.seller_name));
       var det = el('p', 'pay-details');
       d.details.split('\n').forEach(function (line, i) {
         if (i) det.appendChild(document.createElement('br'));
         det.appendChild(document.createTextNode(line));
       });
-      root.appendChild(det);
+      msg.appendChild(det);
+      root.appendChild(msg);
     }
 
     if (d.status === 'paid') {
@@ -88,11 +110,21 @@
       btn.addEventListener('click', function () { startCheckout(btn); });
       root.appendChild(btn);
       root.appendChild(el('p', 'pay-secure', 'Payments are handled by Stripe. We never see your card details.'));
+      if (d.terms) {
+        var agree = el('p', 'pay-secure');
+        agree.appendChild(document.createTextNode('By paying you agree to the '));
+        var a = el('a', null, 'booking terms');
+        a.href = '#terms';
+        agree.appendChild(a);
+        agree.appendChild(document.createTextNode(' below.'));
+        root.appendChild(agree);
+      }
     }
 
     if (d.terms) {
       var terms = el('div', 'pay-terms');
-      terms.appendChild(el('h2', null, 'Terms'));
+      terms.id = 'terms';
+      terms.appendChild(el('h2', null, 'Booking terms'));
       var p = el('p');
       d.terms.split('\n').forEach(function (line, i) {
         if (i) p.appendChild(document.createElement('br'));

@@ -1449,3 +1449,11 @@ details .a { padding: 0 0 20px; color: var(--ink-soft); font-size: .97rem; }
 /* What the payment is (Deposit, Balance…), above the tour on /pay/. */
 .pay-kind { display: inline-block; background: #fbeacd; color: #8a5a14; font-weight: 700; font-size: .8rem; letter-spacing: .04em; text-transform: uppercase; padding: 4px 12px; border-radius: 999px; margin: 0 0 10px; }
 .pay-amount-label { color: var(--ink-soft); font-size: .9rem; font-weight: 600; margin: 4px 0 6px; }
+/* Optional estimate and the organiser's message on /pay/. */
+.pay-estimate { background: var(--cream, #f7f1e5); border-radius: 12px; padding: 10px 16px; margin: 4px 0 18px; }
+.pay-est-row { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; font-size: .95rem; }
+.pay-est-row + .pay-est-row { border-top: 1px solid rgba(0,0,0,.07); }
+.pay-est-row span { color: var(--ink-soft); }
+.pay-message { border-left: 3px solid #e0932f; padding: 2px 0 2px 14px; margin: 0 0 18px; }
+.pay-message-from { font-size: .8rem; color: var(--ink-soft); margin: 0 0 2px; }
+.pay-message .pay-details { margin: 0; }

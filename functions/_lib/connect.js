@@ -943,8 +943,14 @@ export function paymentRequestHtml({ row, payUrl }) {
           ${row2('Payment', esc(kind))}
           ${row2('Tour', esc(row.tour_name))}
           ${when ? row2('Date', esc(when)) : ''}
-          ${row.booking_total_pence ? row2('Booking total', money(row.booking_total_pence)) : ''}
-          ${row2('Amount to pay', amount, true)}
+          ${row.guest_count && row.price_per_guest_pence
+            ? row2('Guests', `${row.guest_count} &times; ${money(row.price_per_guest_pence)}`) : ''}
+          ${row.booking_total_pence
+            ? row2(row.guest_count ? 'Estimated total' : 'Booking total', money(row.booking_total_pence)) : ''}
+          ${row2('Amount to pay now', amount, true)}
+          ${row.booking_total_pence && row.booking_total_pence > row.amount_pence && row.payment_kind === 'deposit'
+            ? row2('Estimated balance remaining', `${money(row.booking_total_pence - row.amount_pence)}<div style="font-size:12px;font-weight:400;color:${INK_SOFT};">due before the tour${row.guest_count ? ', based on the number of guests' : ''}</div>`)
+            : ''}
         </table>
       </td></tr>
     </table>
@@ -962,6 +968,10 @@ export function paymentRequestHtml({ row, payUrl }) {
       </a>
       <div style="font-size:13px;color:${INK_SOFT};margin-top:12px;">Secure payment by Stripe — card, Apple Pay or Google Pay.</div>
     </div>
+
+    ${row.terms_snapshot ? `<p style="margin:18px 0 0;font-size:14px;text-align:center;">
+      By paying you agree to the <a href="${payUrl}#terms" style="color:#b3701d;font-weight:600;">booking terms</a>.
+    </p>` : ''}
 
     <p style="margin:22px 0 0;font-size:13px;color:${INK_SOFT};line-height:1.7;">
       Questions? Just reply to this email.

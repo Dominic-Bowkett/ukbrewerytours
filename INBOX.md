@@ -437,3 +437,17 @@ creates an ordinary team payment request (`payment_requests`, `enquiry_id` set �
   gets the usual "Paid" email. The admin's Payment requests box lists these read-only.
 - The inbox gate does not require Stripe readiness, so this route checks
   `teamChargeReady` itself.
+
+## Payment request extras (14 Oct 2026)
+
+- **Message:** the team member's message (`tour_details`) is shown labelled
+  "Message from <business>" in the email and on /pay/.
+- **Estimate (optional):** Guests × Price per guest → `guest_count`,
+  `price_per_guest_pence`, `booking_total_pence` (`migrations/0021_…`). The email and
+  /pay/ show the estimated total, "amount to pay now", and for a deposit the
+  estimated balance remaining.
+- **Booking terms:** Admin → Team payments → Booking terms edits
+  `platform_settings.default_terms` (a member's `terms_override` still wins).
+  `{team member}` / `{business name}` are replaced with the member's business name by
+  `fillTerms()` when the terms are frozen onto a request. /pay/ shows them under
+  `#terms`; the email links there ("By paying you agree to the booking terms").

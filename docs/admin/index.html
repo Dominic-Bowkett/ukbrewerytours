@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
-<meta name="admin-build" content="d7ca223c7b">
+<meta name="admin-build" content="ebb14e2ecf">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
 <title>Admin — UK Brewery Tours</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍺%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="/assets/css/admin.css?v=d7ca223c7b">
+<link rel="stylesheet" href="/assets/css/admin.css?v=ebb14e2ecf">
 </head>
 <body>
 <header class="admin-header">
@@ -202,6 +202,20 @@
   </div>
 
   <section class="stats" id="payStats"></section>
+
+  <section class="panel" style="margin-bottom:22px">
+    <div class="panel-head"><h2>Booking terms</h2></div>
+    <p class="muted" style="margin:0 0 10px">
+      Shown in full on every payment page, and linked from the payment email ("By paying you agree to the booking terms").
+      Write <code>{team member}</code> (or <code>{business name}</code>) where the team member's business name should go —
+      e.g. "Your booking contract is with {team member}." Each request keeps the terms as they were when it was sent.
+    </p>
+    <textarea id="termsText" rows="12" style="width:100%;font:inherit;font-size:.92rem;line-height:1.55;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff" placeholder="Deposits are non-refundable…"></textarea>
+    <div style="display:flex;gap:10px;align-items:center;margin-top:10px">
+      <button class="btn btn-primary" type="button" id="termsSave">Save terms</button>
+      <span class="muted" id="termsStatus"></span>
+    </div>
+  </section>
 
   <section class="panel" style="margin-bottom:22px">
     <div class="panel-head">
@@ -752,7 +766,7 @@ function showTab(route) {
     vouchersLoaded = true; load(); loadImported();
   }
   if (name === 'connect' && !connectLoaded) {
-    connectLoaded = true; loadPayments(); loadTeam(); loadAccounts(); checkLiveMode();
+    connectLoaded = true; loadPayments(); loadTeam(); loadAccounts(); checkLiveMode(); loadTerms();
   }
   if (name === 'widgets' && !widgetsLoaded) {
     widgetsLoaded = true; loadWidgets(); loadConversion();
@@ -783,6 +797,26 @@ let payPage = 1, payHasMore = false;
 // event and drops it. That is the right call — processing a test event as real
 // money would be worse — but it means a mismatch is invisible until someone
 // asks why a paid request still says "awaiting payment". This surfaces it.
+/* ---- booking terms (platform default; {team member} is filled per member) ---- */
+async function loadTerms() {
+  try {
+    const s = await api('/api/admin/settings');
+    document.getElementById('termsText').value = s.default_terms || '';
+  } catch { /* the box stays empty; saving still works */ }
+}
+document.getElementById('termsSave')?.addEventListener('click', async e => {
+  const btn = e.currentTarget, status = document.getElementById('termsStatus');
+  btn.disabled = true; status.textContent = 'Saving…';
+  try {
+    await api('/api/admin/settings', {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ default_terms: document.getElementById('termsText').value }),
+    });
+    status.textContent = 'Saved — new payment requests use these terms.';
+  } catch (err) { status.textContent = err.message; }
+  finally { btn.disabled = false; }
+});
+
 async function checkLiveMode() {
   const bar = document.getElementById('liveModeAlert');
   try {
@@ -1414,7 +1448,7 @@ document.addEventListener('DOMContentLoaded', () => showTab(location.hash.slice(
 window.addEventListener('hashchange', () => showTab(location.hash.slice(1) || 'inbox'));
 </script>
 <div class="ib-toast" id="ibToast" role="status" aria-live="polite" hidden></div>
-<script src="/admin/inbox.js?v=d7ca223c7b" defer></script>
-<script src="/admin/imported.js?v=d7ca223c7b" defer></script>
+<script src="/admin/inbox.js?v=ebb14e2ecf" defer></script>
+<script src="/admin/imported.js?v=ebb14e2ecf" defer></script>
 </body>
 </html>
