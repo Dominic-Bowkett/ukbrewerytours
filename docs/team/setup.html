@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Set up your account — UK Brewery Tours team</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍺%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body class="login-body">
+  <form class="login-card" id="form">
+    <div class="login-brand">🍺 UK Brewery Tours</div>
+    <h1>Set up your account</h1>
+    <p class="muted" style="font-size:.9rem;margin-bottom:4px">
+      Choose a password. You'll sign in with your email address and this password at
+      <strong>ukbrewerytours.com/team</strong>.
+    </p>
+    <label for="next">Password</label>
+    <input id="next" type="password" autocomplete="new-password" minlength="12" required autofocus>
+    <label for="confirm">Confirm password</label>
+    <input id="confirm" type="password" autocomplete="new-password" minlength="12" required>
+    <p class="muted" style="font-size:.8rem;margin-top:8px">At least 12 characters.</p>
+    <p class="error" id="error" hidden></p>
+    <button class="btn btn-primary btn-block" type="submit" id="submit">Save and sign in</button>
+  </form>
+
+<script>
+// The link is /team/setup.html#t=<token>: the token is in the fragment, so it
+// never reaches a server log or another site's Referer. Take it out of the
+// address bar straight away.
+const token = (new URLSearchParams(location.hash.slice(1)).get('t') || '').trim();
+if (location.hash) history.replaceState(null, '', location.pathname);
+
+const form = document.getElementById('form');
+const errorEl = document.getElementById('error');
+const submit = document.getElementById('submit');
+const fail = msg => { errorEl.textContent = msg; errorEl.hidden = false; };
+
+if (!/^[0-9a-f]{64}$/i.test(token)) {
+  fail('This set-up link is incomplete. Open it again from the message you were sent, or ask for a new one.');
+  submit.disabled = true;
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  errorEl.hidden = true;
+  const next = document.getElementById('next').value.trim();
+  if (next !== document.getElementById('confirm').value.trim()) return fail('The two passwords do not match.');
+  submit.disabled = true;
+  submit.textContent = 'Saving…';
+  try {
+    const res = await fetch('/api/team/setup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, password: next }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Could not save.');
+    location.href = '/team/';
+  } catch (err) {
+    fail(err.message);
+    submit.disabled = false;
+    submit.textContent = 'Save and sign in';
+  }
+});
+</script>
+</body>
+</html>

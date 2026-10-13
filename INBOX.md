@@ -403,3 +403,16 @@ longer names who assigned it; its subject is "New enquiry assigned to you — <n
 
 London Brewery Tours (london@) was removed from the team the same day: inbox access
 off, login deactivated, its one conversation handed back to the admin.
+
+## Set-up links instead of passwords (13 Oct 2026)
+
+Team → **Set-up link** (Inbox → Team access) copies a one-time link,
+`/team/setup.html#t=<64 hex>`, valid 7 days, replacing any earlier one. The member
+opens it, chooses their own password, and is signed in. Only a SHA-256 of the token
+is stored (`team_members.setup_token_hash`, `migrations/0019_team_setup_links.sql`);
+the token is in the URL fragment, so it never reaches logs or a Referer, and it is
+cleared by the same UPDATE that sets the password. `POST /api/team/setup` is public
+(in the team gate's PUBLIC set). `_lib/team-setup.js` issues links.
+
+Every email sends from info@ (team replies included, member's display name kept),
+and a member's alerts go to their own login email.

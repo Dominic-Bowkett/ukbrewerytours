@@ -569,7 +569,7 @@
       <h2 style="margin-bottom:6px">Team access to messages</h2>
       <p class="muted" style="margin-bottom:18px">
         A teammate signs in at <strong>ukbrewerytours.com/team/</strong> and sees <strong>only</strong> the conversations you
-        assign to them — never yours, never each other's. Their replies go out from their own address. You keep seeing everything.
+        assign to them — never yours, never each other's, and never an email address. Their replies go out from info@ukbrewerytours.com. You keep seeing everything.
       </p>
       ${inboxers.length ? `<table class="hist"><tbody>${inboxers.map(m => `
         <tr>
@@ -578,7 +578,8 @@
           <td class="muted">alerts to<br>${esc(m.email)}</td>
           <td class="muted">${m.open_conversations || 0} open</td>
           <td><span class="pill pill-${m.active ? 'active' : 'pending'}">${m.active ? 'Active' : 'Disabled'}</span></td>
-          <td><button class="btn btn-ghost btn-sm" data-revoke="${esc(m.id)}" data-name="${esc(m.name)}">Remove access</button></td>
+          <td style="white-space:nowrap"><button class="btn btn-ghost btn-sm" data-setup="${esc(m.id)}" data-name="${esc(m.name)}" title="A one-time link for them to choose their own password">Set-up link</button>
+            <button class="btn btn-ghost btn-sm" data-revoke="${esc(m.id)}" data-name="${esc(m.name)}">Remove access</button></td>
         </tr>`).join('')}</tbody></table>`
         : '<p class="muted">No one has access to messages yet.</p>'}
 
@@ -595,6 +596,14 @@
         <div class="redeem-actions"><button class="btn btn-primary" type="submit">Create login</button></div>
       </form>`;
 
+    // A one-time link for them to choose their own password: nothing to read out or retype.
+    teamBody.querySelectorAll('[data-setup]').forEach(b => b.addEventListener('click', async () => {
+      try {
+        const res = await api(`/api/admin/team/${b.dataset.setup}/setup-link`, { method: 'POST' });
+        try { await navigator.clipboard.writeText(res.url); b.textContent = 'Link copied ✓'; }
+        catch { prompt(`Set-up link for ${b.dataset.name} — works once, for ${res.days} days:`, res.url); }
+      } catch (err) { alert(err.message); }
+    }));
     teamBody.querySelectorAll('[data-revoke]').forEach(b => b.addEventListener('click', async () => {
       if (!confirm(`Remove ${b.dataset.name}'s access to messages?\n\nThey are signed out immediately. Conversations assigned to them stay assigned until you reassign them.`)) return;
       try {

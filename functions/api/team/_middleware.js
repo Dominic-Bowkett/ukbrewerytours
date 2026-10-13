@@ -32,7 +32,7 @@ import {
 
 // Reachable without a session. Login mints one; logout only deletes a cookie and
 // must keep working for a session that has already been revoked.
-const PUBLIC = new Set(['/api/team/login', '/api/team/logout']);
+const PUBLIC = new Set(['/api/team/login', '/api/team/logout', '/api/team/setup']);
 
 // Reachable with a valid session even when the member cannot currently trade:
 // the shell has to be able to say WHY, and a forced password change has to be
