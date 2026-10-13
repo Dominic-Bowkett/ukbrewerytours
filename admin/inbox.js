@@ -1077,6 +1077,7 @@
             : esc(f.value)}</div>`).join('')}
         </div>` : ''}
 
+        ${notif || binned ? '' : payCard(d)}
         ${notif || binned ? '' : voucherCard(d)}
 
         <div class="timeline">${d.messages.map(m => timelineItem(m, e)).join('')}</div>
@@ -1097,6 +1098,7 @@
         <div class="composer-foot">
           <span class="muted" id="thHint"></span>
           <div class="send-row">
+            ${notif ? '' : '<button class="btn btn-ghost att-btn" type="button" id="thPay" title="Send them a secure Stripe link to pay an amount you choose">💷 Request payment</button>'}
             <button class="btn btn-ghost att-btn" type="button" id="thAttach" title="Attach photos or files — or drag them onto the reply box, or paste a screenshot">📎 Attach</button>
             <input type="file" id="thFileInput" multiple hidden>
             <label class="muted" id="thAfterWrap">then mark
@@ -1156,6 +1158,7 @@
     sc.addEventListener('scroll', () => { if (isNearBottom()) clearUnseen(); }, { passive: true });
 
     $('thBack').addEventListener('click', () => { location.hash = 'inbox'; });
+    $('thPay')?.addEventListener('click', () => openPay(d));
     threadEl.querySelectorAll('[data-th-status]').forEach(b => b.addEventListener('click', () => patch(e.id, { status: b.dataset.thStatus })));
     $('thType')?.addEventListener('change', ev => patch(e.id, { type: ev.target.value }));
     $('thPromote')?.addEventListener('click', async () => {
@@ -1479,6 +1482,141 @@
     }
   }
 
+  /* ---------------- payment requests ----------------
+   * "Pay £5 for your top-up": a Stripe link, emailed as a reply with a Pay
+   * button, or made for copying into a text. Logged here; vouchers untouched. */
+
+  const money2 = p => `£${(p / 100).toFixed(2)}`;
+  const PAY_STATUS = { open: 'Awaiting payment', paid: 'Paid', cancelled: 'Cancelled' };
+
+  function payCard(d) {
+    const list = d.payments || [];
+    if (!list.length) return '';
+    return `<div class="pay-card">
+      <div class="pay-head">💷 Payment requests</div>
+      ${list.map(p => `<div class="pay-row pay-${esc(p.status)}">
+        <strong>${money2(p.amount_pence)}</strong>
+        <span class="pay-desc">${esc(p.description)}</span>
+        <span class="pay-st">${esc(PAY_STATUS[p.status] || p.status)}${p.status === 'paid' ? ` · ${esc(when(p.paid_at))}` : p.status === 'open' ? ` · sent ${esc(dateShort(p.created_at))}` : ''}</span>
+        ${p.status === 'open' ? `<span class="pay-acts">
+          <button type="button" class="chip-btn" data-pay-copy="${esc(p.url)}" title="Copy the link, to send by text or WhatsApp">Copy link</button>
+          <button type="button" class="chip-btn chip-danger" data-pay-cancel="${p.id}" title="Withdraw it — the link stops working">Cancel</button>
+        </span>` : ''}
+      </div>`).join('')}
+    </div>`;
+  }
+
+  async function copyText(text, btn) {
+    try { await navigator.clipboard.writeText(text); } catch { prompt('Copy this link:', text); return; }
+    if (btn) { const was = btn.textContent; btn.textContent = 'Copied ✓'; setTimeout(() => { btn.textContent = was; }, 1500); }
+  }
+
+  function replacePayCard(payments) {
+    if (!currentThread) return;
+    currentThread.payments = payments;
+    const old = threadEl.querySelector('.pay-card');
+    const html = payCard(currentThread);
+    if (old) old.outerHTML = html || '';
+    else if (html) (threadEl.querySelector('.vcheck') || threadEl.querySelector('.timeline'))?.insertAdjacentHTML('beforebegin', html);
+  }
+
+  async function refreshPayments(id) {
+    try {
+      const d = await api('/api/admin/inbox/' + id);
+      if (state.current === id) replacePayCard(d.payments || []);
+    } catch { /* the next poll tries again */ }
+  }
+
+  threadEl.addEventListener('click', async ev => {
+    const copy = ev.target.closest('[data-pay-copy]');
+    if (copy) return copyText(copy.dataset.payCopy, copy);
+    const cancel = ev.target.closest('[data-pay-cancel]');
+    if (!cancel || !currentThread) return;
+    if (!confirm('Cancel this payment request?\n\nThe link stops working. If they have already paid, refund it in Stripe instead.')) return;
+    try {
+      const res = await api(`/api/admin/inbox/${currentThread.enquiry.id}/payments`, {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ payment_id: Number(cancel.dataset.payCancel), cancel: true }),
+      });
+      replacePayCard(res.payments);
+      pollThread();
+    } catch (err) { alert(err.message); }
+  });
+
+  const payModal = $('payModal');
+  payModal.addEventListener('click', ev => { if (ev.target.closest('[data-close]')) payModal.hidden = true; });
+
+  function openPay(d) {
+    const e = d.enquiry;
+    const first = String(e.name || '').split(/\s+/)[0];
+    const canEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(e.email || ''));
+    payModal.hidden = false;
+    $('payBody').innerHTML = `
+      <h2 style="margin-bottom:6px">Request a payment</h2>
+      <p class="muted" style="margin-bottom:18px">
+        ${canEmail ? `${esc(e.name)} gets your message with a <strong>Pay</strong> button` : 'No email address on this one — make the link and send it by text or WhatsApp'}.
+        Stripe takes card, Apple Pay or Google Pay and emails them a receipt. When they pay, it is logged here and you get an alert.
+        Vouchers are not changed.
+      </p>
+      <form class="redeem-form" id="payForm" style="margin-top:0;border-top:0;padding-top:0">
+        <div class="redeem-row even">
+          <div class="field"><label for="pay-amount">Amount (£)</label>
+            <input id="pay-amount" type="number" inputmode="decimal" min="1" step="0.01" required placeholder="5.00"></div>
+          <div class="field"><label for="pay-desc">What it's for</label>
+            <input id="pay-desc" type="text" maxlength="120" required value="Top-up payment"></div>
+        </div>
+        ${canEmail ? `<div class="field" style="margin-top:12px"><label for="pay-msg">Message</label>
+          <textarea id="pay-msg" rows="7"></textarea></div>` : ''}
+        <p class="error" id="payError" hidden></p>
+        <div id="payDone" hidden></div>
+        <div class="redeem-actions">
+          ${canEmail ? '<button class="btn btn-ghost" type="button" id="payLinkOnly" title="Make the link without emailing it — to send by text or WhatsApp">Just make the link</button>' : ''}
+          <button class="btn btn-primary" type="submit">${canEmail ? 'Send payment link' : 'Make the link'}</button>
+        </div>
+      </form>`;
+    const msg = $('pay-msg');
+    if (msg) msg.value = `Hi ${first},\n\nHere's a secure link for your payment — just tap the button below. It takes card, Apple Pay or Google Pay.\n\nCheers,\nDom\n${e.brand}`;
+    $('pay-amount').focus();
+
+    const submit = async send => {
+      const errEl = $('payError');
+      errEl.hidden = true;
+      const amount = Number($('pay-amount').value);
+      if (!(amount >= 1)) { errEl.textContent = 'The smallest payment is £1.'; errEl.hidden = false; return; }
+      const description = $('pay-desc').value.trim() || 'Top-up payment';
+      if (send && !confirm(`Email ${e.email} a link to pay £${amount.toFixed(2)} for "${description}"?`)) return;
+      const btns = $('payForm').querySelectorAll('button');
+      btns.forEach(b => { b.disabled = true; });
+      try {
+        const res = await api(`/api/admin/inbox/${e.id}/payments`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ amount, description, body: msg?.value || '', send }),
+        });
+        if (res.sent) {
+          payModal.hidden = true;
+          await openThread(e.id, { keepScroll: true });
+          loadList({ quiet: true });
+          return;
+        }
+        // Not emailed: show the link to copy.
+        $('payDone').hidden = false;
+        $('payDone').innerHTML = `<div class="pay-made"><span>Link for £${amount.toFixed(2)}:</span>
+          <input type="text" readonly value="${esc(res.url)}" id="payUrl"><button type="button" class="btn btn-primary btn-sm" id="payCopy">Copy</button></div>`;
+        $('payUrl').select();
+        $('payCopy').addEventListener('click', ev => copyText(res.url, ev.target));
+        $('payForm').querySelector('.redeem-actions').hidden = true;
+        replacePayCard(res.payments);
+        pollThread();
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.hidden = false;
+        btns.forEach(b => { b.disabled = false; });
+      }
+    };
+    $('payForm').addEventListener('submit', ev => { ev.preventDefault(); submit(canEmail); });
+    $('payLinkOnly')?.addEventListener('click', () => submit(false));
+  }
+
   /* ---------------- voucher check ---------------- */
 
   function voucherCard(d) {
@@ -1716,6 +1854,7 @@
         loadList({ quiet: true });
       }
 
+      if (d.messages.some(m => m.direction === 'event' && m.body.startsWith('💷'))) refreshPayments(id);
       const shownCount = currentThread.messages.reduce((n, m) => n + (m.attachments?.length || 0), 0);
       if (typeof d.attachment_count === 'number' && d.attachment_count !== shownCount) refreshFiles(id);
 

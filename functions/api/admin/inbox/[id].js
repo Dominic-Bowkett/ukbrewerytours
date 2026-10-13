@@ -11,6 +11,7 @@ import {
 } from '../../../_lib/inbox.js';
 import { sendEmail, assignmentEmailHtml } from '../../../_lib/email.js';
 import { attachmentsByMessage, withAttachments } from '../../../_lib/attachments.js';
+import { paymentsFor } from '../../../_lib/inbox-payments.js';
 
 const BASE = '/api/admin/inbox';
 
@@ -73,6 +74,7 @@ export async function onRequestGet({ params, env }) {
       thread_url: threadUrl(token),
     },
     messages: withAttachments(messages || [], files, BASE, enquiry.id),
+    payments: await paymentsFor(env, enquiry.id),
     vouchers,
     labels: { types: TYPES, statuses: STATUSES },
   }, { headers: { 'Cache-Control': 'no-store' } });

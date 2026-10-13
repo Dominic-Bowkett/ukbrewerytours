@@ -375,11 +375,20 @@ export function assignmentEmailHtml({ enquiry, typeLabel, siteName, link, body, 
 }
 
 /** An admin reply to a customer. Plain text in, paragraphs out, with the thread link. */
-export function inboxReplyHtml({ body, quoted, quotedName, threadLink, brand = 'UK Brewery Tours' }) {
+export function inboxReplyHtml({ body, quoted, quotedName, threadLink, brand = 'UK Brewery Tours', pay = null }) {
   const paras = esc(body).split(/\n{2,}/).map(p =>
     `<p style="margin:0 0 14px;font-size:15px;line-height:1.7;">${p.replace(/\n/g, '<br>')}</p>`).join('');
+  // pay: { url, amount, description } — a payment request's button.
   return shell(`<tr><td style="padding:30px 28px 24px;">
     ${paras}
+    ${pay ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:8px 0 6px;">
+      <tr><td style="background:${CREAM};border-radius:12px;padding:20px 18px;text-align:center;">
+        <div style="font-size:13px;color:${INK_SOFT};margin-bottom:4px;">${esc(pay.description)}</div>
+        <div style="font-size:26px;font-weight:700;margin-bottom:14px;">${esc(pay.amount)}</div>
+        <a href="${esc(pay.url)}" style="display:inline-block;background:${AMBER};color:#2b1a05;text-decoration:none;font-weight:700;padding:13px 30px;border-radius:999px;font-size:15px;">Pay ${esc(pay.amount)} securely</a>
+        <div style="font-size:12px;color:${INK_SOFT};margin-top:10px;">Card, Apple Pay or Google Pay · processed by Stripe</div>
+      </td></tr>
+    </table>` : ''}
     ${quoted ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:22px 0 0;">
       <tr><td style="border-left:3px solid #e7ddcd;padding:4px 0 4px 14px;font-size:13px;line-height:1.65;color:${INK_SOFT};">
         <div style="font-size:12px;margin-bottom:4px;">${quotedName ? `${esc(quotedName)} wrote:` : 'You wrote:'}</div>

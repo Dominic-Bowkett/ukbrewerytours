@@ -540,7 +540,7 @@ if (fs.existsSync(path.join(ROOT, 'team'))) {
 // /assets/js/pay.js) is served straight from the edge cache and never pays for a
 // Function invocation — and can never be intercepted by the team gate.
 fs.writeFileSync(path.join(OUT, '_routes.json'),
-  JSON.stringify({ version: 1, include: ['/api/*', '/pay/*', '/team/*', '/embed/widget/*', '/embed/chat/*', '/messages/*'], exclude: [] }, null, 2) + '\n');
+  JSON.stringify({ version: 1, include: ['/api/*', '/pay/*', '/pay-now/*', '/team/*', '/embed/widget/*', '/embed/chat/*', '/messages/*'], exclude: [] }, null, 2) + '\n');
 
 /* ----- computed blocks shared by pages ----- */
 

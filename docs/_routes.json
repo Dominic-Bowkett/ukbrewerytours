@@ -3,6 +3,7 @@
   "include": [
     "/api/*",
     "/pay/*",
+    "/pay-now/*",
     "/team/*",
     "/embed/widget/*",
     "/embed/chat/*",

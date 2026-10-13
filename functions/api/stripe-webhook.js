@@ -8,6 +8,7 @@
 import { verifyWebhook } from '../_lib/stripe.js';
 import { sendEmail, sendVoucherEmails, receiptEmailHtml, saleNotificationHtml, SALE_SUBJECT, isSendToSelf } from '../_lib/email.js';
 import { orderToken } from '../_lib/auth.js';
+import { markPaid } from '../_lib/inbox-payments.js';
 
 export async function onRequestPost({ request, env }) {
   const raw = await request.text();
@@ -17,6 +18,19 @@ export async function onRequestPost({ request, env }) {
   if (event.type !== 'checkout.session.completed') return new Response('ignored', { status: 200 });
 
   const session = event.data.object;
+
+  // A payment request from the inbox, not a voucher order: log it on its
+  // conversation and stop. markPaid() is idempotent, so retries are harmless.
+  if (session.metadata?.inbox_payment_id) {
+    try {
+      await markPaid(env, session);
+    } catch (err) {
+      console.error('inbox payment webhook failed', err);
+      return new Response('failed', { status: 500 });
+    }
+    return new Response('ok', { status: 200 });
+  }
+
   const order = await env.DB.prepare('SELECT * FROM orders WHERE stripe_session_id = ?')
     .bind(session.id).first();
 

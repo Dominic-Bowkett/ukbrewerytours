@@ -359,3 +359,27 @@ Close; in the Bin, Put back / Delete forever. Delete key (or #) deletes, Escape
 clears. `POST /api/admin/inbox/bulk { ids, action }`.
 
 Admin replies and new emails are signed "Cheers, / Dom / <site brand>".
+
+## Requesting a payment (13 Oct 2026)
+
+**💷 Request payment** in a conversation's composer: amount (min £1, `MIN_PENCE` in
+`_lib/inbox-payments.js`), what it's for (default "Top-up payment"), and a message.
+The customer gets the message as a reply on the thread with a Pay button; **Just make
+the link** skips the email (for a text or WhatsApp — the only option when there is no
+email address). **Logged on the conversation only — vouchers are never changed;** adjust
+one by hand if the payment calls for it.
+
+- Link: `/pay-now/<token>` (`functions/pay-now/[[token]].js`, and `/pay-now/*` in
+  `_routes.json` via build.js). GET shows the amount and a Pay button — not a redirect,
+  because mail scanners open every link; POST makes a fresh Checkout Session on the
+  platform account each time, so the link never goes stale. Stripe emails the receipt.
+- Paid: `/api/stripe-webhook` (existing `checkout.session.completed` endpoint) sees
+  `metadata.inbox_payment_id` and calls `markPaid()`; Stripe's return to
+  `/pay-now/<token>?paid=<session>` calls it too. Whichever is first logs
+  "💷 Paid £x — …" on the timeline, marks the conversation unread and sends one alert
+  to `ALERT_EMAIL`; the other is a no-op.
+- The conversation shows a **Payment requests** card: Awaiting payment / Paid / Cancelled,
+  with Copy link and Cancel (the link then says it is no longer active). Refunds are
+  done in the Stripe dashboard.
+- Table `inbox_payments` (`migrations/0018_inbox_payments.sql`, applied by hand). Kept
+  when a conversation is deleted for good.
