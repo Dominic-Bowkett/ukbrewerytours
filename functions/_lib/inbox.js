@@ -126,18 +126,22 @@ export const senderFor = member => ({
 export const notifyAddressFor = member => member?.notify_email || member?.email || null;
 
 /**
- * Hide a customer's email address in text shown to a team member. Only their own
- * address is masked — an address they typed for someone else (a colleague, the
- * recipient of a gift voucher) is left alone, because that is content, not the
- * identity we are withholding.
+ * Hide email addresses in text shown to a team member. Every address goes, not
+ * only the customer's: Dom decided (13 Oct 2026) that team members see no email
+ * addresses at all — the customer's, anyone Cc'd, the admin's, or one written in
+ * a message. They work from the name and phone, and reply through the portal.
+ * customerEmail is still masked first in case it is not address-shaped on its own.
  */
+const ANY_EMAIL = /[A-Z0-9._%+'-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi;
 export function hideEmails(text, customerEmail) {
-  const body = String(text ?? '');
+  let body = String(text ?? '');
   const addr = String(customerEmail || '').trim();
-  if (!addr) return body;
-  const escaped = addr.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  return body.replace(new RegExp(escaped, 'gi'), '[email hidden]');
+  if (addr) body = body.replace(new RegExp(addr.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), '[email hidden]');
+  return body.replace(ANY_EMAIL, '[email hidden]');
 }
+
+/** Who wrote a timeline entry, as a team member sees it: never an address. */
+export const teamAuthor = author => (/@/.test(String(author || '')) ? 'UK Brewery Tours' : author);
 
 /**
  * Where a customer's email reply should land. Until inbound email is routed

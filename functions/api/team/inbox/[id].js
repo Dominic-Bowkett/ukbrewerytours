@@ -3,7 +3,7 @@
 //   PATCH  { status } — triage. Assignment and deletion stay with the admin.
 
 import {
-  TYPES, STATUSES, CHANNELS, FIELD_LABELS, siteLabel, brandFor, voucherCheck, logEvent, hideEmails,
+  TYPES, STATUSES, CHANNELS, FIELD_LABELS, siteLabel, brandFor, voucherCheck, logEvent, hideEmails, teamAuthor,
 } from '../../../_lib/inbox.js';
 import { attachmentsByMessage } from '../../../_lib/attachments.js';
 
@@ -36,7 +36,7 @@ export async function onRequestGet({ params, env, data }) {
   // The customer's email address is never sent to a team member — not as a
   // field, and not left sitting inside a message body or a voucher record.
   const clean = messages || [];
-  for (const m of clean) m.body = hideEmails(m.body, enquiry.email);
+  for (const m of clean) { m.body = hideEmails(m.body, enquiry.email); m.author = teamAuthor(m.author); }
   // Photos and files, but not the original HTML: that would show the address.
   const files = await attachmentsByMessage(env, enquiry.id, '/api/team/inbox');
   for (const m of clean) m.attachments = files[m.id] || [];

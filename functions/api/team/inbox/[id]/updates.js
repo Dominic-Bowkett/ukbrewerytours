@@ -1,7 +1,7 @@
 // GET /api/team/inbox/:id/updates?after=<message id>&seen=1
 // The team portal's live poll — same contract as the admin's, scoped to the owner.
 
-import { voucherCheck, hideEmails } from '../../../../_lib/inbox.js';
+import { voucherCheck, hideEmails, teamAuthor } from '../../../../_lib/inbox.js';
 
 export async function onRequestGet({ params, request, env, data }) {
   if (!/^\d+$/.test(String(params.id))) return Response.json({ error: 'Conversation not found.' }, { status: 404 });
@@ -36,7 +36,7 @@ export async function onRequestGet({ params, request, env, data }) {
   }
 
   // Same rule as the detail route: no customer email address reaches a team member.
-  for (const m of messages) m.body = hideEmails(m.body, enquiry.email);
+  for (const m of messages) { m.body = hideEmails(m.body, enquiry.email); m.author = teamAuthor(m.author); }
   for (const m of (vouchers?.matches || [])) m.holder_email = null;
 
   // Attachments land just after their message; the page redraws when this changes.

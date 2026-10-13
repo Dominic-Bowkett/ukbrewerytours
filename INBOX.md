@@ -391,3 +391,15 @@ book offered as you type. Several addresses, comma-separated; anything that is n
 address is refused rather than dropped. Recorded on the timeline as "Reply also sent
 to cc … · bcc …". Reply-To stays the conversation's own address, so a Cc'd person's
 reply lands on this thread (matched by the token, not the sender).
+
+## Team members see no email addresses at all (13 Oct 2026)
+
+Supersedes the "customer's own address only" rule above. `hideEmails()` now masks
+every address in anything a team member sees — list snippets, the thread, live
+updates, alert and assignment emails — and `teamAuthor()` shows "UK Brewery Tours"
+for any author that is an address (the admin's login). The assignment email no
+longer names who assigned it; its subject is "New enquiry assigned to you — <name>
+(log in to reply)" with a **Log in & reply** button.
+
+London Brewery Tours (london@) was removed from the team the same day: inbox access
+off, login deactivated, its one conversation handed back to the admin.

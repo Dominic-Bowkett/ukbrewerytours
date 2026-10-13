@@ -356,13 +356,14 @@ export function inboxAlertHtml({ enquiry, body, followUp, matches = [], unmatche
 /** Told to a team member when a conversation is assigned to them. */
 export function assignmentEmailHtml({ enquiry, typeLabel, siteName, link, body, assignedBy }) {
   return shell(`<tr><td style="padding:30px 28px;">
-    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${INK_SOFT};">Assigned to you · ${esc(siteName)}</div>
+    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${INK_SOFT};">New enquiry for you · ${esc(siteName)}</div>
     <h1 style="margin:6px 0 16px;font-size:22px;">${esc(enquiry.name)} — ${esc(typeLabel)}</h1>
     <p style="margin:0 0 20px;font-size:15px;line-height:1.7;">
-      ${esc(assignedBy || 'UK Brewery Tours')} has passed this enquiry to you. Replies you send go out from your own address.
+      ${esc(assignedBy || 'UK Brewery Tours')} has assigned a new enquiry to you. Log in to read it and reply —
+      your reply is sent from the portal, and the customer's own replies come back to you there.
     </p>
     <p style="margin:0 0 22px;">
-      <a href="${esc(link)}" style="display:inline-block;background:${AMBER};color:#2b1a05;text-decoration:none;font-weight:600;padding:12px 24px;border-radius:999px;font-size:15px;">Open &amp; reply</a>
+      <a href="${esc(link)}" style="display:inline-block;background:${AMBER};color:#2b1a05;text-decoration:none;font-weight:600;padding:12px 24px;border-radius:999px;font-size:15px;">Log in &amp; reply</a>
     </p>
     ${body ? `<div style="font-size:15px;line-height:1.7;border-left:3px solid ${AMBER};padding:2px 0 2px 14px;margin:0 0 22px;">${esc(body).replace(/\n/g, '<br>')}</div>` : ''}
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #e7ddcd;border-bottom:1px solid #e7ddcd;">

@@ -176,7 +176,7 @@ export async function onRequestPatch({ params, request, env, data }) {
       await sendEmail(env, {
         // Their login email may be a username with no mailbox behind it.
         to: newOwner.notify_email || newOwner.email,
-        subject: `Assigned to you: ${TYPES[body.type || enquiry.type] || 'Enquiry'} — ${enquiry.name}`,
+        subject: `New enquiry assigned to you — ${enquiry.name} (log in to reply)`,
         html: assignmentEmailHtml({
           enquiry,
           typeLabel: TYPES[body.type || enquiry.type] || 'Enquiry',
@@ -184,7 +184,7 @@ export async function onRequestPatch({ params, request, env, data }) {
           link: teamUrl(enquiry.id),
           // The team member never sees the customer's email address.
           body: hideEmails(last?.body || enquiry.message, enquiry.email),
-          assignedBy: who,
+          assignedBy: 'UK Brewery Tours',
         }),
       });
     } catch (err) {
