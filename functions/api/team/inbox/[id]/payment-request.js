@@ -58,7 +58,7 @@ export async function onRequestPost({ params, request, env, data }) {
   const tourDate = clean(body.tour_date, 10);
   const note = String(body.note ?? '').trim().slice(0, 2000);
   if (!tourName) return Response.json({ error: 'Enter the tour name.' }, { status: 400 });
-  if (tourDate && !/^\d{4}-\d{2}-\d{2}$/.test(tourDate)) return Response.json({ error: 'Choose the tour date from the calendar.' }, { status: 400 });
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(tourDate)) return Response.json({ error: 'Choose the tour date from the calendar.' }, { status: 400 });
 
   const amountPence = Math.round(Number(String(body.amount ?? '').replace(/[£,\s]/g, '')) * 100);
   if (!Number.isFinite(amountPence) || amountPence < STRIPE_MIN_PENCE) {

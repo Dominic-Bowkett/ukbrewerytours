@@ -59,6 +59,7 @@
     clear();
 
     root.appendChild(el('p', 'pay-seller', d.seller_name));
+    if (d.payment_label) root.appendChild(el('p', 'pay-kind', d.payment_label));
     root.appendChild(el('h1', 'pay-title', d.tour_name));
 
     var when = prettyDate(d.tour_date, d.tour_time);

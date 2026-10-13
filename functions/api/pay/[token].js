@@ -25,7 +25,7 @@
 // cached payment link.
 
 import {
-  verifyPayToken, TOKEN_RE, settlePaid, recordEvent, payabilityOf,
+  verifyPayToken, TOKEN_RE, settlePaid, recordEvent, payabilityOf, KIND_SHORT,
 } from '../../_lib/connect.js';
 import { retrieveSession, retrievePaymentIntent, StripeError } from '../../_lib/stripe.js';
 
@@ -148,6 +148,8 @@ export async function onRequestGet(ctx) {
     reference: row.reference || token.slice(0, 8).toUpperCase(),
 
     client_name: row.client_name,
+    // "Deposit", "Balance"… — what this payment is, shown above the tour.
+    payment_label: KIND_SHORT[row.payment_kind] || KIND_SHORT.full,
     tour_name: row.tour_name,
     tour_date: row.tour_date,
     tour_time: row.tour_time,

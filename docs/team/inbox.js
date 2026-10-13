@@ -444,7 +444,7 @@
           <div class="field"><label for="tp-tour">Tour name</label>
             <input id="tp-tour" type="text" maxlength="200" required placeholder="e.g. Bermondsey Beer Mile tour"></div>
           <div class="field"><label for="tp-date">Tour date</label>
-            <input id="tp-date" type="date"></div>
+            <input id="tp-date" type="date" required></div>
         </div>
         <div class="field" style="margin-top:12px"><label for="tp-note">Message (optional)</label>
           <textarea id="tp-note" rows="4" placeholder="Shown with the payment details"></textarea></div>

@@ -836,7 +836,7 @@ export async function sendPaymentRequest(env, { requestId, member = null, actor 
         from,
         to: [row.client_email],
         reply_to: replyTo,
-        subject: `${row.member_display_name || 'UK Brewery Tours'} — payment for ${row.tour_name}`,
+        subject: `${KIND_SHORT[row.payment_kind] || 'Payment'} for ${row.tour_name}${row.tour_date ? ` — ${tourWhen(row, { short: true })}` : ''} | ${row.member_display_name || 'UK Brewery Tours'}`,
         html: paymentRequestHtml({ row, payUrl }),
       }),
     });
@@ -875,6 +875,24 @@ export const KIND_LABEL = {
   extra: 'Additional payment',
 };
 
+/** What the payment is, in the words the client sees it as: "Deposit", "Balance"… */
+export const KIND_SHORT = {
+  full: 'Full payment',
+  deposit: 'Deposit',
+  balance: 'Balance',
+  extra: 'Additional payment',
+};
+
+/** '2026-11-14' (+ '18:30') → 'Saturday 14 November 2026 at 18:30'; short: 'Sat 14 Nov 2026'. */
+export function tourWhen(row, { short = false } = {}) {
+  if (!row?.tour_date || !/^\d{4}-\d{2}-\d{2}$/.test(row.tour_date)) return row?.tour_date || '';
+  const [y, m, d] = row.tour_date.split('-').map(Number);
+  const date = new Date(Date.UTC(y, m - 1, d)).toLocaleDateString('en-GB', short
+    ? { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }
+    : { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+  return row.tour_time && !short ? `${date} at ${row.tour_time}` : date;
+}
+
 function kindIntro(row) {
   const who = esc(row.member_display_name || 'UK Brewery Tours');
   switch (row.payment_kind) {
@@ -891,10 +909,12 @@ function kindIntro(row) {
 
 /** The client's email: what they are paying for, and one button to pay it. */
 export function paymentRequestHtml({ row, payUrl }) {
-  const when = [row.tour_date, row.tour_time].filter(Boolean).join(' at ');
+  const when = tourWhen(row);
   const amountLabel = row.payment_kind === 'balance' ? 'Balance now due'
     : row.payment_kind === 'deposit' ? 'Deposit'
     : 'Amount';
+  const line = (label, value, strong = true) => `<tr><td style="padding:8px 14px 8px 0;font-size:14px;color:${INK_SOFT};white-space:nowrap;">${label}</td>
+        <td style="padding:8px 0;font-size:14px;${strong ? 'font-weight:600;' : ''}">${value}</td></tr>`;
   return payShell(`<tr><td style="padding:30px 28px;">
     <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${INK_SOFT};">${esc(KIND_LABEL[row.payment_kind] || KIND_LABEL.full)}</div>
     <h1 style="margin:6px 0 16px;font-size:24px;line-height:1.3;">${esc(row.tour_name)}</h1>
@@ -904,8 +924,9 @@ export function paymentRequestHtml({ row, payUrl }) {
     </p>
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #e7ddcd;border-bottom:1px solid #e7ddcd;margin-bottom:22px;">
-      ${when ? `<tr><td style="padding:8px 14px 8px 0;font-size:14px;color:${INK_SOFT};">When</td>
-        <td style="padding:8px 0;font-size:14px;font-weight:600;">${esc(when)}</td></tr>` : ''}
+      ${line('Payment for', esc(KIND_SHORT[row.payment_kind] || KIND_SHORT.full))}
+      ${line('Tour', esc(row.tour_name))}
+      ${when ? line('Date', esc(when)) : ''}
       ${row.booking_total_pence ? `<tr><td style="padding:8px 14px 8px 0;font-size:14px;color:${INK_SOFT};">Booking total</td>
         <td style="padding:8px 0;font-size:14px;">${money(row.booking_total_pence)}</td></tr>` : ''}
       <tr><td style="padding:8px 14px 8px 0;font-size:14px;color:${INK_SOFT};">${amountLabel}</td>

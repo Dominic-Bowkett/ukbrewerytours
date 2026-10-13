@@ -1445,3 +1445,6 @@ details .a { padding: 0 0 20px; color: var(--ink-soft); font-size: .97rem; }
 .gift-panel { margin: 28px 0; padding: 20px 22px; border-radius: var(--radius-sm); background: var(--cream); border: 1px solid var(--line); border-left: 4px solid var(--amber-deep); }
 .gift-panel .gift-panel__title { font-weight: 700; font-size: 1.15rem; margin: 4px 0 6px; }
 .gift-panel p { margin: 0 0 12px; }
+
+/* What the payment is (Deposit, Balance…), above the tour on /pay/. */
+.pay-kind { display: inline-block; background: #fbeacd; color: #8a5a14; font-weight: 700; font-size: .8rem; letter-spacing: .04em; text-transform: uppercase; padding: 4px 12px; border-radius: 999px; margin: 0 0 10px; }
