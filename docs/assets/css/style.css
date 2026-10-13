@@ -1448,3 +1448,4 @@ details .a { padding: 0 0 20px; color: var(--ink-soft); font-size: .97rem; }
 
 /* What the payment is (Deposit, Balance…), above the tour on /pay/. */
 .pay-kind { display: inline-block; background: #fbeacd; color: #8a5a14; font-weight: 700; font-size: .8rem; letter-spacing: .04em; text-transform: uppercase; padding: 4px 12px; border-radius: 999px; margin: 0 0 10px; }
+.pay-amount-label { color: var(--ink-soft); font-size: .9rem; font-weight: 600; margin: 4px 0 6px; }

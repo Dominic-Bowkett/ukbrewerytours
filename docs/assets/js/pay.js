@@ -65,6 +65,7 @@
     var when = prettyDate(d.tour_date, d.tour_time);
     if (when) root.appendChild(el('p', 'pay-date', when));
 
+    root.appendChild(el('p', 'pay-amount-label', (d.payment_label ? d.payment_label + ' — ' : '') + 'amount to pay'));
     var amount = el('div', 'pay-amount', money(d.amount_pence, d.currency));
     root.appendChild(amount);
 

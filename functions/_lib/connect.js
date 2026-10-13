@@ -897,53 +897,74 @@ function kindIntro(row) {
   const who = esc(row.member_display_name || 'UK Brewery Tours');
   switch (row.payment_kind) {
     case 'deposit':
-      return `here's the deposit link to secure your booking with ${who}.`;
+      return `Here's the link to pay the deposit that secures your booking with ${who}.`;
     case 'balance':
-      return `here's the link to settle the remaining balance on your booking with ${who}.`;
+      return `Here's the link to pay the remaining balance on your booking with ${who}.`;
     case 'extra':
-      return `here's a link for an additional payment on your booking with ${who}.`;
+      return `Here's the link for an additional payment on your booking with ${who}.`;
     default:
-      return `here's the payment link for your booking with ${who}.`;
+      return `Here's the link to pay for your booking with ${who}.`;
   }
 }
 
 /** The client's email: what they are paying for, and one button to pay it. */
 export function paymentRequestHtml({ row, payUrl }) {
+  // Leads with the three things the client needs — what, for which tour, how
+  // much — in large type, then the same facts as a summary box, then one button
+  // that says exactly what it does. (Dom, 13 Oct 2026: the old layout put the
+  // payment type in small caps and the details in a thin 14px table.)
   const when = tourWhen(row);
-  const amountLabel = row.payment_kind === 'balance' ? 'Balance now due'
-    : row.payment_kind === 'deposit' ? 'Deposit'
-    : 'Amount';
-  const line = (label, value, strong = true) => `<tr><td style="padding:8px 14px 8px 0;font-size:14px;color:${INK_SOFT};white-space:nowrap;">${label}</td>
-        <td style="padding:8px 0;font-size:14px;${strong ? 'font-weight:600;' : ''}">${value}</td></tr>`;
-  return payShell(`<tr><td style="padding:30px 28px;">
-    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${INK_SOFT};">${esc(KIND_LABEL[row.payment_kind] || KIND_LABEL.full)}</div>
-    <h1 style="margin:6px 0 16px;font-size:24px;line-height:1.3;">${esc(row.tour_name)}</h1>
+  const kind = KIND_SHORT[row.payment_kind] || KIND_SHORT.full;
+  const amount = money(row.amount_pence);
+  const seller = esc(row.member_display_name || 'UK Brewery Tours');
+  const headline = row.payment_kind === 'full' || !row.payment_kind
+    ? `${amount} to pay`
+    : `${amount} ${kind.toLowerCase()}`;
+  const button = row.payment_kind === 'full' || !row.payment_kind
+    ? `Pay ${amount}`
+    : `Pay ${amount} ${kind.toLowerCase()}`;
+  const row2 = (label, value, big = false) => `<tr>
+        <td style="padding:10px 16px 10px 0;font-size:15px;color:${INK_SOFT};white-space:nowrap;vertical-align:top;">${label}</td>
+        <td style="padding:10px 0;font-size:${big ? '22px' : '16px'};font-weight:700;color:${STOUT};">${value}</td></tr>`;
 
-    <p style="margin:0 0 20px;font-size:15px;line-height:1.7;">
-      Hi ${esc(row.client_name)}, ${kindIntro(row)}
+  return payShell(`<tr><td style="padding:30px 28px;">
+    <p style="margin:0 0 6px;font-size:16px;line-height:1.6;">Hi ${esc(row.client_name)},</p>
+    <p style="margin:0 0 22px;font-size:16px;line-height:1.6;">${kindIntro(row)}</p>
+
+    <h1 style="margin:0 0 4px;font-size:30px;line-height:1.2;color:${STOUT};">${esc(headline)}</h1>
+    <p style="margin:0 0 22px;font-size:17px;line-height:1.5;color:${STOUT};">
+      ${esc(row.tour_name)}${when ? ` &middot; ${esc(when)}` : ''}
     </p>
 
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #e7ddcd;border-bottom:1px solid #e7ddcd;margin-bottom:22px;">
-      ${line('Payment for', esc(KIND_SHORT[row.payment_kind] || KIND_SHORT.full))}
-      ${line('Tour', esc(row.tour_name))}
-      ${when ? line('Date', esc(when)) : ''}
-      ${row.booking_total_pence ? `<tr><td style="padding:8px 14px 8px 0;font-size:14px;color:${INK_SOFT};">Booking total</td>
-        <td style="padding:8px 0;font-size:14px;">${money(row.booking_total_pence)}</td></tr>` : ''}
-      <tr><td style="padding:8px 14px 8px 0;font-size:14px;color:${INK_SOFT};">${amountLabel}</td>
-        <td style="padding:8px 0;font-size:19px;font-weight:700;">${money(row.amount_pence)}</td></tr>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+           style="background:${CREAM};border-radius:12px;margin-bottom:22px;">
+      <tr><td style="padding:8px 20px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+          ${row2('Payment', esc(kind))}
+          ${row2('Tour', esc(row.tour_name))}
+          ${when ? row2('Date', esc(when)) : ''}
+          ${row.booking_total_pence ? row2('Booking total', money(row.booking_total_pence)) : ''}
+          ${row2('Amount to pay', amount, true)}
+        </table>
+      </td></tr>
     </table>
 
-    ${row.tour_details ? `<div style="font-size:14px;line-height:1.7;margin-bottom:22px;">${esc(row.tour_details).replace(/\n/g, '<br>')}</div>` : ''}
+    ${row.tour_details ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 22px;">
+      <tr><td style="border-left:3px solid ${AMBER};padding:4px 0 4px 14px;">
+        <div style="font-size:12px;color:${INK_SOFT};margin-bottom:4px;">Message from ${seller}</div>
+        <div style="font-size:15px;line-height:1.7;">${esc(row.tour_details).replace(/\n/g, '<br>')}</div>
+      </td></tr>
+    </table>` : ''}
 
-    <div style="text-align:center;margin:26px 0;">
-      <a href="${payUrl}" style="display:inline-block;background:${AMBER};color:#2b1a05;text-decoration:none;font-weight:600;padding:15px 34px;border-radius:999px;font-size:16px;">
-        View and pay ${money(row.amount_pence)}
+    <div style="text-align:center;margin:28px 0 10px;">
+      <a href="${payUrl}" style="display:inline-block;background:${AMBER};color:#2b1a05;text-decoration:none;font-weight:700;padding:16px 38px;border-radius:999px;font-size:17px;">
+        ${esc(button)}
       </a>
-      <div style="font-size:13px;color:${INK_SOFT};margin-top:12px;">Secure payment by Stripe. The full details and terms are on that page.</div>
+      <div style="font-size:13px;color:${INK_SOFT};margin-top:12px;">Secure payment by Stripe — card, Apple Pay or Google Pay.</div>
     </div>
 
     <p style="margin:22px 0 0;font-size:13px;color:${INK_SOFT};line-height:1.7;">
-      Questions? Just reply to this email and it goes straight to your guide.
+      Questions? Just reply to this email.
     </p>
   </td></tr>`);
 }
