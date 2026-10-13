@@ -113,10 +113,16 @@ export async function assignee(env, enquiry) {
 }
 
 /** How a member's replies are addressed. Falls back to their login email. */
-export const senderFor = member => ({
-  from: `${member.inbox_from_name || member.name || 'UK Brewery Tours'} <${member.inbox_from_email || member.email}>`,
-  replyTo: member.inbox_from_email || member.email,
-});
+// Never a personal address: a from-address not on our own (verified) domain —
+// including a member's Gmail login — falls back to info@.
+export const senderFor = member => {
+  const pick = [member.inbox_from_email, member.email].find(e => /@ukbrewerytours\.com$/i.test(String(e || '')))
+    || 'info@ukbrewerytours.com';
+  return {
+    from: `${member.inbox_from_name || member.name || 'UK Brewery Tours'} <${pick}>`,
+    replyTo: pick,
+  };
+};
 
 /**
  * Where a member's own notifications go. Their login email can be a username

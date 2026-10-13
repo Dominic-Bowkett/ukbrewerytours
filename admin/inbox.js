@@ -592,7 +592,7 @@
         </div>
         <div class="redeem-row" style="margin-top:12px">
           <div class="field"><label for="ti-from">Replies to customers come from</label>
-            <input id="ti-from" type="email" placeholder="Same as the login email"></div>
+            <input id="ti-from" type="email" placeholder="Blank = info@ukbrewerytours.com"></div>
           <div class="field"><label for="ti-notify">Send their alerts to</label>
             <input id="ti-notify" type="email" placeholder="A real mailbox they read"></div>
         </div>

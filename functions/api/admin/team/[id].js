@@ -78,6 +78,10 @@ export async function onRequestPatch({ request, env, params }) {
     if (e && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) {
       return Response.json({ error: 'Enter a valid “replies come from” address.' }, { status: 400 });
     }
+    // Only our own, verified domain — never a personal address customers would see.
+    if (e && !e.endsWith('@ukbrewerytours.com')) {
+      return Response.json({ error: 'Replies have to come from an @ukbrewerytours.com address.' }, { status: 400 });
+    }
     sets.push('inbox_from_email = ?'); binds.push(e || null);
   }
   if (body.inbox_from_name !== undefined) {
