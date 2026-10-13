@@ -1,8 +1,8 @@
 // POST /api/team/inbox/:id/reply  { body, status? }
 //
-// The team member's reply goes out from THEIR address (inbox_from_email, e.g.
-// london@ukbrewerytours.com) rather than info@, and is saved on the conversation
-// so the admin sees exactly what the customer was told.
+// The team member's reply goes out from info@ like every other email (their
+// display name, the house address — see senderFor), and is saved on the
+// conversation so the admin sees exactly what the customer was told.
 
 import { sendEmail, inboxReplyHtml } from '../../../../_lib/email.js';
 import { STATUSES, brandFor, threadUrl, senderFor, replyAddress } from '../../../../_lib/inbox.js';

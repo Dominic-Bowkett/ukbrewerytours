@@ -174,8 +174,8 @@ export async function onRequestPatch({ params, request, env, data }) {
         "SELECT body FROM enquiry_messages WHERE enquiry_id = ? AND direction = 'in' ORDER BY id DESC LIMIT 1",
       ).bind(enquiry.id).first();
       await sendEmail(env, {
-        // Their login email may be a username with no mailbox behind it.
-        to: newOwner.notify_email || newOwner.email,
+        // The assigned member themselves, at the email they log in with.
+        to: newOwner.email,
         subject: `New enquiry assigned to you — ${enquiry.name} (log in to reply)`,
         html: assignmentEmailHtml({
           enquiry,

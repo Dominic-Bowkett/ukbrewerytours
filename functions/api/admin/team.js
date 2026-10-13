@@ -29,12 +29,9 @@ function generatePassword() {
 }
 
 
-// A team member's replies go out under the company's name. Only our own domain is
-// verified with Resend, and a personal address (a Gmail login) must never be what
-// customers see — so the from-address is always @ukbrewerytours.com, falling
-// back to info@ when the login is somewhere else.
+// Every email goes out from info@ (see senderFor in _lib/inbox.js), so a team
+// member's own address — often a personal Gmail — never reaches a customer.
 const SEND_DOMAIN = 'ukbrewerytours.com';
-const ownDomain = e => String(e || '').toLowerCase().endsWith('@' + SEND_DOMAIN);
 
 export async function onRequestGet({ env }) {
   const { results } = await env.DB.prepare(`
@@ -75,13 +72,14 @@ export async function onRequestPost({ request, env }) {
   // Inbox-only member: answers assigned conversations, takes no payments, so no
   // Stripe account is involved. They see nothing but what the admin assigns them.
   if (body.kind === 'inbox') {
-    const fromEmail = clean(body.inbox_from_email, 200).toLowerCase() || (ownDomain(email) ? email : `info@${SEND_DOMAIN}`);
+    // Everything sends from info@ (see senderFor); stored for the record only.
+    const fromEmail = `info@${SEND_DOMAIN}`;
     const fromName = clean(body.inbox_from_name, 100) || name;
     // Their login email is often just a username (london@…), so alerts need a
     // real mailbox. Defaults to the login email when one isn't given.
-    const notifyEmail = clean(body.notify_email, 200).toLowerCase() || null;
+    // Alerts go to the login email (notifyAddressFor); nothing separate is kept.
+    const notifyEmail = null;
     if (!isEmail(fromEmail)) return Response.json({ error: 'Enter a valid “replies come from” address.' }, { status: 400 });
-    if (!ownDomain(fromEmail)) return Response.json({ error: `Replies have to come from an @${SEND_DOMAIN} address — leave it blank to use info@${SEND_DOMAIN}.` }, { status: 400 });
     if (notifyEmail && !isEmail(notifyEmail)) return Response.json({ error: 'Enter a valid “send alerts to” address.' }, { status: 400 });
 
     const configProblem = teamAuthConfigError(env);

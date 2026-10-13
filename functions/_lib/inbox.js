@@ -113,23 +113,19 @@ export async function assignee(env, enquiry) {
 }
 
 /** How a member's replies are addressed. Falls back to their login email. */
-// Never a personal address: a from-address not on our own (verified) domain —
-// including a member's Gmail login — falls back to info@.
-export const senderFor = member => {
-  const pick = [member.inbox_from_email, member.email].find(e => /@ukbrewerytours\.com$/i.test(String(e || '')))
-    || 'info@ukbrewerytours.com';
-  return {
-    from: `${member.inbox_from_name || member.name || 'UK Brewery Tours'} <${pick}>`,
-    replyTo: pick,
-  };
-};
+// Every email goes out from info@ — team replies included (Dom, 13 Oct 2026).
+// The member's display name is kept; the address never varies, so no personal
+// address can reach a customer. Replies still come back via the thread's own
+// Reply-To, not to info@.
+export const SEND_FROM = 'info@ukbrewerytours.com';
+export const senderFor = member => ({
+  from: `${member.inbox_from_name || 'UK Brewery Tours'} <${SEND_FROM}>`,
+  replyTo: SEND_FROM,
+});
 
-/**
- * Where a member's own notifications go. Their login email can be a username
- * with no mailbox behind it (london@ukbrewerytours.com), so alerts addressed
- * there would bounce — notify_email is the real destination.
- */
-export const notifyAddressFor = member => member?.notify_email || member?.email || null;
+// Alerts go to the assigned member themselves, at their login email (Dom, 13 Oct
+// 2026). notify_email is no longer used: it is how London's alerts went to Dom.
+export const notifyAddressFor = member => member?.email || null;
 
 /**
  * Hide email addresses in text shown to a team member. Every address goes, not

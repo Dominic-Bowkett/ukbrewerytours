@@ -73,17 +73,7 @@ export async function onRequestPatch({ request, env, params }) {
     sets.push('inbox_access = ?'); binds.push(on);
     if (!on) sets.push('session_epoch = session_epoch + 1');
   }
-  if (body.inbox_from_email !== undefined) {
-    const e = String(body.inbox_from_email ?? '').trim().toLowerCase().slice(0, 200);
-    if (e && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) {
-      return Response.json({ error: 'Enter a valid “replies come from” address.' }, { status: 400 });
-    }
-    // Only our own, verified domain — never a personal address customers would see.
-    if (e && !e.endsWith('@ukbrewerytours.com')) {
-      return Response.json({ error: 'Replies have to come from an @ukbrewerytours.com address.' }, { status: 400 });
-    }
-    sets.push('inbox_from_email = ?'); binds.push(e || null);
-  }
+  // inbox_from_email is no longer settable: every email sends from info@.
   if (body.inbox_from_name !== undefined) {
     sets.push('inbox_from_name = ?'); binds.push(String(body.inbox_from_name ?? '').trim().slice(0, 100) || null);
   }

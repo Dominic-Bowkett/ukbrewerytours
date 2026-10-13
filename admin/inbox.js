@@ -574,8 +574,8 @@
       ${inboxers.length ? `<table class="hist"><tbody>${inboxers.map(m => `
         <tr>
           <td><strong>${esc(m.name)}</strong><br><span class="muted">${esc(m.email)}</span></td>
-          <td class="muted">replies from<br>${esc(m.inbox_from_email || m.email)}</td>
-          <td class="muted">alerts to<br>${esc(m.notify_email || m.email)}</td>
+          <td class="muted">replies from<br>info@ukbrewerytours.com</td>
+          <td class="muted">alerts to<br>${esc(m.email)}</td>
           <td class="muted">${m.open_conversations || 0} open</td>
           <td><span class="pill pill-${m.active ? 'active' : 'pending'}">${m.active ? 'Active' : 'Disabled'}</span></td>
           <td><button class="btn btn-ghost btn-sm" data-revoke="${esc(m.id)}" data-name="${esc(m.name)}">Remove access</button></td>
@@ -587,16 +587,10 @@
         <div class="redeem-row">
           <div class="field"><label for="ti-name">Name <span class="muted">(shown on the assignment)</span></label>
             <input id="ti-name" type="text" required placeholder="e.g. London team"></div>
-          <div class="field"><label for="ti-email">Their login email</label>
-            <input id="ti-email" type="email" required placeholder="london@ukbrewerytours.com"></div>
+          <div class="field"><label for="ti-email">Their email</label>
+            <input id="ti-email" type="email" required placeholder="a real mailbox they read"></div>
         </div>
-        <div class="redeem-row" style="margin-top:12px">
-          <div class="field"><label for="ti-from">Replies to customers come from</label>
-            <input id="ti-from" type="email" placeholder="Blank = info@ukbrewerytours.com"></div>
-          <div class="field"><label for="ti-notify">Send their alerts to</label>
-            <input id="ti-notify" type="email" placeholder="A real mailbox they read"></div>
-        </div>
-        <p class="muted" style="font-size:.8rem;margin-top:6px">The "from" address only needs to be on ukbrewerytours.com — it does not need a mailbox, because customer replies come back to the conversation's own reply address. The alerts address does need to be a real mailbox.</p>
+        <p class="muted" style="font-size:.8rem;margin-top:6px">They sign in with this email, and it is where their alerts go: a new enquiry assigned to them, and every customer reply on it. Their replies to customers go out from <strong>info@ukbrewerytours.com</strong> under the name above, like every email from here — their own address is never shown. Customer replies come back to the conversation.</p>
         <p class="error" id="teamAddError" hidden></p>
         <div class="redeem-actions"><button class="btn btn-primary" type="submit">Create login</button></div>
       </form>`;
@@ -625,9 +619,7 @@
             kind: 'inbox',
             name: $('ti-name').value,
             email: $('ti-email').value,
-            inbox_from_email: $('ti-from').value,
             inbox_from_name: $('ti-name').value,
-            notify_email: $('ti-notify').value,
           }),
         });
         teamBody.innerHTML = `
@@ -1200,7 +1192,7 @@
       const to = ev.target.value;
       const who = state.team.find(t => t.id === to);
       const question = who
-        ? `Assign this conversation to ${who.name}?\n\nThey'll get an email, it appears in their portal, and their replies go out from ${who.inbox_from_email || who.email}.`
+        ? `Assign this conversation to ${who.name}?\n\nThey'll get an email, it appears in their portal, and their replies go out from info@ukbrewerytours.com.`
         : 'Take this conversation back? It will disappear from their portal.';
       if (!confirm(question)) { ev.target.value = e.assigned_to || ''; return; }
       patch(e.id, { assigned_to: to || null });
