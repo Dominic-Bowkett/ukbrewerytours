@@ -260,6 +260,7 @@
         </div>` : ''}
 
         ${voucherCard(d)}
+        <div id="tmPayCard"></div>
 
         <div class="timeline">${d.messages.map(m => item(m, e)).join('')}</div>
         <button type="button" class="th-newpill" id="thNewPill" hidden>↓ New message</button>
@@ -284,6 +285,7 @@
                 <option value="closed">Closed</option>
               </select>
             </label>
+            ${canEmail && window.teamMe?.chargeReady ? '<button class="btn btn-ghost att-btn" type="button" id="thPay" title="Email them a secure link to pay into your Stripe account">💷 Request payment</button>' : ''}
             <button class="btn btn-primary" type="button" id="thSend">Send reply</button>
           </div>
         </div>
@@ -317,6 +319,8 @@
     sc.addEventListener('scroll', () => { if (isNearBottom()) clearUnseen(); }, { passive: true });
 
     $('thBack').addEventListener('click', () => { location.hash = 'inbox'; });
+    $('thPay')?.addEventListener('click', () => openPay(e));
+    loadPayCard(e.id);
     threadEl.querySelectorAll('[data-th-status]').forEach(b => b.addEventListener('click', async () => {
       try {
         await api('/api/team/inbox/' + e.id, {
@@ -378,6 +382,107 @@
       ${others.length ? `<div class="att-chips">${others.map(a => `
         <a class="att-chip" href="${esc(href(a))}" target="_blank" rel="noopener" title="${esc(a.filename)}">📎 <span class="att-name">${esc(a.filename)}</span><small>${fmtSize(a.size)}</small></a>`).join('')}</div>` : ''}
     </div>`;
+  }
+
+
+  /* ---------------- payment requests ----------------
+   * "Pay your £50 deposit for Saturday's tour": a direct charge on this member's
+   * own Stripe account, emailed by the server to the customer in this
+   * conversation. The member never sees the address. The office's fee comes
+   * off automatically. */
+
+  const PAY_KINDS = { deposit: 'Deposit', full: 'Full payment', balance: 'Balance', extra: 'Extra payment' };
+  const PAY_STATUS = { draft: 'Not sent', sending: 'Sending', sent: 'Awaiting payment', processing: 'Processing', paid: 'Paid', refunded: 'Refunded', cancelled: 'Cancelled', expired: 'Expired', failed: 'Failed' };
+  const gbp = p => `£${((p || 0) / 100).toFixed(2)}`;
+
+  async function loadPayCard(id) {
+    const holder = $('tmPayCard');
+    if (!holder) return;
+    try {
+      const { requests } = await api(`/api/team/inbox/${id}/payment-request`);
+      if (state.current !== id || !$('tmPayCard')) return;
+      $('tmPayCard').innerHTML = requests.length ? `<div class="pay-card">
+        <div class="pay-head">💷 Payment requests</div>
+        ${requests.map(r => `<div class="pay-row pay-${r.status === 'paid' ? 'paid' : r.status === 'cancelled' || r.status === 'expired' ? 'cancelled' : 'open'}">
+          <strong>${gbp(r.amount_pence)}</strong>
+          <span class="pay-desc">${esc(r.kind_label)} — ${esc(r.tour_name)}${r.tour_date ? `, ${esc(r.tour_date)}` : ''}</span>
+          <span class="pay-st">${esc(PAY_STATUS[r.status] || r.status)}${r.status === 'paid' && r.paid_at ? ` · ${esc(when(r.paid_at))}` : ''}</span>
+        </div>`).join('')}
+      </div>` : '';
+    } catch { /* not fatal: the thread still works */ }
+  }
+
+  function openPay(e) {
+    const me = window.teamMe || {};
+    const first = String(e.name || '').split(/\s+/)[0];
+    let modal = $('tmPayModal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.className = 'modal';
+      modal.id = 'tmPayModal';
+      modal.innerHTML = `<div class="modal-backdrop" data-close></div>
+        <div class="modal-panel" role="dialog" aria-modal="true" aria-label="Request a payment">
+          <button class="modal-close" data-close aria-label="Close">&times;</button><div id="tmPayBody"></div></div>`;
+      modal.addEventListener('click', ev => { if (ev.target.closest('[data-close]')) modal.hidden = true; });
+      document.body.appendChild(modal);
+    }
+    modal.hidden = false;
+    $('tmPayBody').innerHTML = `
+      <h2 style="margin-bottom:6px">Request a payment</h2>
+      <p class="muted" style="margin-bottom:18px">
+        ${esc(e.name)} gets an email with a secure link to pay. It goes into <strong>your Stripe account</strong>${me.accountLabel ? ` (${esc(me.accountLabel)})` : ''};
+        UK Brewery Tours' fee of ${esc(String(me.feePercent ?? 20))}% comes off automatically. You'll get an email when it's paid.
+      </p>
+      <form class="redeem-form" id="tmPayForm" style="margin-top:0;border-top:0;padding-top:0">
+        <div class="redeem-row even">
+          <div class="field"><label for="tp-kind">What for</label>
+            <select id="tp-kind">${Object.entries(PAY_KINDS).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}</select></div>
+          <div class="field"><label for="tp-amount">Amount (£)</label>
+            <input id="tp-amount" type="number" inputmode="decimal" min="1" step="0.01" required placeholder="50.00"></div>
+        </div>
+        <div class="redeem-row even" style="margin-top:12px">
+          <div class="field"><label for="tp-tour">Tour name</label>
+            <input id="tp-tour" type="text" maxlength="200" required placeholder="e.g. Bermondsey Beer Mile tour"></div>
+          <div class="field"><label for="tp-date">Tour date</label>
+            <input id="tp-date" type="date"></div>
+        </div>
+        <div class="field" style="margin-top:12px"><label for="tp-note">Message (optional)</label>
+          <textarea id="tp-note" rows="4" placeholder="Shown with the payment details"></textarea></div>
+        <p class="error" id="tpError" hidden></p>
+        <div class="redeem-actions">
+          <button class="btn btn-primary" type="submit">Send payment link</button>
+        </div>
+      </form>`;
+    $('tp-note').value = `Hi ${first}, here's the secure link to pay — thanks!`;
+    $('tp-amount').focus();
+
+    $('tmPayForm').addEventListener('submit', async ev => {
+      ev.preventDefault();
+      const errEl = $('tpError');
+      errEl.hidden = true;
+      const amount = Number($('tp-amount').value);
+      const kind = $('tp-kind').value;
+      const tour = $('tp-tour').value.trim();
+      if (!(amount >= 1)) { errEl.textContent = 'Enter the amount.'; errEl.hidden = false; return; }
+      if (!confirm(`Send ${e.name} a link to pay £${amount.toFixed(2)} (${PAY_KINDS[kind].toLowerCase()} — ${tour})?`)) return;
+      const btn = ev.target.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      try {
+        await api(`/api/team/inbox/${e.id}/payment-request`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ kind, amount, tour_name: tour, tour_date: $('tp-date').value, note: $('tp-note').value }),
+        });
+        modal.hidden = true;
+        await openThread(e.id, { keepScroll: true });
+        loadList({ quiet: true });
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.hidden = false;
+        btn.disabled = false;
+        btn.textContent = 'Send payment link';
+      }
+    });
   }
 
   async function send(e) {

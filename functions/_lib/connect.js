@@ -13,6 +13,7 @@
 
 import { safeEqual, expireCheckoutSession, createConnectRefund } from './stripe.js';
 import { sendEmail } from './email.js';
+import { replyAddress, logEvent } from './inbox.js';
 
 const enc = new TextEncoder();
 
@@ -434,6 +435,17 @@ export async function settlePaid(env, { row, session, paymentIntent = null, sour
       detail: `Paid ${money(amountPaid)} via ${source}`,
       data: { session_id: session?.id || null, payment_intent: pi, fee_collected_pence: feeCollected },
     });
+    // Raised from an inbox conversation: say so on the thread, and bring it back
+    // to the top for whoever has it. The member's own "Paid" email still goes out below.
+    if (row.enquiry_id) {
+      try {
+        await logEvent(env, row.enquiry_id, `💷 Paid ${money(amountPaid)} — ${row.tour_name}`, 'Stripe');
+        await env.DB.prepare("UPDATE enquiries SET unread = 1, last_message_at = datetime('now') WHERE id = ? AND deleted_at IS NULL")
+          .bind(row.enquiry_id).run();
+      } catch (err) {
+        console.error('logging payment on conversation failed', row.id, err);
+      }
+    }
   }
 
   // Re-read once: the emails must describe what is actually stored, and another
@@ -807,7 +819,13 @@ export async function sendPaymentRequest(env, { requestId, member = null, actor 
   }
 
   const from = env.FROM_EMAIL || 'UK Brewery Tours <info@ukbrewerytours.com>';
-  const replyTo = row.reply_to_email || row.member_email || 'info@ukbrewerytours.com';
+  // Raised from an inbox conversation: the customer's reply goes back to that
+  // thread. Sending it to the member's own address would hand each the other's email.
+  let replyTo = row.reply_to_email || row.member_email || 'info@ukbrewerytours.com';
+  if (row.enquiry_id) {
+    const enq = await env.DB.prepare('SELECT token FROM enquiries WHERE id = ?').bind(row.enquiry_id).first();
+    replyTo = enq?.token ? replyAddress(env, enq.token) : 'info@ukbrewerytours.com';
+  }
 
   let messageId = null;
   try {
@@ -841,7 +859,8 @@ export async function sendPaymentRequest(env, { requestId, member = null, actor 
 
   await recordEvent(env, {
     requestId, teamMemberId: row.team_member_id, type: 'sent', actor,
-    detail: `Payment request emailed to ${row.client_email}`,
+    // The member can read this log; a conversation's customer address is not theirs to see.
+    detail: row.enquiry_id ? `Payment request emailed to ${row.client_name}` : `Payment request emailed to ${row.client_email}`,
   });
 
   return { ok: true, payUrl, messageId };

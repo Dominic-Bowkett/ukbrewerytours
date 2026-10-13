@@ -1525,7 +1525,7 @@
         <strong>${money2(p.amount_pence)}</strong>
         <span class="pay-desc">${esc(p.description)}</span>
         <span class="pay-st">${esc(PAY_STATUS[p.status] || p.status)}${p.status === 'paid' ? ` · ${esc(when(p.paid_at))}` : p.status === 'open' ? ` · sent ${esc(dateShort(p.created_at))}` : ''}</span>
-        ${p.status === 'open' ? `<span class="pay-acts">
+        ${p.status === 'open' && !p.team ? `<span class="pay-acts">
           <button type="button" class="chip-btn" data-pay-copy="${esc(p.url)}" title="Copy the link, to send by text or WhatsApp">Copy link</button>
           <button type="button" class="chip-btn chip-danger" data-pay-cancel="${p.id}" title="Withdraw it — the link stops working">Cancel</button>
         </span>` : ''}

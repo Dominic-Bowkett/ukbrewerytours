@@ -39,7 +39,28 @@ export async function paymentsFor(env, enquiryId) {
     `SELECT id, token, amount_pence, description, status, created_by, created_at, paid_at, cancelled_at
        FROM inbox_payments WHERE enquiry_id = ? ORDER BY id DESC`,
   ).bind(enquiryId).all();
-  return (results || []).map(({ token, ...p }) => ({ ...p, url: payLink(token) }));
+  const own = (results || []).map(({ token, ...p }) => ({ ...p, url: payLink(token) }));
+
+  // Requests a team member raised from this conversation, on their own Stripe
+  // account. Shown for the record; they are managed in Team payments.
+  const { results: team } = await env.DB.prepare(
+    `SELECT r.id, r.payment_kind, r.tour_name, r.tour_date, r.amount_pence, r.fee_pence, r.status,
+            r.created_at, r.paid_at, m.name AS member_name
+       FROM payment_requests r JOIN team_members m ON m.id = r.team_member_id
+      WHERE r.enquiry_id = ? ORDER BY r.created_at DESC`,
+  ).bind(enquiryId).all();
+  const KIND = { deposit: 'Deposit', full: 'Full payment', balance: 'Balance', extra: 'Extra payment' };
+  const STATUS = { paid: 'paid', refunded: 'paid', cancelled: 'cancelled', expired: 'cancelled', failed: 'cancelled' };
+  const theirs = (team || []).map(r => ({
+    id: `team-${r.id}`,
+    team: true,
+    amount_pence: r.amount_pence,
+    description: `${KIND[r.payment_kind] || 'Payment'} — ${r.tour_name}${r.tour_date ? `, ${r.tour_date}` : ''} · ${r.member_name}'s Stripe (fee ${pounds(r.fee_pence || 0)})`,
+    status: STATUS[r.status] || 'open',
+    created_at: r.created_at,
+    paid_at: r.paid_at,
+  }));
+  return [...theirs, ...own].sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
 }
 
 /** A Checkout Session for one request. Card, Apple Pay and Google Pay come with Checkout. */

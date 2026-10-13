@@ -39,6 +39,14 @@ export async function onRequestGet({ env, data }) {
            COALESCE(SUM(CASE WHEN status IN ('sent','processing') THEN amount_pence ELSE 0 END), 0) AS outstanding_pence
       FROM payment_requests WHERE team_member_id = ?`).bind(memberId).first();
 
+  // Requests raised from an inbox conversation were addressed by the server; the
+  // member never had the customer's email and does not get it here either.
+  const { results: linked } = await env.DB.prepare(
+    'SELECT id FROM payment_requests WHERE team_member_id = ? AND enquiry_id IS NOT NULL',
+  ).bind(memberId).all();
+  const hidden = new Set((linked || []).map(r => r.id));
+  for (const r of results || []) if (hidden.has(r.id)) r.client_email = '(from your messages)';
+
   return Response.json({ requests: results, totals },
     { headers: { 'Cache-Control': 'private, no-store' } });
 }

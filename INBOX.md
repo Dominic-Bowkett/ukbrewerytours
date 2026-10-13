@@ -416,3 +416,24 @@ cleared by the same UPDATE that sets the password. `POST /api/team/setup` is pub
 
 Every email sends from info@ (team replies included, member's display name kept),
 and a member's alerts go to their own login email.
+
+## Team members requesting payment from a conversation (13 Oct 2026)
+
+A team member whose Stripe account is charge-ready sees **💷 Request payment** in an
+assigned conversation: what for (Deposit / Full payment / Balance / Extra), amount,
+tour name, tour date, optional message. `POST /api/team/inbox/:id/payment-request`
+creates an ordinary team payment request (`payment_requests`, `enquiry_id` set —
+`migrations/0020_payment_request_enquiry.sql`) and sends it at once:
+
+- **Direct charge** on the member's own connected account (decided 13 Oct 2026 —
+  destination charges were considered and declined); the platform fee is frozen from
+  the member row: `fee_bps` override, else `platform_settings.default_fee_bps` (20%).
+- The customer's name and email are taken from the conversation on the server; the
+  member never sees the address (their Payments list shows "(from your messages)",
+  the event log names the customer instead).
+- The request email's Reply-To is the conversation's reply address, not the member's.
+- Logged on the thread (the message plus "💷 Deposit request: £x — tour, date"), and
+  `settlePaid()` logs "💷 Paid £x — tour" there and marks it unread; the member still
+  gets the usual "Paid" email. The admin's Payment requests box lists these read-only.
+- The inbox gate does not require Stripe readiness, so this route checks
+  `teamChargeReady` itself.
