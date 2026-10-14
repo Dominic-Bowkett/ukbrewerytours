@@ -484,7 +484,42 @@ async function checkMonitors(env) {
  *
  * @returns a summary suitable for logging or returning from the admin endpoint.
  */
+/**
+ * D1 occasionally fails a query with an error of its own — "D1_ERROR: internal
+ * error; reference = …", "…caused object to be reset", a lost connection — that
+ * succeeds when simply asked again. Seen three times in four weeks (Sep–Oct 2026),
+ * each time followed by a clean tick five minutes later. Worth one retry rather
+ * than an alert email.
+ */
+const TRANSIENT_D1 = /D1_ERROR: (internal error|.*object to be reset|network connection lost|.*storage operation exceeded|.*overloaded)/i;
+
 export async function runScheduler(env) {
+  const first = await runTick(env);
+  if (!first.error || !TRANSIENT_D1.test(first.error)) return report(env, first);
+
+  // Every step of a tick is safe to repeat: claims are atomic, rows a failed pass
+  // left mid-send are reaped, and nothing is emailed twice.
+  await new Promise(r => setTimeout(r, 3000));
+  const second = await runTick(env);
+  second.retried_after = first.error;
+  return report(env, second);
+}
+
+/** Alert only on a failure that a retry did not clear. */
+async function report(env, summary) {
+  if (summary.error) {
+    console.error('scheduler tick failed', summary.error, summary.retried_after ? `(after retrying: ${summary.retried_after})` : '');
+    try {
+      await alertOps(env, {
+        subject: 'Payment scheduler tick failed',
+        lines: [summary.error, ...(summary.retried_after ? [`It failed again on a retry (first error: ${summary.retried_after}).`] : [])],
+      });
+    } catch { /* alerting is best-effort */ }
+  }
+  return summary;
+}
+
+async function runTick(env) {
   const claimId = randomId();
   const summary = { reaped: 0, claimed: 0, sent: 0, failed: 0, deferred: 0, expired: 0, skipped: null };
 
@@ -521,12 +556,8 @@ export async function runScheduler(env) {
     summary.binned = await purgeBin(env);
   } catch (err) {
     // A tick that throws is a tick that does not happen again until someone
-    // reads the logs, so this is reported and swallowed.
-    console.error('scheduler tick failed', err);
+    // reads the logs, so runScheduler reports it (after one retry if D1 blipped).
     summary.error = err.message;
-    try {
-      await alertOps(env, { subject: 'Payment scheduler tick failed', lines: [err.message] });
-    } catch { /* alerting is best-effort */ }
   }
 
   return summary;
