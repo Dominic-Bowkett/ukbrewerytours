@@ -62,14 +62,46 @@ export async function loadApiKey(env) {
 }
 
 export async function aiConfig(env) {
-  const [model, instructions, autoDraft] = await Promise.all([
+  const [model, instructions, autoDraft, workspaceId] = await Promise.all([
     getSetting(env, 'ai_model'), getSetting(env, 'ai_instructions'), getSetting(env, 'ai_auto_draft'),
+    getSetting(env, 'ai_workspace_id'),
   ]);
   return {
     model: AI_MODELS[model] ? model : DEFAULT_MODEL,
     instructions: instructions || '',
     autoDraft: autoDraft === '1',
+    workspaceId: workspaceId || '',
   };
+}
+
+export const WORKSPACE_RE = /^wrkspc_[A-Za-z0-9]{6,64}$/;
+
+/**
+ * A client for the admin's key. A key created at organisation level (not inside
+ * a workspace) must name the workspace on every request, in the
+ * anthropic-workspace-id header — the API answers 400 without it.
+ */
+export function makeClient(apiKey, workspaceId, opts = {}) {
+  return new Anthropic({
+    apiKey,
+    ...(workspaceId ? { defaultHeaders: { 'anthropic-workspace-id': workspaceId } } : {}),
+    ...opts,
+  });
+}
+
+/** Anthropic's error, in words that say what to do about it. */
+export function explainAnthropicError(err) {
+  const msg = String(err?.message || '');
+  if (/workspace/i.test(msg) && /anthropic-workspace-id/i.test(msg)) {
+    return 'This API key is not tied to a workspace. Enter the Workspace ID (it starts wrkspc_) from console.anthropic.com → Settings → Workspaces, or create a new key inside a workspace.';
+  }
+  if (err instanceof Anthropic.AuthenticationError) return 'Anthropic did not accept that API key.';
+  if (err instanceof Anthropic.PermissionDeniedError) return 'That key cannot use the chosen model (or that workspace).';
+  if (err instanceof Anthropic.NotFoundError) return 'Anthropic could not find that model or workspace — check the Workspace ID.';
+  if (err instanceof Anthropic.RateLimitError) return 'Anthropic rate limit hit — try again in a minute.';
+  if (err instanceof Anthropic.APIConnectionError) return 'Could not reach Anthropic — try again.';
+  if (err instanceof Anthropic.APIError) return `Anthropic error ${err.status ?? ''}: ${msg.slice(0, 200)}`;
+  return null;
 }
 
 /* --------------------------------------------------------------- rule matching */
@@ -187,10 +219,10 @@ function transcript(enquiry, messages) {
 export async function aiDraft(env, enquiry, messages) {
   const apiKey = await loadApiKey(env);
   if (!apiKey) return { error: 'Add your Anthropic API key under Auto-replies → AI first.' };
-  const { model, instructions } = await aiConfig(env);
+  const { model, instructions, workspaceId } = await aiConfig(env);
 
   const system = `${BASE_INSTRUCTIONS}\n\nBrand name to sign with: ${brandFor(enquiry.site)}\n\nBusiness instructions from the owner:\n${instructions || '(none given)'}`;
-  const client = new Anthropic({ apiKey, timeout: 60000, maxRetries: 1 });
+  const client = makeClient(apiKey, workspaceId, { timeout: 60000, maxRetries: 1 });
 
   // Haiku 4.5 takes neither effort nor the server-side fallback; the others do.
   const modern = model !== 'claude-haiku-4-5';
@@ -214,10 +246,8 @@ export async function aiDraft(env, enquiry, messages) {
     if (!text) return { error: 'Claude returned an empty draft.' };
     return { text };
   } catch (err) {
-    if (err instanceof Anthropic.AuthenticationError) return { error: 'Anthropic rejected the API key — check it under Auto-replies → AI.' };
-    if (err instanceof Anthropic.RateLimitError) return { error: 'Anthropic rate limit hit — try again in a minute.' };
-    if (err instanceof Anthropic.APIConnectionError) return { error: 'Could not reach Anthropic — try again.' };
-    if (err instanceof Anthropic.APIError) return { error: `Anthropic error ${err.status ?? ''}: ${String(err.message).slice(0, 200)}` };
+    const explained = explainAnthropicError(err);
+    if (explained) return { error: explained };
     console.error('ai draft failed', err);
     return { error: 'The AI draft failed.' };
   }

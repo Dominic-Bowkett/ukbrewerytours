@@ -1746,6 +1746,8 @@
           <div class="field"><label for="ai-model">Model</label>
             <select id="ai-model">${Object.entries(s.models).map(([k, v]) => `<option value="${k}" ${k === s.model ? 'selected' : ''}>${esc(v)}</option>`).join('')}</select></div>
         </div>
+        <div class="field" style="margin-top:12px"><label for="ai-ws">Workspace ID <span class="muted">(only if your key is not inside a workspace — starts wrkspc_; console.anthropic.com → Settings → Workspaces)</span></label>
+          <input id="ai-ws" autocomplete="off" placeholder="wrkspc_…" value="${esc(s.workspace_id || '')}"></div>
         <div class="field" style="margin-top:12px"><label for="ai-instr">What Claude should know <span class="muted">(your policies, tours, tone — used for every draft)</span></label>
           <textarea id="ai-instr" rows="12"></textarea></div>
         <label class="cm-check"><input type="checkbox" id="ai-auto" ${s.auto_draft ? 'checked' : ''}> Draft a reply automatically for new enquiries that no stock reply covers</label>
@@ -1759,7 +1761,7 @@
     $('ai-instr').value = s.instructions || '';
     $('aiForm').addEventListener('submit', async ev => {
       ev.preventDefault();
-      const payload = { model: $('ai-model').value, instructions: $('ai-instr').value, auto_draft: $('ai-auto').checked };
+      const payload = { model: $('ai-model').value, instructions: $('ai-instr').value, auto_draft: $('ai-auto').checked, workspace_id: $('ai-ws').value };
       if ($('ai-key').value.trim()) payload.api_key = $('ai-key').value.trim();
       const btn = ev.target.querySelector('button[type="submit"]');
       btn.disabled = true; btn.textContent = payload.api_key ? 'Checking key…' : 'Saving…';
