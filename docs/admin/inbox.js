@@ -1098,6 +1098,11 @@
           <input type="text" id="thBcc" autocomplete="off" list="thContacts" placeholder="Bcc — hidden from the others" aria-label="Bcc">
           <datalist id="thContacts"></datalist>
         </div>
+        <div class="th-assist" id="thAssist">
+          <div class="th-suggest" id="thSuggest" hidden></div>
+          <button class="btn btn-ghost att-btn" type="button" id="thAi" title="Claude drafts a reply from the conversation — you check it before sending">✨ AI draft</button>
+          <select id="thStock" aria-label="Insert a stock reply"><option value="">📋 Stock reply…</option></select>
+        </div>
         <textarea id="thText" aria-label="Message"></textarea>
         <div class="att-pick" id="thFiles" hidden></div>
         <p class="error" id="thError" hidden></p>
@@ -1126,8 +1131,11 @@
     const draft = text ? getDraft(e.id) : null;
     if (text) {
       if (draft !== null) text.value = draft;
+      else if (composerMode === 'reply' && e.suggested_reply && canEmail) text.value = e.suggested_reply;
       else if (composerMode === 'reply') text.value = `Hi ${first},\n\n${signOff}`;
+      if (draft === null && e.suggested_reply && canEmail) showSuggest(e);
       syncComposer(e, canEmail);
+      bindAssist(e, text, first, signOff);
       text.addEventListener('input', () => setDraft(e.id, text.value));
       if (!draft && composerMode === 'reply' && !keepScroll && window.innerWidth > 900) {
         const pos = `Hi ${first},\n\n`.length;
@@ -1253,6 +1261,7 @@
     // A note is never sent anywhere, so there is nothing to attach it to.
     $('thAttach').hidden = !reply;
     $('thCcBtn').hidden = !reply;
+    if ($('thAssist')) $('thAssist').hidden = !reply;
     if (!reply) $('thCcRow').hidden = true;
     $('thFiles').hidden = !reply || !picker?.files.length;
     $('thSend').textContent = reply ? 'Send reply' : 'Save note';
@@ -1507,6 +1516,269 @@
       btn.disabled = false;
       btn.textContent = reply ? 'Send reply' : 'Save note';
     }
+  }
+
+
+  /* ---------------- auto-replies: stock replies and AI drafts ----------------
+   * Rules (Admin → Inbox → 🤖 Auto-replies) pick a stock reply for a new
+   * conversation: sent at once, or waiting here as a draft. Claude can draft a
+   * reply on demand, and — if switched on — for new conversations no rule
+   * covers. Nothing AI-written is ever sent without Dom pressing Send. */
+
+  let rulesCache = null;
+  const loadRules = async (force = false) => {
+    if (!rulesCache || force) rulesCache = (await api('/api/admin/reply-rules')).rules || [];
+    return rulesCache;
+  };
+
+  /** Placeholders, filled from the conversation the same way the server does. */
+  function fillStock(body, e) {
+    const f = Object.fromEntries((e.fields || []).map(x => [x.key, x.value]));
+    const SITE_CITY = { 'londonbrewerytour.com': 'London', 'bristolbrewerytours.com': 'Bristol' };
+    const map = {
+      'first name': String(e.name || '').trim().split(/\s+/)[0] || 'there',
+      name: e.name || '',
+      city: f.city || SITE_CITY[e.site] || '',
+      'group size': f.group_size || '',
+      date: f.preferred_date || '',
+      brand: e.brand || 'UK Brewery Tours',
+    };
+    return String(body).replace(/\{\s*([a-z ]+?)\s*\}/gi, (all, k) => (map[k.toLowerCase()] ?? all));
+  }
+
+  function showSuggest(e) {
+    const el = $('thSuggest');
+    if (!el) return;
+    const src = String(e.suggested_source || '');
+    el.innerHTML = src === 'ai'
+      ? '✨ <strong>AI draft</strong> — read it through and edit before sending. <button type="button" class="linkish" data-suggest-clear>Start blank</button>'
+      : `📋 Stock reply <strong>${esc(src.replace(/^rule:/, ''))}</strong> — check it, then send. <button type="button" class="linkish" data-suggest-clear>Start blank</button>`;
+    el.hidden = false;
+  }
+
+  function bindAssist(e, text, first, signOff) {
+    const stock = $('thStock');
+    loadRules().then(rules => {
+      if (!$('thStock')) return;
+      stock.innerHTML = '<option value="">📋 Stock reply…</option>'
+        + rules.map(r => `<option value="${r.id}">${esc(r.name)}${r.enabled ? '' : ' (off)'}</option>`).join('');
+    }).catch(() => {});
+    stock.addEventListener('change', () => {
+      const r = (rulesCache || []).find(x => String(x.id) === stock.value);
+      stock.value = '';
+      if (!r) return;
+      const squash = s => s.replace(/\s+/g, ' ').trim();
+      const blank = squash(text.value) === squash(`Hi ${first},${signOff}`) || !text.value.trim();
+      if (!blank && !confirm('Replace what is in the reply box with this stock reply?')) return;
+      text.value = fillStock(r.body, e);
+      setDraft(e.id, text.value);
+      text.focus();
+    });
+    $('thAi').addEventListener('click', async () => {
+      const btn = $('thAi');
+      const squash = s => s.replace(/\s+/g, ' ').trim();
+      const blank = squash(text.value) === squash(`Hi ${first},${signOff}`) || !text.value.trim();
+      if (!blank && !confirm('Replace what is in the reply box with an AI draft?')) return;
+      btn.disabled = true;
+      btn.textContent = '✨ Drafting…';
+      try {
+        const res = await api(`/api/admin/inbox/${e.id}/ai-draft`, { method: 'POST' });
+        text.value = res.text;
+        setDraft(e.id, text.value);
+        showSuggest({ suggested_source: 'ai' });
+        text.focus();
+      } catch (err) {
+        alert(err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '✨ AI draft';
+      }
+    });
+    $('thSuggest')?.addEventListener('click', ev => {
+      if (!ev.target.closest('[data-suggest-clear]')) return;
+      text.value = `Hi ${first},\n\n${signOff}`;
+      setDraft(e.id, null);
+      $('thSuggest').hidden = true;
+      text.focus();
+    });
+  }
+
+  /* --- the settings window --- */
+
+  const autoModal = $('autoModal');
+  autoModal.addEventListener('click', ev => { if (ev.target.closest('[data-close]')) autoModal.hidden = true; });
+  $('ibAuto').addEventListener('click', () => openAuto('rules'));
+
+  const TYPE_KEYS = () => Object.entries(state.labels?.types || {});
+
+  async function openAuto(tab = 'rules') {
+    autoModal.hidden = false;
+    const body = $('autoBody');
+    body.innerHTML = `
+      <h2 style="margin-bottom:6px">Auto-replies</h2>
+      <div class="seg" role="group" style="margin:6px 0 16px">
+        <button type="button" data-auto-tab="rules" class="${tab === 'rules' ? 'on' : ''}">Stock replies &amp; rules</button>
+        <button type="button" data-auto-tab="ai" class="${tab === 'ai' ? 'on' : ''}">AI drafts</button>
+      </div>
+      <div id="autoTab"><p class="muted">Loading…</p></div>`;
+    body.querySelectorAll('[data-auto-tab]').forEach(b => b.addEventListener('click', () => openAuto(b.dataset.autoTab)));
+    try {
+      if (tab === 'rules') await renderRules(); else await renderAi();
+    } catch (err) {
+      $('autoTab').innerHTML = `<p class="error">${esc(err.message)}</p>`;
+    }
+  }
+
+  function ruleSummary(r) {
+    const bits = [];
+    if (r.types) bits.push(r.types.split(',').map(t => state.labels?.types?.[t] || t).join(' / '));
+    if (r.cities) bits.push(r.cities);
+    if (r.min_group != null && r.max_group != null) bits.push(`${r.min_group}–${r.max_group} people`);
+    else if (r.min_group != null) bits.push(`${r.min_group}+ people`);
+    else if (r.max_group != null) bits.push(`up to ${r.max_group} people`);
+    if (r.keywords) bits.push(`mentions: ${r.keywords}`);
+    return bits.length ? bits.join(' · ') : 'any new enquiry';
+  }
+
+  async function renderRules() {
+    const rules = await loadRules(true);
+    $('autoTab').innerHTML = `
+      <p class="muted" style="margin-bottom:12px">
+        When a <strong>new</strong> enquiry arrives, the first switched-on rule (top to bottom) whose conditions all match is used.
+        <strong>Send instantly</strong> emails it straight away from info@ (and skips the usual "we got your message" email);
+        <strong>Draft</strong> puts it in the reply box for you to check. Any reply can also be inserted by hand with “📋 Stock reply…”.
+      </p>
+      ${rules.length ? `<table class="hist rules-table"><tbody>${rules.map(r => `
+        <tr>
+          <td style="width:44px"><label class="switch" title="On / off"><input type="checkbox" data-rule-on="${r.id}" ${r.enabled ? 'checked' : ''}><span></span></label></td>
+          <td><strong>${esc(r.name)}</strong> <span class="pill pill-${r.action === 'send' ? 'active' : 'pending'}">${r.action === 'send' ? 'Send instantly' : 'Draft'}</span><br>
+            <span class="muted" style="font-size:.82rem">${esc(ruleSummary(r))}${r.uses ? ` · used ${r.uses}×` : ''}</span></td>
+          <td style="white-space:nowrap;text-align:right">
+            <button class="btn btn-ghost btn-sm" data-rule-edit="${r.id}">Edit</button>
+            <button class="btn btn-ghost btn-sm" data-rule-del="${r.id}">Delete</button></td>
+        </tr>`).join('')}</tbody></table>` : '<p class="muted">No stock replies yet.</p>'}
+      <div style="margin-top:14px"><button class="btn btn-primary" type="button" id="ruleAdd">+ New stock reply</button></div>
+      <div id="ruleEditor"></div>`;
+    $('autoTab').querySelectorAll('[data-rule-on]').forEach(cb => cb.addEventListener('change', async () => {
+      try {
+        await api(`/api/admin/reply-rules/${cb.dataset.ruleOn}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ enabled: cb.checked }) });
+        rulesCache = null;
+      } catch (err) { alert(err.message); cb.checked = !cb.checked; }
+    }));
+    $('autoTab').querySelectorAll('[data-rule-del]').forEach(b => b.addEventListener('click', async () => {
+      const r = rules.find(x => String(x.id) === b.dataset.ruleDel);
+      if (!confirm(`Delete the stock reply "${r.name}"?`)) return;
+      try { await api(`/api/admin/reply-rules/${r.id}`, { method: 'DELETE' }); await renderRules(); } catch (err) { alert(err.message); }
+    }));
+    $('autoTab').querySelectorAll('[data-rule-edit]').forEach(b => b.addEventListener('click', () => editRule(rules.find(x => String(x.id) === b.dataset.ruleEdit))));
+    $('ruleAdd').addEventListener('click', () => editRule(null));
+  }
+
+  function editRule(r) {
+    const types = (r?.types || '').split(',').filter(Boolean);
+    $('ruleEditor').innerHTML = `
+      <form class="redeem-form" id="ruleForm">
+        <h3>${r ? 'Edit stock reply' : 'New stock reply'}</h3>
+        <div class="redeem-row even">
+          <div class="field"><label for="rf-name">Name</label><input id="rf-name" required maxlength="80" value="${esc(r?.name || '')}" placeholder="e.g. Group under 10"></div>
+          <div class="field"><label for="rf-action">When it matches</label>
+            <select id="rf-action">
+              <option value="draft" ${r?.action !== 'send' ? 'selected' : ''}>Put it in the reply box as a draft</option>
+              <option value="send" ${r?.action === 'send' ? 'selected' : ''}>Send it instantly</option>
+            </select></div>
+        </div>
+        <div class="field" style="margin-top:12px"><label>Enquiry types <span class="muted">(none ticked = any)</span></label>
+          <div class="rf-types">${TYPE_KEYS().map(([k, v]) => `<label class="cm-check"><input type="checkbox" name="rf-type" value="${k}" ${types.includes(k) ? 'checked' : ''}> ${esc(v)}</label>`).join('')}</div></div>
+        <div class="redeem-row even" style="margin-top:12px">
+          <div class="field"><label for="rf-cities">Cities <span class="muted">(comma-separated; blank = any)</span></label><input id="rf-cities" value="${esc(r?.cities || '')}" placeholder="London, Bristol"></div>
+          <div class="field"><label for="rf-keywords">Message mentions any of <span class="muted">(blank = not needed)</span></label><input id="rf-keywords" value="${esc(r?.keywords || '')}" placeholder="voucher, not working, invalid"></div>
+        </div>
+        <div class="redeem-row even" style="margin-top:12px">
+          <div class="field"><label for="rf-min">Group size at least</label><input id="rf-min" type="number" min="1" value="${r?.min_group ?? ''}"></div>
+          <div class="field"><label for="rf-max">Group size at most</label><input id="rf-max" type="number" min="1" value="${r?.max_group ?? ''}"></div>
+          <div class="field"><label for="rf-priority">Order <span class="muted">(lower is checked first)</span></label><input id="rf-priority" type="number" value="${r?.priority ?? 100}"></div>
+        </div>
+        <div class="field" style="margin-top:12px"><label for="rf-body">Reply</label>
+          <textarea id="rf-body" rows="10" required></textarea>
+          <span class="muted" style="font-size:.8rem;display:block;margin-top:4px">You can use {first name}, {name}, {city}, {group size}, {date} (their preferred date) and {brand}.</span></div>
+        <label class="cm-check"><input type="checkbox" id="rf-enabled" ${!r || r.enabled ? 'checked' : ''}> Switched on</label>
+        <p class="error" id="rfError" hidden></p>
+        <div class="redeem-actions">
+          <button class="btn btn-ghost" type="button" id="rfCancel">Cancel</button>
+          <button class="btn btn-primary" type="submit">Save</button>
+        </div>
+      </form>`;
+    $('rf-body').value = r?.body || 'Hi {first name},\n\n\n\nCheers,\nDom\n{brand}';
+    $('ruleEditor').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    $('rfCancel').addEventListener('click', () => { $('ruleEditor').innerHTML = ''; });
+    $('ruleForm').addEventListener('submit', async ev => {
+      ev.preventDefault();
+      const payload = {
+        name: $('rf-name').value, action: $('rf-action').value,
+        types: [...document.querySelectorAll('input[name="rf-type"]:checked')].map(x => x.value),
+        cities: $('rf-cities').value, keywords: $('rf-keywords').value,
+        min_group: $('rf-min').value, max_group: $('rf-max').value, priority: $('rf-priority').value,
+        body: $('rf-body').value, enabled: $('rf-enabled').checked,
+      };
+      if (payload.action === 'send' && payload.enabled
+          && !confirm('This reply will be emailed to customers automatically, without you checking it first. Save it switched on?')) return;
+      try {
+        await api(r ? `/api/admin/reply-rules/${r.id}` : '/api/admin/reply-rules', {
+          method: r ? 'PATCH' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+        });
+        await renderRules();
+      } catch (err) { $('rfError').textContent = err.message; $('rfError').hidden = false; }
+    });
+  }
+
+  async function renderAi() {
+    const s = await api('/api/admin/ai-settings');
+    $('autoTab').innerHTML = `
+      <p class="muted" style="margin-bottom:12px">
+        Claude writes a draft into the reply box when you press <strong>✨ AI draft</strong> in a conversation — and, if switched on below,
+        for each new enquiry that no stock reply covers. AI drafts are <strong>never sent</strong> until you press Send.
+        Uses your own Anthropic API key (billed to your Anthropic account; a reply typically costs well under 1p).
+      </p>
+      <form class="redeem-form" id="aiForm" style="margin-top:0;border-top:0;padding-top:0">
+        <div class="redeem-row even">
+          <div class="field"><label for="ai-key">Anthropic API key ${s.key_set ? `<span class="muted">(saved: ${esc(s.key_hint)})</span>` : ''}</label>
+            <input id="ai-key" type="password" autocomplete="off" placeholder="${s.key_set ? 'Leave blank to keep the saved key' : 'sk-ant-…'}"></div>
+          <div class="field"><label for="ai-model">Model</label>
+            <select id="ai-model">${Object.entries(s.models).map(([k, v]) => `<option value="${k}" ${k === s.model ? 'selected' : ''}>${esc(v)}</option>`).join('')}</select></div>
+        </div>
+        <div class="field" style="margin-top:12px"><label for="ai-instr">What Claude should know <span class="muted">(your policies, tours, tone — used for every draft)</span></label>
+          <textarea id="ai-instr" rows="12"></textarea></div>
+        <label class="cm-check"><input type="checkbox" id="ai-auto" ${s.auto_draft ? 'checked' : ''}> Draft a reply automatically for new enquiries that no stock reply covers</label>
+        <p class="error" id="aiError" hidden></p>
+        <div class="redeem-actions">
+          ${s.key_set ? '<button class="btn btn-ghost" type="button" id="aiForget">Remove saved key</button>' : ''}
+          <button class="btn btn-primary" type="submit">Save</button>
+        </div>
+        <p class="muted" id="aiSaved" style="text-align:right"></p>
+      </form>`;
+    $('ai-instr').value = s.instructions || '';
+    $('aiForm').addEventListener('submit', async ev => {
+      ev.preventDefault();
+      const payload = { model: $('ai-model').value, instructions: $('ai-instr').value, auto_draft: $('ai-auto').checked };
+      if ($('ai-key').value.trim()) payload.api_key = $('ai-key').value.trim();
+      const btn = ev.target.querySelector('button[type="submit"]');
+      btn.disabled = true; btn.textContent = payload.api_key ? 'Checking key…' : 'Saving…';
+      try {
+        await api('/api/admin/ai-settings', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        await renderAi();
+        $('aiSaved').textContent = 'Saved.';
+      } catch (err) {
+        $('aiError').textContent = err.message; $('aiError').hidden = false;
+        btn.disabled = false; btn.textContent = 'Save';
+      }
+    });
+    $('aiForget')?.addEventListener('click', async () => {
+      if (!confirm('Remove the saved API key? AI drafts stop until you add one again.')) return;
+      try {
+        await api('/api/admin/ai-settings', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ api_key: '' }) });
+        await renderAi();
+      } catch (err) { alert(err.message); }
+    });
   }
 
   /* ---------------- payment requests ----------------

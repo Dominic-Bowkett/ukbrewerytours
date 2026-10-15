@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
-<meta name="admin-build" content="ebb14e2ecf">
+<meta name="admin-build" content="ad32c55c62">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
 <title>Admin — UK Brewery Tours</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍺%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="/assets/css/admin.css?v=ebb14e2ecf">
+<link rel="stylesheet" href="/assets/css/admin.css?v=ad32c55c62">
 </head>
 <body>
 <header class="admin-header">
@@ -43,6 +43,7 @@
           <select id="ibAssignee" aria-label="Assigned to"><option value="">Anyone</option><option value="none">Unassigned</option></select>
           <button type="button" class="chip-btn" id="ibContacts" title="Your address book">Contacts</button>
           <button type="button" class="chip-btn" id="ibTeam" title="Who can be given conversations">Team access</button>
+          <button type="button" class="chip-btn" id="ibAuto" title="Stock replies, instant replies and AI drafts">🤖 Auto-replies</button>
           <button type="button" class="chip-btn chip-danger" id="ibEmptyBin" hidden title="Delete everything in the bin now, without waiting out the 7 days">Empty the bin</button>
         </div>
         <div class="inbox-search">
@@ -284,6 +285,14 @@
 </main>
 
 <!-- Payment detail + refund -->
+<div class="modal" id="autoModal" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-label="Auto-replies" style="max-width:860px">
+    <button class="modal-close" data-close aria-label="Close">&times;</button>
+    <div id="autoBody"></div>
+  </div>
+</div>
+
 <div class="modal" id="payModal" hidden>
   <div class="modal-backdrop" data-close></div>
   <div class="modal-panel" role="dialog" aria-modal="true">
@@ -1448,7 +1457,7 @@ document.addEventListener('DOMContentLoaded', () => showTab(location.hash.slice(
 window.addEventListener('hashchange', () => showTab(location.hash.slice(1) || 'inbox'));
 </script>
 <div class="ib-toast" id="ibToast" role="status" aria-live="polite" hidden></div>
-<script src="/admin/inbox.js?v=ebb14e2ecf" defer></script>
-<script src="/admin/imported.js?v=ebb14e2ecf" defer></script>
+<script src="/admin/inbox.js?v=ad32c55c62" defer></script>
+<script src="/admin/imported.js?v=ad32c55c62" defer></script>
 </body>
 </html>

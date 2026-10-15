@@ -42,6 +42,7 @@
           <select id="ibAssignee" aria-label="Assigned to"><option value="">Anyone</option><option value="none">Unassigned</option></select>
           <button type="button" class="chip-btn" id="ibContacts" title="Your address book">Contacts</button>
           <button type="button" class="chip-btn" id="ibTeam" title="Who can be given conversations">Team access</button>
+          <button type="button" class="chip-btn" id="ibAuto" title="Stock replies, instant replies and AI drafts">🤖 Auto-replies</button>
           <button type="button" class="chip-btn chip-danger" id="ibEmptyBin" hidden title="Delete everything in the bin now, without waiting out the 7 days">Empty the bin</button>
         </div>
         <div class="inbox-search">
@@ -283,6 +284,14 @@
 </main>
 
 <!-- Payment detail + refund -->
+<div class="modal" id="autoModal" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-label="Auto-replies" style="max-width:860px">
+    <button class="modal-close" data-close aria-label="Close">&times;</button>
+    <div id="autoBody"></div>
+  </div>
+</div>
+
 <div class="modal" id="payModal" hidden>
   <div class="modal-backdrop" data-close></div>
   <div class="modal-panel" role="dialog" aria-modal="true">

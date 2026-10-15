@@ -451,3 +451,30 @@ creates an ordinary team payment request (`payment_requests`, `enquiry_id` set �
   `{team member}` / `{business name}` are replaced with the member's business name by
   `fillTerms()` when the terms are frozen onto a request. /pay/ shows them under
   `#terms`; the email links there ("By paying you agree to the booking terms").
+
+## Auto-replies: stock replies, instant replies, AI drafts (15 Oct 2026)
+
+Admin → Inbox → **🤖 Auto-replies**.
+
+- **Stock replies & rules** (`reply_rules`, `migrations/0022_auto_replies.sql`). When a
+  NEW conversation arrives (contact/group forms, chat, widgets, inbound email — not
+  follow-ups, not notifications), the first switched-on rule by Order whose conditions
+  all hold is used. Conditions: enquiry types, cities (the form's City field, else the
+  site — londonbrewerytour.com = London, bristolbrewerytours.com = Bristol — else the
+  word in the message), group size min/max (the Group size field, else "10 people" /
+  "group of 8" in the text; a size condition never matches when no size is known),
+  and keywords (any one). **Send instantly** emails it from info@ (logged as
+  "Auto-reply", status Awaiting customer, still unread) and the contact form then
+  skips its "we got your message" email; **Draft** stores it in
+  `enquiries.suggested_reply`, which the reply box opens with. Placeholders:
+  {first name} {name} {city} {group size} {date} {brand}. Any reply can be inserted
+  by hand from "📋 Stock reply…" in the reply box. Seeded 15 Oct (all switched off for
+  review): Group under 10, Group tour — London, Group tour — Bristol, Gift voucher
+  not working.
+- **AI drafts** (`_lib/autoreply.js` aiDraft, `@anthropic-ai/sdk`). The admin's own
+  Anthropic key, stored AES-GCM-encrypted in `app_settings` (key derived from
+  ADMIN_SESSION_SECRET — rotating that secret means re-entering the key) and checked
+  with a models lookup when saved. Model choice (default Sonnet 5.5; effort low;
+  server-side refusal fallback on), owner's instructions, and an optional "draft
+  automatically for new enquiries no rule covers" (runs after the response). AI text
+  is never sent automatically. ✨ AI draft in the reply box drafts on demand.

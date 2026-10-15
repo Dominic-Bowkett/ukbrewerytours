@@ -7,6 +7,7 @@
 // Public and unauthenticated, so it is rate limited and carries a honeypot;
 // without those it would be an open relay for spam.
 
+import { autoReplyNew } from '../_lib/autoreply.js';
 import { sendEmail, enquiryAutoReplyHtml } from '../_lib/email.js';
 import {
   createEnquiry, alertAdmin, voucherCheck, cleanType, cleanFields, inferType,
@@ -22,7 +23,7 @@ const maxPerHour = env => {
 const isEmail = s => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(s || '').trim());
 const clean = (s, max) => String(s ?? '').trim().slice(0, max);
 
-export async function onRequestPost({ request, env }) {
+export async function onRequestPost({ request, env, waitUntil }) {
   let body;
   try {
     body = await request.json();
@@ -120,8 +121,12 @@ export async function onRequestPost({ request, env }) {
     console.error('enquiry alert failed', err);
   }
 
+  // Stock replies and AI drafts (Admin → Inbox → Auto-replies). An instant
+  // stock reply is the answer itself, so the courtesy email below is skipped.
+  const auto = await autoReplyNew(env, created.id, { waitUntil });
+
   // Courtesy confirmation — never fail the request over it.
-  if (env.RESEND_API_KEY) {
+  if (env.RESEND_API_KEY && auto !== 'sent') {
     try {
       await sendEmail(env, {
         to: email,

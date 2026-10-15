@@ -77,6 +77,7 @@ export async function onRequestPost({ params, request, env, data }) {
     // alerted_at is cleared so the customer's next message alerts straight away.
     env.DB.prepare(
       `UPDATE enquiries SET status = ?, unread = 0, alerted_at = NULL, last_message_at = datetime('now'),
+         suggested_reply = NULL, suggested_source = NULL,
          closed_at = CASE WHEN ? = 'closed' THEN datetime('now') ELSE NULL END
        WHERE id = ?`,
     ).bind(status, status, enquiry.id),

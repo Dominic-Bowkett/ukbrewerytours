@@ -16,5 +16,8 @@
     "esbuild@0.17.19": true,
     "workerd@1.20250718.0": true,
     "sharp@0.33.5": true
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.134.0"
   }
 }

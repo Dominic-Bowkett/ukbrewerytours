@@ -15,6 +15,7 @@ import {
   TOKEN_RE, appendCustomerMessage, alertAdmin, createEnquiry, voucherCheck, cleanFields,
 } from '../_lib/inbox.js';
 import { saveInbound } from '../_lib/attachments.js';
+import { autoReplyNew } from '../_lib/autoreply.js';
 
 const MAX_BODY = 20000;
 
@@ -144,6 +145,8 @@ async function ingest(env, data, waitUntil) {
     await stampEmailId(env, created.id, messageId);
     keepFiles(env, created.id, data.email_id, full.html || data.html, attachments.length, waitUntil);
     if (reason) return;
+    // A new conversation by email: stock reply or AI draft (not for follow-ups).
+    await autoReplyNew(env, created.id, { waitUntil });
     enquiry = { id: created.id, token: created.token, name: from.name, email: from.email, type: 'general', channel: 'email', site: 'ukbrewerytours.com', subject };
   }
 

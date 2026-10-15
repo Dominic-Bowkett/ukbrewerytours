@@ -589,3 +589,19 @@ code.small { font-size: .78rem; }
 .th-ccrow input { padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; font-size: .85rem; background: #fff; min-width: 0; }
 .th-ccrow input:focus { outline: 2px solid var(--amber); outline-offset: -1px; }
 @media (max-width: 620px) { .th-ccrow { grid-template-columns: 1fr; } }
+
+/* ---------- Inbox: auto-replies ---------- */
+.th-assist { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 6px; }
+.th-assist[hidden] { display: none; }
+.th-assist select { padding: 6px 28px 6px 10px; border: 1px solid var(--line); border-radius: 999px; font: inherit; font-size: .82rem; background: #fff; }
+.th-suggest { flex-basis: 100%; background: #eef4ff; border: 1px solid #cddcf5; color: #24406b; border-radius: 8px; padding: 6px 10px; font-size: .82rem; }
+.th-suggest[hidden] { display: none; }
+.linkish { background: none; border: 0; padding: 0 0 0 6px; color: inherit; text-decoration: underline; cursor: pointer; font: inherit; }
+.rules-table td { vertical-align: middle; }
+.rf-types { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.switch { position: relative; display: inline-block; width: 36px; height: 20px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.switch span { position: absolute; inset: 0; background: #d8cdbd; border-radius: 999px; transition: background .15s; cursor: pointer; }
+.switch span::before { content: ''; position: absolute; width: 16px; height: 16px; left: 2px; top: 2px; background: #fff; border-radius: 50%; transition: transform .15s; }
+.switch input:checked + span { background: var(--green); }
+.switch input:checked + span::before { transform: translateX(16px); }
