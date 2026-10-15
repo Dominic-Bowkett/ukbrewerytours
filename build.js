@@ -1086,6 +1086,9 @@ for (const [from, to] of Object.entries(allRedirects)) {
 }
 // Cloudflare Pages _redirects file — real 301s (better than the meta-refresh stubs).
 fs.writeFileSync(path.join(OUT, '_redirects'), redirectLines.join('\n') + '\n');
+// Cloudflare Pages _headers — the admin may be shown inside Dom's hub, and nowhere else.
+fs.writeFileSync(path.join(OUT, '_headers'), ['/admin', '/admin/*']
+  .map(p => `${p}\n  Content-Security-Policy: frame-ancestors 'self' https://hub.dominicbowkett.com\n`).join(''));
 
 /* ----- 404, sitemap, robots ----- */
 

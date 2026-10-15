@@ -1,0 +1,4 @@
+/admin
+  Content-Security-Policy: frame-ancestors 'self' https://hub.dominicbowkett.com
+/admin/*
+  Content-Security-Policy: frame-ancestors 'self' https://hub.dominicbowkett.com
