@@ -23,7 +23,9 @@
 import { safeEqual } from '../../_lib/stripe.js';
 
 const SHARE = 0.2;
-const SAMPLE_UNTIL = Date.parse('2026-10-22T00:00:00Z'); // setup window — see below
+// Setup window for the sample row (see below). Closed once the four connections
+// existed (21 Oct 2026); move it forward to add or re-map a connection.
+const SAMPLE_UNTIL = Date.parse('2026-10-21T18:30:00Z');
 const NAMES = {
   voucher: 'UKBT gift voucher sale',
   booking: 'UKBT booking payment',
