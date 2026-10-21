@@ -9,6 +9,18 @@
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+    // Consent Mode v2 — analytics and ads denied until the visitor accepts the
+    // cookie banner (assets/js/main.js). url_passthrough keeps an ad click id in
+    // internal links meanwhile, so accepting on a later page still credits the ad.
+    var ubtConsent = (function(){ try { return localStorage.getItem('ubt_consent'); } catch(e){ return null; } })() === 'granted' ? 'granted' : 'denied';
+    gtag('consent', 'default', {
+      'ad_storage': ubtConsent,
+      'ad_user_data': ubtConsent,
+      'ad_personalization': ubtConsent,
+      'analytics_storage': ubtConsent,
+      'wait_for_update': 500
+    });
+    gtag('set', 'url_passthrough', true);
     gtag('js', new Date());
     gtag('config', 'G-Z8BMP5CVTD');
   </script>
@@ -27,7 +39,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/style.css?v=8d2c5961">
+  <link rel="stylesheet" href="/assets/css/style.css?v=069c882c">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Anspach and Hobday Brewery: Craft Beer Artisans","datePublished":"2024-06-03","dateModified":"2024-06-03","author":{"@type":"Organization","name":"UK Brewery Tours"},"image":"https://www.ukbrewerytours.com/assets/img/Anspach-and-Hobday-Brewery.jpg","mainEntityOfPage":"https://www.ukbrewerytours.com/blog/anspach-and-hobday-brewery/"}</script>
 </head>
 <body>
@@ -193,7 +205,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <span>© 2026 UK Brewery Tours. All rights reserved.</span>
+        <span>© 2026 UK Brewery Tours. All rights reserved. <a href="/privacy/">Privacy</a> · <a href="#" data-cookie-settings>Cookie settings</a></span>
         <span>Crafted in Britain 🍺</span>
       </div>
     </div>
@@ -303,9 +315,9 @@
 </div>
 
 
-  <script src="/assets/js/main.js?v=8d2c5961" defer></script>
-  <script src="/assets/js/voucher.js?v=8d2c5961" defer></script>
-  <script src="/assets/js/salespop.js?v=8d2c5961" defer></script>
-  <script src="/embed/chat.js?v=8d2c5961" data-site="ukbt" async></script>
+  <script src="/assets/js/main.js?v=069c882c" defer></script>
+  <script src="/assets/js/voucher.js?v=069c882c" defer></script>
+  <script src="/assets/js/salespop.js?v=069c882c" defer></script>
+  <script src="/embed/chat.js?v=069c882c" data-site="ukbt" async></script>
 </body>
 </html>

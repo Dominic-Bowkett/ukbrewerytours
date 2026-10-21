@@ -1457,3 +1457,14 @@ details .a { padding: 0 0 20px; color: var(--ink-soft); font-size: .97rem; }
 .pay-message { border-left: 3px solid #e0932f; padding: 2px 0 2px 14px; margin: 0 0 18px; }
 .pay-message-from { font-size: .8rem; color: var(--ink-soft); margin: 0 0 2px; }
 .pay-message .pay-details { margin: 0; }
+
+/* ---------- cookie banner (assets/js/main.js) ---------- */
+body.has-cookie-banner { padding-bottom: 110px; }
+body.has-cookie-banner iframe[data-ubt-chat="closed"] { bottom: 96px !important; }
+.cookie-banner { position: fixed; left: 0; right: 0; bottom: 0; z-index: 160; background: var(--stout); color: var(--cream); box-shadow: 0 -8px 30px rgba(0, 0, 0, .3); }
+.cookie-banner-in { max-width: var(--container); margin-inline: auto; padding: 16px 22px; display: flex; align-items: center; gap: 14px 24px; flex-wrap: wrap; }
+.cookie-banner p { flex: 1 1 320px; margin: 0; font-size: .95rem; color: rgba(247, 241, 229, .9); }
+.cookie-banner a { color: var(--amber); text-decoration: underline; }
+.cookie-banner-btns { display: flex; gap: 10px; }
+.footer-bottom a { color: inherit; text-decoration: underline; }
+body.has-cookie-banner .salespop { bottom: 124px; }

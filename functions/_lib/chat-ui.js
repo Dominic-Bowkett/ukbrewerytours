@@ -636,6 +636,8 @@ export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = ''
       setTimeout(autosize, 60);
     }
     if (e.data.type === 'layout') setTimeout(autosize, 30);
+    // The visitor accepted cookies after the chat loaded: their ad click, if any.
+    if (e.data.type === 'attr' && typeof e.data.attr === 'string') C.attr = e.data.attr.slice(0, 2000);
   });
 
   render();

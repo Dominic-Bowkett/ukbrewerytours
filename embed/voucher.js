@@ -29,6 +29,11 @@
   if (!window.UBTAttr) window.UBTAttr = function () {
     var KEYS = ['gclid', 'gbraid', 'wbraid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
     try {
+      // Only with cookie consent: ubt_consent (UKBT, Bristol) or lbt_consent (London).
+      if (localStorage.getItem('ubt_consent') !== 'granted' && localStorage.getItem('lbt_consent') !== 'granted') {
+        localStorage.removeItem('ubt_attr');
+        return '';
+      }
       var q = new URLSearchParams(location.search), fresh = null, i, v;
       for (i = 0; i < KEYS.length; i++) {
         v = q.get(KEYS[i]);
@@ -49,6 +54,22 @@
 
   var frames = [];
 
+  function widgetSrc(id) {
+    var attr = window.UBTAttr();
+    return ORIGIN + '/embed/widget/' + encodeURIComponent(id)
+      + '?host=' + encodeURIComponent(window.location.href)
+      + (attr ? '&attr=' + encodeURIComponent(attr) : '');
+  }
+
+  // Cookies accepted after the widgets loaded: reload them with the ad click.
+  // The banner shows on arrival, so nobody has typed into a widget yet.
+  function onConsent() {
+    if (!window.UBTAttr()) return;
+    for (var i = 0; i < frames.length; i++) frames[i].src = widgetSrc(frames[i].getAttribute('data-ubt-id'));
+  }
+  document.addEventListener('ubt:consent', onConsent);
+  document.addEventListener('lbt:consent', onConsent);
+
   function mount(el) {
     if (el.getAttribute('data-ubt-ready')) return;
     el.setAttribute('data-ubt-ready', '1');
@@ -56,10 +77,8 @@
     if (!id) return;
 
     var iframe = document.createElement('iframe');
-    var attr = window.UBTAttr();
-    iframe.src = ORIGIN + '/embed/widget/' + encodeURIComponent(id)
-      + '?host=' + encodeURIComponent(window.location.href)
-      + (attr ? '&attr=' + encodeURIComponent(attr) : '');
+    iframe.src = widgetSrc(id);
+    iframe.setAttribute('data-ubt-id', id);
     iframe.title = 'UK Brewery Tours';
     iframe.loading = 'lazy';
     iframe.style.cssText = 'display:block;width:100%;border:0;min-height:560px;background:transparent;';

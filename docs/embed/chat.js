@@ -29,6 +29,11 @@
   if (!window.UBTAttr) window.UBTAttr = function () {
     var KEYS = ['gclid', 'gbraid', 'wbraid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
     try {
+      // Only with cookie consent: ubt_consent (UKBT, Bristol) or lbt_consent (London).
+      if (localStorage.getItem('ubt_consent') !== 'granted' && localStorage.getItem('lbt_consent') !== 'granted') {
+        localStorage.removeItem('ubt_attr');
+        return '';
+      }
       var q = new URLSearchParams(location.search), fresh = null, i, v;
       for (i = 0; i < KEYS.length; i++) {
         v = q.get(KEYS[i]);
@@ -47,6 +52,14 @@
     } catch (e) { return ''; } // storage blocked — attribution is best effort
   };
   var ATTR = window.UBTAttr();
+  // Cookies accepted after the chat loaded: store any ad click in this page's
+  // URL and hand it to the chat frame (its src was built without it).
+  function onConsent() {
+    ATTR = window.UBTAttr();
+    if (frame && ATTR) send({ type: 'attr', attr: ATTR });
+  }
+  document.addEventListener('ubt:consent', onConsent);
+  document.addEventListener('lbt:consent', onConsent);
 
   var frame = null;
   var ready = false;
