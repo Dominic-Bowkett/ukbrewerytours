@@ -11,8 +11,9 @@ export async function onRequestGet({ request }) {
   const url = new URL(request.url);
   const site = url.searchParams.get('site') || 'ukbt';
   const host = url.searchParams.get('host') || '';
+  const attr = url.searchParams.get('attr') || '';
 
-  return new Response(chatHtml({ mode: 'frame', profileKey: PROFILES[site] ? site : 'ukbt', hostUrl: host }), {
+  return new Response(chatHtml({ mode: 'frame', profileKey: PROFILES[site] ? site : 'ukbt', hostUrl: host, attr }), {
     headers: {
       'Content-Type': 'text/html; charset=utf-8',
       'Cache-Control': 'no-store',

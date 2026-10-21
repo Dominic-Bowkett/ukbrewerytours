@@ -2,6 +2,7 @@
 // Validates the voucher form, reserves the order + codes as `pending`, and
 // returns a Stripe Checkout URL for the browser to redirect to.
 
+import { cleanAttr } from '../_lib/attribution.js';
 import { generateCode } from '../_lib/codes.js';
 import { createCheckoutSession } from '../_lib/stripe.js';
 
@@ -90,6 +91,9 @@ export async function onRequestPost({ request, env }) {
     } catch { /* no usable host page — fall back to our own cancel page */ }
   }
 
+  // Last ad click the buyer came through (Google Ads conversion upload).
+  const attr = cleanAttr(body.attr);
+
   const orderId = crypto.randomUUID();
   const totalPence = amountPence * quantity;
 
@@ -118,8 +122,9 @@ export async function onRequestPost({ request, env }) {
     env.DB.prepare(
       `INSERT INTO orders (id, stripe_session_id, status, quantity, amount_pence, total_pence,
         purchaser_name, purchaser_email, recipient_name, recipient_email, send_to_self,
-        message, tour_slug, tour_name, is_demo, widget_id, widget_origin, page)
-       VALUES (?,?,'pending',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+        message, tour_slug, tour_name, is_demo, widget_id, widget_origin, page,
+        gclid, gbraid, wbraid, attribution)
+       VALUES (?,?,'pending',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
     ).bind(
       orderId, session.id, quantity, amountPence, totalPence,
       purchaserName, purchaserEmail,
@@ -131,6 +136,7 @@ export async function onRequestPost({ request, env }) {
       widget ? widget.id : null,
       widgetOrigin,
       page || null,
+      attr.gclid, attr.gbraid, attr.wbraid, attr.attribution,
     ),
   ];
 

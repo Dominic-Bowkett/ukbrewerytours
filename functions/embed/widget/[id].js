@@ -229,6 +229,7 @@ export async function onRequestGet({ params, env }) {
   'use strict';
   var WIDGET_ID = ${JSON.stringify(widget.id)};
   var HOST_URL = new URLSearchParams(location.search).get('host') || '';
+  var ATTR = new URLSearchParams(location.search).get('attr') || ''; // last ad click, from the loader
   var framed = window.parent !== window;
 
   var $ = function (id) { return document.getElementById(id); };
@@ -325,6 +326,7 @@ export async function onRequestGet({ params, env }) {
         message: sendToSelf ? '' : $('msg').value,
         widgetId: WIDGET_ID,
         hostUrl: HOST_URL,
+        attr: ATTR,
       }),
     }).then(function (res) {
       return res.json().then(function (data) {
@@ -467,6 +469,7 @@ function contactPageHtml(widget, accent, accentInk) {
   'use strict';
   var WIDGET_ID = ${JSON.stringify(widget.id)};
   var HOST_URL = new URLSearchParams(location.search).get('host') || '';
+  var ATTR = new URLSearchParams(location.search).get('attr') || ''; // last ad click, from the loader
   var framed = window.parent !== window;
 
   var $ = function (id) { return document.getElementById(id); };
@@ -519,6 +522,7 @@ function contactPageHtml(widget, accent, accentInk) {
         company: $('company').value,
         widgetId: WIDGET_ID,
         hostUrl: HOST_URL,
+        attr: ATTR,
       }),
     }).then(function (res) {
       return res.json().then(function (data) {

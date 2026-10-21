@@ -7,6 +7,7 @@
 // Public and unauthenticated, so it is rate limited and carries a honeypot;
 // without those it would be an open relay for spam.
 
+import { cleanAttr } from '../_lib/attribution.js';
 import { autoReplyNew } from '../_lib/autoreply.js';
 import { sendEmail, enquiryAutoReplyHtml } from '../_lib/email.js';
 import {
@@ -103,6 +104,7 @@ export async function onRequestPost({ request, env, waitUntil }) {
       name, email, phone, message, page, ip,
       widgetId: widget ? widget.id : null, widgetOrigin,
       type, channel, site, fields, voucherCode,
+      attr: cleanAttr(body.attr),
     });
   } catch (err) {
     console.error('enquiry insert failed', err);

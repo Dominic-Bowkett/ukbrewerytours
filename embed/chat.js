@@ -22,6 +22,32 @@
   try { if (script && script.src) ORIGIN = new URL(script.src).origin; } catch (e) { /* production is fine */ }
   var SITE = (script && script.getAttribute('data-site')) || 'ukbt';
 
+  // Ad attribution: remember the last ad click (Google click id + UTM tags) in
+  // this site's localStorage for 90 days, so a voucher sale or enquiry days
+  // later can be credited to the ad. Returns it as a query string ('' if none).
+  // The same function lives in embed/voucher.js; whichever loads first wins.
+  if (!window.UBTAttr) window.UBTAttr = function () {
+    var KEYS = ['gclid', 'gbraid', 'wbraid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+    try {
+      var q = new URLSearchParams(location.search), fresh = null, i, v;
+      for (i = 0; i < KEYS.length; i++) {
+        v = q.get(KEYS[i]);
+        if (v) { fresh = fresh || {}; fresh[KEYS[i]] = v.slice(0, 200); }
+      }
+      if (fresh) {
+        fresh.landing = location.origin + location.pathname;
+        fresh.ts = Date.now();
+        localStorage.setItem('ubt_attr', JSON.stringify(fresh));
+      }
+      var s = JSON.parse(localStorage.getItem('ubt_attr') || 'null');
+      if (!s || !(Date.now() - s.ts < 90 * 864e5)) return '';
+      var out = new URLSearchParams();
+      for (var k in s) if (Object.prototype.hasOwnProperty.call(s, k)) out.set(k, String(s[k]));
+      return out.toString();
+    } catch (e) { return ''; } // storage blocked — attribution is best effort
+  };
+  var ATTR = window.UBTAttr();
+
   var frame = null;
   var ready = false;
   var queue = [];
@@ -59,7 +85,8 @@
     if (frame) return;
     frame = document.createElement('iframe');
     frame.src = ORIGIN + '/embed/chat/frame?site=' + encodeURIComponent(SITE)
-      + '&host=' + encodeURIComponent(window.location.href);
+      + '&host=' + encodeURIComponent(window.location.href)
+      + (ATTR ? '&attr=' + encodeURIComponent(ATTR) : '');
     frame.title = 'Chat with us';
     frame.setAttribute('data-ubt-chat', 'closed');
     frame.setAttribute('allowtransparency', 'true');

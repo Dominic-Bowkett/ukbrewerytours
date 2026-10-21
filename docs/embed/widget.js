@@ -25,6 +25,28 @@
     if (cs && cs.src) ORIGIN = new URL(cs.src).origin;
   } catch (e) { /* very old browser — production origin is fine */ }
 
+  // Ad attribution — the same function as in embed/chat.js (see there).
+  if (!window.UBTAttr) window.UBTAttr = function () {
+    var KEYS = ['gclid', 'gbraid', 'wbraid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+    try {
+      var q = new URLSearchParams(location.search), fresh = null, i, v;
+      for (i = 0; i < KEYS.length; i++) {
+        v = q.get(KEYS[i]);
+        if (v) { fresh = fresh || {}; fresh[KEYS[i]] = v.slice(0, 200); }
+      }
+      if (fresh) {
+        fresh.landing = location.origin + location.pathname;
+        fresh.ts = Date.now();
+        localStorage.setItem('ubt_attr', JSON.stringify(fresh));
+      }
+      var s = JSON.parse(localStorage.getItem('ubt_attr') || 'null');
+      if (!s || !(Date.now() - s.ts < 90 * 864e5)) return '';
+      var out = new URLSearchParams();
+      for (var k in s) if (Object.prototype.hasOwnProperty.call(s, k)) out.set(k, String(s[k]));
+      return out.toString();
+    } catch (e) { return ''; } // storage blocked — attribution is best effort
+  };
+
   var frames = [];
 
   function mount(el) {
@@ -34,8 +56,10 @@
     if (!id) return;
 
     var iframe = document.createElement('iframe');
+    var attr = window.UBTAttr();
     iframe.src = ORIGIN + '/embed/widget/' + encodeURIComponent(id)
-      + '?host=' + encodeURIComponent(window.location.href);
+      + '?host=' + encodeURIComponent(window.location.href)
+      + (attr ? '&attr=' + encodeURIComponent(attr) : '');
     iframe.title = 'UK Brewery Tours';
     iframe.loading = 'lazy';
     iframe.style.cssText = 'display:block;width:100%;border:0;min-height:560px;background:transparent;';

@@ -163,6 +163,7 @@
           tourName: tour.name,
           tourSlug: tour.slug,
           page: location.href,
+          attr: window.UBTAttr ? window.UBTAttr() : '', // from embed/chat.js
           demo: document.body.dataset.voucherDemo === '1',
         }),
       });

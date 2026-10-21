@@ -79,6 +79,7 @@
             fields,
             company: val('company'), // honeypot
             page: location.pathname,
+            attr: window.UBTAttr ? window.UBTAttr() : '', // from embed/chat.js
           }),
         });
         const data = await res.json();

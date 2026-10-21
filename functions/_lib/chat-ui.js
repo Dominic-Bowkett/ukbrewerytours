@@ -54,7 +54,7 @@ function tourOptions(homeCity) {
 const CHAT_ICON = '<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" aria-hidden="true"><path d="M12 3C6.5 3 2 6.6 2 11.1c0 2.4 1.3 4.6 3.4 6.1-.2 1.3-.8 2.6-1.9 3.6-.2.2 0 .6.3.6 2.1-.1 3.8-.9 5-1.9 1 .3 2.1.4 3.2.4 5.5 0 10-3.6 10-8.1S17.5 3 12 3Zm-4.5 9.4a1.3 1.3 0 1 1 0-2.6 1.3 1.3 0 0 1 0 2.6Zm4.5 0a1.3 1.3 0 1 1 0-2.6 1.3 1.3 0 0 1 0 2.6Zm4.5 0a1.3 1.3 0 1 1 0-2.6 1.3 1.3 0 0 1 0 2.6Z"/></svg>';
 const SEND_ICON = '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z"/></svg>';
 
-export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = '' }) {
+export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = '', attr = '' }) {
   const p = PROFILES[profileKey] || PROFILES.ukbt;
   const page = mode === 'page';
   const config = {
@@ -64,6 +64,7 @@ export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = ''
     home: p.home,
     token,
     hostUrl: String(hostUrl || '').slice(0, 500),
+    attr: String(attr || '').slice(0, 2000), // last ad click, from the loader
     topics: TOPICS.map(([key, , prompt]) => [key, prompt]),
     homeCity: p.city,
     tours: TOURS,
@@ -563,7 +564,7 @@ export function chatHtml({ mode, profileKey = 'ukbt', token = null, hostUrl = ''
       body: JSON.stringify({
         channel: 'chat', name: name, email: email, message: message, phone: phone, fields: fields,
         type: topic || 'general', voucher_code: topic === 'redemption' ? code : '',
-        hostUrl: C.hostUrl, company: $('d-company').value
+        hostUrl: C.hostUrl, attr: C.attr, company: $('d-company').value
       })
     }).then(function (r) { return r.json().then(function (d) { if (!r.ok) throw new Error(d.error || 'Could not send.'); return d; }); })
       .then(function (d) {
