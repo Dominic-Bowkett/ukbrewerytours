@@ -3,7 +3,8 @@
 // Google Ads fetches this on a schedule (Tools → Data manager → HTTPS,
 // username "googleads", password = the ADS_FEED_PASSWORD secret). Data manager
 // ties each connection to ONE conversion action, so each has its own URL:
-//   /api/ads/conversions?action=voucher|booking|inbox|enquiry
+//   /api/ads/voucher.csv, booking.csv, inbox.csv, enquiry.csv (./[file].js)
+//   — also /api/ads/conversions?action=voucher|booking|inbox|enquiry
 // — a plain CSV (click id, time with UTC offset, value, currency) for mapping.
 // Without ?action it serves the classic all-actions upload template instead.
 // Every sale or enquiry from the last 90 days that
@@ -50,7 +51,13 @@ function authorised(request, env) {
   return safeEqual(decoded, `googleads:${env.ADS_FEED_PASSWORD}`);
 }
 
-export async function onRequestGet({ request, env }) {
+export function onRequestGet({ request, env }) {
+  return conversionsFeed(request, env, new URL(request.url).searchParams.get('action'));
+}
+
+// Shared with ./[file].js, which serves the same per-action feed as
+// /api/ads/<action>.csv — Data manager only accepts URLs ending in .csv.
+export async function conversionsFeed(request, env, action) {
   if (!env.ADS_FEED_PASSWORD) return new Response('Feed not configured.', { status: 503 });
   if (!authorised(request, env)) {
     return new Response('Unauthorised', { status: 401, headers: { 'WWW-Authenticate': 'Basic realm="ads"' } });
@@ -95,7 +102,6 @@ export async function onRequestGet({ request, env }) {
   for (const r of inbox.results) if (r.pence > 0) add(r, 'inbox', pounds(Math.round(r.pence * SHARE)));
   for (const r of enquiries.results) add(r, 'enquiry', '');
 
-  const action = new URL(request.url).searchParams.get('action');
   if (action && !NAMES[action]) return new Response('Unknown action.', { status: 404 });
 
   const currency = v => (v === '' ? '' : 'GBP');
