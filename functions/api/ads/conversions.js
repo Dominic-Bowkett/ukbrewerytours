@@ -1,8 +1,12 @@
 // GET /api/ads/conversions — Google Ads offline conversion feed (CSV).
 //
-// Google Ads fetches this on a schedule (Goals → Conversions → Uploads →
-// Schedules, source "HTTPS", username "googleads", password = the
-// ADS_FEED_PASSWORD secret). Every sale or enquiry from the last 90 days that
+// Google Ads fetches this on a schedule (Tools → Data manager → HTTPS,
+// username "googleads", password = the ADS_FEED_PASSWORD secret). Data manager
+// ties each connection to ONE conversion action, so each has its own URL:
+//   /api/ads/conversions?action=voucher|booking|inbox|enquiry
+// — a plain CSV (click id, time with UTC offset, value, currency) for mapping.
+// Without ?action it serves the classic all-actions upload template instead.
+// Every sale or enquiry from the last 90 days that
 // arrived through an ad click (a stored gclid) becomes one row. Re-sending a
 // row Google already has is harmless: it is rejected as a duplicate, never
 // counted twice.
@@ -83,19 +87,29 @@ export async function onRequestGet({ request, env }) {
   ]);
 
   const rows = [];
-  const add = (r, name, value) => {
-    if (r.gclid && r.at) rows.push([r.gclid, name, londonTime(r.at), value, value === '' ? '' : 'GBP']);
+  const add = (r, kind, value) => {
+    if (r.gclid && r.at) rows.push({ kind, gclid: r.gclid, at: r.at, value });
   };
-  for (const r of vouchers.results) if (r.pence > 0) add(r, NAMES.voucher, pounds(Math.round(r.pence * SHARE)));
-  for (const r of bookings.results) if (r.pence > 0) add(r, NAMES.booking, pounds(r.pence));
-  for (const r of inbox.results) if (r.pence > 0) add(r, NAMES.inbox, pounds(Math.round(r.pence * SHARE)));
-  for (const r of enquiries.results) add(r, NAMES.enquiry, '');
+  for (const r of vouchers.results) if (r.pence > 0) add(r, 'voucher', pounds(Math.round(r.pence * SHARE)));
+  for (const r of bookings.results) if (r.pence > 0) add(r, 'booking', pounds(r.pence));
+  for (const r of inbox.results) if (r.pence > 0) add(r, 'inbox', pounds(Math.round(r.pence * SHARE)));
+  for (const r of enquiries.results) add(r, 'enquiry', '');
 
-  const csv = [
-    'Parameters:TimeZone=Europe/London',
-    'Google Click ID,Conversion Name,Conversion Time,Conversion Value,Conversion Currency',
-    ...rows.map(r => r.join(',')),
-  ].join('\n') + '\n';
+  const action = new URL(request.url).searchParams.get('action');
+  if (action && !NAMES[action]) return new Response('Unknown action.', { status: 404 });
+
+  const currency = v => (v === '' ? '' : 'GBP');
+  const csv = (action
+    ? [
+      'Google Click ID,Conversion Time,Conversion Value,Conversion Currency',
+      ...rows.filter(r => r.kind === action)
+        .map(r => [r.gclid, `${r.at}+00:00`, r.value, currency(r.value)].join(',')),
+    ]
+    : [
+      'Parameters:TimeZone=Europe/London',
+      'Google Click ID,Conversion Name,Conversion Time,Conversion Value,Conversion Currency',
+      ...rows.map(r => [r.gclid, NAMES[r.kind], londonTime(r.at), r.value, currency(r.value)].join(',')),
+    ]).join('\n') + '\n';
 
   return new Response(csv, {
     headers: {
