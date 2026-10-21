@@ -23,6 +23,7 @@
 import { safeEqual } from '../../_lib/stripe.js';
 
 const SHARE = 0.2;
+const SAMPLE_UNTIL = Date.parse('2026-10-22T00:00:00Z'); // setup window — see below
 const NAMES = {
   voucher: 'UKBT gift voucher sale',
   booking: 'UKBT booking payment',
@@ -103,6 +104,13 @@ export async function conversionsFeed(request, env, action) {
   for (const r of enquiries.results) add(r, 'enquiry', '');
 
   if (action && !NAMES[action]) return new Response('Unknown action.', { status: 404 });
+
+  // Data manager will not set up a connection to a file with no data rows. Until
+  // SAMPLE_UNTIL an empty per-action feed carries one sample row so its columns
+  // can be mapped; Google rejects the made-up click id, so it never counts.
+  if (action && Date.now() < SAMPLE_UNTIL && !rows.some(r => r.kind === action)) {
+    rows.push({ kind: action, gclid: 'SAMPLE_ROW_FOR_SETUP_ONLY', at: new Date(Date.now() - 36e5).toISOString().slice(0, 19).replace('T', ' '), value: action === 'enquiry' ? '' : '1.00' });
+  }
 
   const currency = v => (v === '' ? '' : 'GBP');
   const csv = (action
