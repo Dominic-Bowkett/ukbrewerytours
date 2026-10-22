@@ -28,6 +28,24 @@
   // Ad attribution — the same function as in embed/chat.js (see there).
   if (!window.UBTAttr) window.UBTAttr = function () {
     var KEYS = ['gclid', 'gbraid', 'wbraid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+    // The ad click Google itself is holding, or null. Until the banner is
+    // answered, url_passthrough carries it from page to page inside _gl
+    // ("1*hash*key*value*…", web-safe base64 with '.' for '='); once cookies are
+    // on, Google's tag keeps it in _gcl_aw / _gcl_gb. Both hold "GCL.<secs>.<id>".
+    function googleClick(gl) {
+      var raw = {}, parts = (gl || '').split('*'), NAMES = { _gcl_aw: 'gclid', _gcl_gb: 'gbraid' }, j, k, m, t;
+      for (j = 2; j + 1 < parts.length; j += 2) {
+        try { raw[parts[j]] = atob(parts[j + 1].replace(/-/g, '+').replace(/_/g, '/').replace(/\./g, '=')); } catch (e) { /* not base64 */ }
+      }
+      for (k in NAMES) {
+        m = raw[k] ? null : document.cookie.match(new RegExp('(?:^|; )' + k + '=([^;]*)'));
+        m = /^GCL\.(\d+)\.([A-Za-z0-9_\-]{10,200})$/.exec(raw[k] || (m ? decodeURIComponent(m[1]) : ''));
+        t = m ? Number(m[1]) * 1000 : 0;
+        // A click older than the 90-day window is not revived as a new one.
+        if (t > Date.now() - 90 * 864e5 && t <= Date.now() + 864e5) return { key: NAMES[k], id: m[2], ts: Math.min(t, Date.now()) };
+      }
+      return null;
+    }
     try {
       // Only with cookie consent: ubt_consent (UKBT, Bristol) or lbt_consent (London).
       if (localStorage.getItem('ubt_consent') !== 'granted' && localStorage.getItem('lbt_consent') !== 'granted') {
@@ -39,12 +57,23 @@
         v = q.get(KEYS[i]);
         if (v) { fresh = fresh || {}; fresh[KEYS[i]] = v.slice(0, 200); }
       }
+      var s = JSON.parse(localStorage.getItem('ubt_attr') || 'null');
+      // No click id in this URL (they accepted cookies a page or two after
+      // arriving from the ad): take Google's copy, unless it's one already stored.
+      if (!(fresh && (fresh.gclid || fresh.gbraid || fresh.wbraid))) {
+        var g = googleClick(q.get('_gl'));
+        if (g && (fresh || !(s && s[g.key] === g.id))) {
+          fresh = fresh || {};
+          fresh[g.key] = g.id;
+          fresh.ts = g.ts;
+        }
+      }
       if (fresh) {
         fresh.landing = location.origin + location.pathname;
-        fresh.ts = Date.now();
+        fresh.ts = fresh.ts || Date.now();
         localStorage.setItem('ubt_attr', JSON.stringify(fresh));
+        s = fresh;
       }
-      var s = JSON.parse(localStorage.getItem('ubt_attr') || 'null');
       if (!s || !(Date.now() - s.ts < 90 * 864e5)) return '';
       var out = new URLSearchParams();
       for (var k in s) if (Object.prototype.hasOwnProperty.call(s, k)) out.set(k, String(s[k]));
