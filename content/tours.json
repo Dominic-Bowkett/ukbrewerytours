@@ -336,7 +336,9 @@
         "context": "gallery"
       }
     ],
-    "active": true
+    "active": false,
+    "retired": true,
+    "retired_note": "The Leeds Heritage Pub Tour has now finished and is no longer taking bookings. Thank you to everyone who joined Mike over the years."
   },
   {
     "old_slug": "leeds-craft-beer-experience",

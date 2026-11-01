@@ -25,7 +25,7 @@ If you want more than a self-guided crawl, a beer tasting in Leeds with a knowle
 
 ## The history option: 300 years in an afternoon
 
-Leeds's other great tour is about the pubs themselves. [The Leeds Heritage Pub Tour](/tours/leeds-heritage-pub-and-beer-tour/) is led by Mike — Leeds born and bred, currently secretary of the British Guild of Beer Writers, and a man who has run a pub, operated a microbrewery and chaired the local CAMRA branch. Over three and a half hours he walks you from The Tetley through Victorian classics like the Adelphi and the Lamb & Flag, past the "ghost pubs" hidden in the city's architecture, and on to Whitelock's to finish. A half pint is included at every stop, and the storytelling is worth the ticket on its own. If you are weighing up which tour suits you, our [Leeds brewery tour guide](/blog/leeds-brewery-tour/) answers the most common questions.
+Leeds's pubs are a history lesson in themselves. The Leeds Heritage Pub Tour, which walked groups from The Tetley through Victorian classics like the Adelphi and the Lamb & Flag to Whitelock's, is no longer running, but you can still follow the same trail yourself. Start at The Tetley, on the site of the brewery that made the name famous, then take in the Adelphi's late-Victorian interior, the Lamb & Flag (opened 1801) and the White Swan beside City Varieties Music Hall, before finishing at Whitelock's Ale House, pouring since 1715. If you are weighing up which tour suits you, our [Leeds brewery tour guide](/blog/leeds-brewery-tour/) answers the most common questions.
 
 ## Where the locals drink
 

@@ -1067,11 +1067,69 @@ ${related.length ? `<section class="section band-dark">
   });
 }
 
+/* ----- retired own-tour pages (same URL, no tickets or group booking, points at the city's other tours) ----- */
+
+for (const t of tours.filter(t => t.retired)) {
+  const img = localizeUrl((t.images || [])[0]?.url || '') || '/assets/img/hms-hops.jpg';
+  const guide = guideFor(t.city);
+  const cityUrl = guide ? `/tours/${guide.slug}/` : '/tours/';
+  const cityLabel = guide ? `See our other ${esc(t.city)} tours` : 'See all our tours';
+  const note = t.retired_note ? `<p>${esc(t.retired_note)}</p>` : '';
+  const related = activeTours.filter(x => x.city === t.city).map(tourCard)
+    .concat((expByCity[t.city] || []).map(partnerCard)).slice(0, 3);
+
+  const content = `<section class="exp-hero" style="background-image:url('${img}')">
+  <div class="exp-hero-scrim"></div>
+  <div class="container">
+    <nav class="breadcrumbs city-crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a><span class="sep">/</span><a href="/tours/">Tours</a><span class="sep">/</span>${guide ? `<a href="${cityUrl}">${esc(t.city)}</a><span class="sep">/</span>` : ''}Tour
+    </nav>
+    <span class="partner-flag-lg retired">No longer running</span>
+    <h1>${esc(t.name)}</h1>
+  </div>
+</section>
+<section class="section" style="padding-top:44px">
+  <div class="container product-top">
+    <div class="prose">
+      <div class="retired-notice" role="status">
+        <h2>This tour is no longer running</h2>
+        ${note}
+        <p>Tickets and group bookings are no longer available. ${esc(t.city)} still has other brewery tours, tastings and pub walks you can book.</p>
+        <a class="btn btn-primary" href="${cityUrl}">${cityLabel} →</a>
+      </div>
+      <h2>What this tour was</h2>
+      ${mdToHtml(t.description_md || t.summary || '')}
+    </div>
+    <aside class="booking-card">
+      <p class="retired-tag">Not available to book</p>
+      <p>This tour has finished. Browse what's on in ${esc(t.city)} instead.</p>
+      <a class="btn btn-primary btn-block" href="${cityUrl}">${cityLabel}</a>
+      <a class="btn btn-outline btn-block" href="/tours/">All UK tours</a>
+      <p class="note"><a href="/contact/">Contact us</a> if you have a booking or voucher for this tour and need help.</p>
+    </aside>
+  </div>
+</section>
+${related.length ? `<section class="section band-dark">
+  <div class="container">
+    <div class="section-head"><span class="kicker">Still running in ${esc(t.city)}</span><h2>Other ${esc(t.city)} tours you can book</h2></div>
+    <div class="card-grid">${related.join('\n')}</div>
+    <p class="mt-3"><a class="btn btn-outline-light" href="${cityUrl}">${cityLabel}</a></p>
+  </div>
+</section>` : ''}`;
+
+  writePage(`tours/${t.old_slug}/index.html`, {
+    title: `${t.name} (no longer running) | UK Brewery Tours`,
+    description: `${t.name} is no longer running. See the other brewery tours, tastings and pub walks you can book in ${t.city}.`.slice(0, 158),
+    content, nav: 'tours', ogImage: img,
+    robots: 'noindex,follow',
+  });
+}
+
 /* ----- redirect stubs ----- */
 
 const redirectTpl = read('templates/redirect.html');
 const allRedirects = { ...site.redirects };
-for (const t of activeTours) allRedirects[`/listing/${t.old_slug}/`] = `/tours/${t.old_slug}/`;
+for (const t of tours.filter(t => t.active || t.retired)) allRedirects[`/listing/${t.old_slug}/`] = `/tours/${t.old_slug}/`;
 for (const p of posts) if (p.old_url) allRedirects[p.old_url] = `/blog/${p.slug}/`;
 
 let stubCount = 0;

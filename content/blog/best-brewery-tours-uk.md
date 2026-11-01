@@ -21,7 +21,7 @@ Prefer some food with your beer? The Bermondsey Cheese Meat & Beer Tour (£65 pe
 
 ## Leeds: brewery access and 300 years of pub history
 
-Leeds gives you two brilliant and very different days out. The Leeds Craft Beer Experience starts with a behind-the-scenes brewery tour at Nomadic Beers, then works through the city's taprooms — Brew York's Leeds home, North Brewing Co and Leeds City Tap — before finishing at the much-loved Cross Keys. The Leeds Heritage Pub Tour takes the historical route instead: three and a half hours through 300 years of brewing history with local expert Mike, currently secretary of the British Guild of Beer Writers, with a half pint waiting at every stop from The Tetley to Whitelock's Ale House, the city's oldest pub. Our [Leeds guide](/tours/leeds/) covers both, along with where to drink before and after.
+The Leeds Craft Beer Experience starts with a behind-the-scenes brewery tour at Nomadic Beers, then works through the city's taprooms — Brew York's Leeds home, North Brewing Co and Leeds City Tap — before finishing at the much-loved Cross Keys. History fans can still walk 300 years of Leeds brewing on their own, from The Tetley to Whitelock's Ale House, the city's oldest pub (the guided Leeds Heritage Pub Tour is no longer running). Our [Leeds guide](/tours/leeds/) covers the tours you can book, along with where to drink before and after.
 
 ## Bristol: beer by boat
 
