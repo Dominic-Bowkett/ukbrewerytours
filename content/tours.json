@@ -689,5 +689,30 @@
     ],
     "active": true,
     "booking_url": "https://www.designmynight.com/london/bars/hackney/crate-bar-pizzeria/hackney-wick-brewery-tour-and-tasting"
+  },
+  {
+    "old_slug": "blackhorse-lane-beer-mile-tour",
+    "name": "Blackhorse Lane Beer Mile Tour",
+    "city": "London",
+    "price": "52.92",
+    "duration": "3 hours",
+    "schedule": "Sundays, 1pm–4pm",
+    "meeting_point": "Blackhorse Road Underground Station, Blackhorse Road, London E17 6JT",
+    "summary": "A guided walking tour of four taprooms on Walthamstow's Blackhorse Lane beer mile, led by an accredited Beer Sommelier and Certified Cicerone®, in groups of up to 14.",
+    "description_md": "London has more than 130 breweries, and some of the most interesting are no longer in the centre at all. Up in Walthamstow, a cluster of breweries and taprooms around Blackhorse Lane has grown into the city's newest beer mile: a quieter, more spread-out cousin of Bermondsey, with its own character and plenty of locals in the know. This guided tour takes you through it on a Sunday afternoon, in the company of an accredited Beer Sommelier and Certified Cicerone®.\n\n# What you'll do\n\nYou'll meet at Blackhorse Road station and walk between four of the area's taprooms, with your guide leading the way and talking you through the beers, the breweries and how this corner of north-east London became a destination for craft beer. Groups are kept to a maximum of 14, so there's time to ask questions and get to know what's in your glass rather than being herded from bar to bar.\n\nYour guide is a CIBD-accredited Beer Sommelier, Certified Cicerone® and international beer judge, who has worked on Fuller's quality team and delivered brewery tours at the Griffin Brewery in Chiswick. It's the same expert-led approach as our Bermondsey Beer Tasting Tour, taken to a different part of London.\n\n# Good to know\n\n- Runs on Sundays, 1pm–4pm (live dates and times are on the ticket page)\n- Meet at Blackhorse Road Underground Station, Blackhorse Road, London E17 6JT (Victoria line and Overground)\n- Visits four taprooms on the Blackhorse Lane beer mile\n- Groups of up to 14\n- Aged 18+, and ID may be required\n- Tickets can't be exchanged or refunded after purchase",
+    "includes": [
+      "Guided walk to 4 taprooms on the Blackhorse Lane beer mile",
+      "Led by an accredited Beer Sommelier & Certified Cicerone®",
+      "Small groups of up to 14"
+    ],
+    "breweries": [],
+    "images": [
+      {
+        "url": "/assets/img/blackhorse-lane-beer-mile-tour.jpg",
+        "context": "hero"
+      }
+    ],
+    "active": true,
+    "booking_url": "https://www.designmynight.com/london/whats-on/drinks-tasting/north-london-craft-brew-tour?t=tickets"
   }
 ]
