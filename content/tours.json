@@ -708,8 +708,12 @@
     "breweries": [],
     "images": [
       {
-        "url": "/assets/img/blackhorse-lane-beer-mile-tour.jpg",
+        "url": "/assets/img/blackhorse-tour-summer.jpg",
         "context": "hero"
+      },
+      {
+        "url": "/assets/img/blackhorse-tour-signature.jpg",
+        "context": "gallery"
       }
     ],
     "active": true,
